@@ -2,7 +2,7 @@
 using Fanex.Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace L1.WebApi.Middlewares
+namespace L1.Middlewares
 {
     public static class ServiceMiddleware
     {

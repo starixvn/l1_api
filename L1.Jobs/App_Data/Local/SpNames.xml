@@ -1,0 +1,5 @@
+﻿<Functions>
+  <Function Name="Matches">
+    <Setting Key="Match_GetByDateRange" SpName="Match_GetByDateRange" DbName="DefaultConnection" />
+  </Function>
+</Functions>

@@ -1,7 +1,7 @@
 using System;
 using Fanex.Logging;
 using L1.Configurations;
-using L1.WebApi.Middlewares;
+using L1.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -75,7 +75,7 @@ namespace L1.WebApi
                 LogService.Error(ex.ToString());
             }
 
-            LogService.Info("LiveScore API has been started.");
+            LogService.Info("Site has been started.");
         }
     }
 }

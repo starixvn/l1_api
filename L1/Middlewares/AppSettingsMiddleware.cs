@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace L1.WebApi.Middlewares
+namespace L1.Middlewares
 {
     public static class AppSettingsMiddleware
     {
-        public static IAppSettings AddSettings(this IServiceCollection services, IConfiguration configuration)
+        public static AppSettings AddSettings(this IServiceCollection services, IConfiguration configuration)
         {
             var appSettings = new AppSettings();
 

@@ -5,7 +5,7 @@ using Fanex.Data.MySql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 
-namespace L1.WebApi.Middlewares
+namespace L1.Middlewares
 {
     public static class DataBaseMiddleware
     {

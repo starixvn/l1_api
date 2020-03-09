@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using L1.WebApi.Configurations;
+using Fanex.Logging;
+using L1.Configurations;
+using L1.WebApi.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace L1.WebApi
 {
@@ -26,34 +23,59 @@ namespace L1.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var builder = services.AddIdentityServer()
-               .AddInMemoryApiResources(IdentityConfigs.Apis)
-               .AddInMemoryClients(IdentityConfigs.Clients);
+            try
+            {
+                services.AddLogging(Configuration);
+                var appSettings = services.AddSettings(Configuration);
+                services.AddServices();
 
-            builder.AddDeveloperSigningCredential();
+                var builder = services.AddIdentityServer()
+                   .AddInMemoryApiResources(IdentityConfigs.Apis)
+                   .AddInMemoryClients(IdentityConfigs.Clients);
 
-            services.AddControllers();
+                builder.AddDeveloperSigningCredential();
+
+                services.AddControllers();
+            }
+            catch (Exception ex)
+            {
+                LogService.Error(ex.ToString());
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            try
             {
-                app.UseDeveloperExceptionPage();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+
+                app.ConfigureExceptionHandler();
+                app.UseDatabase(Configuration);
+
+                app.UseRouting();
+
+                app.UseAuthorization();
+
+                app.UseIdentityServer();
+
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapGet("/", context => context.Response.WriteAsync("Site is running"));
+                });
+
+                //app.UsePathBase(Configuration["HostingVirtualPath"]);
+            }
+            catch (Exception ex)
+            {
+                LogService.Error(ex.ToString());
             }
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseIdentityServer();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapGet("/", context => context.Response.WriteAsync("Site is running"));
-            });
+            LogService.Info("LiveScore API has been started.");
         }
     }
 }

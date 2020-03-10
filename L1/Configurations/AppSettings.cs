@@ -15,11 +15,4 @@ namespace L1.Configurations
 
         public string MongoDBConnectionString { get; set; }
     }
-
-    public class LicenseeConfig
-    {
-        public string SiteName { get; set; }
-
-        public string BackendApi { get; set; }
-    }
 }

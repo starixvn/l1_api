@@ -1,6 +1,5 @@
 using System;
 using Fanex.Logging;
-using L1.Configurations;
 using L1.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,16 +25,20 @@ namespace L1.WebApi
             try
             {
                 services.AddLogging(Configuration);
-                var appSettings = services.AddSettings(Configuration);
+                services.AddSettings(Configuration);
                 services.AddServices();
 
-                var builder = services.AddIdentityServer()
-                   .AddInMemoryApiResources(IdentityConfigs.Apis)
-                   .AddInMemoryClients(IdentityConfigs.Clients);
-
-                builder.AddDeveloperSigningCredential();
-
                 services.AddControllers();
+
+                services
+                    .AddAuthentication("Bearer")
+                    .AddJwtBearer("Bearer", options =>
+                    {
+                        options.Authority = "http://localhost:8898/";
+                        options.RequireHttpsMetadata = false;
+
+                        options.Audience = "bwing";
+                    });
             }
             catch (Exception ex)
             {
@@ -58,17 +61,14 @@ namespace L1.WebApi
 
                 app.UseRouting();
 
+                app.UseAuthentication();
                 app.UseAuthorization();
-
-                app.UseIdentityServer();
 
                 app.UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();
                     endpoints.MapGet("/", context => context.Response.WriteAsync("Site is running"));
                 });
-
-                //app.UsePathBase(Configuration["HostingVirtualPath"]);
             }
             catch (Exception ex)
             {

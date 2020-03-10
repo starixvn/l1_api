@@ -35,7 +35,7 @@ namespace L1.Client
             var action = $"{authenticationInfo.ApiUri}signin/test";
             var response = await client.PostAsync(action, paramContent);
             if (!response.IsSuccessStatusCode)
-            {
+            { 
                 return SingleSignOnResult.ServerErrorResult;
             }
 

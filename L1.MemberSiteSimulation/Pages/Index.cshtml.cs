@@ -22,7 +22,7 @@ namespace L1.MemberSiteSimulation.Pages
 
         public void OnGet()
         {
-            var authenticationInfo = new AuthenticationInfo(new Uri("http://localhost:8868/"), "client", "secret");
+            var authenticationInfo = new AuthenticationInfo(new Uri("http://localhost:8868/"), new Uri("http://localhost:8898/"), "bwing-client", "bwing-secret", "bwing");
 
             var client = new AuthenticationClient(authenticationInfo);
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Fanex.Logging;
-using L1.Middlewares;
+using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +27,7 @@ namespace L1.WebApi
             {
                 services.AddLogging(Configuration);
                 var appSettings = services.AddSettings(Configuration);
-                services.AddServices();
+                services.AddServices(appSettings);
 
                 services.AddControllers();
 

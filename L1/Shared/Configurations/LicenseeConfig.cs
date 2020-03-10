@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace L1.Configurations
+namespace L1.Shared.Configurations
 {
     public class LicenseeConfig
     {

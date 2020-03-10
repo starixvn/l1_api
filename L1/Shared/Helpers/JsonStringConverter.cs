@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace L1.Helpers
+namespace L1.Shared.Helpers
 {
     public static class JsonStringConverter
     {

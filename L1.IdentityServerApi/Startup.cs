@@ -1,7 +1,7 @@
 using System;
 using Fanex.Logging;
-using L1.Configurations;
-using L1.Middlewares;
+using L1.Shared.Configurations;
+using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +28,7 @@ namespace L1.IdentityServerApi
             {
                 services.AddLogging(Configuration);
                 var appSettings = services.AddSettings(Configuration);
-                services.AddServices();
+                services.AddServices(appSettings);
 
                 var builder = services.AddIdentityServer()
                    .AddInMemoryApiResources(IdentityConfigs.Apis(appSettings.LicenseeConfigs))

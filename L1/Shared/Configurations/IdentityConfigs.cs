@@ -2,7 +2,7 @@
 using System.Linq;
 using IdentityServer4.Models;
 
-namespace L1.Configurations
+namespace L1.Shared.Configurations
 {
     public static class IdentityConfigs
     {

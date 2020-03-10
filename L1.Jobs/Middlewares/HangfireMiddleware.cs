@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.MySql.Core;
-using L1.Configurations;
+using L1.Shared.Configurations;
 using L1.Jobs.RecurringTasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

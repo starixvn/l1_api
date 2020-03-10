@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sentry;
 
-namespace L1.Middlewares
+namespace L1.Shared.Middlewares
 {
     public static class ErrorHandlingMiddleware
     {

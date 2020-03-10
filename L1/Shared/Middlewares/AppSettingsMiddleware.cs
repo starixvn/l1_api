@@ -1,8 +1,8 @@
-﻿using L1.Configurations;
+﻿using L1.Shared.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace L1.Middlewares
+namespace L1.Shared.Middlewares
 {
     public static class AppSettingsMiddleware
     {

@@ -4,7 +4,7 @@ using Dapper;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace L1.Helpers
+namespace L1.Shared.Helpers
 {
     public class JsonTypeHandler : SqlMapper.ITypeHandler
     {

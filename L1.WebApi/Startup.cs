@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Fanex.Logging;
 using L1.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,7 @@ namespace L1.WebApi
             try
             {
                 services.AddLogging(Configuration);
-                services.AddSettings(Configuration);
+                var appSettings = services.AddSettings(Configuration);
                 services.AddServices();
 
                 services.AddControllers();
@@ -34,10 +35,14 @@ namespace L1.WebApi
                     .AddAuthentication("Bearer")
                     .AddJwtBearer("Bearer", options =>
                     {
-                        options.Authority = "http://localhost:8898/";
+                        options.Authority = appSettings.IdentityServer;
                         options.RequireHttpsMetadata = false;
 
-                        options.Audience = "bwing";
+                        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidAudiences = appSettings.IdentityAudiences
+                        };
                     });
             }
             catch (Exception ex)

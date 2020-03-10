@@ -20,13 +20,20 @@ namespace L1.MemberSiteSimulation.Pages
 
         public SingleSignOnResult singleSignOnResult { get; private set; }
 
-        public void OnGet()
+        public async Task OnGet()
         {
-            var authenticationInfo = new AuthenticationInfo(new Uri("http://localhost:8868/"), new Uri("http://localhost:8898/"), "bwing-client", "bwing-secret", "bwing");
+            var authenticationInfo = new AuthenticationInfo(
+                new Uri("http://localhost:8868/"), 
+                new Uri("http://localhost:8898/"), 
+                "bwing3-client", 
+                "bwing3-secret", 
+                "bwing3");
 
             var client = new AuthenticationClient(authenticationInfo);
 
-            singleSignOnResult = client.SingleSignOnAsync(new SingleSignOnParams("1", 343434, "membername")).GetAwaiter().GetResult();
+            var signInParams = new SingleSignOnParams("1", 343434, "membername");
+
+            singleSignOnResult = await client.SingleSignOnAsync(signInParams);
         }
     }
 }

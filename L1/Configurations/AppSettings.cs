@@ -7,6 +7,10 @@ namespace L1.Configurations
         IEnumerable<LicenseeConfig> LicenseeConfigs { get; set; }
 
         string MongoDBConnectionString { get; set; }
+
+        string IdentityServer { get; set; }
+
+        IEnumerable<string> IdentityAudiences { get; set; }
     }
 
     public class AppSettings : IAppSettings
@@ -14,5 +18,9 @@ namespace L1.Configurations
         public IEnumerable<LicenseeConfig> LicenseeConfigs { get; set; }
 
         public string MongoDBConnectionString { get; set; }
+
+        public string IdentityServer { get; set; }
+
+        public IEnumerable<string> IdentityAudiences { get; set; }
     }
 }

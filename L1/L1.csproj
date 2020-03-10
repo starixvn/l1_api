@@ -16,6 +16,12 @@
     <PackageReference Include="Fanex.Logging.Sentry" Version="1.0.6" />
     <PackageReference Include="IdentityServer4" Version="3.1.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
+    <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

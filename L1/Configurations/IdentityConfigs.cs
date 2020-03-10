@@ -8,7 +8,7 @@ namespace L1.Configurations
         public static IEnumerable<ApiResource> Apis =>
             new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("SingleSignOn", "My API")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -28,7 +28,7 @@ namespace L1.Configurations
                     },
 
                     // scopes that client has access to
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "SingleSignOn" }
                 }
             };
     }

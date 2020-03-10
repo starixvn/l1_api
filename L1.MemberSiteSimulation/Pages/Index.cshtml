@@ -1,0 +1,10 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    Redirect Url: <a href="@(Model.singleSignOnResult.RedirectUri)">@(Model.singleSignOnResult.RedirectUri)</a>
+    
+</div>

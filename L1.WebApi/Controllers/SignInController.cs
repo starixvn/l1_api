@@ -6,8 +6,8 @@ namespace L1.WebApi.Controllers
     [Route("[controller]")]
     public class SignInController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet, HttpPost]
         [Route("test")]
-        public string Test() => "hello";
+        public string Test() => "http://demo.com";
     }
 }

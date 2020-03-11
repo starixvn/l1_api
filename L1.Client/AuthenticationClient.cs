@@ -32,7 +32,7 @@ namespace L1.Client
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
 
-            var action = $"{authenticationInfo.ApiUri}signin/test";
+            var action = $"{authenticationInfo.ApiUri}signin/index";
             var response = await client.PostAsync(action, paramContent);
             if (!response.IsSuccessStatusCode)
             { 

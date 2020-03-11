@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace L1.Features.Authentications
@@ -15,7 +16,7 @@ namespace L1.Features.Authentications
 
         public string Token { get; set; }
 
-        public string Time { get; set; }
+        public DateTime Time { get; set; }
 
         public int MemberId { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Fanex.Data.Repository;
-using L1.Shared.Configurations;
 using L1.Features.Authentications;
+using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
@@ -14,7 +14,10 @@ namespace L1.Shared.Middlewares
             services.AddSingleton<IDynamicRepository, DynamicRepository>();
 
             services.AddSingleton<Func<DateTimeOffset>>(() => DateTimeOffset.Now);
+        }
 
+        public static void AddMongoDBServices(this IServiceCollection services, AppSettings appSettings)
+        {
             var client = new MongoClient(appSettings.MongoDBSettings.ConnectionString);
             var database = client.GetDatabase(appSettings.MongoDBSettings.DatabaseName);
 

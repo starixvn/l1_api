@@ -28,6 +28,7 @@ namespace L1.WebApi
                 services.AddLogging(Configuration);
                 var appSettings = services.AddSettings(Configuration);
                 services.AddServices(appSettings);
+                services.AddMongoDBServices(appSettings);
 
                 services.AddControllers();
 

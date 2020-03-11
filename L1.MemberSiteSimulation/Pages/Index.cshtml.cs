@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using L1.Client;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
@@ -23,15 +20,20 @@ namespace L1.MemberSiteSimulation.Pages
         public async Task OnGet()
         {
             var authenticationInfo = new AuthenticationInfo(
-                new Uri("http://localhost:8868/"), 
-                new Uri("http://localhost:8898/"), 
-                "bwing3-client", 
-                "bwing3-secret", 
+                new Uri("http://localhost:8868/"),
+                new Uri("http://localhost:8898/"),
+                "bwing3-client",
+                "bwing3-secret",
                 "bwing3");
 
             var client = new AuthenticationClient(authenticationInfo);
 
-            var signInParams = new SingleSignOnParams("1", 343434, "membername");
+            var signInParams = new SingleSignOnParams(
+                "1", 
+                343434, 
+                "membername",
+                Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
+                Request.Headers["User-Agent"].ToString());
 
             singleSignOnResult = await client.SingleSignOnAsync(signInParams);
         }

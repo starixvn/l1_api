@@ -31,7 +31,7 @@ namespace L1.Client
 
         public Uri RedirectUri { get; }
 
-        public bool IsSuccessful => Code == SuccessCode;
+        public bool IsSuccessful() => Code == SuccessCode;
 
         public static SingleSignOnResult CreateSuccessResponse(string redirectUrl)
             => new SingleSignOnResult(SuccessCode, string.Empty, new Uri(redirectUrl));

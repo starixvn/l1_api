@@ -22,7 +22,7 @@ namespace L1.Client
                 Address = disco.TokenEndpoint,
                 ClientId = authenticationInfo.ClientId,
                 ClientSecret = authenticationInfo.ClientSecret,
-                Scope = authenticationInfo.SiteName
+                Scope = authenticationInfo.SiteId
             });
 
             if (tokenResponse.IsError)

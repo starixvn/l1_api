@@ -9,13 +9,13 @@ namespace L1.Client
             Uri authUri,
             string clientId, 
             string clientSecret, 
-            string siteName)
+            string siteId)
         {
             ApiUri = apiUri;
             AuthUri = authUri;
             ClientId = clientId;
             ClientSecret = clientSecret;
-            SiteName = siteName;
+            SiteId = siteId;
         }
 
         public Uri ApiUri { get; }
@@ -26,6 +26,6 @@ namespace L1.Client
 
         public string ClientSecret { get; }
 
-        public string SiteName { get; }
+        public string SiteId { get; }
     }
 }

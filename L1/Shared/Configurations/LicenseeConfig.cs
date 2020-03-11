@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace L1.Shared.Configurations
+﻿namespace L1.Shared.Configurations
 {
     public class LicenseeConfig
     {
@@ -11,5 +9,7 @@ namespace L1.Shared.Configurations
         public string ClientId { get; set; }
 
         public string ClientSecret { get; set; }
+
+        public string GameServerUrl { get; set; }
     }
 }

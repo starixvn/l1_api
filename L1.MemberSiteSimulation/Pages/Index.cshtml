@@ -4,7 +4,24 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    Redirect Url: <a href="@(Model.singleSignOnResult.RedirectUri)">@(Model.singleSignOnResult.RedirectUri)</a>
-    
-</div>
+    <div class="text-left">
+        <form method="post">
+            <label for="MemberId">Member ID:</label>
+            <input asp-for="MemberId" />
+            <br />
+            <label for="MemberName">Member Username:</label>
+            <input asp-for="MemberName" />
+            <br />
+            <input type="submit" value="SSO" />
+        </form>
+    </div>
+    <div class="text-center">
+        
+
+        @if (!string.IsNullOrWhiteSpace(Model.SingleSignOnResult?.RedirectUri?.ToString()))
+        {
+            @:Redirect Url: 
+            <a href="@(Model.SingleSignOnResult.RedirectUri)">@(Model.SingleSignOnResult.RedirectUri)</a>
+        }
+
+    </div>

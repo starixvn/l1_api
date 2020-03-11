@@ -19,11 +19,13 @@ namespace L1.Features.Authentications
     public class MemberAuthDataAccess : IMemberAuthDataAccess
     {
         private const string collectionName = "MemberAuths";
+        private const string databaseName = "member";
         private readonly IMongoCollection<MemberAuth> memberAuthCollection;
 
-        public MemberAuthDataAccess(IMongoDatabase mongoDatabase)
+        public MemberAuthDataAccess(IMongoClient mongoClient)
         {
-            memberAuthCollection = mongoDatabase.GetCollection<MemberAuth>(collectionName);
+            var database = mongoClient.GetDatabase(databaseName);
+            memberAuthCollection = database.GetCollection<MemberAuth>(collectionName);
         }
 
         public IEnumerable<MemberAuth> GetAll() =>
@@ -38,7 +40,6 @@ namespace L1.Features.Authentications
         public MemberAuth Create(MemberAuth memberAuth)
         {
             memberAuthCollection.InsertOne(memberAuth);
-            var returnedData = GetByToken(memberAuth.Token);
             return memberAuth;
         }
 

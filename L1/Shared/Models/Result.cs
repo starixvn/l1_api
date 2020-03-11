@@ -13,12 +13,13 @@ namespace L1.Shared.Models
 
     public class SingleSignOnResult : IResult
     {
-        private const int SuccessCode = 0;
-        private const int ClientIdDoesNotExistCode = 1;
-        private const int WrongClientSecretCode = 2;
-        private const int ApiServerNotExistCode = 3;
-        private const int IdentityServerNotExistCode = 4;
-        private const int ServerErrorCode = 5;
+        public const int SuccessCode = 0;
+        public const int ClientIdDoesNotExistCode = 1;
+        public const int WrongClientSecretCode = 2;
+        public const int ApiServerNotExistCode = 3;
+        public const int IdentityServerNotExistCode = 4;
+        public const int ServerErrorCode = 5;
+        public const int GameServerNotFoundCode = 6;
 
         public SingleSignOnResult(int code, string message, Uri redirectUri = null)
         {

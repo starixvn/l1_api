@@ -15,27 +15,55 @@ namespace L1.MemberSiteSimulation.Pages
             _logger = logger;
         }
 
-        public SingleSignOnResult singleSignOnResult { get; private set; }
+        public SingleSignOnResult SingleSignOnResult { get; private set; }
+
+        public int MemberId { get; set; } = 1111111;
+
+        public string MemberName { get; set; } = "MemberName";
 
         public async Task OnGet()
         {
+            //var redirectUrl = await GenerateRedirecUrl();
+
+            //if (SingleSignOnResult.IsSuccessful())
+            //{
+            //    // return singleSignOnResult.RedirectUri;
+            //}
+            //else
+            //{
+            //    // Handle Error
+            //}
+        }
+
+        public async Task OnPost()
+        {
+            MemberId = int.Parse(Request.Form[nameof(MemberId)]);
+            MemberName = Request.Form[nameof(MemberName)];
+
+            var redirectUrl = await GenerateRedirecUrl();
+        }
+
+        private async Task<string> GenerateRedirecUrl()
+        {
             var authenticationInfo = new AuthenticationInfo(
-                new Uri("http://localhost:8868/"),
-                new Uri("http://localhost:8898/"),
-                "bwing3-client",
-                "bwing3-secret",
-                "bwing3");
+                            apiUri: new Uri("http://localhost:8868/"),
+                            authUri: new Uri("http://localhost:8898/"),
+                            clientId: "licensee1",
+                            clientSecret: "123licensee1%^&sit",
+                            siteId: "licensee1");
 
             var client = new AuthenticationClient(authenticationInfo);
 
             var signInParams = new SingleSignOnParams(
-                "1", 
-                343434, 
-                "membername",
-                Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
-                Request.Headers["User-Agent"].ToString());
+                siteId: authenticationInfo.SiteId,
+                memberId: MemberId,
+                memberName: MemberName,
+                iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
+                browserUserAgent: Request.Headers["User-Agent"].ToString());
 
-            singleSignOnResult = await client.SingleSignOnAsync(signInParams);
+            SingleSignOnResult = await client.SingleSignOnAsync(signInParams);
+
+            return SingleSignOnResult.RedirectUri.ToString();
         }
     }
 }

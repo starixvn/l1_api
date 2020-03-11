@@ -19,9 +19,8 @@ namespace L1.Shared.Middlewares
         public static void AddMongoDBServices(this IServiceCollection services, AppSettings appSettings)
         {
             var client = new MongoClient(appSettings.MongoDBSettings.ConnectionString);
-            var database = client.GetDatabase(appSettings.MongoDBSettings.DatabaseName);
 
-            services.AddSingleton(database);
+            services.AddSingleton<IMongoClient>(client);
             services.AddSingleton<IMemberAuthDataAccess, MemberAuthDataAccess>();
             services.AddSingleton<IMemberAuthService, MemberAuthService>();
         }

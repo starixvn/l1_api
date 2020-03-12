@@ -16,7 +16,10 @@ namespace L1.Features.Authentications
 
         public string Token { get; set; }
 
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime Time { get; set; }
+
+        public string Language { get; set; }
 
         public int MemberId { get; set; }
 

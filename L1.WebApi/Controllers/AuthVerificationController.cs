@@ -1,4 +1,5 @@
 ﻿using L1.Features.Authentications;
+using L1.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,13 @@ namespace L1.WebApi.Controllers
             this.memberAuthService = memberAuthService;
         }
 
+        [HttpPost, Route("verify")]
+        public VerificationResult Verify(VerificationParams verificationParams)
+        {
+            var result = memberAuthService.VerifyToken(verificationParams);
+
+            return result;
+        }
 
     }
 }

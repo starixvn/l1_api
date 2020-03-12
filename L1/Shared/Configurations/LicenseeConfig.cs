@@ -10,6 +10,6 @@
 
         public string ClientSecret { get; set; }
 
-        public string GameServerUrl { get; set; }
+        public string GameClientUrl { get; set; }
     }
 }

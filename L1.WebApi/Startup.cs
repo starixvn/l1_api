@@ -45,6 +45,8 @@ namespace L1.WebApi
                             ValidAudiences = appSettings.IdentityAudiences
                         };
                     });
+
+                services.AddMvc();
             }
             catch (Exception ex)
             {
@@ -72,8 +74,7 @@ namespace L1.WebApi
 
                 app.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapControllers();
-                    endpoints.MapGet("/", context => context.Response.WriteAsync("Site is running"));
+                    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 });
             }
             catch (Exception ex)
@@ -81,7 +82,7 @@ namespace L1.WebApi
                 LogService.Error(ex.ToString());
             }
 
-            LogService.Info("Site has been started.");
+            LogService.Info("API has been started.");
         }
     }
 }

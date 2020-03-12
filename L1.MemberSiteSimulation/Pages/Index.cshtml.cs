@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Client;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
@@ -17,9 +19,18 @@ namespace L1.MemberSiteSimulation.Pages
 
         public SingleSignOnResult SingleSignOnResult { get; private set; }
 
+        public IEnumerable<Language> Languages => new List<Language>
+        {
+            new Language("en-US", "English"),
+            new Language("zh-CN", "Chinese Simplified"),
+            new Language("zh-TW", "Chinese Traditional")
+        };
+
         public int MemberId { get; set; } = 1111111;
 
         public string MemberName { get; set; } = "MemberName";
+
+        public string Language { get; set; } = "en-US";
 
         public async Task OnGet()
         {
@@ -35,19 +46,22 @@ namespace L1.MemberSiteSimulation.Pages
             //}
         }
 
-        public async Task OnPost()
+        public async Task<IActionResult> OnPost()
         {
             MemberId = int.Parse(Request.Form[nameof(MemberId)]);
             MemberName = Request.Form[nameof(MemberName)];
+            Language = Request.Form[nameof(Language)];
 
             var redirectUrl = await GenerateRedirecUrl();
+
+            return Redirect(redirectUrl);
         }
 
         private async Task<string> GenerateRedirecUrl()
         {
             var authenticationInfo = new AuthenticationInfo(
-                            apiUri: new Uri("http://localhost:8868/"),
-                            authUri: new Uri("http://localhost:8898/"),
+                            apiUri: new Uri("http://api.lumigame.com/"),
+                            authUri: new Uri("http://auth.lumigame.com/"),
                             clientId: "licensee1",
                             clientSecret: "123licensee1%^&sit",
                             siteId: "licensee1");
@@ -58,6 +72,7 @@ namespace L1.MemberSiteSimulation.Pages
                 siteId: authenticationInfo.SiteId,
                 memberId: MemberId,
                 memberName: MemberName,
+                language: Language,
                 iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 browserUserAgent: Request.Headers["User-Agent"].ToString());
 
@@ -65,5 +80,18 @@ namespace L1.MemberSiteSimulation.Pages
 
             return SingleSignOnResult.RedirectUri.ToString();
         }
+    }
+
+    public class Language
+    {
+        public Language(string value, string name)
+        {
+            Value = value;
+            Name = name;
+        }
+
+        public string Value { get; }
+
+        public string Name { get; }
     }
 }

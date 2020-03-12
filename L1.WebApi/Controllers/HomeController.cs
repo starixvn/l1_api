@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace L1.WebApi.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
-        [Route("/home")]
+        [AllowAnonymous]
         public ActionResult Index() => new ContentResult()
         {
-            Content = "Site is running",
+            Content = "Api is running",
             ContentType = "text/html"
         };
     }

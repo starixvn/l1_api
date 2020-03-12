@@ -37,6 +37,7 @@ namespace L1.IdentityServerApi
                 builder.AddDeveloperSigningCredential();
 
                 services.AddControllers();
+                services.AddMvc();
             }
             catch (Exception ex)
             {
@@ -64,8 +65,7 @@ namespace L1.IdentityServerApi
 
                 app.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapControllers();
-                    endpoints.MapGet("/", context => context.Response.WriteAsync("Site is running"));
+                    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 });
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace L1.IdentityServerApi
                 LogService.Error(ex.ToString());
             }
 
-            LogService.Info("Site has been started.");
+            LogService.Info("Auth Server has been started.");
         }
     }
 }

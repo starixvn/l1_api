@@ -10,6 +10,8 @@ namespace L1.Shared.Configurations
 
         string IdentityServer { get; set; }
 
+        int TokenExpiredSeconds { get; set; }
+
         IEnumerable<string> IdentityAudiences { get; set; }
     }
 
@@ -22,5 +24,7 @@ namespace L1.Shared.Configurations
         public string IdentityServer { get; set; }
 
         public IEnumerable<string> IdentityAudiences { get; set; }
+
+        public int TokenExpiredSeconds { get; set; }
     }
 }

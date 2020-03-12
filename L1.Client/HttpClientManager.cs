@@ -11,7 +11,15 @@ namespace L1.Client
 
         public static async Task<string> GetAccessToken(AuthenticationInfo authenticationInfo)
         {
-            var disco = await client.GetDiscoveryDocumentAsync(authenticationInfo.AuthUri.ToString());
+            var request = new DiscoveryDocumentRequest
+            {
+                Address = authenticationInfo.AuthUri.ToString(), //authenticationInfo.AuthUri.ToString(),
+                Policy = new DiscoveryPolicy
+                {
+                    RequireHttps = false
+                }
+            };
+            var disco = await client.GetDiscoveryDocumentAsync(request);
             if (disco.IsError)
             {
                 throw new InvalidOperationException(disco.Error);
@@ -22,7 +30,7 @@ namespace L1.Client
                 Address = disco.TokenEndpoint,
                 ClientId = authenticationInfo.ClientId,
                 ClientSecret = authenticationInfo.ClientSecret,
-                Scope = authenticationInfo.SiteId
+                Scope = authenticationInfo.SiteId,
             });
 
             if (tokenResponse.IsError)

@@ -4,29 +4,31 @@
     ViewData["Title"] = "Home page";
 }
 
-    <div class="text-left">
-        <form method="post">
-            <label for="MemberId">Member ID:</label>
-            <input asp-for="MemberId" />
-            <br />
-            <label for="MemberName">Member Username:</label>
-            <input asp-for="MemberName" />
-            <br />
-            <label for="Language">Language:</label>
-            <select asp-for="Language"
-                    asp-items="@(new SelectList(Model.Languages,"Value","Name", Model.Language))">
-            </select>
-            <br />
-            <input type="submit" value="SSO" />
-        </form>
-    </div>
-    <div class="text-center">
-        
+<div class="text-left">
+    <form method="post">
+        <label for="MemberId">Member ID:</label>
+        <input asp-for="MemberId" />
+        <br />
+        <label for="MemberName">Member Username:</label>
+        <input asp-for="MemberName" />
+        <br />
+        <label for="Language">Language:</label>
+        <select asp-for="Language"
+                asp-items="@(new SelectList(Model.Languages,"Value","Name", Model.Language))">
+        </select>
+        <br />
+        <input type="submit" value="SSO" />
+    </form>
+</div>
 
-        @if (!string.IsNullOrWhiteSpace(Model.SingleSignOnResult?.RedirectUri?.ToString()))
+@(Model.ErrorMessage)
+<div class="text-center">
+    @if (!string.IsNullOrWhiteSpace(Model.SingleSignOnResult?.RedirectUri?.ToString()))
         {
-            @:Redirect Url: 
-            <a href="@(Model.SingleSignOnResult.RedirectUri)">@(Model.SingleSignOnResult.RedirectUri)</a>
+    @:Redirect Url:
+    <a href="@(Model.SingleSignOnResult.RedirectUri)">@(Model.SingleSignOnResult.RedirectUri)</a>
         }
 
-    </div>
+
+
+</div>

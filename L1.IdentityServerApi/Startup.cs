@@ -4,7 +4,7 @@ using L1.Shared.Configurations;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -59,8 +59,12 @@ namespace L1.IdentityServerApi
 
                 app.UseRouting();
 
-                app.UseAuthorization();
+                //app.UseForwardedHeaders(new ForwardedHeadersOptions
+                //{
+                //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                //});
 
+                app.UseAuthorization();
                 app.UseIdentityServer();
 
                 app.UseEndpoints(endpoints =>

@@ -32,9 +32,18 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string Language { get; set; } = "en-US";
 
-        public async Task OnGet()
+        public string ErrorMessage { get; set; }
+
+        public void OnGet()
         {
-            //var redirectUrl = await GenerateRedirecUrl();
+            try
+            {
+                GenerateRedirecUrl().GetAwaiter().GetResult();
+            }
+            catch(Exception ex)
+            {
+                ErrorMessage = ex.ToString();
+            }
 
             //if (SingleSignOnResult.IsSuccessful())
             //{
@@ -48,20 +57,31 @@ namespace L1.MemberSiteSimulation.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            MemberId = int.Parse(Request.Form[nameof(MemberId)]);
-            MemberName = Request.Form[nameof(MemberName)];
-            Language = Request.Form[nameof(Language)];
+            try
+            {
+                MemberId = int.Parse(Request.Form[nameof(MemberId)]);
+                MemberName = Request.Form[nameof(MemberName)];
+                Language = Request.Form[nameof(Language)];
 
-            var redirectUrl = await GenerateRedirecUrl();
+                var redirectUrl = await GenerateRedirecUrl();
 
-            return Redirect(redirectUrl);
+                return Redirect(redirectUrl);
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(ex.ToString());
+            }
         }
 
         private async Task<string> GenerateRedirecUrl()
         {
             var authenticationInfo = new AuthenticationInfo(
                             apiUri: new Uri("http://api.lumigame.com/"),
+                             //apiUri: new Uri("http://10.253.14.11:8868"),
+                             //apiUri: new Uri("http://localhost:8868/"),
+                            //authUri: new Uri("http://10.253.14.11:8898/"),
                             authUri: new Uri("http://auth.lumigame.com/"),
+                            //authUri: new Uri("http://localhost:8898/"),
                             clientId: "licensee1",
                             clientSecret: "123licensee1%^&sit",
                             siteId: "licensee1");

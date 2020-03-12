@@ -36,23 +36,23 @@ namespace L1.MemberSiteSimulation.Pages
 
         public void OnGet()
         {
-            try
-            {
-                GenerateRedirecUrl().GetAwaiter().GetResult();
-            }
-            catch(Exception ex)
-            {
-                ErrorMessage = ex.ToString();
-            }
+            ////try
+            ////{
+            ////    GenerateRedirecUrl().GetAwaiter().GetResult();
+            ////}
+            ////catch(Exception ex)
+            ////{
+            ////    ErrorMessage = ex.ToString();
+            ////}
 
-            //if (SingleSignOnResult.IsSuccessful())
-            //{
-            //    // return singleSignOnResult.RedirectUri;
-            //}
-            //else
-            //{
-            //    // Handle Error
-            //}
+            ////if (SingleSignOnResult.IsSuccessful())
+            ////{
+            ////    // return singleSignOnResult.RedirectUri;
+            ////}
+            ////else
+            ////{
+            ////    // Handle Error
+            ////}
         }
 
         public async Task<IActionResult> OnPost()

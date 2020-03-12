@@ -21,7 +21,6 @@
     </form>
 </div>
 
-@(Model.ErrorMessage)
 <div class="text-center">
     @if (!string.IsNullOrWhiteSpace(Model.SingleSignOnResult?.RedirectUri?.ToString()))
         {

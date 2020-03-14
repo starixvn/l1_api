@@ -13,7 +13,7 @@ namespace L1.Client
         {
             var request = new DiscoveryDocumentRequest
             {
-                Address = authenticationInfo.AuthUri.ToString(), //authenticationInfo.AuthUri.ToString(),
+                Address = authenticationInfo.AuthUri.ToString(),
                 Policy = new DiscoveryPolicy
                 {
                     RequireHttps = false

@@ -9,13 +9,13 @@ namespace L1.Client
             Uri authUri,
             string clientId, 
             string clientSecret, 
-            string siteId)
+            string siteId = null)
         {
             ApiUri = apiUri;
             AuthUri = authUri;
             ClientId = clientId;
             ClientSecret = clientSecret;
-            SiteId = siteId;
+            SiteId = siteId ?? ClientId;
         }
 
         public Uri ApiUri { get; }

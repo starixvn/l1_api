@@ -56,7 +56,7 @@ namespace L1.Features.Authentications
                 return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
             }
 
-            return VerificationResult.CreateSuccessResponse(memberAuth.MemberId, memberAuth.MemberName, memberAuth.SiteId, memberAuth.Language);
+            return VerificationResult.CreateSuccessResponse(memberAuth.MemberId, memberAuth.MemberName, memberAuth.SiteId, memberAuth.Language, memberAuth.Currency);
         }
 
         private string GetGameClientUrl(MemberAuth memberAuth)

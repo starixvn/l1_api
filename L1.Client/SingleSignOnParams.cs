@@ -7,6 +7,7 @@
             int memberId,
             string memberName, 
             string language,
+            string currency,
             string iP, 
             string browserUserAgent)
         {
@@ -14,6 +15,7 @@
             MemberId = memberId;
             MemberName = memberName;
             Language = language;
+            Currency = currency;
             IP = iP;
             BrowserUserAgent = browserUserAgent;
         }
@@ -27,6 +29,8 @@
         public string Language { get; }
 
         public string IP { get; }
+
+        public string Currency { get; }
 
         public string BrowserUserAgent { get; }
     }

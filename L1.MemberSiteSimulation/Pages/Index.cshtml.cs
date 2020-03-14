@@ -83,8 +83,7 @@ namespace L1.MemberSiteSimulation.Pages
                             authUri: new Uri("http://auth.lumigame.com/"),
                             //authUri: new Uri("http://localhost:8898/"),
                             clientId: "licensee1",
-                            clientSecret: "123licensee1%^&sit",
-                            siteId: "licensee1");
+                            clientSecret: "123licensee1%^&sit");
 
             var client = new AuthenticationClient(authenticationInfo);
 
@@ -93,6 +92,7 @@ namespace L1.MemberSiteSimulation.Pages
                 memberId: MemberId,
                 memberName: MemberName,
                 language: Language,
+                currency: "UUS",
                 iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 browserUserAgent: Request.Headers["User-Agent"].ToString());
 

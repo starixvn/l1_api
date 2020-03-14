@@ -38,7 +38,7 @@ namespace L1.Shared.Models
             Message = message;
         }
 
-        public VerificationResult(int code, string message, int memberId, string memberName, string siteId, string language)
+        public VerificationResult(int code, string message, int memberId, string memberName, string siteId, string language, string currency)
             : this(code, message)
         {
             MemberId = memberId;
@@ -46,6 +46,7 @@ namespace L1.Shared.Models
             SiteId = siteId;
             Language = language;
             MemberBalance = 10000000;
+            Currency = currency;
         }
 
         public int MemberId { get; }
@@ -58,13 +59,15 @@ namespace L1.Shared.Models
 
         public decimal MemberBalance { get; } 
 
+        public string Currency { get; }
+
         public string MemberKey => $"{SiteId}_{MemberId}";
 
         public static VerificationResult CreateErrorResponse(int code)
            => new VerificationResult(code, string.Empty);
 
-        public static VerificationResult CreateSuccessResponse(int memberId, string memberName, string siteId, string language)
-            => new VerificationResult(SuccessCode, string.Empty, memberId, memberName, siteId, language);
+        public static VerificationResult CreateSuccessResponse(int memberId, string memberName, string siteId, string language, string currency)
+            => new VerificationResult(SuccessCode, string.Empty, memberId, memberName, siteId, language, currency);
     }
 
     public class SingleSignOnResult : BaseResult

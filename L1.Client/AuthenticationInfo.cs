@@ -16,6 +16,7 @@ namespace L1.Client
             ClientId = clientId;
             ClientSecret = clientSecret;
             SiteId = siteId ?? ClientId;
+
         }
 
         public Uri ApiUri { get; }

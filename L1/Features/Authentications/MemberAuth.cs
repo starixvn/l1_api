@@ -30,5 +30,9 @@ namespace L1.Features.Authentications
         public string SiteId { get; set; }
 
         public string Currency { get; set; }
+
+        public string OWToken { get; set; }
+
+        public string OWSeq { get; set; }
     }
 }

@@ -5,11 +5,13 @@
         public SingleSignOnParams(
             string siteId,
             int memberId,
-            string memberName, 
+            string memberName,
             string language,
             string currency,
-            string iP, 
-            string browserUserAgent)
+            string iP,
+            string browserUserAgent,
+            string owToken,
+            string owSeq)
         {
             SiteId = siteId;
             MemberId = memberId;
@@ -18,6 +20,8 @@
             Currency = currency;
             IP = iP;
             BrowserUserAgent = browserUserAgent;
+            OWToken = owToken;
+            OWSeq = owSeq;
         }
 
         public string SiteId { get; }
@@ -33,5 +37,9 @@
         public string Currency { get; }
 
         public string BrowserUserAgent { get; }
+
+        public string OWToken { get; }
+
+        public string OWSeq { get; }
     }
 }

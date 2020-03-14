@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Fanex.Logging;
+using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +10,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
 
 namespace L1.IdentityServerApi
 {
@@ -30,10 +34,10 @@ namespace L1.IdentityServerApi
                 var appSettings = services.AddSettings(Configuration);
                 services.AddServices(appSettings);
 
+                var sites = getAllSites(appSettings);
                 var builder = services.AddIdentityServer()
-                   .AddInMemoryApiResources(IdentityConfigs.Apis(appSettings.LicenseeConfigs))
-                   .AddInMemoryClients(IdentityConfigs.Clients(appSettings.LicenseeConfigs));
-
+                   .AddInMemoryApiResources(IdentityConfigs.Apis(sites))
+                   .AddInMemoryClients(IdentityConfigs.Clients(sites));
                 builder.AddDeveloperSigningCredential();
 
                 services.AddControllers();
@@ -79,5 +83,15 @@ namespace L1.IdentityServerApi
 
             LogService.Info("Auth Server has been started.");
         }
+
+        private IEnumerable<Site> getAllSites(AppSettings appSettings)
+        {
+            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
+            ConventionRegistry.Register("camelCase", conventionPack, t => true);
+            var client = new MongoClient(appSettings.MongoDBSettings.ConnectionString);
+
+            return new SiteDataAccess(client).GetAll();
+        }
+
     }
 }

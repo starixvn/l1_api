@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Driver;
 
 namespace L1.Features.Authentications
@@ -14,6 +15,8 @@ namespace L1.Features.Authentications
         MemberAuth Create(MemberAuth memberAuth);
 
         void Update(string id, MemberAuth memberAuth);
+
+        MemberAuth GetLatest(MemberAuth memberAuth);
     }
 
     public class MemberAuthDataAccess : IMemberAuthDataAccess
@@ -33,6 +36,13 @@ namespace L1.Features.Authentications
 
         public MemberAuth Get(string id) =>
             memberAuthCollection.Find(memberAuth => memberAuth.Id == id).FirstOrDefault();
+
+        public MemberAuth GetLatest(MemberAuth memberAuth) =>
+            memberAuthCollection
+                .Find(x => x.IP == memberAuth.IP && x.MemberId == memberAuth.MemberId && x.SiteId == memberAuth.SiteId)
+                .SortByDescending(x => x.Time)
+                .Limit(1)
+                .FirstOrDefault();     
 
         public MemberAuth GetByToken(string token) =>
             memberAuthCollection.Find(memberAuth => memberAuth.Token == token).FirstOrDefault();

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using L1.Shared.Configurations;
-using L1.Shared.Models;
-
-namespace L1.Features.Authentications
+﻿namespace L1.Features.Authentications
 {
+    using System;
+    using L1.Features.Sites;
+    using L1.Shared.Configurations;
+    using L1.Shared.Models;
+
     public interface IMemberAuthService
     {
         SingleSignOnResult SignIn(MemberAuth memberAuth);
@@ -15,31 +15,44 @@ namespace L1.Features.Authentications
     public class MemberAuthService : IMemberAuthService
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
+        private readonly ISiteDataAccess siteDataAccess;
         private readonly IAppSettings appSettings;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
+            ISiteDataAccess siteDataAccess,
             IAppSettings appSettings)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
+            this.siteDataAccess = siteDataAccess;
             this.appSettings = appSettings;
         }
 
         public SingleSignOnResult SignIn(MemberAuth memberAuth)
         {
-            var GameClientUrl = GetGameClientUrl(memberAuth);
+            var gameClientUrl = GetGameClientUrl(memberAuth);
 
-            if (string.IsNullOrWhiteSpace(GameClientUrl))
+            if (string.IsNullOrWhiteSpace(gameClientUrl))
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
 
-            memberAuth.Token = Guid.NewGuid().ToString();
-            memberAuth.Time = DateTime.Now;
+            var latestSignIn = memberAuthDataAccess.GetLatest(memberAuth);
 
-            memberAuthDataAccess.Create(memberAuth);
+            string token;
 
-            return SingleSignOnResult.CreateSuccessResponse($"{GameClientUrl.TrimEnd('/')}/?token={memberAuth.Token}");
+            if (latestSignIn != null && latestSignIn.Time.AddSeconds(appSettings.TokenExpiredSeconds) > DateTime.Now)
+            {
+                token = latestSignIn.Token;
+            }
+            else
+            {
+                memberAuth.Token = token = Guid.NewGuid().ToString();
+                memberAuth.Time = DateTime.Now;
+                memberAuthDataAccess.Create(memberAuth);
+            }
+
+            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}");
         }
 
         public VerificationResult VerifyToken(VerificationParams verificationParams)
@@ -61,9 +74,9 @@ namespace L1.Features.Authentications
 
         private string GetGameClientUrl(MemberAuth memberAuth)
         {
-            var getLicenseeConfig = appSettings.LicenseeConfigs.FirstOrDefault(config => config.ClientId == memberAuth.SiteId);
+            var site = siteDataAccess.Get(memberAuth.SiteId);
 
-            return getLicenseeConfig?.GameClientUrl;
+            return site?.GameClientUrl;
         }
     }
 }

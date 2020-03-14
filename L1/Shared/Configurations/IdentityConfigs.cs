@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using IdentityServer4.Models;
+using L1.Features.Sites;
 
 namespace L1.Shared.Configurations
 {
     public static class IdentityConfigs
     {
-        public static IEnumerable<ApiResource> Apis(IEnumerable<LicenseeConfig> licenseeConfigs)
-            => licenseeConfigs.Select(resource => new ApiResource(resource.SiteName, resource.SiteName));
+        public static IEnumerable<ApiResource> Apis(IEnumerable<Site> sites)
+            => sites.Select(resource => new ApiResource(resource.SiteId, resource.SiteId));
 
-        public static IEnumerable<Client> Clients(IEnumerable<LicenseeConfig> licenseeConfig)
-            => licenseeConfig.Select(resource 
+        public static IEnumerable<Client> Clients(IEnumerable<Site> sites)
+            => sites.Select(resource 
                 => new Client
                 {
                     ClientId = resource.ClientId,
@@ -25,7 +26,7 @@ namespace L1.Shared.Configurations
                         },
 
                     // scopes that client has access to
-                    AllowedScopes = { resource.SiteName }
+                    AllowedScopes = { resource.SiteId }
                 });
         }
 }

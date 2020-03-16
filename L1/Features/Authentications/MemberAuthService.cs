@@ -15,16 +15,16 @@
     public class MemberAuthService : IMemberAuthService
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
-        private readonly ISiteDataAccess siteDataAccess;
+        private readonly ISiteDataService siteDataService;
         private readonly IAppSettings appSettings;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
-            ISiteDataAccess siteDataAccess,
+            ISiteDataService siteDataService,
             IAppSettings appSettings)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
-            this.siteDataAccess = siteDataAccess;
+            this.siteDataService = siteDataService;
             this.appSettings = appSettings;
         }
 
@@ -74,7 +74,7 @@
 
         private string GetGameClientUrl(MemberAuth memberAuth)
         {
-            var site = siteDataAccess.Get(memberAuth.SiteId);
+            var site = siteDataService.GetBySiteId(memberAuth.SiteId);
 
             return site?.GameClientUrl;
         }

@@ -34,6 +34,11 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string ErrorMessage { get; set; }
 
+        public string ClientId { get; set; } = "licensee1";
+
+        public string ClientSecret { get; set; } = "123licensee1";
+
+
         public void OnGet()
         {
             ////try
@@ -82,8 +87,8 @@ namespace L1.MemberSiteSimulation.Pages
                             //authUri: new Uri("http://10.253.14.11:8898/"),
                             //authUri: new Uri("http://auth.lumigame.com/"),
                             authUri: new Uri("http://localhost:8898/"),
-                            clientId: "licensee1",
-                            clientSecret: "123licensee1%^&sit");
+                            clientId: ClientId,
+                            clientSecret: ClientSecret);
 
             var client = new AuthenticationClient(authenticationInfo);
 

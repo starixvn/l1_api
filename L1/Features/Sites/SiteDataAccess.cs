@@ -8,7 +8,9 @@
     {
         IEnumerable<Site> GetAll();
 
-        Site Get(string siteId);
+        Site GetByClientId(string id);
+
+        Site GetBySiteId(string id);
     }
 
     public class SiteDataAccess : ISiteDataAccess
@@ -26,7 +28,10 @@
         public IEnumerable<Site> GetAll() =>
             siteCollection.Find(site => true).ToList();
 
-        public Site Get(string id) =>
-            siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
+        public Site GetByClientId(string id) =>
+            siteCollection.Find(site => site.ClientId == id).FirstOrDefault();
+
+        public Site GetBySiteId(string id) =>
+           siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
     }
 }

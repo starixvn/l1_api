@@ -28,6 +28,7 @@ namespace L1.Shared.Middlewares
             services.AddSingleton<IMemberAuthDataAccess, MemberAuthDataAccess>();
             services.AddSingleton<IMemberAuthService, MemberAuthService>();
             services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
+            services.AddSingleton<ISiteDataService, SiteDataService>();
         }
     }
 }

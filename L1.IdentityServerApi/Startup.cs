@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-using Fanex.Logging;
-using L1.Features.Sites;
-using L1.Shared.Configurations;
-using L1.Shared.Middlewares;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-
 namespace L1.IdentityServerApi
 {
+    using System;
+    using Fanex.Logging;
+    using L1.IdentityServerApi.Extensions;
+    using L1.Shared.Middlewares;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -34,11 +30,16 @@ namespace L1.IdentityServerApi
                 var appSettings = services.AddSettings(Configuration);
                 services.AddServices(appSettings);
 
-                var sites = getAllSites(appSettings);
-                var builder = services.AddIdentityServer()
-                   .AddInMemoryApiResources(IdentityConfigs.Apis(sites))
-                   .AddInMemoryClients(IdentityConfigs.Clients(sites));
-                builder.AddDeveloperSigningCredential();
+                var builder = services.AddIdentityServer(options =>
+                {
+                    options.Caching.ResourceStoreExpiration =   TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
+                    options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));
+                })
+                .AddMongoDb(appSettings.MongoDBSettings.ConnectionString)
+                .AddInMemoryCaching()
+                .AddIdentityClients()
+                .AddIdentityApiResources()
+                .AddDeveloperSigningCredential();
 
                 services.AddControllers();
                 services.AddMvc();
@@ -82,15 +83,6 @@ namespace L1.IdentityServerApi
             }
 
             LogService.Info("Auth Server has been started.");
-        }
-
-        private IEnumerable<Site> getAllSites(AppSettings appSettings)
-        {
-            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("camelCase", conventionPack, t => true);
-            var client = new MongoClient(appSettings.MongoDBSettings.ConnectionString);
-
-            return new SiteDataAccess(client).GetAll();
         }
 
     }

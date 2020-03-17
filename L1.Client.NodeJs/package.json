@@ -1,0 +1,13 @@
+{
+  "name": "l1.client.nodejs",
+  "version": "0.0.0",
+  "description": "L1.Client.NodeJs",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "start": "node"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

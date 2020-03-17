@@ -10,8 +10,7 @@
             string currency,
             string iP,
             string browserUserAgent,
-            string owToken,
-            string owSeq)
+            string seq)
         {
             SiteId = siteId;
             MemberId = memberId;
@@ -20,8 +19,7 @@
             Currency = currency;
             IP = iP;
             BrowserUserAgent = browserUserAgent;
-            OWToken = owToken;
-            OWSeq = owSeq;
+            Seq = seq;
         }
 
         public string SiteId { get; }
@@ -38,8 +36,6 @@
 
         public string BrowserUserAgent { get; }
 
-        public string OWToken { get; }
-
-        public string OWSeq { get; }
+        public string Seq { get; }
     }
 }

@@ -49,10 +49,7 @@ namespace L1.MemberSiteSimulation.Pages
         public string ClientSecret { get; set; } = "123licensee1%^&sit";
 
         [BindProperty]
-        public string OWToken { get; set; } = "7699e837-3488-41f2-8ce5-f2816f633339";
-
-        [BindProperty]
-        public string OWSeq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
+        public string Seq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
 
 
         public void OnGet()
@@ -115,8 +112,7 @@ namespace L1.MemberSiteSimulation.Pages
                 currency: Currency,
                 iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 browserUserAgent: Request.Headers["User-Agent"].ToString(),
-                owToken: OWToken,
-                owSeq: OWSeq);
+                seq: Seq);
 
             return await client.SingleSignOnAsync(signInParams);
 

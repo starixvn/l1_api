@@ -16,20 +16,19 @@ $IdentityServerApi = "L1.IdentityServerApi"
 
 # Delete previous compiled
 $DELETE_COMPILED_WEBAPI = "Remove-Item -recurse -path $env:API_COMPILED\$WebApi"
-
-if (Test-Path $DELETE_COMPILED_WEBAPI) {
+if ((Test-Path "$env:API_COMPILED\$WebApi")) {
   Invoke-Expression $DELETE_COMPILED_WEBAPI
 }
 
 $DELETE_COMPILED_IDENTITYSERVER = "Remove-Item -recurse -path $env:API_COMPILED\$IdentityServerApi"
 
-if (Test-Path $DELETE_COMPILED_IDENTITYSERVER) {
+if ((Test-Path "$env:API_COMPILED\$IdentityServerApi")) {
   Invoke-Expression $DELETE_COMPILED_IDENTITYSERVER
 }
 
 # Compile
-$BUILD_WEB_API = "dotnet publish -c release -r linux-x64 -o $env:API_COMPILED\$WebApi"
-$BUILD_IDENTITY_SERVER_API = "dotnet publish -c release -r linux-x64 -o $env:API_COMPILED\$IdentityServerApi"
+$BUILD_WEB_API = "dotnet publish $WebApi -c release -r linux-x64 -o $env:API_COMPILED\$WebApi"
+$BUILD_IDENTITY_SERVER_API = "dotnet publish $IdentityServerApi -c release -r linux-x64 -o $env:API_COMPILED\$IdentityServerApi"
 
 Invoke-Expression $BUILD_WEB_API
 Invoke-Expression $BUILD_IDENTITY_SERVER_API

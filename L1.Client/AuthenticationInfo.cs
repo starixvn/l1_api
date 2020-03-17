@@ -23,9 +23,9 @@ namespace L1.Client
 
         public Uri AuthUri { get; }
 
-        public string ClientId { get; }
+        public string ClientId { get; set; }
 
-        public string ClientSecret { get; }
+        public string ClientSecret { get; set; }
 
         public string SiteId { get; }
     }

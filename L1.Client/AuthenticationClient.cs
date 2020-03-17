@@ -9,7 +9,7 @@ namespace L1.Client
 {
     public interface IAuthenticationClient
     {
-        Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams);
+        Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams, Action<string> errorHandler = null);
     }
 
     public class AuthenticationClient : IAuthenticationClient
@@ -24,24 +24,26 @@ namespace L1.Client
             this.getAccessTokenFunc = getAccessTokenFunc ?? HttpClientManager.GetAccessToken;
         }
 
-        public async Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams)
+        public async Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams, Action<string> errorHandler = null)
         {
             var tokenResponse = await getAccessTokenFunc(authenticationInfo);
 
             if (tokenResponse.IsError)
             {
-                return new SingleSignOnResult(SingleSignOnResult.ServerErrorCode, tokenResponse.Error);
+                errorHandler?.Invoke(tokenResponse.Error);
+                return new SingleSignOnResult(SingleSignOnResult.FailCode, "Failed to login");
             }
 
-            client.SetBearerToken(tokenResponse.AccessToken);
+            client.SetBearerToken("12345");
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
 
             var action = $"{authenticationInfo.ApiUri}signin/index";
             var response = await client.PostAsync(action, paramContent);
             if (!response.IsSuccessStatusCode)
-            { 
-                return SingleSignOnResult.ServerErrorResult;
+            {
+                errorHandler?.Invoke($"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}");
+                return new SingleSignOnResult(SingleSignOnResult.FailCode, "Failed to login");
             }
 
             var redirectUrl = await response.Content.ReadAsStringAsync();

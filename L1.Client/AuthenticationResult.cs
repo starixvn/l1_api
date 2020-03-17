@@ -12,11 +12,7 @@ namespace L1.Client
     public class SingleSignOnResult : IResult
     {
         public const int SuccessCode = 0;
-        public const int ClientIdDoesNotExistCode = 1;
-        public const int WrongClientSecretCode = 2;
-        public const int ApiServerNotExistCode = 3;
-        public const int IdentityServerNotExistCode = 4;
-        public const int ServerErrorCode = 5;
+        public const int FailCode = 1;
 
         public SingleSignOnResult(int code, string message, Uri redirectUri = null)
         {
@@ -36,9 +32,7 @@ namespace L1.Client
         public static SingleSignOnResult CreateSuccessResponse(string redirectUrl)
             => new SingleSignOnResult(SuccessCode, string.Empty, new Uri(redirectUrl));
 
-        public static SingleSignOnResult CreateErrorResponse(int code)
-            => new SingleSignOnResult(code, string.Empty);
-
-        public static SingleSignOnResult ServerErrorResult => new SingleSignOnResult(ServerErrorCode, string.Empty);
+        public static SingleSignOnResult CreateErrorResponse(string message)
+            => new SingleSignOnResult(FailCode, message);
     }
 }

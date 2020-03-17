@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Client;
+using L1.MemberSiteSimulation.Config;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace L1.MemberSiteSimulation.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly AppSettings appSettings;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger, IOptions<AppSettings> options)
         {
             _logger = logger;
+            appSettings = options.Value;
         }
 
         public SingleSignOnResult SingleSignOnResult { get; private set; }
@@ -41,7 +45,7 @@ namespace L1.MemberSiteSimulation.Pages
         public string ClientSecret { get; set; } = "123licensee1%^&sit";
 
 
-        public string OWToken { get; set; } 
+        public string OWToken { get; set; }
 
         public string OWSeq { get; set; }
 
@@ -86,7 +90,7 @@ namespace L1.MemberSiteSimulation.Pages
                     return Page();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new JsonResult(ex.ToString());
             }
@@ -95,12 +99,8 @@ namespace L1.MemberSiteSimulation.Pages
         private async Task<SingleSignOnResult> SingleSignOnAsync()
         {
             var authenticationInfo = new AuthenticationInfo(
-                            //apiUri: new Uri("http://api.lumigame.com/"),
-                             //apiUri: new Uri("http://10.253.14.11:8868"),
-                             apiUri: new Uri("http://localhost:8868/"),
-                            //authUri: new Uri("http://10.253.14.11:8898/"),
-                            //authUri: new Uri("http://auth.lumigame.com/"),
-                            authUri: new Uri("http://localhost:8898/"),
+                            apiUri: new Uri(appSettings.ApiUrl),
+                            authUri: new Uri(appSettings.AuthUrl),
                             clientId: ClientId,
                             clientSecret: ClientSecret);
 
@@ -114,7 +114,7 @@ namespace L1.MemberSiteSimulation.Pages
                 currency: Currency,
                 iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 browserUserAgent: Request.Headers["User-Agent"].ToString(),
-                owToken:OWToken,
+                owToken: OWToken,
                 owSeq: OWSeq);
 
             return await client.SingleSignOnAsync(signInParams);

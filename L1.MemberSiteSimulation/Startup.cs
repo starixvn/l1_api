@@ -1,3 +1,4 @@
+using L1.MemberSiteSimulation.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -19,6 +20,7 @@ namespace L1.MemberSiteSimulation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddRazorPages();
         }
 

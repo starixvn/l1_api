@@ -13,8 +13,6 @@ namespace L1.Shared.Middlewares
 {
     public static class ErrorHandlingMiddleware
     {
-        private const int InternalErrorServerCode = 500;
-
         public static void AddLogging(this IServiceCollection services, IConfiguration configuration)
         {
             LogManager
@@ -39,7 +37,7 @@ namespace L1.Shared.Middlewares
 
                     await ExceptionHandler.HandleAsync(exception, context, customInfo);
 
-                    context.Response.StatusCode = InternalErrorServerCode;
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     context.Response.ContentType = "application/json";
                     await context.Response.WriteAsync(exception?.Message);
                 });

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using L1.Shared.Constants;
     using MongoDB.Driver;
 
     public interface ISiteDataAccess
@@ -16,12 +17,11 @@
     public class SiteDataAccess : ISiteDataAccess
     {
         private const string collectionName = "sites";
-        private const string databaseName = "config";
         private readonly IMongoCollection<Site> siteCollection;
 
         public SiteDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(databaseName);
+            var database = mongoClient.GetDatabase(MongoDatabase.Config);
             siteCollection = database.GetCollection<Site>(collectionName);
         }
 

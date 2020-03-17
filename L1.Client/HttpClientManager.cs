@@ -9,7 +9,7 @@ namespace L1.Client
     {
         private static readonly HttpClient client = new HttpClient();
 
-        public static async Task<string> GetAccessToken(AuthenticationInfo authenticationInfo)
+        public static async Task<TokenResponse> GetAccessToken(AuthenticationInfo authenticationInfo)
         {
             var request = new DiscoveryDocumentRequest
             {
@@ -33,12 +33,7 @@ namespace L1.Client
                 Scope = authenticationInfo.SiteId,
             });
 
-            if (tokenResponse.IsError)
-            {
-                throw new InvalidOperationException(tokenResponse.Error);
-            }
-
-            return tokenResponse.AccessToken;
+            return tokenResponse;
         }
     }
 }

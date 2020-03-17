@@ -32,11 +32,18 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string Language { get; set; } = "en-US";
 
+        public string Currency { get; set; } = "UUS";
+
         public string ErrorMessage { get; set; }
 
         public string ClientId { get; set; } = "licensee1";
 
-        public string ClientSecret { get; set; } = "123licensee1";
+        public string ClientSecret { get; set; } = "123licensee1%^&sit";
+
+
+        public string OWToken { get; set; } 
+
+        public string OWSeq { get; set; }
 
 
         public void OnGet()
@@ -68,9 +75,16 @@ namespace L1.MemberSiteSimulation.Pages
                 MemberName = Request.Form[nameof(MemberName)];
                 Language = Request.Form[nameof(Language)];
 
-                var redirectUrl = await GenerateRedirecUrl();
+                SingleSignOnResult = await SingleSignOnAsync();
 
-                return Redirect(redirectUrl);
+                if (SingleSignOnResult.IsSuccessful())
+                {
+                    return Redirect(SingleSignOnResult.RedirectUri.ToString());
+                }
+                else
+                {
+                    return Page();
+                }
             }
             catch(Exception ex)
             {
@@ -78,7 +92,7 @@ namespace L1.MemberSiteSimulation.Pages
             }
         }
 
-        private async Task<string> GenerateRedirecUrl()
+        private async Task<SingleSignOnResult> SingleSignOnAsync()
         {
             var authenticationInfo = new AuthenticationInfo(
                             //apiUri: new Uri("http://api.lumigame.com/"),
@@ -97,15 +111,14 @@ namespace L1.MemberSiteSimulation.Pages
                 memberId: MemberId,
                 memberName: MemberName,
                 language: Language,
-                currency: "UUS",
+                currency: Currency,
                 iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 browserUserAgent: Request.Headers["User-Agent"].ToString(),
-                owToken: "",
-                owSeq: "");
+                owToken:OWToken,
+                owSeq: OWSeq);
 
-            SingleSignOnResult = await client.SingleSignOnAsync(signInParams);
+            return await client.SingleSignOnAsync(signInParams);
 
-            return SingleSignOnResult.RedirectUri.ToString();
         }
     }
 

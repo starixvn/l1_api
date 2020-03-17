@@ -16,9 +16,9 @@ namespace L1.Client
     {
         private static readonly HttpClient client = new HttpClient();
         private readonly AuthenticationInfo authenticationInfo;
-        private readonly Func<AuthenticationInfo, Task<string>> getAccessTokenFunc;
+        private readonly Func<AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc;
 
-        public AuthenticationClient(AuthenticationInfo authenticationInfo, Func<AuthenticationInfo, Task<string>> getAccessTokenFunc = null)
+        public AuthenticationClient(AuthenticationInfo authenticationInfo, Func<AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc = null)
         {
             this.authenticationInfo = authenticationInfo;
             this.getAccessTokenFunc = getAccessTokenFunc ?? HttpClientManager.GetAccessToken;
@@ -26,9 +26,14 @@ namespace L1.Client
 
         public async Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams)
         {
-            var accessToken = await getAccessTokenFunc(authenticationInfo);
+            var tokenResponse = await getAccessTokenFunc(authenticationInfo);
 
-            client.SetBearerToken(accessToken);
+            if (tokenResponse.IsError)
+            {
+                return new SingleSignOnResult(SingleSignOnResult.ServerErrorCode, tokenResponse.Error);
+            }
+
+            client.SetBearerToken(tokenResponse.AccessToken);
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using L1.Shared.Constants;
 using MongoDB.Driver;
 
 namespace L1.Features.Authentications
@@ -21,13 +22,12 @@ namespace L1.Features.Authentications
 
     public class MemberAuthDataAccess : IMemberAuthDataAccess
     {
-        private const string collectionName = "MemberAuths";
-        private const string databaseName = "member";
+        private const string collectionName = "member_auths";
         private readonly IMongoCollection<MemberAuth> memberAuthCollection;
 
         public MemberAuthDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(databaseName);
+            var database = mongoClient.GetDatabase(MongoDatabase.Member);
             memberAuthCollection = database.GetCollection<MemberAuth>(collectionName);
         }
 

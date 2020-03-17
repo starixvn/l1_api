@@ -30,12 +30,16 @@ namespace L1.MemberSiteSimulation.Pages
             new Language("zh-TW", "Chinese Traditional")
         };
 
+        [BindProperty]
         public int MemberId { get; set; } = 1111111;
 
+        [BindProperty]
         public string MemberName { get; set; } = "MemberName";
 
+        [BindProperty]
         public string Language { get; set; } = "en-US";
 
+        [BindProperty]
         public string Currency { get; set; } = "UUS";
 
         public string ErrorMessage { get; set; }
@@ -44,10 +48,11 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string ClientSecret { get; set; } = "123licensee1%^&sit";
 
+        [BindProperty]
+        public string OWToken { get; set; } = "7699e837-3488-41f2-8ce5-f2816f633339";
 
-        public string OWToken { get; set; }
-
-        public string OWSeq { get; set; }
+        [BindProperty]
+        public string OWSeq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
 
 
         public void OnGet()
@@ -75,10 +80,6 @@ namespace L1.MemberSiteSimulation.Pages
         {
             try
             {
-                MemberId = int.Parse(Request.Form[nameof(MemberId)]);
-                MemberName = Request.Form[nameof(MemberName)];
-                Language = Request.Form[nameof(Language)];
-
                 SingleSignOnResult = await SingleSignOnAsync();
 
                 if (SingleSignOnResult.IsSuccessful())

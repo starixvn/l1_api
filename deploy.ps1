@@ -27,8 +27,8 @@ if ((Test-Path "$env:API_COMPILED\$IdentityServerApi")) {
 }
 
 # Compile
-$BUILD_WEB_API = "dotnet publish $WebApi -c release -r linux-x64 -o $env:API_COMPILED\$WebApi"
-$BUILD_IDENTITY_SERVER_API = "dotnet publish $IdentityServerApi -c release -r linux-x64 -o $env:API_COMPILED\$IdentityServerApi"
+$BUILD_WEB_API = "dotnet publish $WebApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$WebApi"
+$BUILD_IDENTITY_SERVER_API = "dotnet publish $IdentityServerApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$IdentityServerApi"
 
 Invoke-Expression $BUILD_WEB_API
 Invoke-Expression $BUILD_IDENTITY_SERVER_API

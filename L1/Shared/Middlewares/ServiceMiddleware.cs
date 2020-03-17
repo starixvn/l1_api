@@ -1,5 +1,4 @@
 ﻿using System;
-using Fanex.Data.Repository;
 using L1.Features.Authentications;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
@@ -13,8 +12,6 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddSingleton<IDynamicRepository, DynamicRepository>();
-
             services.AddSingleton<Func<DateTimeOffset>>(() => DateTimeOffset.Now);
         }
 

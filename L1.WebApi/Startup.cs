@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using Fanex.Logging;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -66,7 +64,6 @@ namespace L1.WebApi
                 }
 
                 app.ConfigureExceptionHandler();
-                //app.UseDatabase(Configuration);
 
                 app.UseRouting();
 

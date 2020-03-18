@@ -2,7 +2,7 @@
   "name": "l1.client.node-js",
   "version": "0.1.0",
   "private": true,
-  "main": "test",
+  "main": "simulation",
   "scripts": {
     "dev": "nodemon .",
     "start": "node ."
@@ -12,6 +12,7 @@
     "nodemon": "^2.0.2"
   },
   "dependencies": {
-    "openid-client": "^3.14.0"
+    "openid-client": "^3.14.0",
+    "request": "^2.88.2"
   }
 }

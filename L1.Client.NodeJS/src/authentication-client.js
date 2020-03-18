@@ -1,11 +1,16 @@
 const { Issuer } = require("openid-client");
+const { SingleSignOnResult } = require("./authentication-response");
+const request = require("request");
 
 const getAccessTokenDefault = async authenticationInfo => {
   const issuer = await Issuer.discover(authenticationInfo.authUrl);
   const Client = issuer.Client;
   const client = new Client(authenticationInfo.getMetadata());
-  console.log(client);
-  //console.log(issuer);
+  const tokenAccess = await client.requestObject();
+  const data = await client.requestResource(`${authenticationInfo.apiUrl}signin/index`, tokenAccess)
+
+  console.log(data.body.toString());
+  return tokenAccess;
 };
 
 class AuthenticationClient {
@@ -15,9 +20,18 @@ class AuthenticationClient {
   }
 
   async singleSignOnAsync(signOnParams) {
-    const tokenResponse = await this.getAccessToken(this.authenticationInfo);
+    const token = await this.getAccessToken(this.authenticationInfo);
+    const url = `${this.authenticationInfo.apiUrl}signin/index`;
 
-    console.log(tokenResponse);
+    request({
+      url,
+      method: 'POST',
+      auth: {
+        bearer: token.substr(0, token.length - 1)
+      }
+    }, (error, res) => {
+      const fs = require("fs");
+    });
   }
 }
 

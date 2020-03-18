@@ -11,11 +11,12 @@ namespace L1.Shared.Configurations
         int TokenExpiredSeconds { get; set; }
 
         IEnumerable<string> IdentityAudiences { get; set; }
+
+        OWServiceSettings OWServiceSettings { get; set; }
     }
 
     public class AppSettings : IAppSettings
     {
-
         public MongoDBSettings MongoDBSettings { get; set; }
 
         public string IdentityServer { get; set; }
@@ -23,5 +24,7 @@ namespace L1.Shared.Configurations
         public IEnumerable<string> IdentityAudiences { get; set; }
 
         public int TokenExpiredSeconds { get; set; }
+
+        public OWServiceSettings OWServiceSettings { get; set; }
     }
 }

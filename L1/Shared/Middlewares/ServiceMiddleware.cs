@@ -15,7 +15,7 @@ namespace L1.Shared.Middlewares
             services.AddSingleton<Func<DateTimeOffset>>(() => DateTimeOffset.Now);
         }
 
-        public static void AddMongoDBServices(this IServiceCollection services, AppSettings appSettings)
+        public static void AddMongoDBServices(this IServiceCollection services, IAppSettings appSettings)
         {
             var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
             ConventionRegistry.Register("camelCase", conventionPack, t => true);

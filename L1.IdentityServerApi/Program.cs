@@ -15,9 +15,9 @@ namespace L1.IdentityServerApi
         public static IWebHostBuilder CreateHostBuilder(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                  .SetBasePath(Directory.GetCurrentDirectory())
-                  .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                  .Build();
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
 
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()

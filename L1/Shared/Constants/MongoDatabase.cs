@@ -2,6 +2,7 @@
 {
     public static class MongoDatabase
     {
+        public const string Admin = "admin";
         public const string Config = "config";
         public const string Member = "member";
     }

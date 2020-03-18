@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="IdentityServer4" Version="3.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\L1\L1.csproj" />
-  </ItemGroup>
-
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="IdentityServer4" Version="3.1.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\L1\L1.csproj" />
+    </ItemGroup>
 </Project>

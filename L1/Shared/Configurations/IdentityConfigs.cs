@@ -11,7 +11,7 @@ namespace L1.Shared.Configurations
             => sites.Select(resource => new ApiResource(resource.SiteId, resource.SiteId));
 
         public static IEnumerable<Client> Clients(IEnumerable<Site> sites)
-            => sites.Select(resource 
+            => sites.Select(resource
                 => new Client
                 {
                     ClientId = resource.ClientId,
@@ -28,5 +28,5 @@ namespace L1.Shared.Configurations
                     // scopes that client has access to
                     AllowedScopes = { resource.SiteId }
                 });
-        }
+    }
 }

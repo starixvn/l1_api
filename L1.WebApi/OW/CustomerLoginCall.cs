@@ -1,6 +1,4 @@
-﻿
-
-namespace L1.WebApi.OW
+﻿namespace L1.WebApi.OW
 {
     using L1.Features.OWCommunicators;
 

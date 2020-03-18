@@ -3,7 +3,6 @@
     using System;
     using L1.Features.Sites;
     using L1.Shared.Configurations;
-    using L1.Shared.Models;
 
     public interface IMemberAuthService
     {
@@ -70,10 +69,10 @@
             }
 
             return VerificationResult.CreateSuccessResponse(
-                memberAuth.MemberId, 
-                memberAuth.MemberName, 
+                memberAuth.MemberId,
+                memberAuth.MemberName,
                 memberAuth.SiteId,
-                memberAuth.Language, 
+                memberAuth.Language,
                 memberAuth.Currency,
                 memberAuth.Seq);
         }

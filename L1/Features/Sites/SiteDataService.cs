@@ -1,5 +1,4 @@
-﻿
-namespace L1.Features.Sites
+﻿namespace L1.Features.Sites
 {
     using System.Collections.Generic;
 

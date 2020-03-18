@@ -1,5 +1,4 @@
-﻿
-namespace L1.WebApi.Models
+﻿namespace L1.WebApi.Models
 {
     using System.ComponentModel.DataAnnotations;
 

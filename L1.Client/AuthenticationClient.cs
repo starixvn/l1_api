@@ -34,7 +34,7 @@ namespace L1.Client
                 return new SingleSignOnResult(SingleSignOnResult.FailCode, "Failed to login");
             }
 
-            client.SetBearerToken("12345");
+            client.SetBearerToken(tokenResponse.AccessToken);
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
 

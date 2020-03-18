@@ -25,6 +25,14 @@ namespace L1.Client
                 throw new InvalidOperationException(disco.Error);
             }
 
+            var credential = new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = authenticationInfo.ClientId,
+                ClientSecret = authenticationInfo.ClientSecret,
+                Scope = authenticationInfo.SiteId,
+            };
+
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,

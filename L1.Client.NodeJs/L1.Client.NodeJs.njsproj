@@ -20,12 +20,14 @@
     <NodejsPort>1337</NodejsPort>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="index.js" />
     <Content Include="package.json" />
     <Content Include="src\authentication-client.js" />
     <Content Include="src\authentication-info.js" />
     <Content Include="src\authentication-request.js" />
     <Content Include="src\authentication-response.js" />
     <Content Include="simulation\index.js" />
+    <Content Include="src\index.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />

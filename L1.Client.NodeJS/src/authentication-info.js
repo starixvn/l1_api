@@ -8,11 +8,11 @@ class AuthenticationInfo {
   }
 
   getMetadata() {
-    return ({
+    return {
       client_id: this.clientId,
       client_secret: this.clientSecret,
       site_id: this.siteId
-    })
+    };
   }
 }
 

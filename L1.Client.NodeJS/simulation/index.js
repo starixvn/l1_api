@@ -4,11 +4,23 @@ const AuthClient = require("../src/authentication-client");
 
 const authInfo = new AuthInfo(
   "http://api.lumigame.com/",
-  "http://auth.lumigame.com",
-  "1234321",
+  "http://auth.lumigame.com/",
+  "licensee1",
   "123licensee1%^&sit",
-  "NODE_CLIENT",
-  "NODE_SITE"
+  "",
+  "licensee1"
 );
+
+var signInParams = new SingleSignOnParams(
+  "licensee1",
+  12344321,
+  "MemberName",
+  "en-US",
+  "UUS",
+  "0.0.0.0",
+  "Browser Agent"
+);
+
 const client = new AuthClient(authInfo);
-client.singleSignOnAsync()
+
+client.singleSignOnAsync(signInParams).then(console.log);

@@ -1,16 +1,19 @@
 const { Issuer } = require("openid-client");
 const { SingleSignOnResult } = require("./authentication-response");
-const request = require("request");
+const Axios = require("axios").default;
 
 const getAccessTokenDefault = async authenticationInfo => {
-  const issuer = await Issuer.discover(authenticationInfo.authUrl);
-  const Client = issuer.Client;
-  const client = new Client(authenticationInfo.getMetadata());
-  const tokenAccess = await client.requestObject();
-  const data = await client.requestResource(`${authenticationInfo.apiUrl}signin/index`, tokenAccess)
+  const token = await Issuer.discover(authenticationInfo.authUrl)
+    .then(issuer => new issuer.Client(authenticationInfo.getMetadata()))
+    .then(client =>
+      client.grant({
+        grant_type: "client_credentials",
+        ...authenticationInfo.getMetadata()
+      })
+    )
+    .catch(SingleSignOnResult.authErrorResponse);
 
-  console.log(data.body.toString());
-  return tokenAccess;
+  return token;
 };
 
 class AuthenticationClient {
@@ -23,15 +26,21 @@ class AuthenticationClient {
     const token = await this.getAccessToken(this.authenticationInfo);
     const url = `${this.authenticationInfo.apiUrl}signin/index`;
 
-    request({
-      url,
-      method: 'POST',
-      auth: {
-        bearer: token.substr(0, token.length - 1)
+    if (token && token.access_token) {
+      const config = {
+        headers: { Authorization: `${token.token_type} ${token.access_token}` }
+      };
+
+      try {
+        const response = await Axios.post(url, signOnParams, config);
+
+        return SingleSignOnResult.createSuccessResponse(response.data);
+      } catch (error) {
+        return SingleSignOnResult.apiErrorResponse(error);
       }
-    }, (error, res) => {
-      const fs = require("fs");
-    });
+    }
+
+    return token ? token : SingleSignOnResult.UnknownErrorResponse;
   }
 }
 

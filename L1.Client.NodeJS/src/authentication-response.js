@@ -11,11 +11,9 @@ class SingleSignOnResult {
 }
 
 SingleSignOnResult.SUCCESS_CODE = 0;
-SingleSignOnResult.CLIENT_ID_DOES_NOT_EXIST_CODE = 0;
-SingleSignOnResult.WRONG_CLIENT_SECRET_CODE = 0;
-SingleSignOnResult.API_SERVER_NOT_EXIST_CODE = 0;
-SingleSignOnResult.IDENTITY_SERVER_NOT_EXIST_CODE = 0;
-SingleSignOnResult.SERVER_ERROR_CODE = 0;
+SingleSignOnResult.AUTH_ERROR_CODE = 1;
+SingleSignOnResult.API_ERROR_CODE = 2;
+SingleSignOnResult.UNKNOWN_ERROR_CODE = 2;
 
 SingleSignOnResult.createSuccessResponse = redirectUrl =>
   new SingleSignOnResult(
@@ -24,11 +22,14 @@ SingleSignOnResult.createSuccessResponse = redirectUrl =>
     new URL(redirectUrl)
   );
 
-SingleSignOnResult.creatErrorResponse = code =>
-  new SingleSignOnResult(code, "");
+SingleSignOnResult.apiErrorResponse = error =>
+  new SingleSignOnResult(SingleSignOnResult.API_ERROR_CODE, error);
 
-SingleSignOnResult.serverErrorResult = new SingleSignOnResult(
-  SingleSignOnResult.SERVER_ERROR_CODE,
+SingleSignOnResult.authErrorResponse = error =>
+  new SingleSignOnResult(SingleSignOnResult.AUTH_ERROR_CODE, error);
+
+SingleSignOnResult.UnknownErrorResponse = new SingleSignOnResult(
+  SingleSignOnResult.UNKNOWN_ERROR_CODE,
   ""
 );
 

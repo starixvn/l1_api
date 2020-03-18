@@ -9,6 +9,9 @@ if (!(Test-Path $env:API_COMPILED)) {
 if ((Get-ChildItem $env:API_COMPILED).Count -eq 0) {
   $CLONE_CMD = "git clone git@gitlab.com:l110/api-compiled.git " + $env:API_COMPILED
   Invoke-Expression $CLONE_CMD
+} else {
+  $PULL_CMD = "git -C $env:API_COMPILED pull"
+  Invoke-Expression $PULL_CMD
 }
 
 $WebApi = "L1.WebApi"

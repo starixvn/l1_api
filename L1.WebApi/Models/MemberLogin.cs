@@ -6,9 +6,14 @@ namespace L1.WebApi.Models
     public class MemberLogin
     {
         [Required]
-        public string MemberId { get; set; }
+        public int MemberId { get; set; }
 
         [Required]
         public string CharacterName { get; set; }
+
+        [Required]
+        public string Seq { get; set; }
+
+        public bool FirstLogin { get; set; }
     }
 }

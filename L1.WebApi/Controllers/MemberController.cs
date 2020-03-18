@@ -1,28 +1,36 @@
 ﻿namespace L1.WebApi.Controllers
 {
-    using L1.Features.Authentications;
+    using System.Threading.Tasks;
+    using L1.Features.OWCommunicators;
     using L1.WebApi.Models;
+    using L1.WebApi.OW;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController, Route("[controller]"), Authorize]
     public class MemberController : ControllerBase
     {
-        private readonly IMemberAuthService memberAuthService;
+        private readonly IOWService oWService;
 
-        public MemberController(IMemberAuthService memberAuthService)
+        public MemberController(IOWService oWService)
         {
-            this.memberAuthService = memberAuthService;
+            this.oWService = oWService;
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult NotifyMemberLogin([FromBody] MemberLogin model)
+        public async Task<IActionResult> NotifyMemberLogin([FromBody] MemberLogin model)
         {
             if (ModelState.IsValid)
             {
                 //TODO: call OW Api to notify member login
-                return Ok();
+                var response = await oWService.Post<OWResult>("/notify-customer-login",
+                    new CustomerLoginCall(model.MemberId, model.Seq, model.CharacterName, model.FirstLogin));
+
+                if (response.Result.ErrorCode == 0)
+                {
+                    return Ok();
+                }
             }
 
             return BadRequest(ModelState);

@@ -2,10 +2,9 @@
   "name": "l1.client.node-js",
   "version": "0.1.0",
   "private": true,
-  "main": "simulation",
+  "main": "demo",
   "scripts": {
-    "dev": "nodemon .",
-    "start": "node ."
+    "dev": "nodemon ."
   },
   "description": "L1.Client.NodeJS",
   "devDependencies": {

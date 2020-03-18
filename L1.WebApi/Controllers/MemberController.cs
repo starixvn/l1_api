@@ -17,10 +17,15 @@
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("character/update")]
-        public IActionResult UpdateCharacterName([FromBody] UpdateCharacterName model)
+        public IActionResult NotifyMemberLogin([FromBody] MemberLogin model)
         {
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                //TODO: call OW Api to notify member login
+                return Ok();
+            }
+
+            return BadRequest(ModelState);
         }
     }
 }

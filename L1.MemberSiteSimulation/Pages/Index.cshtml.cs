@@ -48,6 +48,9 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string ClientSecret { get; set; } = "123licensee1%^&sit";
 
+        public string SiteId { get; set; } = "licensee1";
+
+
         [BindProperty]
         public string Seq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
 
@@ -100,12 +103,14 @@ namespace L1.MemberSiteSimulation.Pages
                             apiUri: new Uri(appSettings.ApiUrl),
                             authUri: new Uri(appSettings.AuthUrl),
                             clientId: ClientId,
-                            clientSecret: ClientSecret);
+                            clientSecret: ClientSecret,
+                            siteId: SiteId);
 
             var client = new AuthenticationClient(authenticationInfo);
 
             var signInParams = new SingleSignOnParams(
-                siteId: authenticationInfo.SiteId,
+                clientId: ClientId,
+                siteId: SiteId,
                 memberId: MemberId,
                 memberName: MemberName,
                 language: Language,

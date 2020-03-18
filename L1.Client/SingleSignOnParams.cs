@@ -3,6 +3,7 @@
     public class SingleSignOnParams
     {
         public SingleSignOnParams(
+            string clientId,
             string siteId,
             int memberId,
             string memberName,
@@ -12,6 +13,7 @@
             string browserUserAgent,
             string seq)
         {
+            ClientId = clientId;
             SiteId = siteId;
             MemberId = memberId;
             MemberName = memberName;
@@ -21,6 +23,8 @@
             BrowserUserAgent = browserUserAgent;
             Seq = seq;
         }
+
+        public string ClientId { get; }
 
         public string SiteId { get; }
 

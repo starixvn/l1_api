@@ -32,5 +32,7 @@ namespace L1.Features.Authentications
         public string Currency { get; set; }
 
         public string Seq { get; set; }
+
+        public string ClientId { get; set; }
     }
 }

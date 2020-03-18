@@ -12,7 +12,7 @@ namespace L1.Shared.Models
     public abstract class BaseResult : IResult
     {
         public const int SuccessCode = 0;
-        public const int ClientIdDoesNotExistCode = 1;
+        public const int ClientIdqDoesNotExistCode = 1;
         public const int WrongClientSecretCode = 2;
         public const int ApiServerNotExistCode = 3;
         public const int IdentityServerNotExistCode = 4;
@@ -38,7 +38,7 @@ namespace L1.Shared.Models
             Message = message;
         }
 
-        public VerificationResult(int code, string message, int memberId, string memberName, string siteId, string language, string currency)
+        public VerificationResult(int code, string message, int memberId, string memberName, string siteId, string language, string currency, string seq)
             : this(code, message)
         {
             MemberId = memberId;
@@ -47,6 +47,7 @@ namespace L1.Shared.Models
             Language = language;
             MemberBalance = 10000000;
             Currency = currency;
+            Seq = seq;
         }
 
         public int MemberId { get; }
@@ -61,13 +62,15 @@ namespace L1.Shared.Models
 
         public string Currency { get; }
 
+        public string Seq { get; }
+
         public string MemberKey => $"{SiteId}_{MemberId}";
 
         public static VerificationResult CreateErrorResponse(int code)
            => new VerificationResult(code, string.Empty);
 
-        public static VerificationResult CreateSuccessResponse(int memberId, string memberName, string siteId, string language, string currency)
-            => new VerificationResult(SuccessCode, string.Empty, memberId, memberName, siteId, language, currency);
+        public static VerificationResult CreateSuccessResponse(int memberId, string memberName, string siteId, string language, string currency, string seq)
+            => new VerificationResult(SuccessCode, string.Empty, memberId, memberName, siteId, language, currency, seq);
     }
 
     public class SingleSignOnResult : BaseResult

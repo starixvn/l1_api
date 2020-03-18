@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,8 +31,8 @@ namespace L1.Client
 
             if (tokenResponse.IsError)
             {
-                errorHandler?.Invoke(tokenResponse.Error);
-                return new SingleSignOnResult(SingleSignOnResult.FailCode, "Failed to login");
+                errorHandler?.Invoke($"{tokenResponse.HttpStatusCode}-{tokenResponse.HttpErrorReason}-{tokenResponse.Raw}");
+                return CreateErrorResultFromResponseStatusCode(tokenResponse.HttpStatusCode);
             }
 
             client.SetBearerToken(tokenResponse.AccessToken);
@@ -43,12 +44,32 @@ namespace L1.Client
             if (!response.IsSuccessStatusCode)
             {
                 errorHandler?.Invoke($"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}");
-                return new SingleSignOnResult(SingleSignOnResult.FailCode, "Failed to login");
+                return CreateErrorResultFromResponseStatusCode(response.StatusCode);
             }
 
             var redirectUrl = await response.Content.ReadAsStringAsync();
 
             return SingleSignOnResult.CreateSuccessResponse(redirectUrl);
+        }
+
+        private SingleSignOnResult CreateErrorResultFromResponseStatusCode(HttpStatusCode httpStatusCode)
+        {
+            if (httpStatusCode == HttpStatusCode.Unauthorized)
+            {
+                return SingleSignOnResult.CreateUnauthorizedErrorResponse();
+            }
+
+            if (httpStatusCode == HttpStatusCode.BadRequest)
+            {
+                return SingleSignOnResult.CreateInvalidDataErrorResponse();
+            }
+
+            if (httpStatusCode == HttpStatusCode.NotFound)
+            {
+                return SingleSignOnResult.CreateServerNotFoundResponse();
+            }
+
+            return SingleSignOnResult.CreateServerErrorResponse();
         }
     }
 }

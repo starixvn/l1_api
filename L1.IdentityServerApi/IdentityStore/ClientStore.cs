@@ -21,17 +21,11 @@
             return Task.FromResult(new Client
             {
                 ClientId = site.ClientId,
-
-                // no interactive user, use the clientid/secret for authentication
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                // secret for authentication
                 ClientSecrets = 
                 {
                     new Secret(site.ClientSecret.Sha256())
                 },
-
-                // scopes that client has access to
                 AllowedScopes = { site.SiteId }
             });
         }

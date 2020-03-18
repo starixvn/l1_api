@@ -59,17 +59,23 @@
         {
             var memberAuth = memberAuthDataAccess.GetByToken(verificationParams.Token);
 
-            if(memberAuth == null)
+            if (memberAuth == null)
             {
                 return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
             }
 
-            if(memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
+            if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
             {
                 return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
             }
 
-            return VerificationResult.CreateSuccessResponse(memberAuth.MemberId, memberAuth.MemberName, memberAuth.SiteId, memberAuth.Language, memberAuth.Currency);
+            return VerificationResult.CreateSuccessResponse(
+                memberAuth.MemberId, 
+                memberAuth.MemberName, 
+                memberAuth.SiteId,
+                memberAuth.Language, 
+                memberAuth.Currency,
+                memberAuth.Seq);
         }
 
         private string GetGameClientUrl(MemberAuth memberAuth)

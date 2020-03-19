@@ -3,18 +3,17 @@
     using System.Threading.Tasks;
     using L1.Features.OWCommunicators;
     using L1.WebApi.Models;
-    using L1.WebApi.OW;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController, Route("[controller]"), Authorize]
     public class MemberController : ControllerBase
     {
-        private readonly IOWService oWService;
+        private readonly IOWCustomerService oWCustomerService;
 
-        public MemberController(IOWService oWService)
+        public MemberController(IOWCustomerService oWCustomerService)
         {
-            this.oWService = oWService;
+            this.oWCustomerService = oWCustomerService;
         }
 
         [HttpPost]
@@ -22,8 +21,8 @@
         public async Task<IActionResult> NotifyMemberLogin([FromBody] MemberLogin model)
         {
 
-            var response = await oWService.Post<OWResult>("/notify-customer-login",
-                new CustomerLoginCall(model.MemberId, model.Seq, model.CharacterName, model.FirstLogin, model.SiteId));
+            var response = await oWCustomerService.NotifyLogin(
+                new NotifyCustomerLoginCall(model.MemberId, model.Seq, model.SiteId, model.CharacterName, model.FirstLogin));
 
             return Ok(response);
         }

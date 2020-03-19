@@ -1,0 +1,8 @@
+{
+  "ignore": [
+    "node_modules/*",
+    "package*.json",
+    "views/*"
+  ],
+  "ext": "js"
+}

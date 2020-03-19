@@ -2,55 +2,55 @@ const Axios = require("axios").default;
 const { Issuer } = require("openid-client");
 
 const handleSuccess = (resolve, callback) => body => {
-    callback && callback(null, body);
-    resolve(body);
+  callback && callback(null, body);
+  resolve(body);
 };
 
 const handleError = (reject, callback) => error => {
-    callback && callback(error);
-    reject(error);
+  callback && callback(error);
+  reject(error);
 };
 
 const verifyToken = ({ apiUrl }) => (params, callback) =>
-    new Promise((resolve, reject) => {
-        Axios.post(`${apiUrl}/AuthVerification/verify`, params)
-            .then(data => data.data)
-            .then(handleSuccess(resolve, callback))
-            .catch(handleError(reject, callback));
-    });
+  new Promise((resolve, reject) => {
+    Axios.post(`${apiUrl}/AuthVerification/verify`, params)
+      .then(data => data.data)
+      .then(handleSuccess(resolve, callback))
+      .catch(handleError(reject, callback));
+  });
 
 const singleSignOn = ({ apiUrl, authUrl, client, siteId }) => (
-    params,
-    callback
+  params,
+  callback
 ) =>
-    new Promise((resolve, reject) => {
-        const metadata = {
-            grant_type: "client_credentials",
-            client_id: client.id,
-            client_secret: client.secret,
-            site_id: siteId
-        };
+  new Promise((resolve, reject) => {
+    const metadata = {
+      grant_type: "client_credentials",
+      client_id: client.id,
+      client_secret: client.secret,
+      site_id: siteId
+    };
 
-        const url = `${apiUrl}/signin/index`;
+    const url = `${apiUrl}/signin/index`;
 
-        Issuer.discover(authUrl)
-            .then(issuer => new issuer.Client(metadata))
-            .then(client => client.grant(metadata))
-            .then(
-                token =>
-                    token.access_token
-                        ? `${token.token_type} ${token.access_token}`
-                        : Promise.reject(token)
-            )
-            .then(token =>
-                Axios.post(url, params, { headers: { Authorization: token } })
-            )
-            .then(data => data.data)
-            .then(handleSuccess(resolve, callback))
-            .catch(handleError(reject, callback));
-    });
+    Issuer.discover(authUrl)
+      .then(issuer => new issuer.Client(metadata))
+      .then(client => client.grant(metadata))
+      .then(
+        token =>
+          token.access_token
+            ? `${token.token_type} ${token.access_token}`
+            : Promise.reject(token)
+      )
+      .then(token =>
+        Axios.post(url, params, { headers: { Authorization: token } })
+      )
+      .then(data => data.data)
+      .then(handleSuccess(resolve, callback))
+      .catch(handleError(reject, callback));
+  });
 
 module.exports = config => ({
-    verifyToken: verifyToken(config),
-    singleSignOn: singleSignOn(config)
+  verifyToken: verifyToken(config),
+  singleSignOn: singleSignOn(config)
 });

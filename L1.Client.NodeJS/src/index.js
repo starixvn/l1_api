@@ -13,7 +13,6 @@ const GameClient = config => {
 
 module.exports = config => {
   const instance = GameClient(config);
-  Object.freeze(GameClient);
 
   return instance;
 };

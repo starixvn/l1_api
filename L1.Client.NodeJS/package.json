@@ -2,9 +2,9 @@
   "name": "l1.client.node-js",
   "version": "0.1.0",
   "private": true,
-  "main": "demo",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon ."
+    "dev": "nodemon demo"
   },
   "description": "L1.Client.NodeJS",
   "devDependencies": {

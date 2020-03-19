@@ -32,3 +32,6 @@ _ReSharper*/
 packages/
 
 _NCrunch_Score247.Backend/
+
+**/node_modules/
+**/GameLobbySimulator/**/**public/bundle.js

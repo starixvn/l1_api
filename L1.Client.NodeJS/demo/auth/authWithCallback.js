@@ -2,44 +2,47 @@ const GameClient = require("../../index")();
 const url = require("url");
 
 const singleSignInParams = {
-    siteId: "licensee1",
-    memberId: 12344321,
-    memberName: "MemberName",
-    language: "en-US",
-    currency: "UUS",
-    ip: "0.0.0.0",
-    browserUserAgent: "Browser Agent"
+  siteId: "licensee1",
+  memberId: 12344321,
+  memberName: "MemberName",
+  language: "en-US",
+  currency: "UUS",
+  ip: "0.0.0.0",
+  browserUserAgent: "Browser Agent",
+  seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b"
 };
 
 const signInParams = {
-    siteId: "licensee1",
-    ip: "0.0.0.0",
-    memberId: 12344321
+  siteId: "licensee1",
+  ip: "0.0.0.0",
+  memberId: 12344321
 };
 
 const withCallback = async () => {
-    console.log("Starting demo Authentication using callback functions");
+  console.log("Starting demo Authentication using callback functions");
 
-    // Single Sign On
-    console.log("\nSingleSignOn\n");
-    GameClient.auth.singleSignOn(singleSignInParams, (error, singleSignOnResult) => {
-        error && console.log(`Single Sign On Error: ${error}`);
+  // Single Sign On
+  console.log("\nSingleSignOn\n");
+  GameClient.auth.singleSignOn(
+    singleSignInParams,
+    (error, singleSignOnResult) => {
+      error && console.log(`Single Sign On Error: ${error}`);
 
-        // Verify Token
-        const token = url.parse(singleSignOnResult, true).query.token;
-        const params = {
-            token,
-            browserUserAgent: "Test",
-            ip: "0.0.0.0"
-        };
+      // Verify Token
+      const token = url.parse(singleSignOnResult, true).query.token;
+      const params = {
+        token,
+        browserUserAgent: "Test",
+        ip: "0.0.0.0"
+      };
 
-        GameClient.auth.verifyToken(params, (error, verifyResult) => {
-            error && console.log(`Verify Token Error: ${error}`);
+      GameClient.auth.verifyToken(params, (error, verifyResult) => {
+        error && console.log(`Verify Token Error: ${error}`);
 
-            console.log(verifyResult);
-        });
-
-    });
-}
+        console.log(verifyResult);
+      });
+    }
+  );
+};
 
 module.exports = withCallback;

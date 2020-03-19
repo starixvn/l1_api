@@ -26,7 +26,7 @@ namespace L1.Features.Authentications
 
         public MemberAuthDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabase.Member);
+            var database = mongoClient.GetDatabase(MongoDatabases.Member);
             memberAuthCollection = database.GetCollection<MemberAuth>(collectionName);
         }
 

@@ -2,6 +2,9 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using L1.Features.OWCommunicators.Resources;
+using L1.Shared.Constants;
+using L1.Shared.Resources;
 using Newtonsoft.Json;
 
 namespace L1.Features.OWCommunicators
@@ -29,15 +32,25 @@ namespace L1.Features.OWCommunicators
             var owRequestBody = new OWRequest(_auth, call);
             var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
             var response = await _httpClient.PostAsync(apiEndpoint, content);
+            OWResponse<T> finalResponse;
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
+                var responseContent = await response.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<OWResponse<T>>(result);
+                finalResponse = JsonConvert.DeserializeObject<OWResponse<T>>(responseContent);
+            }
+            else
+            {
+                finalResponse = await CreateOWNetworkErrorResponse<T>(call, response);
             }
 
-            return await CreateOWNetworkErrorResponse<T>(call, response);
+            if (finalResponse.Result.IsFailed())
+            {
+                MapErrorMessage(finalResponse.Result);
+            }
+
+            return finalResponse;
         }
 
         private static async Task<OWResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response) where T : IOWResult, new()
@@ -54,5 +67,8 @@ namespace L1.Features.OWCommunicators
 
         private static async Task<string> GetErrorResponseContent(HttpResponseMessage response)
             => $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}";
+
+        private static void MapErrorMessage(IOWResult result)
+            => result.ErrorMessage = OWErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? Errors.ResourceManager.GetString(ErrorCodes.InternalError);
     }
 }

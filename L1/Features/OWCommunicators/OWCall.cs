@@ -13,15 +13,15 @@ namespace L1.Features.OWCommunicators
 
     public class OWCall : IOWCall
     {
-        public OWCall(int obCustId)
-            : this(Guid.NewGuid().ToString(), obCustId, string.Empty)
+        public OWCall(int obCustId, string siteId)
+            : this(Guid.NewGuid().ToString(), obCustId, siteId)
         {
         }
 
         public OWCall(string seq, int obCustId, string siteId)
         {
             Seq = seq ?? throw new ArgumentNullException(nameof(seq));
-            SiteId = siteId ?? throw new ArgumentNullException(nameof(SiteId));
+            SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
             ObCustId = obCustId;
         }
 
@@ -30,6 +30,5 @@ namespace L1.Features.OWCommunicators
         public int ObCustId { get; }
 
         public string SiteId { get; }
-
     }
 }

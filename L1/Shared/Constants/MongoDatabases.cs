@@ -1,6 +1,6 @@
 ﻿namespace L1.Shared.Constants
 {
-    public static class MongoDatabase
+    internal static class MongoDatabases
     {
         public const string Admin = "admin";
         public const string Config = "config";

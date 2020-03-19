@@ -20,7 +20,7 @@
 
         public SiteDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabase.Config);
+            var database = mongoClient.GetDatabase(MongoDatabases.Config);
             siteCollection = database.GetCollection<Site>(collectionName);
         }
 

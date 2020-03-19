@@ -1,15 +1,14 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using IdentityModel.Client;
-
+﻿
 namespace L1.Client
 {
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using IdentityModel.Client;
+
     public static class HttpClientManager
     {
-        private static readonly HttpClient client = new HttpClient();
-
-        public static async Task<TokenResponse> GetAccessToken(AuthenticationInfo authenticationInfo)
+        public static async Task<TokenResponse> GetAccessToken(HttpClient client, AuthenticationInfo authenticationInfo)
         {
             var request = new DiscoveryDocumentRequest
             {
@@ -24,14 +23,6 @@ namespace L1.Client
             {
                 throw new InvalidOperationException(disco.Error);
             }
-
-            var credential = new ClientCredentialsTokenRequest
-            {
-                Address = disco.TokenEndpoint,
-                ClientId = authenticationInfo.ClientId,
-                ClientSecret = authenticationInfo.ClientSecret,
-                Scope = authenticationInfo.SiteId,
-            };
 
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {

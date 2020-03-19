@@ -6,15 +6,16 @@ namespace L1.WebApi.OW
 
     public class CustomerLoginCall : OWCall
     {
-        public CustomerLoginCall(int obCustId, string seq, string characcterName, bool firstLogin)
-            : base(seq, obCustId)
+        public CustomerLoginCall(int obCustId, string seq, string characcterName, bool firstLogin, string siteId)
+            : base(seq, obCustId, siteId)
         {
             CharacterName = characcterName;
             FirstLogin = firstLogin;
         }
 
-        public string CharacterName { get; set; }
+        public string CharacterName { get; }
 
-        public bool FirstLogin { get; set; }
+
+        public bool FirstLogin { get; }
     }
 }

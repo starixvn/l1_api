@@ -14,6 +14,10 @@ namespace L1.WebApi.Models
         [Required]
         public string Seq { get; set; }
 
+
+        [Required]
+        public string SiteId { get; set; }
+
         public bool FirstLogin { get; set; }
     }
 }

@@ -17,9 +17,9 @@ namespace L1.Client
     {
         private static readonly HttpClient client = new HttpClient();
         private readonly AuthenticationInfo authenticationInfo;
-        private readonly Func<AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc;
+        private readonly Func<HttpClient, AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc;
 
-        public AuthenticationClient(AuthenticationInfo authenticationInfo, Func<AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc = null)
+        public AuthenticationClient(AuthenticationInfo authenticationInfo, Func<HttpClient, AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc = null)
         {
             this.authenticationInfo = authenticationInfo;
             this.getAccessTokenFunc = getAccessTokenFunc ?? HttpClientManager.GetAccessToken;
@@ -27,7 +27,7 @@ namespace L1.Client
 
         public async Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams, Action<string> errorHandler = null)
         {
-            var tokenResponse = await getAccessTokenFunc(authenticationInfo);
+            var tokenResponse = await getAccessTokenFunc(client, authenticationInfo);
 
             if (tokenResponse.IsError)
             {

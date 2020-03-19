@@ -21,19 +21,11 @@
         [AllowAnonymous]
         public async Task<IActionResult> NotifyMemberLogin([FromBody] MemberLogin model)
         {
-            if (ModelState.IsValid)
-            {
-                //TODO: call OW Api to notify member login
-                var response = await oWService.Post<OWResult>("/notify-customer-login",
-                    new CustomerLoginCall(model.MemberId, model.Seq, model.CharacterName, model.FirstLogin));
 
-                if (response.Result.ErrorCode == 0)
-                {
-                    return Ok();
-                }
-            }
+            var response = await oWService.Post<OWResult>("/notify-customer-login",
+                new CustomerLoginCall(model.MemberId, model.Seq, model.CharacterName, model.FirstLogin, model.SiteId));
 
-            return BadRequest(ModelState);
+            return Ok(response);
         }
     }
 }

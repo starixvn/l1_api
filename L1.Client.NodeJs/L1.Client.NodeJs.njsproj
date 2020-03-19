@@ -10,7 +10,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3be56a2b-5a47-45a2-91c9-a6bc278fbdb7</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>
+    </ProjectHome>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -20,18 +21,20 @@
     <NodejsPort>1337</NodejsPort>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="demo\auth\authWithPromise.js" />
+    <Content Include="demo\auth\index.js" />
     <Content Include="index.js" />
     <Content Include="package.json" />
-    <Content Include="src\authentication-client.js" />
-    <Content Include="src\authentication-info.js" />
-    <Content Include="src\authentication-request.js" />
-    <Content Include="src\authentication-response.js" />
-    <Content Include="simulation\index.js" />
+    <Content Include="demo\index.js" />
+    <Content Include="src\auth.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\index.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="demo\auth\" />
     <Folder Include="src\" />
-    <Folder Include="simulation\" />
+    <Folder Include="demo\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

@@ -1,0 +1,17 @@
+﻿@model OW.SimulatorApi.Models.OW.PlaceBetResult
+
+<form method="post">
+    <label asp-for="ErrorCode"></label>
+    <input asp-for="ErrorCode" />
+    <br />
+    <label asp-for="ErrorDescription"></label>
+    <input asp-for="ErrorDescription" />
+    <br />
+    <label asp-for="Balance"></label>
+    <input asp-for="Balance" />
+    <br />
+    <label asp-for="ObTransId"></label>
+    <input asp-for="ObTransId" />
+    <br />
+    <input type="submit" value="Save" />
+</form>

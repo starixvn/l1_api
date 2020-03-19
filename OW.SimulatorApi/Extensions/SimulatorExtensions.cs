@@ -1,19 +1,17 @@
-﻿
-namespace OW.SimulatorApi.Extensions
+﻿namespace OW.SimulatorApi.Extensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using L1.Features.OWCommunicators;
     using Microsoft.Extensions.DependencyInjection;
+    using OW.SimulatorApi.Models.OW;
 
     public static class SimulatorExtensions
     {
         public static void AddOW(this IServiceCollection services)
         {
-            var baseResult = new OWResult();
-            services.AddSingleton<OWResult>(baseResult);
+            services.AddSingleton(new NotfityCustomerLoginResult());
+            services.AddSingleton(new GetBalanceResult());
+            services.AddSingleton(new PlaceBetResult());
+            services.AddSingleton(new EndGameResult());
+            services.AddSingleton(new VoidGameResult());
         }
     }
 }

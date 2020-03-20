@@ -2,10 +2,10 @@
 
 namespace OW.ApiSimulator.Models.OW
 {
-    public class OWResponse
+    public class OWResponse<T> where T: OWResult
     {
         public DateTimeOffset TimeStamp { get; set; }
 
-        public OWResult Result { get; set; }
+        public T Result { get; set; }
     }
 }

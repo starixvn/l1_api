@@ -1,11 +1,13 @@
-﻿namespace L1.WebApi.Controllers
-{
-    using System.Threading.Tasks;
-    using L1.Features.OWCommunicators;
-    using L1.WebApi.Models;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using L1.Features.OWCommunicators;
+using L1.Features.OWCommunicators.GetBalance;
+using L1.Features.OWCommunicators.NotifyLogin;
+using L1.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
+namespace L1.WebApi.Controllers
+{
     [ApiController, Route("[controller]"), Authorize]
     public class MemberController : ControllerBase
     {
@@ -16,13 +18,35 @@
             this.oWCustomerService = oWCustomerService;
         }
 
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Index()
+        {
+
+            return Ok();
+        }
+
+
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> NotifyMemberLogin([FromBody] MemberLogin model)
+        [Route("[action]")]
+        public async Task<IActionResult> NotifyLogin([FromBody] MemberLogin model)
         {
 
             var response = await oWCustomerService.NotifyLogin(
-                new NotifyCustomerLoginCall(model.MemberId, model.Seq, model.SiteId, model.CharacterName, model.FirstLogin));
+                new NotifyLoginCall(model.MemberId, model.Seq, model.SiteId, model.CharacterName, model.FirstLogin));
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<IActionResult> Balance([FromBody] GetBalance model)
+        {
+
+            var response = await oWCustomerService.GetBalance(
+                new GetBalanceCall(model.Seq, model.MemberId, model.SiteId));
 
             return Ok(response);
         }

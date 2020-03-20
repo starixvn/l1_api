@@ -1,16 +1,16 @@
-﻿
+﻿using System.Threading.Tasks;
+using L1.Features.OWCommunicators.GetBalance;
+using L1.Features.OWCommunicators.NotifyLogin;
+using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using L1.Shared.Configurations;
 
     public interface IOWCustomerService
     {
-        Task<OWResponse<OWResult>> NotifyLogin(NotifyCustomerLoginCall call);
+        Task<OWResponse<OWResult>> NotifyLogin(NotifyLoginCall call);
+
+        Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call);
     }
 
     public class OWCustomerService : IOWCustomerService
@@ -25,9 +25,14 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
         }
 
-        public async Task<OWResponse<OWResult>> NotifyLogin(NotifyCustomerLoginCall call)
+        public async Task<OWResponse<OWResult>> NotifyLogin(NotifyLoginCall call)
         {
             return await oWService.Post<OWResult>(appSettings.OWServiceSettings.NotifyLoginEndPoint, call);
+        }
+
+        public async Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
+        {
+            return await oWService.Post<GetBalanceResult>(appSettings.OWServiceSettings.GetBalanceEndPoint, call);
         }
     }
 }

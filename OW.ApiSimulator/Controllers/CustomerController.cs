@@ -44,7 +44,7 @@ namespace OW.ApiSimulator.Controllers
             var result = serviceProvider.GetRequiredService<NotfityCustomerLoginResult>();
             result.Seq = request.Call?.Seq;
 
-            return Ok(new OWResponse
+            return Ok(new OWResponse<NotfityCustomerLoginResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result
@@ -74,7 +74,7 @@ namespace OW.ApiSimulator.Controllers
             var result = serviceProvider.GetRequiredService<GetBalanceResult>();
             result.Seq = request.Call?.Seq;
 
-            return Ok(new OWResponse
+            return Ok(new OWResponse<GetBalanceResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result
@@ -109,7 +109,7 @@ namespace OW.ApiSimulator.Controllers
                 result.ObCustId = request.Call?.ObCustId;
             }
 
-            return Ok(new OWResponse
+            return Ok(new OWResponse<PlaceBetResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result
@@ -143,7 +143,7 @@ namespace OW.ApiSimulator.Controllers
                 result.ObCustId = request.Call?.ObCustId;
             }
 
-            return Ok(new OWResponse
+            return Ok(new OWResponse<EndGameResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result
@@ -169,14 +169,14 @@ namespace OW.ApiSimulator.Controllers
         [HttpPost]
         public IActionResult VoidGame([FromBody] OWRequest<VoidGameCall> request)
         {
-            var result = serviceProvider.GetRequiredService<EndGameResult>();
+            var result = serviceProvider.GetRequiredService<VoidGameResult>();
             result.Seq = request.Call?.Seq;
             if(result.ErrorCode == 0)
             {
                 result.ObCustId = request.Call?.ObCustId;
             }
 
-            return Ok(new OWResponse
+            return Ok(new OWResponse<VoidGameResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result

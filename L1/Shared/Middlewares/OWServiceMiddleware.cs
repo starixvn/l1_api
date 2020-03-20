@@ -8,10 +8,10 @@ namespace L1.Shared.Middlewares
     {
         public static void AddOWServices(this IServiceCollection services, OWServiceSettings owServiceSettings)
         {
-            services.AddSingleton<IOWAuth>(new OWAuth(owServiceSettings.Login, owServiceSettings.Password));
+            services.AddSingleton(new OWAuth(owServiceSettings.Login, owServiceSettings.Password));
             services.AddScoped<IOWCustomerService, OWCustomerService>();
 
-            services.AddHttpClient<IOWService>(httpClient =>
+            services.AddHttpClient<IOWService, OWService>(httpClient =>
             {
                 httpClient.BaseAddress = owServiceSettings.BaseUrl;
             });

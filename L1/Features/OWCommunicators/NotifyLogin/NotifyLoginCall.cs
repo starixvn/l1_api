@@ -1,8 +1,9 @@
-﻿namespace L1.Features.OWCommunicators
+﻿namespace L1.Features.OWCommunicators.NotifyLogin
+
 {
-    public class NotifyCustomerLoginCall : OWCall
+    public class NotifyLoginCall : OWCall
     {
-        public NotifyCustomerLoginCall(int obCustId, string seq, string siteId, string characcterName, bool firstLogin)
+        public NotifyLoginCall(int obCustId, string seq, string siteId, string characcterName, bool firstLogin)
           : base(seq, obCustId, siteId)
         {
             CharacterName = characcterName;

@@ -15,7 +15,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Features\BalanceChecking\" />
-        <Folder Include="Properties\" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Features\OWCommunicators\Resources\OWErrors.Designer.cs">

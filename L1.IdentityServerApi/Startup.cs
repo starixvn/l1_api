@@ -1,7 +1,6 @@
 namespace L1.IdentityServerApi
 {
     using System;
-    using Fanex.Logging;
     using L1.IdentityServerApi.Extensions;
     using L1.Shared.Middlewares;
     using Microsoft.AspNetCore.Builder;
@@ -26,7 +25,6 @@ namespace L1.IdentityServerApi
         {
             try
             {
-                services.AddLogging(Configuration);
                 var appSettings = services.AddSettings(Configuration);
                 services.AddServices(appSettings);
 
@@ -46,7 +44,6 @@ namespace L1.IdentityServerApi
             }
             catch (Exception ex)
             {
-                LogService.Error(ex.ToString());
             }
         }
 
@@ -79,10 +76,7 @@ namespace L1.IdentityServerApi
             }
             catch (Exception ex)
             {
-                LogService.Error(ex.ToString());
             }
-
-            LogService.Info("Auth Server has been started.");
         }
 
     }

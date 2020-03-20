@@ -20,6 +20,7 @@ namespace L1.WebApi
                   .Build();
 
             return WebHost.CreateDefaultBuilder(args)
+                .UseSentry()
                 .UseStartup<Startup>()
                 .UseUrls($"http://localhost:{configuration["AppSettings:HostingPort"]}");
         }

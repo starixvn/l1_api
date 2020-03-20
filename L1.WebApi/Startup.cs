@@ -1,5 +1,4 @@
 using System;
-using Fanex.Logging;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,7 +23,6 @@ namespace L1.WebApi
         {
             try
             {
-                services.AddLogging(Configuration);
                 var appSettings = services.AddSettings(Configuration);
                 services.AddServices(appSettings);
                 services.AddMongoDBServices(appSettings);
@@ -50,7 +48,6 @@ namespace L1.WebApi
             }
             catch (Exception ex)
             {
-                LogService.Error(ex.ToString());
             }
         }
 
@@ -83,10 +80,7 @@ namespace L1.WebApi
             }
             catch (Exception ex)
             {
-                LogService.Error(ex.ToString());
             }
-
-            LogService.Info("API has been started.");
         }
     }
 }

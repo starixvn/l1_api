@@ -6,12 +6,11 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.1-beta1" />
-        <PackageReference Include="Fanex.Logging.Sentry" Version="1.0.6" />
         <PackageReference Include="IdentityServer4" Version="3.1.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.2" />
         <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
         <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
+        <PackageReference Include="Sentry.AspNetCore" Version="2.1.1" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Features\OWCommunicators\Resources\OWErrors.Designer.cs">

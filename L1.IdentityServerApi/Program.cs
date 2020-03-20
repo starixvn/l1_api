@@ -20,6 +20,7 @@ namespace L1.IdentityServerApi
                 .Build();
 
             return WebHost.CreateDefaultBuilder(args)
+                .UseSentry()
                 .UseStartup<Startup>()
                 .UseUrls($"http://localhost:{configuration["AppSettings:HostingPort"]}");
         }

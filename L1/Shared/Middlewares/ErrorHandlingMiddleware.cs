@@ -1,30 +1,12 @@
 ﻿using System.Collections.Generic;
-using Fanex.Logging;
-using Fanex.Logging.Extensions.AspNetCore;
-using Fanex.Logging.Sentry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Sentry;
 
 namespace L1.Shared.Middlewares
 {
     public static class ErrorHandlingMiddleware
     {
-        public static void AddLogging(this IServiceCollection services, IConfiguration configuration)
-        {
-            LogManager
-                   .SetDefaultLogCategory(configuration["AppSettings:Fanex.Logging:DefaultCategory"])
-                   .Use(new SentryLogging(new SentryEngineOptions
-                   {
-                       Dsn = new Dsn(configuration["AppSettings:Fanex.Logging:SentryUrl"])
-                   }));
-
-            services.AddSingleton(Logger.Log);
-        }
-
         public static void ConfigureExceptionHandler(this IApplicationBuilder app)
         {
             app.UseExceptionHandler(errorApp =>
@@ -34,8 +16,6 @@ namespace L1.Shared.Middlewares
                     var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                     var exception = exceptionHandlerPathFeature?.Error;
                     var customInfo = new Dictionary<string, object>();
-
-                    await ExceptionHandler.HandleAsync(exception, context, customInfo);
 
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     context.Response.ContentType = "application/json";

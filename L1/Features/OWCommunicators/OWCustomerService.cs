@@ -10,7 +10,7 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWCustomerService
     {
-        Task<OWResponse<OWResult>> NotifyLogin(NotifyLoginCall call);
+        Task<OWResponse<NotifyResult>> NotifyLogin(NotifyLoginCall call);
 
         Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call);
 
@@ -32,9 +32,9 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
         }
 
-        public async Task<OWResponse<OWResult>> NotifyLogin(NotifyLoginCall call)
+        public async Task<OWResponse<NotifyResult>> NotifyLogin(NotifyLoginCall call)
         {
-            return await oWService.Post<OWResult>(appSettings.OWServiceSettings.NotifyLoginEndPoint, call);
+            return await oWService.Post<NotifyResult>(appSettings.OWServiceSettings.NotifyLoginEndPoint, call);
         }
 
         public async Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)

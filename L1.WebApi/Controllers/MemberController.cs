@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.OWCommunicators;
+using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.GetBalance;
 using L1.Features.OWCommunicators.NotifyLogin;
+using L1.Features.OWCommunicators.PlaceBet;
+using L1.Features.OWCommunicators.VoidGame;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +26,8 @@ namespace L1.WebApi.Controllers
         [Route("[action]")]
         public async Task<IActionResult> NotifyLogin([FromBody] MemberLogin model)
         {
-
             var response = await oWCustomerService.NotifyLogin(
-                new NotifyLoginCall(model.MemberId, model.Seq, model.SiteId, model.CharacterName, model.FirstLogin));
+                new NotifyLoginCall(model.Seq, model.MemberId, model.SiteId, model.CharacterName, model.FirstLogin));
 
             return Ok(response);
         }
@@ -35,9 +37,41 @@ namespace L1.WebApi.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
-
             var response = await oWCustomerService.GetBalance(
                 new GetBalanceCall(model.Seq, model.MemberId, model.SiteId));
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
+        {
+            var response = await oWCustomerService.PlaceBet(
+                new PlaceBetCall(model.Seq, model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.ChoiceId, model.Amount, model.Currency, model.Ip));
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<IActionResult> EndGame([FromBody] EndGame model)
+        {
+            var response = await oWCustomerService.EndGame(
+                new EndGameCall(model.Seq, model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount));
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
+        {
+            var response = await oWCustomerService.EndGame(
+                new VoidGameCall(model.Seq, model.MemberId, model.SiteId, model.GameRoundId, model.ObTransId, model.Reason));
 
             return Ok(response);
         }

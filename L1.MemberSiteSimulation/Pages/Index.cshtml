@@ -20,6 +20,9 @@
         <label asp-for="Currency">Currency:</label>
         <select asp-for="Currency" asp-items="Model.Currencies"></select>
         <br />
+        <label asp-for="GameId">Game:</label>
+        <select asp-for="GameId" asp-items="@(new SelectList(Model.Games,"Id","Name", Model.GameId))"></select>
+        <br />
         <label asp-for="Seq">Seq:</label>
         <input asp-for="Seq" />
         <br />

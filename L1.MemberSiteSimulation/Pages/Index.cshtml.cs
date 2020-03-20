@@ -31,6 +31,13 @@ namespace L1.MemberSiteSimulation.Pages
             new Language("zh-TW", "Chinese Traditional")
         };
 
+        public IEnumerable<Game> Games => new List<Game>
+        {
+            new Game(1, "Tài Xỉu"),
+            new Game(2, "Xóc Dĩa"),
+            new Game(3, "Bầu Cua")
+        };
+
         public IEnumerable<SelectListItem> Currencies => new List<SelectListItem>
         {
             new SelectListItem("$US", "$US"),
@@ -63,6 +70,7 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string SiteId { get; set; } = "licensee1";
 
+        public int GameId { get; set; } = 1;
 
         [BindProperty]
         public string Seq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
@@ -97,7 +105,7 @@ namespace L1.MemberSiteSimulation.Pages
 
                 if (SingleSignOnResult.IsSuccessful())
                 {
-                    return Redirect(SingleSignOnResult.RedirectUri.ToString());
+                    return Redirect(SingleSignOnResult.RedirectUri.ToString()+$"&gameId={GameId}");
                 }
                 else
                 {
@@ -146,6 +154,19 @@ namespace L1.MemberSiteSimulation.Pages
         }
 
         public string Value { get; }
+
+        public string Name { get; }
+    }
+
+    public class Game
+    {
+        public Game(byte id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        public byte Id { get; }
 
         public string Name { get; }
     }

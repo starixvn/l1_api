@@ -14,9 +14,6 @@
         <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Features\BalanceChecking\" />
-    </ItemGroup>
-    <ItemGroup>
       <Compile Update="Features\OWCommunicators\Resources\OWErrors.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>

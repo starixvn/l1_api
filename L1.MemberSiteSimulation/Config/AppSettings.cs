@@ -1,5 +1,4 @@
-﻿
-namespace L1.MemberSiteSimulation.Config
+﻿namespace L1.MemberSiteSimulation.Config
 {
     public class AppSettings
     {

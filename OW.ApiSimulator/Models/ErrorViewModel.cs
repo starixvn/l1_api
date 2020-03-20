@@ -1,5 +1,3 @@
-using System;
-
 namespace OW.ApiSimulator.Models
 {
     public class ErrorViewModel

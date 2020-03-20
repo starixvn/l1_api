@@ -1,11 +1,11 @@
-﻿namespace L1.IdentityServerApi.Extensions
-{
-    using L1.Features.Sites;
-    using L1.IdentityServerApi.IdentityStore;
-    using Microsoft.Extensions.DependencyInjection;
-    using MongoDB.Bson.Serialization.Conventions;
-    using MongoDB.Driver;
+﻿using L1.Features.Sites;
+using L1.IdentityServerApi.IdentityStore;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
 
+namespace L1.IdentityServerApi.Extensions
+{
     public static class IdentityServerBuilderExtensions
     {
         public static IIdentityServerBuilder AddMongoDb(this IIdentityServerBuilder builder, string connectionString)
@@ -23,7 +23,7 @@
         public static IIdentityServerBuilder AddIdentityClients(this IIdentityServerBuilder builder) =>
             builder.AddClientStoreCache<ClientStore>();
 
-        public static IIdentityServerBuilder AddIdentityApiResources(this IIdentityServerBuilder builder) => 
+        public static IIdentityServerBuilder AddIdentityApiResources(this IIdentityServerBuilder builder) =>
             builder.AddResourceStoreCache<ResourceStore>();
     }
 }

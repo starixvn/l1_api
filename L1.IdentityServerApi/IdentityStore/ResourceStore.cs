@@ -1,13 +1,13 @@
-﻿namespace L1.IdentityServerApi.IdentityStore
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using IdentityServer4.Models;
-    using IdentityServer4.Stores;
-    using L1.Features.Sites;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using IdentityServer4.Models;
+using IdentityServer4.Stores;
+using L1.Features.Sites;
 
+namespace L1.IdentityServerApi.IdentityStore
+{
     public class ResourceStore : IResourceStore
     {
         private readonly ISiteDataService siteDataService;

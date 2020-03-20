@@ -1,15 +1,14 @@
+using System;
+using L1.IdentityServerApi.Extensions;
+using L1.Shared.Middlewares;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 namespace L1.IdentityServerApi
 {
-    using System;
-    using L1.IdentityServerApi.Extensions;
-    using L1.Shared.Middlewares;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -30,7 +29,7 @@ namespace L1.IdentityServerApi
 
                 var builder = services.AddIdentityServer(options =>
                 {
-                    options.Caching.ResourceStoreExpiration =   TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
+                    options.Caching.ResourceStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
                     options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));
                 })
                 .AddMongoDb(appSettings.MongoDBSettings.ConnectionString)
@@ -78,6 +77,5 @@ namespace L1.IdentityServerApi
             {
             }
         }
-
     }
 }

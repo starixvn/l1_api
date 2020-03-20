@@ -1,10 +1,10 @@
-﻿namespace L1.IdentityServerApi.IdentityStore
-{
-    using System.Threading.Tasks;
-    using IdentityServer4.Models;
-    using IdentityServer4.Stores;
-    using L1.Features.Sites;
+﻿using System.Threading.Tasks;
+using IdentityServer4.Models;
+using IdentityServer4.Stores;
+using L1.Features.Sites;
 
+namespace L1.IdentityServerApi.IdentityStore
+{
     public class ClientStore : IClientStore
     {
         private readonly ISiteDataService siteDataService;
@@ -22,7 +22,7 @@
             {
                 ClientId = site.ClientId,
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = 
+                ClientSecrets =
                 {
                     new Secret(site.ClientSecret.Sha256())
                 },

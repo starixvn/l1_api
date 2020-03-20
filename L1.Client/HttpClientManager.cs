@@ -18,6 +18,7 @@ namespace L1.Client
                 }
             };
             var disco = await client.GetDiscoveryDocumentAsync(request);
+
             if (disco.IsError)
             {
                 throw new InvalidOperationException(disco.Error);

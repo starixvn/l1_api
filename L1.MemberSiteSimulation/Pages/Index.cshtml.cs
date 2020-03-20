@@ -76,7 +76,6 @@ namespace L1.MemberSiteSimulation.Pages
         [BindProperty]
         public string Seq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
 
-
         public void OnGet()
         {
             ////try
@@ -106,7 +105,7 @@ namespace L1.MemberSiteSimulation.Pages
 
                 if (SingleSignOnResult.IsSuccessful())
                 {
-                    return Redirect(SingleSignOnResult.RedirectUri.ToString()+$"&gameId={GameId}");
+                    return Redirect(SingleSignOnResult.RedirectUri.ToString() + $"&gameId={GameId}");
                 }
                 else
                 {
@@ -142,7 +141,6 @@ namespace L1.MemberSiteSimulation.Pages
                 seq: Seq);
 
             return await client.SingleSignOnAsync(signInParams);
-
         }
     }
 

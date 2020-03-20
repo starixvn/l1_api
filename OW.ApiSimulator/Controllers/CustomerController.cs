@@ -5,14 +5,12 @@ using OW.ApiSimulator.Models.OW;
 
 namespace OW.ApiSimulator.Controllers
 {
-
     public class CustomerController : Controller
     {
         private readonly IServiceProvider serviceProvider;
 
         public CustomerController(IServiceProvider serviceProvider)
         {
-
             this.serviceProvider = serviceProvider;
         }
 
@@ -171,7 +169,7 @@ namespace OW.ApiSimulator.Controllers
         {
             var result = serviceProvider.GetRequiredService<VoidGameResult>();
             result.Seq = request.Call?.Seq;
-            if(result.ErrorCode == 0)
+            if (result.ErrorCode == 0)
             {
                 result.ObCustId = request.Call?.ObCustId;
             }

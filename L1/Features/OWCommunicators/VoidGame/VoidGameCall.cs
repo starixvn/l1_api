@@ -8,6 +8,7 @@
             ObTransId = obTransId;
             Reason = reason;
         }
+
         public int GameRoundId { get; }
 
         public int ObTransId { get; }

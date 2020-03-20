@@ -56,10 +56,10 @@ Invoke-Expression $BUILD_MEMBER_SITE
 Invoke-Expression $BUILD_OWAPI_SIMULATOR
 
 # Copy GameLobby
-Copy-Item -Path ".\GameLobbySimulator\*" -Destination "$env:API_COMPILED\game-lobby-simulator" -Recurse
+Copy-Item -Path ".\GameLobbySimulator\*" -Destination "$env:API_COMPILED\game-lobby-simulator" -Recurse -Force
 
 # Copy GameClient
-Copy-Item -Path ".\L1.Client.NodeJS\*" -Destination "$env:API_COMPILED\L1.Client.NodeJS" -Recurse
+Copy-Item -Path ".\L1.Client.NodeJS\*" -Destination "$env:API_COMPILED\L1.Client.NodeJS" -Recurse -Force
 
 # Push git
 $CommitMessage = "'deploy-" + (Get-Date -UFormat "%Y%m%d-%H%M%S") + "'"

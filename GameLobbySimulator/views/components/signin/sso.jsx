@@ -1,19 +1,30 @@
 import React from "react";
 import Axios from "axios";
 
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 class SSOSection extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      memberId: 1111111,
-      memberName: "MemberName",
+      memberId: (Math.random() * 10000000) >> 0,
+      memberName: makeid(8),
       language: "en-US",
       currency: "UUS",
       seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       siteId: "licensee1",
       ip: "0.0.0.0",
-      browserUserAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6)",
+      browserUserAgent: navigator.userAgent,
       token: "",
       verifyResult: null
     };
@@ -33,9 +44,17 @@ class SSOSection extends React.Component {
     });
     Axios.post("/signin/sso", request)
       .then(data => data.data)
-      .then(token => this.setState(token));
+      .then(data => (data.error ? Promise.reject(data.error) : data))
+      .then(token => this.setState(token))
+      .catch(this.showAlertError);
 
     event.preventDefault();
+  }
+
+  showAlertError(error) {
+    const errorMessage = JSON.stringify(error, null, 2);
+
+    window.alert(errorMessage);
   }
 
   handleVerifyToken(event) {
@@ -50,7 +69,9 @@ class SSOSection extends React.Component {
 
     Axios.post("/signin/verify", request)
       .then(data => data.data)
-      .then(verifyResult => this.setState({ verifyResult }));
+      .then(data => (data.error ? Promise.reject(data.error) : data))
+      .then(verifyResult => this.setState({ verifyResult }))
+      .catch(this.showAlertError);
 
     event.preventDefault();
   }

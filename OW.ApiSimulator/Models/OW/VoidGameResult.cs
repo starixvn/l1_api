@@ -1,5 +1,4 @@
-﻿
-namespace OW.ApiSimulator.Models.OW
+﻿namespace OW.ApiSimulator.Models.OW
 {
     public class VoidGameResult : OWResult
     {

@@ -2,7 +2,7 @@
 
 namespace OW.ApiSimulator.Models.OW
 {
-    public class OWRequest<T> where T: OWCall
+    public class OWRequest<T> where T : OWCall
     {
         public DateTimeOffset TimeStamp { get; set; }
 

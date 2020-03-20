@@ -1,11 +1,10 @@
-﻿
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using IdentityModel.Client;
+
 namespace L1.Client
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using IdentityModel.Client;
-
     public static class HttpClientManager
     {
         public static async Task<TokenResponse> GetAccessToken(HttpClient client, AuthenticationInfo authenticationInfo)

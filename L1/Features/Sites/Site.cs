@@ -3,8 +3,6 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace L1.Features.Sites
 {
- 
-
     public class Site
     {
         [BsonId]

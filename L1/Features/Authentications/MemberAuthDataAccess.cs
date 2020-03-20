@@ -41,7 +41,7 @@ namespace L1.Features.Authentications
                 .Find(x => x.IP == memberAuth.IP && x.MemberId == memberAuth.MemberId && x.SiteId == memberAuth.SiteId)
                 .SortByDescending(x => x.Time)
                 .Limit(1)
-                .FirstOrDefault();     
+                .FirstOrDefault();
 
         public MemberAuth GetByToken(string token) =>
             memberAuthCollection.Find(memberAuth => memberAuth.Token == token).FirstOrDefault();

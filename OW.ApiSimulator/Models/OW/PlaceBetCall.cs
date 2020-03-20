@@ -5,9 +5,13 @@
         public int GameRoundId {get;set;}
 
         public int GameTypeId { get; set; }
-        public int ActionId { get; set; }
+
+        public int ChoiceId { get; set; }
+
         public double Amount { get; set; }
+
         public string Currency { get; set; }
 
+        public string Ip { get; set; }
     }
 }

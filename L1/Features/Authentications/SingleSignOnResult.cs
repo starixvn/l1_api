@@ -1,5 +1,5 @@
-﻿using System;
-using L1.Shared.Models;
+﻿using L1.Shared.Models;
+using System;
 
 namespace L1.Features.Authentications
 {

@@ -2,7 +2,6 @@
 
 namespace L1.Client
 {
-
     public interface IResult
     {
         int Code { get; }

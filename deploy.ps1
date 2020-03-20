@@ -55,6 +55,12 @@ Invoke-Expression $BUILD_IDENTITY_SERVER_API
 Invoke-Expression $BUILD_MEMBER_SITE
 Invoke-Expression $BUILD_OWAPI_SIMULATOR
 
+# Copy GameLobby
+Copy-Item -Path ".\GameLobbySimulator\*" -Destination "$env:API_COMPILED\game-lobby-simulator" -Recurse
+
+# Copy GameClient
+Copy-Item -Path ".\L1.Client.NodeJS\*" -Destination "$env:API_COMPILED\L1.Client.NodeJS" -Recurse
+
 # Push git
 $CommitMessage = "'deploy-" + (Get-Date -UFormat "%Y%m%d-%H%M%S") + "'"
 $PUSH_COMPILED = "cd $env:API_COMPILED; git add .; git commit -m $CommitMessage; git pull --rebase; git push origin master"

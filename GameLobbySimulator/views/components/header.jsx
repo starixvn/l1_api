@@ -1,10 +1,13 @@
 import React from "react";
+import routes from "../routes.jsx";
 
 const Header = () => (
   <header className="sticky">
-    <a href="/" className="button">
-      Sign-In Flow
-    </a>
+    {routes.map(({ path, name }) => (
+      <a href={path} className="button" key={path}>
+        {name}
+      </a>
+    ))}
   </header>
 );
 

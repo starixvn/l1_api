@@ -1,16 +1,6 @@
 import React from "react";
 import Axios from "axios";
-
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+import { randomString, showAlert } from "../util.jsx";
 
 class SignIn extends React.Component {
   constructor() {
@@ -18,7 +8,7 @@ class SignIn extends React.Component {
 
     this.state = {
       memberId: (Math.random() * 10000000) >> 0,
-      memberName: makeid(8),
+      memberName: randomString(8),
       language: "en-US",
       currency: "UUS",
       seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
@@ -27,7 +17,8 @@ class SignIn extends React.Component {
       browserUserAgent: navigator.userAgent,
       token: "",
       redirectUrl: "#",
-      verifyResult: null
+      verifyResult: null,
+      gameId: "1"
     };
   }
 
@@ -47,15 +38,9 @@ class SignIn extends React.Component {
       .then(data => data.data)
       .then(data => (data.error ? Promise.reject(data.error) : data))
       .then(token => this.setState(token))
-      .catch(this.showAlertError);
+      .catch(showAlert);
 
     event.preventDefault();
-  }
-
-  showAlertError(error) {
-    const errorMessage = JSON.stringify(error, null, 2);
-
-    window.alert(errorMessage);
   }
 
   handleVerifyToken(event) {
@@ -72,7 +57,7 @@ class SignIn extends React.Component {
       .then(data => data.data)
       .then(data => (data.error ? Promise.reject(data.error) : data))
       .then(verifyResult => this.setState({ verifyResult }))
-      .catch(this.showAlertError);
+      .catch(showAlert);
 
     event.preventDefault();
   }
@@ -137,6 +122,19 @@ class SignIn extends React.Component {
                       <option value="UUS">UUS</option>
                     </select>
                   </div>
+
+                  <div className="input-group vertical">
+                    <label htmlFor="gameId">Game</label>
+                    <select
+                      id="gameId"
+                      onChange={event => this.handleChange(event)}
+                      value={this.state.gameId}
+                    >
+                      <option value="1">Tài Xỉu</option>
+                      <option value="2">Xóc Dĩa</option>
+                      <option value="3">Bầu Cua</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="col-sm-12 col-md-6">
                   <div className="input-group vertical">
@@ -191,7 +189,13 @@ class SignIn extends React.Component {
               <legend>Token</legend>
               <div className="input-group vertical">
                 <label htmlFor="redirectUrl">Redirect</label>
-                <a className="col-sm-12" href={this.state.redirectUrl}>{this.state.redirectUrl}</a>
+                <a
+                  className="col-sm-12"
+                  href={this.state.redirectUrl}
+                  target="_blank"
+                >
+                  {this.state.redirectUrl}
+                </a>
               </div>
               <div className="input-group vertical">
                 <label htmlFor="token">Token</label>

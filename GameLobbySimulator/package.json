@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node .",
+    "start": "nodemon .",
     "webpack:dev": "webpack --watch --mode development",
     "dev": "concurrently --kill-others \"npm run webpack:dev\" \"nodemon .\"",
     "build": "webpack"

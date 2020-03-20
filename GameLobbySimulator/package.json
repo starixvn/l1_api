@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node .",
     "webpack:dev": "webpack --watch --mode development",
-    "dev": "concurrently --kill-others \"npm run webpack:dev\" \"nodemon .\""
+    "dev": "concurrently --kill-others \"npm run webpack:dev\" \"nodemon .\"",
+    "webpack:build": "webpack --watch --mode production"
   },
   "description": "GameLobbySimulator",
   "author": {

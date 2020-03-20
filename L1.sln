@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L1.IdentityServerApi", "L1.
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "L1.Client.NodeJS", "L1.Client.NodeJS\L1.Client.NodeJS.njsproj", "{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OW.SimulatorApi", "OW.SimulatorApi\OW.SimulatorApi.csproj", "{FDF8E29F-10D6-4319-9741-50E9A8F5FF21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OW.ApiSimulator", "OW.SimulatorApi\OW.ApiSimulator.csproj", "{FDF8E29F-10D6-4319-9741-50E9A8F5FF21}"
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "GameLobbySimulator", "GameLobbySimulator\GameLobbySimulator.njsproj", "{AE0A6657-AB7A-4C8D-8395-42A9386B2DDE}"
 EndProject

@@ -45,14 +45,15 @@ if ((Test-Path "$env:API_COMPILED\$OWApiSimulator")) {
 
 
 # Compile
-$BUILD_WEB_API = "dotnet publish $WebApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$WebApi"
-$BUILD_IDENTITY_SERVER_API = "dotnet publish $IdentityServerApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$IdentityServerApi"
-$BUILD_MEMBER_SITE = "dotnet publish $MemberSiteSimulation -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$MemberSiteSimulation"
-$BUILD_OWAPI_SIMULATOR = "dotnet publish $OWApiSimulator -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$OWApiSimulator"
+$BUILD_WEB_API = "dotnet publish $WebApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\api"
+$BUILD_IDENTITY_SERVER_API = "dotnet publish $IdentityServerApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\identity-api"
+$BUILD_MEMBER_SITE = "dotnet publish $MemberSiteSimulation -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\member-site-simulator"
+$BUILD_OWAPI_SIMULATOR = "dotnet publish $OWApiSimulator -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\ow-api-simulator"
 
 Invoke-Expression $BUILD_WEB_API
 Invoke-Expression $BUILD_IDENTITY_SERVER_API
 Invoke-Expression $BUILD_MEMBER_SITE
+Invoke-Expression $BUILD_OWAPI_SIMULATOR
 
 # Push git
 $CommitMessage = "'deploy-" + (Get-Date -UFormat "%Y%m%d-%H%M%S") + "'"

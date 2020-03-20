@@ -5,10 +5,10 @@ const GameClient = require("l1.client.node-js")();
 router.post('/signin/sso', async (req, res) => {
   try {
     const redirectUrl = await GameClient.auth.singleSignOn(req.body);
-    const url = new URL(redirectUrl);
+    const url = new URL(redirecUrl);
     const token = url.searchParams.get("token");
 
-    res.send({token});
+    res.send({token, redirectUrl});
   } catch (error) {
     res.send({ error })
   }

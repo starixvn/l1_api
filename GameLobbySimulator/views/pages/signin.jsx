@@ -1,11 +1,11 @@
 import React from "react";
-import SSOSection from "../components/signin/sso.jsx";
+import SignIn from "../components/signin.jsx";
 
 class SignInPage extends React.Component {
   render() {
     return (
       <div className="container">
-        <SSOSection/>
+        <SignIn/>
       </div>
     );
   }

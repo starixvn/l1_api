@@ -12,7 +12,7 @@ function makeid(length) {
   return result;
 }
 
-class SSOSection extends React.Component {
+class SignIn extends React.Component {
   constructor() {
     super();
 
@@ -26,6 +26,7 @@ class SSOSection extends React.Component {
       ip: "0.0.0.0",
       browserUserAgent: navigator.userAgent,
       token: "",
+      redirectUrl: "#",
       verifyResult: null
     };
   }
@@ -188,7 +189,10 @@ class SSOSection extends React.Component {
           <form onSubmit={event => this.handleVerifyToken(event)}>
             <fieldset className="container">
               <legend>Token</legend>
-
+              <div className="input-group vertical">
+                <label htmlFor="redirectUrl">Redirect</label>
+                <a className="col-sm-12" href={this.state.redirectUrl}>{this.state.redirectUrl}</a>
+              </div>
               <div className="input-group vertical">
                 <label htmlFor="token">Token</label>
                 <input
@@ -218,4 +222,4 @@ class SSOSection extends React.Component {
   }
 }
 
-export default SSOSection;
+export default SignIn;

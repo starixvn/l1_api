@@ -18,7 +18,7 @@
         </select>
         <br />
         <label asp-for="Currency">Currency:</label>
-        <input asp-for="Currency" />
+        <select asp-for="Currency" asp-items="Model.Currencies"></select>
         <br />
         <label asp-for="Seq">Seq:</label>
         <input asp-for="Seq" />

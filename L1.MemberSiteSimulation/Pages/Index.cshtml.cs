@@ -5,6 +5,7 @@ using L1.Client;
 using L1.MemberSiteSimulation.Config;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -28,6 +29,18 @@ namespace L1.MemberSiteSimulation.Pages
             new Language("en-US", "English"),
             new Language("zh-CN", "Chinese Simplified"),
             new Language("zh-TW", "Chinese Traditional")
+        };
+
+        public IEnumerable<SelectListItem> Currencies => new List<SelectListItem>
+        {
+            new SelectListItem("$US", "$US"),
+            new SelectListItem("IRR", "IRR"),
+            new SelectListItem("NTD", "NTD"),
+            new SelectListItem("US$", "US$"),
+            new SelectListItem("UT", "UT"),
+            new SelectListItem("Y$US", "Y$US"),
+            new SelectListItem("Yen", "Yen"),
+            new SelectListItem("UUS", "UUS")
         };
 
         [BindProperty]

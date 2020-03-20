@@ -17,6 +17,7 @@ if ((Get-ChildItem $env:API_COMPILED).Count -eq 0) {
 $WebApi = "L1.WebApi"
 $IdentityServerApi = "L1.IdentityServerApi"
 $MemberSiteSimulation = "L1.MemberSiteSimulation"
+$OWApiSimulator = "OW.ApiSimulator"
 
 # Delete previous compiled
 $DELETE_COMPILED_WEBAPI = "Remove-Item -recurse -path $env:API_COMPILED\$WebApi"
@@ -36,11 +37,18 @@ if ((Test-Path "$env:API_COMPILED\$MemberSiteSimulation")) {
   Invoke-Expression $DELETE_COMPILED_MEMBERSITE
 }
 
+$DELETE_COMPILED_OWAPI = "Remove-Item -recurse -path $env:API_COMPILED\$OWApiSimulator"
+
+if ((Test-Path "$env:API_COMPILED\$OWApiSimulator")) {
+  Invoke-Expression $DELETE_COMPILED_OWAPI
+}
+
 
 # Compile
 $BUILD_WEB_API = "dotnet publish $WebApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$WebApi"
 $BUILD_IDENTITY_SERVER_API = "dotnet publish $IdentityServerApi -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$IdentityServerApi"
 $BUILD_MEMBER_SITE = "dotnet publish $MemberSiteSimulation -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$MemberSiteSimulation"
+$BUILD_OWAPI_SIMULATOR = "dotnet publish $OWApiSimulator -c release -r linux-x64 --self-contained false -o $env:API_COMPILED\$OWApiSimulator"
 
 Invoke-Expression $BUILD_WEB_API
 Invoke-Expression $BUILD_IDENTITY_SERVER_API

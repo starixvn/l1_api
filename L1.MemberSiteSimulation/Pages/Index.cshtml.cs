@@ -70,6 +70,7 @@ namespace L1.MemberSiteSimulation.Pages
 
         public string SiteId { get; set; } = "licensee1";
 
+        [BindProperty]
         public int GameId { get; set; } = 1;
 
         [BindProperty]

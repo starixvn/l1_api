@@ -18,15 +18,6 @@ namespace L1.WebApi.Controllers
             this.oWCustomerService = oWCustomerService;
         }
 
-
-        [AllowAnonymous]
-        public async Task<IActionResult> Index()
-        {
-
-            return Ok();
-        }
-
-
         [HttpPost]
         [AllowAnonymous]
         [Route("[action]")]

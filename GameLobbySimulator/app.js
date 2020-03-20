@@ -1,17 +1,17 @@
 const express = require("express");
 const debug = require("debug");
-const routes = require("./routes/index");
-const users = require("./routes/pages");
+
+const config = require("./game-client-config");
+require("l1.client.node-js")(config);
+
+const routes = require("./routes");
 const applyMiddlewares = require("./middleware");
-const GameClient = require("l1.client.node-js");
-const config = require("./config");
 
 const app = express();
 
-GameClient(config);
-
 applyMiddlewares(app);
 app.use("/", routes);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error("Not Found");

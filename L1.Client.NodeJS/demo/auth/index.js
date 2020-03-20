@@ -3,5 +3,5 @@ const withCallback = require("./authWithCallback");
 
 (async () => {
     await withPromise();
-    //withCallback();
+    withCallback();
 })();

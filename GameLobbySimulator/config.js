@@ -1,9 +1,0 @@
-module.exports = {
-  apiUrl: "http://api.lumigame.com",
-  authUrl: "http://auth.lumigame.com",
-  client: {
-    id: "licensee1",
-    secret: "123licensee1%^&sit"
-  },
-  siteId: "licensee1"
-};

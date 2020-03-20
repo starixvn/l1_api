@@ -1,15 +1,6 @@
 const Axios = require("axios").default;
 const { Issuer } = require("openid-client");
-
-const handleSuccess = (resolve, callback) => body => {
-  callback && callback(null, body);
-  resolve(body);
-};
-
-const handleError = (reject, callback) => error => {
-  callback && callback(error);
-  reject(error);
-};
+const { handleError, handleSuccess } = require("./util");
 
 const verifyToken = ({ apiUrl }) => (params, callback) =>
   new Promise((resolve, reject) => {
@@ -19,7 +10,7 @@ const verifyToken = ({ apiUrl }) => (params, callback) =>
       .catch(handleError(reject, callback));
   });
 
-const singleSignOn = ({ apiUrl, authUrl, client, siteId }) => (
+const singleSignOn = ({ apiUrl, authUrl, client }) => (
   params,
   callback
 ) =>
@@ -28,7 +19,7 @@ const singleSignOn = ({ apiUrl, authUrl, client, siteId }) => (
       grant_type: "client_credentials",
       client_id: client.id,
       client_secret: client.secret,
-      site_id: siteId
+      site_id: params.siteId
     };
 
     const url = `${apiUrl}/signin/index`;

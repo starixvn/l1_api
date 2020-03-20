@@ -12,12 +12,6 @@ const singleSignInParams = {
   seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b"
 };
 
-const signInParams = {
-  siteId: "licensee1",
-  ip: "0.0.0.0",
-  memberId: 12344321
-};
-
 const withCallback = async () => {
   console.log("Starting demo Authentication using callback functions");
 

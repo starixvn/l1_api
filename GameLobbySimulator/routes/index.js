@@ -1,5 +1,6 @@
 const routers = [
-    require("./pages")
+    require("./pages"),
+    require("./signin")
 ];
 
 module.exports = routers;

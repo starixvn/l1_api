@@ -1,9 +1,10 @@
 import React from "react";
 
 const Header = () => (
-  <header>
+  <header className="sticky">
     <a href="/" className="button">
       Sign-In Flow
+    </a>
   </header>
 );
 

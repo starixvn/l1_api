@@ -1,9 +1,9 @@
-﻿namespace L1.Features.Authentications
-{
-    using System;
-    using L1.Features.Sites;
-    using L1.Shared.Configurations;
+﻿using System;
+using L1.Features.Sites;
+using L1.Shared.Configurations;
 
+namespace L1.Features.Authentications
+{
     public interface IMemberAuthService
     {
         SingleSignOnResult SignIn(MemberAuth memberAuth);

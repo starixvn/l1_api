@@ -1,10 +1,10 @@
-﻿
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using OW.ApiSimulator.Models.OW;
+
 namespace OW.ApiSimulator.Controllers
 {
-    using System;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.DependencyInjection;
-    using OW.ApiSimulator.Models.OW;
 
     public class CustomerController : Controller
     {

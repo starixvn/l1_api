@@ -1,6 +1,7 @@
-﻿namespace L1.Client
+﻿using System;
+
+namespace L1.Client
 {
-    using System;
 
     public interface IResult
     {

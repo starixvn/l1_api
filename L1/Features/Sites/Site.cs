@@ -1,7 +1,9 @@
-﻿namespace L1.Features.Sites
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace L1.Features.Sites
 {
-    using MongoDB.Bson;
-    using MongoDB.Bson.Serialization.Attributes;
+ 
 
     public class Site
     {

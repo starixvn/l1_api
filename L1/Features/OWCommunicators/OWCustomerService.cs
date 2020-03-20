@@ -5,7 +5,6 @@ using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators
 {
-
     public interface IOWCustomerService
     {
         Task<OWResponse<OWResult>> NotifyLogin(NotifyLoginCall call);
@@ -15,7 +14,6 @@ namespace L1.Features.OWCommunicators
 
     public class OWCustomerService : IOWCustomerService
     {
-
         private readonly IOWService oWService;
         private readonly IAppSettings appSettings;
 

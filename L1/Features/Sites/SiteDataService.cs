@@ -1,7 +1,7 @@
-﻿namespace L1.Features.Sites
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace L1.Features.Sites
+{
     public interface ISiteDataService
     {
         IEnumerable<Site> GetAll();

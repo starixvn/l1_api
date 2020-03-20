@@ -1,7 +1,7 @@
-﻿namespace L1.WebApi.Models
-{
-    using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
+namespace L1.WebApi.Models
+{
     public class MemberLogin
     {
         [Required]

@@ -1,9 +1,9 @@
-﻿namespace L1.Features.Sites
-{
-    using System.Collections.Generic;
-    using L1.Shared.Constants;
-    using MongoDB.Driver;
+﻿using System.Collections.Generic;
+using L1.Shared.Constants;
+using MongoDB.Driver;
 
+namespace L1.Features.Sites
+{
     public interface ISiteDataAccess
     {
         IEnumerable<Site> GetAll();

@@ -31,29 +31,48 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.js" />
+    <Content Include="game-client-config.json" />
     <Content Include="middleware.js">
       <SubType>Code</SubType>
     </Content>
     <Content Include="nodemon.json">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="public\favicon.ico" />
     <Content Include="public\stylesheets\mini.css" />
+    <Content Include="resource\currency.json" />
+    <Content Include="resource\game.json" />
     <Content Include="routes\index.js" />
+    <Content Include="routes\member.js" />
     <Content Include="routes\pages.js" />
     <Content Include="package.json" />
+    <Content Include="routes\resource.js" />
+    <Content Include="routes\setting.js" />
+    <Content Include="routes\signin.js" />
     <Content Include="views\components\header.jsx">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\components\member.jsx" />
+    <Content Include="views\components\member\balance.jsx" />
+    <Content Include="views\components\member\end-game.jsx" />
+    <Content Include="views\components\member\notify-login.jsx" />
+    <Content Include="views\components\member\place-bet.jsx" />
+    <Content Include="views\components\member\void-game.jsx" />
+    <Content Include="views\components\signin.jsx" />
+    <Content Include="views\components\signin\sso.jsx" />
     <Content Include="views\index.jsx">
       <SubType>Code</SubType>
     </Content>
     <Content Include="views\index.pug" />
+    <Content Include="views\pages\member.jsx" />
+    <Content Include="views\pages\setting.jsx" />
     <Content Include="views\pages\signin.jsx">
       <SubType>Code</SubType>
     </Content>
     <Content Include="views\routes.jsx">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\util.jsx" />
     <Content Include="webpack.config.js">
       <SubType>Code</SubType>
     </Content>
@@ -63,9 +82,12 @@
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
+    <Folder Include="resource\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
     <Folder Include="views\components\" />
+    <Folder Include="views\components\member\" />
+    <Folder Include="views\components\signin\" />
     <Folder Include="views\pages\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

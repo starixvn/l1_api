@@ -9,7 +9,7 @@ class MemberPage extends React.Component {
       <div className="container">
         <NotifyLogin />
         <Balance />
-        
+        <PlaceBet />
       </div>
     );
   }

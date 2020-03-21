@@ -2,7 +2,7 @@ import React from "react";
 import Axios from "axios";
 import { showAlert } from "../../util.jsx";
 
-export default class Balance extends React.Component {
+export default class PlaceBet extends React.Component {
   constructor() {
     super();
 
@@ -13,21 +13,35 @@ export default class Balance extends React.Component {
       gameRoundId: 1,
       gameTypeId: 1,
       choiceId: 1,
-      amount: (Math.random() * 1000) >> 0,
+      amount: (Math.random() * 100) >> 0,
       currency: "UUS",
       ip: "0.0.0.0",
       result: null,
       resource: {
-        game: []
+        game: [
+          {
+            id: 1,
+            choice: []
+          }
+        ],
+        currency: []
       }
     };
   }
 
   handleChange(event) {
     const state = this.state;
-
-    if (event.target.type === "number") {
+    if (event.target.id === "gameTypeId") {
+      state.choiceId = 1;
       state[event.target.id] = parseInt(event.target.value);
+    } else if (event.target.id === "choiceId") {
+      state[event.target.id] = parseInt(event.target.value);
+    } else if (event.target.type === "number") {
+      if (event.target.id === "amount") {
+        state[event.target.id] = parseFloat(event.target.value);
+      } else {
+        state[event.target.id] = parseInt(event.target.value);
+      }
     } else {
       state[event.target.id] = event.target.value;
     }
@@ -37,10 +51,11 @@ export default class Balance extends React.Component {
 
   handleSubmit(event) {
     const request = Object.assign({}, this.state, {
-      result: undefined
+      result: undefined,
+      resource: undefined
     });
 
-    Axios.post("/member/balance", request)
+    Axios.post("/member/bet", request)
       .then(data => data.data)
       .then(data => (data.error ? Promise.reject(data.error) : data))
       .then(result => this.setState({ result }))
@@ -50,14 +65,17 @@ export default class Balance extends React.Component {
   }
 
   componentDidMount() {
-    Axios.get("/resource/game")
+    Axios.get("/resource/currency")
       .then(data => data.data)
-      .then(game => {
-        const state = this.state;
-        state.resource.game = game;
-
-        this.setState(state);
-      });
+      .then(currency =>
+        Axios.get("/resource/game")
+          .then(data => data.data)
+          .then(game => ({
+            currency,
+            game
+          }))
+      )
+      .then(resource => this.setState({ resource }));
   }
 
   render() {
@@ -105,6 +123,75 @@ export default class Balance extends React.Component {
                     defaultValue={this.state.gameRoundId}
                     id="gameRoundId"
                     placeholder="Game round id"
+                    onChange={event => this.handleChange(event)}
+                  />
+                </div>
+                <div className="input-group vertical">
+                  <label htmlFor="currency">Currency</label>
+                  <select
+                    id="currency"
+                    onChange={event => this.handleChange(event)}
+                    value={this.state.currency}
+                  >
+                    {this.state.resource.currency.map(curr => (
+                      <option value={curr.value} key={curr.value}>
+                        {curr.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="input-group vertical">
+                  <label htmlFor="gameTypeId">Game</label>
+                  <select
+                    id="gameTypeId"
+                    onChange={event => this.handleChange(event)}
+                    value={this.state.gameId}
+                  >
+                    {this.state.resource.game.map(game => (
+                      <option value={game.id} key={game.id}>
+                        {game.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="input-group vertical">
+                  <label htmlFor="choiceId">Choice</label>
+                  <select
+                    id="choiceId"
+                    onChange={event => this.handleChange(event)}
+                    value={this.state.choiceId}
+                  >
+                    {this.state.resource.game[
+                      this.state.gameTypeId - 1
+                    ].choice.map(choice => (
+                      <option
+                        value={choice.id}
+                        key={`${this.state.gameTypeId}${choice.id}`}
+                      >
+                        {choice.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group vertical">
+                  <label htmlFor="amount">Amount</label>
+                  <input
+                    type="number"
+                    defaultValue={this.state.amount}
+                    id="amount"
+                    placeholder="amount"
+                    onChange={event => this.handleChange(event)}
+                  />
+                </div>
+                <div className="input-group vertical">
+                  <label htmlFor="ip">IP</label>
+                  <input
+                    type="text"
+                    defaultValue={this.state.ip}
+                    id="ip"
+                    placeholder="IP"
                     onChange={event => this.handleChange(event)}
                   />
                 </div>

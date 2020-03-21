@@ -20,4 +20,13 @@ router.post('/member/balance', async (req, res) => {
   }
 });
 
+router.post('/member/bet', async (req, res) => {
+  try {
+    const result = await GameClient.member.placeBet(req.body);
+    res.send(result);
+  } catch (error) {
+    res.send({ error })
+  }
+});
+
 module.exports = router;

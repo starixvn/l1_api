@@ -24,7 +24,11 @@ class SignIn extends React.Component {
 
   handleChange(event) {
     const state = this.state;
-    state[event.target.id] = event.target.value;
+    if (event.target.type === 'number') {
+      state[event.target.id] = parseInt(event.target.value);
+    } else {
+      state[event.target.id] = event.target.value;
+    }
 
     this.setState(state);
   }

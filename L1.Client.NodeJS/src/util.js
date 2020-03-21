@@ -8,4 +8,9 @@ const handleError = (reject, callback) => error => {
   reject(error);
 };
 
-module.exports = { handleSuccess, handleError };
+const uppercaseKeys = (obj) => Object.keys(obj).reduce((result, key) => {
+  result[key[0].toUpperCase() + key.substr(1)] = obj[key];
+  return result;
+}, {})
+
+module.exports = { handleSuccess, handleError, uppercaseKeys };

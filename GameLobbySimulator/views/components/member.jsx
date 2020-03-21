@@ -21,6 +21,8 @@ export default class Member extends React.Component {
 
     if (event.target.type === "checkbox") {
       state[event.target.id] = event.target.checked;
+    } else if (event.target.type === 'number') {
+      state[event.target.id] = parseInt(event.target.value);
     } else {
       state[event.target.id] = event.target.value;
     }
@@ -87,6 +89,12 @@ export default class Member extends React.Component {
                 <input className="primary" type="submit" value="Notify" />
               </fieldset>
             </form>
+          </div>
+          <div className="col-sm-12 col-md-6">
+            <fieldset className="container">
+              <legend>Notify Result</legend>
+              <pre>{JSON.stringify(this.state.result, null, 2)}</pre>
+            </fieldset>
           </div>
         </div>
       </div>

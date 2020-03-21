@@ -1,8 +1,8 @@
-﻿namespace OW.ApiSimulator.Extensions
-{
-    using Microsoft.Extensions.DependencyInjection;
-    using OW.ApiSimulator.Models.OW;
+﻿using Microsoft.Extensions.DependencyInjection;
+using OW.ApiSimulator.Models.OW;
 
+namespace OW.ApiSimulator.Extensions
+{
     public static class SimulatorExtensions
     {
         public static void AddOW(this IServiceCollection services)

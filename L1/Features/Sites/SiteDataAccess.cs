@@ -20,7 +20,7 @@ namespace L1.Features.Sites
 
         public SiteDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.Config);
+            var database = mongoClient.GetDatabase(MongoDatabases.Member);
             siteCollection = database.GetCollection<Site>(collectionName);
         }
 

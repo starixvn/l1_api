@@ -1,17 +1,23 @@
 ﻿@model OW.ApiSimulator.Models.OW.PlaceBetResult
 
+<h3>Update Place Bet Result</h3>
+
 <form method="post">
-    <label asp-for="ErrorCode"></label>
-    <input asp-for="ErrorCode" />
-    <br />
-    <label asp-for="ErrorDescription"></label>
-    <input asp-for="ErrorDescription" />
-    <br />
-    <label asp-for="Balance"></label>
-    <input asp-for="Balance" />
-    <br />
-    <label asp-for="ObTransId"></label>
-    <input asp-for="ObTransId" />
-    <br />
-    <input type="submit" value="Save" />
+    <div class="form-group">
+        <label asp-for="ErrorCode"></label>
+        <input class="form-control" asp-for="ErrorCode" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ErrorDescription"></label>
+        <input class="form-control" asp-for="ErrorDescription" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Balance"></label>
+        <input class="form-control" asp-for="Balance" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ObTransId"></label>
+        <input class="form-control" asp-for="ObTransId" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save" />
 </form>

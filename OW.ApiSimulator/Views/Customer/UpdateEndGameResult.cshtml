@@ -1,11 +1,14 @@
 ﻿@model OW.ApiSimulator.Models.OW.EndGameResult
 
+<h3>Update End Game Result</h3>
 <form method="post">
-    <label asp-for="ErrorCode"></label>
-    <input asp-for="ErrorCode" />
-    <br />
-    <label asp-for="ErrorDescription"></label>
-    <input asp-for="ErrorDescription" />
-    <br />
-    <input type="submit" value="Save" />
+    <div class="form-group">
+        <label asp-for="ErrorCode"></label>
+        <input class="form-control" asp-for="ErrorCode" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ErrorDescription"></label>
+        <input class="form-control" asp-for="ErrorDescription" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save" />
 </form>

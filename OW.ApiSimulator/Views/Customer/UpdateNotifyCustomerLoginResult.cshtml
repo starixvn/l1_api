@@ -1,11 +1,15 @@
 ﻿@model OW.ApiSimulator.Models.OW.NotfityCustomerLoginResult
 
-<form method="post" asp-action="UpdateNotifyCustomerLoginResult">
-    <label asp-for="ErrorCode">ErrorCode:</label>
-    <input asp-for="ErrorCode" />
-    <br />
-    <label asp-for="ErrorDescription">ErrorDescription:</label>
-    <input asp-for="ErrorDescription" />
-    <br />
-    <input type="submit" value="Save" />
+<h3>Update Notify Login Result</h3>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="ErrorCode"></label>
+        <input class="form-control" asp-for="ErrorCode" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ErrorDescription"></label>
+        <input class="form-control" asp-for="ErrorDescription" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save" />
 </form>

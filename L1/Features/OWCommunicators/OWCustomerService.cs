@@ -34,8 +34,7 @@ namespace L1.Features.OWCommunicators
 
         public async Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
         {
-            return await oWService.Post<NotifyResult>(endpoints.NotifyLogin, call);
-            return await oWService.Post<EnterPortalResult>(appSettings.OWServiceSettings.NotifyLoginEndPoint, call);
+            return await oWService.Post<EnterPortalResult>(endpoints.EnterPortal, call);
         }
 
         public async Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)

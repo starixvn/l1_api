@@ -15,7 +15,7 @@ namespace L1.Shared.Configurations
 
     public class OWEndPoints
     {
-        public string NotifyLogin { get; set; }
+        public string EnterPortal { get; set; }
 
         public string GetBalance { get; set; }
 

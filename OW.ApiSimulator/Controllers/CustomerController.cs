@@ -91,7 +91,6 @@ namespace OW.ApiSimulator.Controllers
             var result = serviceProvider.GetRequiredService<PlaceBetResult>();
             result.ErrorCode = model.ErrorCode;
             result.ErrorDescription = model.ErrorDescription;
-            result.Balance = model.Balance;
             result.ObTransId = model.ObTransId;
 
             return View(model);
@@ -102,9 +101,12 @@ namespace OW.ApiSimulator.Controllers
         {
             var result = serviceProvider.GetRequiredService<PlaceBetResult>();
             result.Seq = request.Call?.Seq;
+
             if (result.ErrorCode == 0)
             {
                 result.ObCustId = request.Call?.ObCustId;
+                var balanceResult = serviceProvider.GetRequiredService<GetBalanceResult>();
+                result.Balance = balanceResult.Balance = balanceResult.Balance - request.Call.Amount;
             }
 
             return Ok(new OWResponse<PlaceBetResult>
@@ -134,11 +136,14 @@ namespace OW.ApiSimulator.Controllers
         public IActionResult EndGame([FromBody] OWRequest<EndGameCall> request)
         {
             var result = serviceProvider.GetRequiredService<EndGameResult>();
+         
             result.Seq = request.Call?.Seq;
 
             if (result.ErrorCode == 0)
             {
                 result.ObCustId = request.Call?.ObCustId;
+                var balanceResult = serviceProvider.GetRequiredService<GetBalanceResult>();
+                balanceResult.Balance += request.Call.TotalWin;
             }
 
             return Ok(new OWResponse<EndGameResult>

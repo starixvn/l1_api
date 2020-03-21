@@ -14,7 +14,7 @@
 
         public double TotalAmount { get; set; }
 
-        public int TotalWin { get; set; }
+        public double TotalWin { get; set; }
 
         public int ValidBetAmount { get; set; }
     }

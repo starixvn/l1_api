@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace L1.Client {
+namespace L1.Client.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace L1.Client {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("L1.Client.SingleSignOnResultMessage", typeof(SingleSignOnResultMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("L1.Client.Resources.SingleSignOnResultMessage", typeof(SingleSignOnResultMessage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

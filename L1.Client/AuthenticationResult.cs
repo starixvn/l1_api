@@ -1,4 +1,5 @@
 ﻿using System;
+using L1.Client.Resources;
 
 namespace L1.Client
 {

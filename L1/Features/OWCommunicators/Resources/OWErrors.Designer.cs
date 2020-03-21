@@ -61,11 +61,110 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account is locked.
+        /// </summary>
+        internal static string _2002 {
+            get {
+                return ResourceManager.GetString("2002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account does not exist.
+        /// </summary>
+        internal static string _2003 {
+            get {
+                return ResourceManager.GetString("2003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The IP address is restricted.
+        /// </summary>
+        internal static string _2004 {
+            get {
+                return ResourceManager.GetString("2004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player has insufficient funds.
+        /// </summary>
+        internal static string _3002 {
+            get {
+                return ResourceManager.GetString("3002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The player exceeded their game limit.
+        /// </summary>
+        internal static string _3003 {
+            get {
+                return ResourceManager.GetString("3003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The player is not permitted to play this game.
+        /// </summary>
+        internal static string _3004 {
+            get {
+                return ResourceManager.GetString("3004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Win limit hit! Please contact your upline, thank you.
+        /// </summary>
+        internal static string _3006 {
+            get {
+                return ResourceManager.GetString("3006", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lose limit hit! Please contact your upline, thank you.
+        /// </summary>
+        internal static string _3007 {
+            get {
+                return ResourceManager.GetString("3007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The player exceeded company win limit.
+        /// </summary>
+        internal static string _3014 {
+            get {
+                return ResourceManager.GetString("3014", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Member/User not found.
+        /// </summary>
+        internal static string _4012 {
+            get {
+                return ResourceManager.GetString("4012", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Network error..
         /// </summary>
         internal static string _5002 {
             get {
                 return ResourceManager.GetString("5002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Under maintenance.
+        /// </summary>
+        internal static string _5003 {
+            get {
+                return ResourceManager.GetString("5003", resourceCulture);
             }
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +45,7 @@ namespace L1.WebApi
 
                 services.AddMvc();
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
@@ -78,7 +77,7 @@ namespace L1.WebApi
                     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 });
             }
-            catch (Exception ex)
+            catch
             {
             }
         }

@@ -41,7 +41,7 @@ namespace L1.IdentityServerApi
                 services.AddControllers();
                 services.AddMvc();
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
@@ -73,7 +73,7 @@ namespace L1.IdentityServerApi
                     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 });
             }
-            catch (Exception ex)
+            catch
             {
             }
         }

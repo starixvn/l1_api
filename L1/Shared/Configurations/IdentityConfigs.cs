@@ -21,9 +21,9 @@ namespace L1.Shared.Configurations
 
                     // secret for authentication
                     ClientSecrets =
-                        {
-                            new Secret(resource.ClientSecret.Sha256())
-                        },
+                    {
+                        new Secret(resource.ClientSecret.Sha256())
+                    },
 
                     // scopes that client has access to
                     AllowedScopes = { resource.SiteId }

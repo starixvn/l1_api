@@ -117,7 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="2002" xml:space="preserve">
+    <value>Account is locked</value>
+  </data>
+  <data name="2003" xml:space="preserve">
+    <value>Account does not exist</value>
+  </data>
+  <data name="2004" xml:space="preserve">
+    <value>The IP address is restricted</value>
+  </data>
+  <data name="3002" xml:space="preserve">
+    <value>Player has insufficient funds</value>
+  </data>
+  <data name="3003" xml:space="preserve">
+    <value>The player exceeded their game limit</value>
+  </data>
+  <data name="3004" xml:space="preserve">
+    <value>The player is not permitted to play this game</value>
+  </data>
+  <data name="3006" xml:space="preserve">
+    <value>Win limit hit! Please contact your upline, thank you</value>
+  </data>
+  <data name="3007" xml:space="preserve">
+    <value>Lose limit hit! Please contact your upline, thank you</value>
+  </data>
+  <data name="3014" xml:space="preserve">
+    <value>The player exceeded company win limit</value>
+  </data>
+  <data name="4012" xml:space="preserve">
+    <value>Member/User not found</value>
+  </data>
   <data name="5002" xml:space="preserve">
     <value>Network error.</value>
+  </data>
+  <data name="5003" xml:space="preserve">
+    <value>Under maintenance</value>
   </data>
 </root>

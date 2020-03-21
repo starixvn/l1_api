@@ -61,7 +61,7 @@ namespace L1.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to System suddently got a problem. Please give it a try!.
+        ///   Looks up a localized string similar to An Error has occurred. Please contact CSD for solutions..
         /// </summary>
         internal static string SB0001 {
             get {

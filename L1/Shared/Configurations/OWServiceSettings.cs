@@ -10,14 +10,19 @@ namespace L1.Shared.Configurations
 
         public string Password { get; set; }
 
-        public string NotifyLoginEndPoint { get; set; }
+        public OWEndPoints Endpoints { get; set; }
+    }
 
-        public string GetBalanceEndPoint { get; set; }
+    public class OWEndPoints
+    {
+        public string NotifyLogin { get; set; }
 
-        public string PlaceBetEndPoint { get; set; }
+        public string GetBalance { get; set; }
 
-        public string EndGameEndPoint { get; set; }
+        public string PlaceBet { get; set; }
 
-        public string VoidGameEndPoint { get; set; }
+        public string EndGame { get; set; }
+
+        public string VoidGame { get; set; }
     }
 }

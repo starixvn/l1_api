@@ -1,0 +1,34 @@
+[
+  {
+    "name": "$US",
+    "value": "$US"
+  },
+  {
+    "name": "IRR",
+    "value": "IRR"
+  },
+  {
+    "name": "NTD",
+    "value":"NTD"
+  },
+  {
+    "name": "US$",
+    "value": "US$"
+  },
+  {
+    "name": "UT",
+    "value": "UT"
+  },
+  {
+    "name": "Y$US",
+    "value": "Y$US"
+  },
+  {
+    "name": "Yen",
+    "value": "Yen"
+  },
+  {
+    "name": "UUS",
+    "value": "UUS"
+  }
+]

@@ -1,0 +1,84 @@
+[
+  {
+    "id": 1,
+    "name": "Tài xỉu",
+    "choice": [
+      {
+        "id": 1,
+        "name": "Tài"
+      },
+      {
+        "id": 2,
+        "name": "Xỉu"
+      },
+      {
+        "id": 3,
+        "name": "Đu dây thắng"
+      },
+      {
+        "id": 4,
+        "name": "Đu dây thua"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Xóc dĩa",
+    "choice": [
+      {
+        "id": 1,
+        "name": "Chãn"
+      },
+      {
+        "id": 2,
+        "name": "Lẻ"
+      },
+      {
+        "id": 3,
+        "name": "3 Đỏ 1 Trắng"
+      },
+      {
+        "id": 4,
+        "name": "4 Đỏ"
+      },
+      {
+        "id": 5,
+        "name": "3 Trắng 1 Đỏ"
+      },
+      {
+        "id": 6,
+        "name": "4 Trắng"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Bầu cua",
+    "choice": [
+      {
+        "id": 1,
+        "name": "Nai"
+      },
+      {
+        "id": 2,
+        "name": "Bầu"
+      },
+      {
+        "id": 3,
+        "name": "Gà"
+      },
+      {
+        "id": 4,
+        "name": "Cá"
+      },
+      {
+        "id": 5,
+        "name": "Cua"
+      },
+      {
+        "id": 6,
+        "name": "Tôm"
+      }
+    ]
+  }
+]

@@ -11,4 +11,13 @@ router.post('/member/notify', async (req, res) => {
   }
 });
 
+router.post('/member/balance', async (req, res) => {
+  try {
+    const result = await GameClient.member.balance(req.body);
+    res.send(result);
+  } catch (error) {
+    res.send({ error })
+  }
+});
+
 module.exports = router;

@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const GameClient = require("l1.client.node-js");
 const fs = require("fs");
 
 router.get("/setting/data", async (req, res) => {
@@ -14,8 +13,6 @@ router.post("/setting/data", async (req, res) => {
       "game-client-config.json",
       JSON.stringify(req.body, null, 2)
     );
-
-    GameClient(req.body);
 
     res.send(req.body);
     res.send(result);

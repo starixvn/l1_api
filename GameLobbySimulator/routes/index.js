@@ -1,8 +1,9 @@
 const routers = [
+    require("./setting"),
     require("./pages"),
     require("./signin"),
     require("./member"),
-    require("./setting")
+    require("./resource")
 ];
 
 module.exports = routers;

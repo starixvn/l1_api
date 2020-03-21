@@ -1,11 +1,15 @@
 import React from "react";
-import Member from "../components/member.jsx";
+import NotifyLogin from "../components/member/notify-login.jsx";
+import Balance from "../components/member/balance.jsx";
+import PlaceBet from "../components/member/place-bet.jsx";
 
 class MemberPage extends React.Component {
   render() {
     return (
       <div className="container">
-        <Member/>
+        <NotifyLogin />
+        <Balance />
+        
       </div>
     );
   }

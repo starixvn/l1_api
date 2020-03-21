@@ -5,11 +5,11 @@ using OW.ApiSimulator.Models.OW;
 
 namespace OW.ApiSimulator.Controllers
 {
-    public class CustomerController : Controller
+    public class SabaClubController : Controller
     {
         private readonly IServiceProvider serviceProvider;
 
-        public CustomerController(IServiceProvider serviceProvider)
+        public SabaClubController(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

@@ -45,7 +45,7 @@ namespace OW.ApiSimulator
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Customer}/{action=Index}/{id?}");
+                    pattern: "{controller=SabaClub}/{action=Index}/{id?}");
             });
         }
     }

@@ -6,6 +6,6 @@
 
         public int? ObCustId { get; set; }
 
-        public double Balance { get; set; }
+        public decimal Balance { get; set; }
     }
 }

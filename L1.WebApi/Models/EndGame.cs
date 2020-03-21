@@ -12,9 +12,9 @@
 
         public int GameTypeId { get; set; }
 
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
-        public double TotalWin { get; set; }
+        public decimal TotalWin { get; set; }
 
         public int ValidBetAmount { get; set; }
     }

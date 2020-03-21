@@ -1,8 +1,8 @@
-﻿namespace L1.Features.OWCommunicators.NotifyLogin
+﻿namespace L1.Features.OWCommunicators.EnterPortal
 {
-    public class NotifyLoginCall : OWCall
+    public class EnterPortalCall : OWCall
     {
-        public NotifyLoginCall(string seq, int obCustId, string siteId, string characcterName, bool firstLogin)
+        public EnterPortalCall(string seq, int obCustId, string siteId, string characcterName, bool firstLogin)
           : base(seq, obCustId, siteId)
         {
             CharacterName = characcterName;

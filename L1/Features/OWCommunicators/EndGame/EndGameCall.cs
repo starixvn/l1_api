@@ -2,7 +2,7 @@
 {
     public class EndGameCall : OWCall
     {
-        public EndGameCall(string seq, int obCustId, string siteId, int gameRoundId, int gameTypeId, double totalAmount, double totalWin, int validBetAmount) : base(seq, obCustId, siteId)
+        public EndGameCall(string seq, int obCustId, string siteId, int gameRoundId, int gameTypeId, decimal totalAmount, decimal totalWin, int validBetAmount) : base(seq, obCustId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
@@ -15,9 +15,9 @@
 
         public int GameTypeId { get; }
 
-        public double TotalAmount { get; }
+        public decimal TotalAmount { get; }
 
-        public double TotalWin { get; }
+        public decimal TotalWin { get; }
 
         public int ValidBetAmount { get; }
     }

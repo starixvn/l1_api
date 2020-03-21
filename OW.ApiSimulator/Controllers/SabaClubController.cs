@@ -21,15 +21,15 @@ namespace OW.ApiSimulator.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateNotifyCustomerLoginResult()
+        public IActionResult UpdateEnterPortalResult()
         {
-            return View(serviceProvider.GetRequiredService<NotfityCustomerLoginResult>());
+            return View(serviceProvider.GetRequiredService<EnterPortalResult>());
         }
 
         [HttpPost]
-        public IActionResult UpdateNotifyCustomerLoginResult(NotfityCustomerLoginResult model)
+        public IActionResult UpdateEnterPortalResult(EnterPortalResult model)
         {
-            var result = serviceProvider.GetRequiredService<NotfityCustomerLoginResult>();
+            var result = serviceProvider.GetRequiredService<EnterPortalResult>();
             result.ErrorCode = model.ErrorCode;
             result.ErrorDescription = model.ErrorDescription;
 
@@ -37,12 +37,12 @@ namespace OW.ApiSimulator.Controllers
         }
 
         [HttpPost]
-        public IActionResult NotifyLogin([FromBody] OWRequest<NotifyCustomerLoginCall> request)
+        public IActionResult EnterPortal([FromBody] OWRequest<EnterPortalCall> request)
         {
-            var result = serviceProvider.GetRequiredService<NotfityCustomerLoginResult>();
+            var result = serviceProvider.GetRequiredService<EnterPortalResult>();
             result.Seq = request.Call?.Seq;
 
-            return Ok(new OWResponse<NotfityCustomerLoginResult>
+            return Ok(new OWResponse<EnterPortalResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result

@@ -1,6 +1,6 @@
 ﻿namespace OW.ApiSimulator.Models.OW
 {
-    public class NotifyCustomerLoginCall : OWCall
+    public class EnterPortalCall : OWCall
     {
         public string CharacterName { get; set; }
 

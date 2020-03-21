@@ -2,7 +2,7 @@
 
 namespace L1.WebApi.Models
 {
-    public class MemberLogin
+    public class MemberEnterPortal
     {
         [Required]
         public int MemberId { get; set; }

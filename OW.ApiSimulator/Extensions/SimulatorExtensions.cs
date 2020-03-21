@@ -7,7 +7,7 @@ namespace OW.ApiSimulator.Extensions
     {
         public static void AddOW(this IServiceCollection services)
         {
-            services.AddSingleton(new NotfityCustomerLoginResult());
+            services.AddSingleton(new EnterPortalResult());
             services.AddSingleton(new GetBalanceResult());
             services.AddSingleton(new PlaceBetResult());
             services.AddSingleton(new EndGameResult());

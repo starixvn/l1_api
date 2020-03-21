@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
+using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
-using L1.Features.OWCommunicators.NotifyLogin;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.WebApi.Models;
@@ -22,18 +22,16 @@ namespace L1.WebApi.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
-        public async Task<IActionResult> NotifyLogin([FromBody] MemberLogin model)
+        public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
         {
-            var response = await oWCustomerService.NotifyLogin(
-                new NotifyLoginCall(model.Seq, model.MemberId, model.SiteId, model.CharacterName, model.FirstLogin));
+            var response = await oWCustomerService.EnterPortal(
+                new EnterPortalCall(model.Seq, model.MemberId, model.SiteId, model.CharacterName, model.FirstLogin));
 
             return Ok(response);
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
@@ -44,7 +42,6 @@ namespace L1.WebApi.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
@@ -55,7 +52,6 @@ namespace L1.WebApi.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
@@ -66,12 +62,11 @@ namespace L1.WebApi.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
-            var response = await oWCustomerService.EndGame(
-                new VoidGameCall(model.Seq, model.MemberId, model.SiteId, model.GameRoundId, model.ObTransId, model.Reason));
+            var response = await oWCustomerService.VoidGame(
+                new VoidGameCall(model.Seq, model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
 
             return Ok(response);
         }

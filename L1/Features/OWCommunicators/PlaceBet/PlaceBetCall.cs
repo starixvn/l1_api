@@ -2,7 +2,7 @@
 {
     public class PlaceBetCall : OWCall
     {
-        public PlaceBetCall(string seq, int obCustId, string siteId, int gameRoundId, int gameTypeId, int choiceId, double amount, string currency, string ip) : base(seq, obCustId, siteId)
+        public PlaceBetCall(string seq, int obCustId, string siteId, int gameRoundId, int gameTypeId, int choiceId, decimal amount, string currency, string ip) : base(seq, obCustId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
@@ -18,7 +18,7 @@
 
         public int ChoiceId { get; }
 
-        public double Amount { get; }
+        public decimal Amount { get; }
 
         public string Currency { get; }
 

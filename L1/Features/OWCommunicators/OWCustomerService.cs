@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.OWCommunicators.EndGame;
+using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
-using L1.Features.OWCommunicators.NotifyLogin;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.Shared.Configurations;
@@ -10,7 +10,7 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWCustomerService
     {
-        Task<OWResponse<NotifyResult>> NotifyLogin(NotifyLoginCall call);
+        Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call);
 
         Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call);
 
@@ -18,7 +18,7 @@ namespace L1.Features.OWCommunicators
 
         Task<OWResponse<EndGameResult>> EndGame(EndGameCall call);
 
-        Task<OWResponse<VoidGameResult>> EndGame(VoidGameCall call);
+        Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call);
     }
 
     public class OWCustomerService : IOWCustomerService
@@ -32,9 +32,10 @@ namespace L1.Features.OWCommunicators
             endpoints = appSettings.OWServiceSettings.Endpoints;
         }
 
-        public async Task<OWResponse<NotifyResult>> NotifyLogin(NotifyLoginCall call)
+        public async Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
         {
             return await oWService.Post<NotifyResult>(endpoints.NotifyLogin, call);
+            return await oWService.Post<EnterPortalResult>(appSettings.OWServiceSettings.NotifyLoginEndPoint, call);
         }
 
         public async Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
@@ -53,7 +54,7 @@ namespace L1.Features.OWCommunicators
             return await oWService.Post<EndGameResult>(endpoints.EndGame, call);
         }
 
-        public async Task<OWResponse<VoidGameResult>> EndGame(VoidGameCall call)
+        public async Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
 
         {
             return await oWService.Post<VoidGameResult>(endpoints.VoidGame, call);

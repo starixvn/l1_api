@@ -55,7 +55,7 @@ export default class PlaceBet extends React.Component {
       resource: undefined
     });
 
-    Axios.post("/member/bet", request)
+    Axios.post("/member/placeBet", request)
       .then(data => data.data)
       .then(data => (data.error ? Promise.reject(data.error) : data))
       .then(result => this.setState({ result }))
@@ -181,6 +181,7 @@ export default class PlaceBet extends React.Component {
                     type="number"
                     defaultValue={this.state.amount}
                     id="amount"
+                    step="0.01"
                     placeholder="amount"
                     onChange={event => this.handleChange(event)}
                   />

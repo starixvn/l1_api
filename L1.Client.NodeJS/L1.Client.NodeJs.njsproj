@@ -33,8 +33,6 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\index.js" />
-    <Content Include="src\member.js" />
-    <Content Include="src\util.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="demo\auth\" />

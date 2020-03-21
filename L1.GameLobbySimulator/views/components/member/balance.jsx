@@ -1,6 +1,6 @@
 import React from "react";
 import Axios from "axios";
-import { randomString, showAlert } from "../../util.jsx";
+import { showAlert } from "../../util.jsx";
 
 export default class Balance extends React.Component {
   constructor() {

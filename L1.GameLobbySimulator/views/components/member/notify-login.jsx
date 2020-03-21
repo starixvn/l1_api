@@ -35,7 +35,7 @@ export default class Member extends React.Component {
       result: undefined
     });
 
-    Axios.post("/member/notify", request)
+    Axios.post("/member/notifyLogin", request)
       .then(data => data.data)
       .then(data => (data.error ? Promise.reject(data.error) : data))
       .then(result => this.setState({ result }))

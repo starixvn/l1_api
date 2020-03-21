@@ -2,7 +2,7 @@
 {
     public class VoidGameCall : OWCall
     {
-        public VoidGameCall(string seq, int obCustId, string siteId, int gameRoundId, int gameTypeId, string reason) : base(seq, obCustId, siteId)
+        public VoidGameCall(int obCustId, string siteId, int gameRoundId, int gameTypeId, string reason) : base(obCustId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;

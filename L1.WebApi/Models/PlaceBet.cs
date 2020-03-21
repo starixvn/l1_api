@@ -1,13 +1,7 @@
 ﻿namespace L1.WebApi.Models
 {
-    public class PlaceBet
+    public class PlaceBet : MemberRequest
     {
-        public int MemberId { get; set; }
-
-        public string Seq { get; set; }
-
-        public string SiteId { get; set; }
-
         public int GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }

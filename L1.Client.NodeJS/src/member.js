@@ -3,7 +3,7 @@ const { handleError, handleSuccess } = require("./util");
 
 const notifyLogin = ({ apiUrl }) => (params, callback) =>
   new Promise((resolve, reject) => {
-    Axios.post(`${apiUrl}/Member/NotifyLogin`, params)
+    Axios.post(`${apiUrl}/Member/EnterPortal`, params)
       .then(data => data.data)
       .then(handleSuccess(resolve, callback))
       .catch(handleError(reject, callback));

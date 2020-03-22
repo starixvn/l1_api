@@ -122,8 +122,6 @@ deploy_ow_api_simulator:
 deploy_game_lobby_simulator:
   stage: deploy-game-lobby-simulator
   before_script:
-    - apk update && apk upgrade
-    - apk add git openssh bash
     - eval $(ssh-agent -s)
     - echo "$SSH_KEY" | ssh-add -
     - mkdir -p ~/.ssh
@@ -134,7 +132,4 @@ deploy_game_lobby_simulator:
   environment:
     name: deploying
   tags:
-    - docker
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-gamelobby-\d{8}-\d+.*$/
+    - deploy-nodejs

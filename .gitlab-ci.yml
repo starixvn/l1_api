@@ -2,14 +2,14 @@ stages:
   - build
   - deploy-web-api
 
-build:
-  stage: build
-  script:      
-    - dotnet clean ./L1.sln
-    - dotnet restore ./L1.sln
-    - dotnet build ./L1.sln
-  tags:
-    - deploy-dotnet
+#build:
+#  stage: build
+#  script:      
+#    - dotnet clean ./L1.sln
+#    - dotnet restore ./L1.sln
+#    - dotnet build ./L1.sln
+#  tags:
+#    - deploy-dotnet
     
 deploy_web_api:
   stage: deploy-web-api
@@ -19,6 +19,9 @@ deploy_web_api:
     - echo "$SSH_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - dotnet clean ./L1.WebApi/L1.WebApi.csproj
+    - dotnet restore ./L1.WebApi/L1.WebApi.csproj
+    - dotnet build ./L1.WebApi/L1.WebApi.csproj
   script:   
     - echo "====== Deploying ... ======"
     - dotnet publish -c Local ./L1.WebApi/L1.WebApi.csproj -o ./build/api

@@ -1,0 +1,35 @@
+stages:
+  - build
+  - deploy-web-api
+
+build:
+  stage: build
+  script:      
+    - dotnet clean ./L1.sln
+    - dotnet restore ./L1.sln
+    - dotnet build ./L1.sln
+  tags:
+    - deploy-dotnet
+    
+deploy_web_api:
+  stage: deploy-web-api
+  before_script:
+    - echo "====== Setting SSH Key ======"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:   
+    - echo "====== Deploying ... ======"
+    - dotnet publish -c Local ./L1.WebApi/L1.WebApi.csproj -o ./build/api
+    - tar -C ./build/api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
+    - ssh root@$HOST 'sudo service l1-api restart'
+  artifacts:
+    expire_in: 2 days
+    paths:
+      - './build/api'
+  tags:
+    - deploy-dotnet
+#  only:
+#    - /^deploy-\d{8}-\d+.*$/
+#    - /^deploy-api-\d{8}-\d+.*$/

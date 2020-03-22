@@ -102,7 +102,7 @@ deploy_ow_api_simulator:
     - echo "====== Deploying ... ======"
     - dotnet publish -c Local ./OW.ApiSimulator/OW.ApiSimulator.csproj -o ./build/ow-api-simulator
     - tar -C ./build/ow-api-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/ow-api-simulator/ -jxf -'
-    - ssh root@$HOST 'sudo service l1-ow-api-simulator'
+    - ssh root@$HOST 'sudo service l1-ow-api-simulator restart'
   artifacts:
     expire_in: 2 days
     paths:

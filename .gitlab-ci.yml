@@ -28,7 +28,7 @@ deploy_web_api:
     - dotnet build ./L1.WebApi/L1.WebApi.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 ./L1.WebApi/L1.WebApi.csproj -o ./build/api
+    - dotnet publish -c Release -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api
     - tar -C ./build/api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-api restart'
   artifacts:
@@ -54,7 +54,7 @@ deploy_auth_api:
     - dotnet build ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
+    - dotnet publish -c Release -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
     - tar -C ./build/auth-api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   artifacts:
@@ -80,7 +80,7 @@ deploy_member_site_simulator:
     - dotnet build ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj -o ./build/member-site-simulator
+    - dotnet publish -c Release -r linux-x64 --self-contained false ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj -o ./build/member-site-simulator
     - tar -C ./build/member-site-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/member-site-simulator/ -jxf -'
     - ssh root@$HOST 'sudo service l1-member-site-simulator restart'
   artifacts:
@@ -106,7 +106,7 @@ deploy_ow_api_simulator:
     - dotnet build ./OW.ApiSimulator/OW.ApiSimulator.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 ./OW.ApiSimulator/OW.ApiSimulator.csproj -o ./build/ow-api-simulator
+    - dotnet publish -c Release -r linux-x64 --self-contained false ./OW.ApiSimulator/OW.ApiSimulator.csproj -o ./build/ow-api-simulator
     - tar -C ./build/ow-api-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/ow-api-simulator/ -jxf -'
     - ssh root@$HOST 'sudo service l1-ow-api-simulator restart'
   artifacts:
@@ -131,7 +131,5 @@ deploy_game_lobby_simulator:
     - tar jcf - ./L1.Client.NodeJS | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/ -jxf -'
     - tar -C ./L1.GameLobbySimulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/simulator/ -jxf -'
     - ssh root@$HOST 'npm run build  --prefix /var/www/l1/game-lobby-simulator/simulator/ | sudo service l1-gamelobby-simulator restart'
-  environment:
-    name: deploying
   tags:
     - deploy-nodejs

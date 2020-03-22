@@ -1,6 +1,5 @@
 using L1.MemberSiteSimulation.Config;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -22,9 +21,6 @@ namespace L1.MemberSiteSimulation
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            services.AddDataProtection()
-                .SetApplicationName("myapp-web")
-                .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"./"));
             services.AddRazorPages();
         }
 

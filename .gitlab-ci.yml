@@ -1,7 +1,11 @@
 stages:
   - build
   - deploy-web-api
-
+  - deploy_auth_api
+  - deploy_member_site_simulator
+  - deploy_ow_api_simulator
+  - deploy_game_lobby_simulator
+  
 #build:
 #  stage: build
 #  script:      

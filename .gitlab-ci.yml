@@ -89,9 +89,9 @@ deploy_member_site_simulator:
       - './build/member-site-simulator'
   tags:
     - deploy-dotnet
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-member-site-\d{8}-\d+.*$/
+#  only:
+#    - /^deploy-\d{8}-\d+.*$/
+#    - /^deploy-member-site-\d{8}-\d+.*$/
     
 deploy_ow_api_simulator:
   stage: deploy-ow-api-simulator

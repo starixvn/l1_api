@@ -119,6 +119,7 @@ deploy_ow_api_simulator:
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-ow-api-\d{8}-\d+.*$/
     
+    
 deploy_game_lobby_simulator:
   stage: deploy-game-lobby-simulator
   before_script:

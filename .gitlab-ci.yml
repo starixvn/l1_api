@@ -127,7 +127,7 @@ deploy_game_lobby_simulator:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - tar -C ./L1.Client.NodeJS -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/ -jxf -'
+    - tar -C ./L1.Client.NodeJS/* -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/ -jxf -'
     - tar -C ./L1.GameLobbySimulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/simulator/ -jxf -'
     - ssh root@$HOST 'npm install --prefix /var/www/l1/game-lobby-simulator/simulator/ | sudo service l1-gamelobby-simulator restart'
   environment:

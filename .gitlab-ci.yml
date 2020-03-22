@@ -63,6 +63,9 @@ deploy_auth_api:
       - './build/auth-api'
   tags:
     - deploy-dotnet
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
 
 deploy_member_site_simulator:
   stage: deploy-member-site-simulator
@@ -86,6 +89,9 @@ deploy_member_site_simulator:
       - './build/member-site-simulator'
   tags:
     - deploy-dotnet
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-member-site-\d{8}-\d+.*$/
     
 deploy_ow_api_simulator:
   stage: deploy-ow-api-simulator
@@ -109,6 +115,9 @@ deploy_ow_api_simulator:
       - './build/ow-api-simulator'
   tags:
     - deploy-dotnet
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-ow-api-\d{8}-\d+.*$/
     
 deploy_game_lobby_simulator:
   stage: deploy-game-lobby-simulator
@@ -126,3 +135,6 @@ deploy_game_lobby_simulator:
     name: deploying
   tags:
     - docker
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-gamelobby-\d{8}-\d+.*$/

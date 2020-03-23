@@ -15,6 +15,15 @@ const singleSignInParams = {
 const withAsyncAwait = async () => {
   console.log("Starting demo Authentication using async/await");
 
+  // Get bearer token
+  console.log("\nBearer Token\n");
+  try {
+    const token = await GameClient.auth.getBearerToken();
+    console.log(token);
+  } catch (error) {
+    console.log(`Bearer Token On Error: ${error}`);
+  }
+
   // Single Sign On
   console.log("\nSingleSignOn\n");
   try {

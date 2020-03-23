@@ -1,6 +1,7 @@
 import React from "react";
 import Axios from "axios";
 import { randomString, showAlert } from "../../util.jsx";
+import Input from "../input.jsx";
 
 export default class Member extends React.Component {
   constructor() {
@@ -14,20 +15,12 @@ export default class Member extends React.Component {
       firstLogin: false,
       result: null
     };
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
-    const state = this.state;
-
-    if (event.target.type === "checkbox") {
-      state[event.target.id] = event.target.checked;
-    } else if (event.target.type === 'number') {
-      state[event.target.id] = parseInt(event.target.value);
-    } else {
-      state[event.target.id] = event.target.value;
-    }
-
-    this.setState(state);
+  handleChange(data) {
+    this.setState(data);
   }
 
   handleSubmit(event) {
@@ -52,60 +45,41 @@ export default class Member extends React.Component {
             <form onSubmit={event => this.handleSubmit(event)}>
               <fieldset className="container">
                 <legend>Notify Login</legend>
-
-                <div className="input-group vertical">
-                  <label htmlFor="memberId">Member ID</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.memberId}
-                    id="memberId"
-                    placeholder="Member ID"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="characterName">Character name</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.characterName}
-                    id="characterName"
-                    placeholder="Character Name"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="seq">SEQ</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.seq}
-                    id="seq"
-                    placeholder="seq"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="siteId">Site ID</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.siteId}
-                    id="siteId"
-                    placeholder="Site ID"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="row responsive-label">
-                  <div className="col-sm-12 col-md-3">
-                    <label htmlFor="firstLogin">First Login</label>
-                  </div>
-                  <div className="col-sm-12 col-md">
-                    <input
-                      type="checkbox"
-                      checked={this.props.firstLogin}
-                      id="firstLogin"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
-                </div>
+                <Input
+                  type="int"
+                  id="memberId"
+                  name="Member ID"
+                  value={this.state.memberId}
+                  onChange={this.handleChange}
+                />
+                <Input
+                  type="text"
+                  id="characterName"
+                  name="Chacter Name"
+                  value={this.state.characterName}
+                  onChange={this.handleChange}
+                />
+                <Input
+                  type="text"
+                  id="seq"
+                  name="SEQ"
+                  value={this.state.seq}
+                  onChange={this.handleChange}
+                />
+                <Input
+                  type="text"
+                  id="siteId"
+                  name="Site ID"
+                  value={this.state.siteId}
+                  onChange={this.handleChange}
+                />
+                <Input
+                  type="checkbox"
+                  id="firstLogin"
+                  name="First Login"
+                  value={this.state.siteId}
+                  onChange={this.handleChange}
+                />
                 <input className="primary" type="submit" value="Notify" />
               </fieldset>
             </form>

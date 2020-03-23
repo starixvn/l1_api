@@ -2,11 +2,11 @@ const initAuth = require("./auth");
 const initMember = require("./member");
 
 const GameClient = config => {
-  if(GameClient.config) {
+  if (GameClient.config) {
     delete GameClient.config;
   }
 
-  if(GameClient.instance) {
+  if (GameClient.instance) {
     delete GameClient.instance;
   }
 

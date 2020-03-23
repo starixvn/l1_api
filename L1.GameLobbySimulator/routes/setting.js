@@ -4,7 +4,7 @@ const fs = require("fs");
 
 router.get("/setting/data", async (req, res) => {
   const config = await fs.readFileSync("game-client-config.json");
-  res.send(config);
+  res.send(JSON.parse(config));
 });
 
 router.post("/setting/data", async (req, res) => {

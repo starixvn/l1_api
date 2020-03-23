@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 
 namespace L1.WebApi
 {
@@ -44,6 +45,8 @@ namespace L1.WebApi
                     });
 
                 services.AddMvc();
+
+                IdentityModelEventSource.ShowPII = true;
             }
             catch
             {

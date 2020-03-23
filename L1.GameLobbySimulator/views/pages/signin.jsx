@@ -20,7 +20,8 @@ export default class SignIn extends React.Component {
       verifyResult: null,
       resource: {
         currency: [],
-        game: []
+        game: [],
+        language: []
       },
       gameId: "1"
     };
@@ -82,6 +83,11 @@ export default class SignIn extends React.Component {
             game
           }))
       )
+      .then(resource =>
+        Axios.get("/resource/language")
+          .then(data => data.data)
+          .then(language => ({ language, ...resource }))
+      )
       .then(resource => this.setState({ resource }));
   }
 
@@ -122,9 +128,11 @@ export default class SignIn extends React.Component {
                       onChange={event => this.handleChange(event)}
                       value={this.state.language}
                     >
-                      <option value="en-US">English</option>
-                      <option value="zh-CN">Chinese Simplified</option>
-                      <option value="zh-TW">Chinese Traditional</option>
+                      {this.state.resource.language.map(language => (
+                        <option value={language.value} key={language.value}>
+                          {language.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

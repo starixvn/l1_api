@@ -4,5 +4,6 @@
   "client": {
     "id": "licensee1",
     "secret": "123licensee1%^&sit"
-  }
+  },
+  "id": "licensee1"
 }

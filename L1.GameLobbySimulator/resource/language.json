@@ -1,0 +1,14 @@
+[
+  {
+    "name": "English",
+    "value": "en-US"
+  },
+  {
+    "value": "zh-CN",
+    "name": "Chinese Sumplified"
+  },
+  {
+    "value": "zh-TW",
+    "name": "Chinese Traditional"
+  }
+]

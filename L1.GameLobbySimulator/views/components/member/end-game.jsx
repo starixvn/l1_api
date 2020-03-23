@@ -1,6 +1,9 @@
 import React from "react";
 import Axios from "axios";
 import { showAlert } from "../../util.jsx";
+import Input from "../input.jsx";
+import LanguageSelect from "../select/language.jsx";
+import GameSelect from "../select/game.jsx";
 
 export default class EndGame extends React.Component {
   constructor() {
@@ -8,35 +11,24 @@ export default class EndGame extends React.Component {
 
     this.state = {
       memberId: (Math.random() * 10000000) >> 0,
-      seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       siteId: "licensee1",
       gameRoundId: 1,
       gameTypeId: 1,
       totalAmount: (Math.random() * 100) >> 0,
       totalWin: (Math.random() * 100) >> 0,
       validBetAmount: (Math.random() * 100) >> 0,
+      languageCode: "vi-VN",
       result: null,
       resource: {
         game: []
       }
     };
+
+    this.changeValue = this.changeValue.bind(this);
   }
 
-  handleChange(event) {
-    const state = this.state;
-    if (event.target.id === "gameTypeId") {
-      state[event.target.id] = parseInt(event.target.value);
-    } else if (event.target.type === "number") {
-      if (event.target.id === "totalAmount") {
-        state[event.target.id] = parseFloat(event.target.value);
-      } else {
-        state[event.target.id] = parseInt(event.target.value);
-      }
-    } else {
-      state[event.target.id] = event.target.value;
-    }
-
-    this.setState(state);
+  changeValue(data) {
+    this.setState(data);
   }
 
   handleSubmit(event) {
@@ -69,91 +61,59 @@ export default class EndGame extends React.Component {
             <form onSubmit={event => this.handleSubmit(event)}>
               <fieldset className="container">
                 <legend>End game</legend>
-                <div className="input-group vertical">
-                  <label htmlFor="memberId">Member ID</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.memberId}
-                    id="memberId"
-                    placeholder="Member ID"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="seq">SEQ</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.seq}
-                    id="seq"
-                    placeholder="seq"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="siteId">Site ID</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.siteId}
-                    id="siteId"
-                    placeholder="Site ID"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="gameRoundId">Game Round ID</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.gameRoundId}
-                    id="gameRoundId"
-                    placeholder="Game round id"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="gameTypeId">Game</label>
-                  <select
-                    id="gameTypeId"
-                    onChange={event => this.handleChange(event)}
-                    value={this.state.gameId}
-                  >
-                    {this.state.resource.game.map(game => (
-                      <option value={game.id} key={game.id}>
-                        {game.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="totalAmount">Total Amount</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.totalAmount}
-                    id="totalAmount"
-                    placeholder="total amount"
-                    step="0.01"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="totalWin">Total Win</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.totalWin}
-                    id="totalWin"
-                    placeholder="total win"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="validBetAmount">Valid bet amount</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.validBetAmount}
-                    id="validBetAmount"
-                    placeholder="valid bet amount"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
+                <Input
+                  type="int"
+                  id="memberId"
+                  name="Member ID"
+                  value={this.state.memberId}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="text"
+                  id="siteId"
+                  name="Site ID"
+                  value={this.state.siteId}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="int"
+                  id="gameRoundId"
+                  name="Game Round ID"
+                  value={this.state.gameRoundId}
+                  onChange={this.changeValue}
+                />
+                <GameSelect
+                  onChange={this.changeValue}
+                  id="gameTypeId"
+                  value={this.state.gameTypeId}
+                />
+                <Input
+                  type="float"
+                  id="totalAmount"
+                  name="Total Amount"
+                  value={this.state.totalAmount}
+                  step="0.01"
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="int"
+                  id="totalWin"
+                  name="Total Win"
+                  value={this.state.totalWin}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="int"
+                  id="validBetAmount"
+                  name="Valid bet amount"
+                  value={this.state.validBetAmount}
+                  onChange={this.changeValue}
+                />
+                <LanguageSelect
+                  onChange={this.changeValue}
+                  id="languageCode"
+                  value={this.state.languageCode}
+                />
                 <input className="primary" type="submit" value="End" />
               </fieldset>
             </form>

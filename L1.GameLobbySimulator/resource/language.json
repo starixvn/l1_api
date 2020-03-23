@@ -1,14 +1,10 @@
 [
   {
-    "name": "English",
-    "value": "en-US"
+    "value": "vi-VN",
+    "name": " Tiếng việt"
   },
   {
-    "value": "zh-CN",
-    "name": "Chinese Sumplified"
-  },
-  {
-    "value": "zh-TW",
-    "name": "Chinese Traditional"
+    "value": "en-US",
+    "name": " English"
   }
 ]

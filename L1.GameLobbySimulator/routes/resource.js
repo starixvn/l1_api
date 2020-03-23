@@ -10,8 +10,8 @@ router
   })
   .post("/resource/:name", async (req, res) => {
     const name = req.params.name;
-    const config = await fs.writeFileSync(`resource/${name}.json`, req.body);
-    res.send(config);
+    await fs.writeFileSync(`resource/${name}.json`, JSON.stringify(req.body, null, 2));
+    res.send(req.body);
   });
 
 module.exports = router;

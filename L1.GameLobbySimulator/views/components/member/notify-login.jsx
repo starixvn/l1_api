@@ -2,6 +2,7 @@ import React from "react";
 import Axios from "axios";
 import { randomString, showAlert } from "../../util.jsx";
 import Input from "../input.jsx";
+import LanguageSelect from "../select/language.jsx";
 
 export default class Member extends React.Component {
   constructor() {
@@ -12,6 +13,7 @@ export default class Member extends React.Component {
       characterName: randomString(8),
       seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       siteId: "licensee1",
+      languageCode: "vi-VN",
       firstLogin: false,
       result: null
     };
@@ -79,6 +81,11 @@ export default class Member extends React.Component {
                   name="First Login"
                   value={this.state.siteId}
                   onChange={this.handleChange}
+                />
+                <LanguageSelect
+                  onChange={this.handleChange}
+                  id="languageCode"
+                  value={this.state.languageCode}
                 />
                 <input className="primary" type="submit" value="Notify" />
               </fieldset>

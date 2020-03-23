@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class Input extends React.Component {
+export default class Select extends React.Component {
   constructor(props) {
     super(props);
 
@@ -10,7 +10,7 @@ export default class Input extends React.Component {
   handleChange(event) {
     let value = null;
 
-    if (event.target.type === "number") {
+    if (event.target.attributes.getNamedItem("type").value === "number") {
       if (this.props.type === "float") {
         value = parseFloat(event.target.value);
       } else {
@@ -25,6 +25,14 @@ export default class Input extends React.Component {
     this.props.onChange(data);
   }
 
+  getType(typeName) {
+    if (typeName === "int" || typeName === "float") {
+      return "number";
+    }
+
+    return typeName;
+  }
+
   render() {
     const { id, name, value, type, options } = this.props;
     return (
@@ -32,13 +40,13 @@ export default class Input extends React.Component {
         <label htmlFor={id}>{name}</label>
         <select
           className="input"
-          type={type}
+          type={this.getType(type)}
           id={id}
           onChange={event => this.handleChange(event)}
           value={value}
         >
           {options.map(option => (
-            <option value={option.value} key={option.value}>
+            <option value={option.value || option.id} key={option.value || option.id}>
               {option.name}
             </option>
           ))}

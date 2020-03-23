@@ -36,13 +36,14 @@ export default class Input extends React.Component {
   }
 
   render() {
-    const { id, name, type, value } = this.props;
+    const { id, name, type, value, step } = this.props;
     return (
       <div className="input-group vertical">
         <label htmlFor={id}>{name}</label>
         <input
           type={this.getType(type)}
           defaultValue={value}
+          step={step || 1}
           id={id}
           onChange={this.handleChange}
         />

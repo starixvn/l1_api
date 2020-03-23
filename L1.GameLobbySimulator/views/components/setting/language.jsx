@@ -26,13 +26,23 @@ export default class GameClient extends React.Component {
   }
 
   handleSubmit(event) {
-    Axios.post("/setting/data", this.state)
-      .then(data => data.data)
-      .then(data => (data.error ? Promise.reject(data.error) : data))
-      .then(data => this.setState(data))
-      .catch(showAlert);
+    const splited = this.state.newLanguage.split(":");
 
-    event.preventDefault();
+    if (splited.length == 2) {
+      const language = this.state.language;
+      language.push({
+        value: splited[0],
+        name: splited[1]
+      });
+
+      Axios.post("/resource/language", language)
+        .then(data => data.data)
+        .then(data => (data.error ? Promise.reject(data.error) : data))
+        .then(language => this.setState({ language }))
+        .catch(showAlert);
+
+      event.preventDefault();
+    }
   }
 
   render() {

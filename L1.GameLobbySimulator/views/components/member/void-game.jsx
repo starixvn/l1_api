@@ -1,6 +1,8 @@
 import React from "react";
 import Axios from "axios";
 import { showAlert, randomString } from "../../util.jsx";
+import Input from "../input.jsx";
+import LanguageSelect from "../select/language.jsx";
 
 export default class VoidGame extends React.Component {
   constructor() {
@@ -8,24 +10,19 @@ export default class VoidGame extends React.Component {
 
     this.state = {
       memberId: (Math.random() * 10000000) >> 0,
-      seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       siteId: "licensee1",
       gameRoundId: 1,
       obTransId: (Math.random() * 100) >> 0,
       reason: randomString(8),
+      languageCode: "vi-VN",
       result: null
     };
+
+    this.changeValue = this.changeValue.bind(this);
   }
 
-  handleChange(event) {
-    const state = this.state;
-    if (event.target.type === "number") {
-      state[event.target.id] = parseInt(event.target.value);
-    } else {
-      state[event.target.id] = event.target.value;
-    }
-
-    this.setState(state);
+  changeValue(data) {
+    this.setState(data);
   }
 
   handleSubmit(event) {
@@ -51,65 +48,46 @@ export default class VoidGame extends React.Component {
             <form onSubmit={event => this.handleSubmit(event)}>
               <fieldset className="container">
                 <legend>Void game</legend>
-                <div className="input-group vertical">
-                  <label htmlFor="memberId">Member ID</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.memberId}
-                    id="memberId"
-                    placeholder="Member ID"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="seq">SEQ</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.seq}
-                    id="seq"
-                    placeholder="seq"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="siteId">Site ID</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.siteId}
-                    id="siteId"
-                    placeholder="Site ID"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="gameRoundId">Game Round ID</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.gameRoundId}
-                    id="gameRoundId"
-                    placeholder="Game round id"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="obTransId">ObTrans ID</label>
-                  <input
-                    type="number"
-                    defaultValue={this.state.obTransId}
-                    id="obTransId"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
-                <div className="input-group vertical">
-                  <label htmlFor="reason">Reason</label>
-                  <input
-                    type="text"
-                    defaultValue={this.state.reason}
-                    id="reason"
-                    placeholder="reason"
-                    onChange={event => this.handleChange(event)}
-                  />
-                </div>
+                <Input
+                  type="int"
+                  id="memberId"
+                  name="Member ID"
+                  value={this.state.memberId}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="text"
+                  id="siteId"
+                  name="Site ID"
+                  value={this.state.siteId}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="int"
+                  id="gameRoundId"
+                  name="Game Round ID"
+                  value={this.state.gameRoundId}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="int"
+                  id="obTransId"
+                  name="ObTrans ID"
+                  value={this.state.obTransId}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="text"
+                  id="reason"
+                  name="Reason"
+                  value={this.state.reason}
+                  onChange={this.changeValue}
+                />
+                <LanguageSelect
+                  onChange={this.changeValue}
+                  id="languageCode"
+                  value={this.state.languageCode}
+                />
                 <input className="primary" type="submit" value="End" />
               </fieldset>
             </form>

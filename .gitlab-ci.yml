@@ -37,9 +37,9 @@ deploy_web_api:
       - './build/api'
   tags:
     - deploy-dotnet
-  # only:
-  #   - /^deploy-\d{8}-\d+.*$/
-  #   - /^deploy-api-\d{8}-\d+.*$/
+   only:
+     - /^deploy-\d{8}-\d+.*$/
+     - /^deploy-api-\d{8}-\d+.*$/
 
 deploy_auth_api:
   stage: deploy-auth-api
@@ -63,9 +63,9 @@ deploy_auth_api:
       - './build/auth-api'
   tags:
     - deploy-dotnet
-#  only:
-#    - /^deploy-\d{8}-\d+.*$/
-#    - /^deploy-auth-api-\d{8}-\d+.*$/
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
 
 deploy_member_site_simulator:
   stage: deploy-member-site-simulator
@@ -89,9 +89,9 @@ deploy_member_site_simulator:
       - './build/member-site-simulator'
   tags:
     - deploy-dotnet
-#  only:
-#    - /^deploy-\d{8}-\d+.*$/
-#    - /^deploy-member-site-\d{8}-\d+.*$/
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-member-site-simulator-\d{8}-\d+.*$/
     
 deploy_ow_api_simulator:
   stage: deploy-ow-api-simulator
@@ -117,7 +117,7 @@ deploy_ow_api_simulator:
     - deploy-dotnet
   only:
     - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-ow-api-\d{8}-\d+.*$/
+    - /^deploy-ow-api-simulator-\d{8}-\d+.*$/
     
     
 deploy_game_lobby_simulator:
@@ -133,3 +133,6 @@ deploy_game_lobby_simulator:
     - ssh root@$HOST 'npm run build  --prefix /var/www/l1/game-lobby-simulator/simulator/ | sudo service l1-gamelobby-simulator restart'
   tags:
     - deploy-nodejs
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-game-lobby-simulator-\d{8}-\d+.*$/

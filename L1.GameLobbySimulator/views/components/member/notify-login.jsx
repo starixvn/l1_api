@@ -30,7 +30,7 @@ export default class Member extends React.Component {
       result: undefined
     });
 
-    Axios.post("/member/notifyLogin", request)
+    Axios.post("/member/enterPortal", request)
       .then(data => data.data)
       .then(data => (data.error ? Promise.reject(data.error) : data))
       .then(result => this.setState({ result }))
@@ -46,7 +46,7 @@ export default class Member extends React.Component {
           <div className="col-sm-12 col-md-6">
             <form onSubmit={event => this.handleSubmit(event)}>
               <fieldset className="container">
-                <legend>Notify Login</legend>
+                <legend>Enter Portal</legend>
                 <Input
                   type="int"
                   id="memberId"

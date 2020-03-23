@@ -20,6 +20,10 @@ const metadata = [
   {
     action: "/Member/VoidGame",
     name: "voidGame"
+  },
+  {
+    action: "/Member/EnterPortal",
+    name: "enterPortal"
   }
 ];
 

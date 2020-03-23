@@ -37,9 +37,9 @@ deploy_web_api:
       - './build/api'
   tags:
     - deploy-dotnet
-   only:
-     - /^deploy-\d{8}-\d+.*$/
-     - /^deploy-api-\d{8}-\d+.*$/
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
 
 deploy_auth_api:
   stage: deploy-auth-api

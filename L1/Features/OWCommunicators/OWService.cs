@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.OWCommunicators.Resources;
+using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Newtonsoft.Json;
@@ -18,20 +19,22 @@ namespace L1.Features.OWCommunicators
     {
         private const string DefaultMediaType = "application/json";
 
-        private readonly HttpClient _httpClient;
-        private readonly OWAuth _auth;
+        private readonly HttpClient httpClient;
+        private readonly OWAuth auth;
+        private readonly OWEndPoints endpoints;
 
-        public OWService(HttpClient httpClient, OWAuth auth)
+        public OWService(HttpClient httpClient, OWAuth auth, OWEndPoints endpoints)
         {
-            _httpClient = httpClient;
-            _auth = auth;
+            this.httpClient = httpClient;
+            this.auth = auth;
+            this.endpoints = endpoints;
         }
 
         public async Task<OWResponse<T>> Post<T>(string apiEndpoint, OWCall call) where T : IOWResult, new()
         {
-            var owRequestBody = new OWRequest(_auth, call);
+            var owRequestBody = new OWRequest(auth, call);
             var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
-            var response = await _httpClient.PostAsync(apiEndpoint, content);
+            var response = await httpClient.PostAsync(apiEndpoint, content);
             OWResponse<T> finalResponse;
 
             if (response.IsSuccessStatusCode)
@@ -39,6 +42,11 @@ namespace L1.Features.OWCommunicators
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 finalResponse = JsonConvert.DeserializeObject<OWResponse<T>>(responseContent);
+
+                if (finalResponse.Result.ErrorCode == OWSpecialErrorCodes.UnderMaintenance)
+                {
+                    await ScheduleMaintenance(call);
+                }
             }
             else
             {
@@ -51,6 +59,22 @@ namespace L1.Features.OWCommunicators
             }
 
             return finalResponse;
+        }
+
+        public async Task ScheduleMaintenance(OWCall originalCall)
+        {
+            var checkingMaintenanceCall = new OWCall(originalCall.ObCustId, originalCall.SiteId);
+            var owRequestBody = new OWRequest(auth, checkingMaintenanceCall);
+            var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
+            var response = await httpClient.PostAsync(endpoints.CheckMaintenance, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var desializedResponse = JsonConvert.DeserializeObject<OWResponse<OWMaintenanceResult>>(responseContent);
+
+                // TODO: Trigger maintenance plan at Game Admin.
+            }
         }
 
         private static async Task<OWResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response) where T : IOWResult, new()

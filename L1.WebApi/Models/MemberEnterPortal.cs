@@ -2,7 +2,6 @@
 {
     public class MemberEnterPortal : MemberRequest
     {
-
         public string CharacterName { get; set; }
 
         public string Seq { get; set; }

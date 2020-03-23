@@ -26,10 +26,10 @@ namespace L1.Features.OWCommunicators
         private readonly IOWService oWService;
         private readonly OWEndPoints endpoints;
 
-        public OWCustomerService(IOWService oWService, IAppSettings appSettings)
+        public OWCustomerService(IOWService oWService, OWEndPoints endpoints)
         {
             this.oWService = oWService;
-            endpoints = appSettings.OWServiceSettings.Endpoints;
+            this.endpoints = endpoints;
         }
 
         public async Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)

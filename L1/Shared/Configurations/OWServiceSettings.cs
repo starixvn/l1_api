@@ -24,5 +24,7 @@ namespace L1.Shared.Configurations
         public string EndGame { get; set; }
 
         public string VoidGame { get; set; }
+
+        public string CheckMaintenance { get; set; }
     }
 }

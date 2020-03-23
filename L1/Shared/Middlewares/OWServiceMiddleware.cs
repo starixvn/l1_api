@@ -13,6 +13,7 @@ namespace L1.Shared.Middlewares
         public static void AddOWServices(this IServiceCollection services, OWServiceSettings owServiceSettings)
         {
             services.AddSingleton(new OWAuth(owServiceSettings.Login, owServiceSettings.Password));
+            services.AddSingleton(owServiceSettings.Endpoints);
             services.AddScoped<IOWCustomerService, OWCustomerService>();
 
             services.AddHttpClient<IOWService, OWService>(httpClient =>

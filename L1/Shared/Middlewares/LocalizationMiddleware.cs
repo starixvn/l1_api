@@ -44,7 +44,7 @@ namespace L1.Shared.Middlewares
     }
 
     public static class LocalizationMiddlewareExtensions
-    { 
+    {
         public static void ConfigureLocalization(this IApplicationBuilder app)
             => app.UseMiddleware(typeof(LocalizationMiddleware));
     }

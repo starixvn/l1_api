@@ -136,7 +136,7 @@ namespace OW.ApiSimulator.Controllers
         public IActionResult EndGame([FromBody] OWRequest<EndGameCall> request)
         {
             var result = serviceProvider.GetRequiredService<EndGameResult>();
-         
+
             result.Seq = request.Call?.Seq;
 
             if (result.ErrorCode == 0)

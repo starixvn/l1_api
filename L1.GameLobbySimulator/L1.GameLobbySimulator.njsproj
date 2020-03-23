@@ -52,6 +52,7 @@
     <Content Include="views\components\header.jsx">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\components\input.jsx" />
     <Content Include="views\components\member.jsx" />
     <Content Include="views\components\member\balance.jsx" />
     <Content Include="views\components\member\end-game.jsx" />

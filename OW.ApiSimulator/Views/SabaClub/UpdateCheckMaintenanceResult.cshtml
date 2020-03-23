@@ -1,0 +1,23 @@
+﻿@model OW.ApiSimulator.Models.OW.CheckMaintenanceResult
+
+<h3>Update Check Maintenance Result</h3>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="ErrorCode"></label>
+        <input class="form-control" asp-for="ErrorCode" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ErrorDescription"></label>
+        <input class="form-control" asp-for="ErrorDescription" />
+    </div>
+    <div class="form-group">
+        <label asp-for="StartTime"></label>
+        <input class="form-control" asp-for="StartTime" type="datetime" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EndTime"></label>
+        <input class="form-control" asp-for="EndTime" type="datetime" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save" />
+</form>

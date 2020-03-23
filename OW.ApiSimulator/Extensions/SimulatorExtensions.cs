@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using OW.ApiSimulator.Models.OW;
 
 namespace OW.ApiSimulator.Extensions
@@ -12,6 +13,7 @@ namespace OW.ApiSimulator.Extensions
             services.AddSingleton(new PlaceBetResult());
             services.AddSingleton(new EndGameResult());
             services.AddSingleton(new VoidGameResult());
+            services.AddSingleton(new CheckMaintenanceResult { StartTime = DateTimeOffset.UtcNow, EndTime = DateTimeOffset.UtcNow.AddHours(1) });
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace L1.WebApi.Models
+﻿using System;
+
+namespace L1.WebApi.Models
 {
     public class EndGame : MemberRequest
     {
@@ -11,5 +13,7 @@
         public decimal TotalWin { get; set; }
 
         public int ValidBetAmount { get; set; }
+
+        public DateTimeOffset EndTime { get; set; }
     }
 }

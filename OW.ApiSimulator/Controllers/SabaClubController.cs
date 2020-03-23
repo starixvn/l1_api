@@ -185,5 +185,36 @@ namespace OW.ApiSimulator.Controllers
                 Result = result
             });
         }
+
+        [HttpGet]
+        public IActionResult UpdateCheckMaintenanceResult()
+        {
+            return View(serviceProvider.GetRequiredService<CheckMaintenanceResult>());
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCheckMaintenanceResult(CheckMaintenanceResult model)
+        {
+            var result = serviceProvider.GetRequiredService<CheckMaintenanceResult>();
+            result.ErrorCode = model.ErrorCode;
+            result.ErrorDescription = model.ErrorDescription;
+            result.StartTime = model.StartTime;
+            result.EndTime = model.EndTime;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult CheckMaintenance([FromBody] OWRequest<CheckMaintenanceCall> request)
+        {
+            var result = serviceProvider.GetRequiredService<CheckMaintenanceResult>();
+            result.Seq = request.Call?.Seq;
+       
+            return Ok(new OWResponse<CheckMaintenanceResult>
+            {
+                TimeStamp = DateTimeOffset.UtcNow,
+                Result = result
+            });
+        }
     }
 }

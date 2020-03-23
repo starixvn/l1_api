@@ -60,7 +60,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
             var response = await oWCustomerService.EndGame(
-                new EndGameCall(model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount));
+                new EndGameCall(model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount, model.EndTime));
 
             return Ok(response);
         }

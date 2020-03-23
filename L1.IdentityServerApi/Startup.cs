@@ -49,33 +49,27 @@ namespace L1.IdentityServerApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            try
+            if (env.IsDevelopment())
             {
-                if (env.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                }
-
-                app.ConfigureExceptionHandler();
-
-                app.UseRouting();
-
-                //app.UseForwardedHeaders(new ForwardedHeadersOptions
-                //{
-                //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                //});
-
-                app.UseAuthorization();
-                app.UseIdentityServer();
-
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                });
+                app.UseDeveloperExceptionPage();
             }
-            catch
+
+            app.ConfigureExceptionHandler();
+
+            app.UseRouting();
+
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            //});
+
+            app.UseAuthorization();
+            app.UseIdentityServer();
+
+            app.UseEndpoints(endpoints =>
             {
-            }
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

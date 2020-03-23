@@ -59,6 +59,7 @@ namespace L1.WebApi
             }
 
             app.ConfigureExceptionHandler();
+            app.ConfigureLocalization();
 
             app.UseRouting();
 

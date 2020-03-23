@@ -130,7 +130,8 @@ deploy_game_lobby_simulator:
   script:
     - tar jcf - ./L1.Client.NodeJS | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/ -jxf -'
     - tar -C ./L1.GameLobbySimulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/simulator/ -jxf -'
-    - ssh root@$HOST 'sudo service l1-gamelobby-simulator restart'
+    - ssh root@$HOST 'npm install --prefix /var/www/l1/game-lobby-simulator/simulator/ && npm run build  --prefix /var/www/l1/game-lobby-simulator/simulator/ | sudo service l1-gamelobby-simulator restart'
+    - ssh root@$HOST 'chmod -R 777 /var/www/l1/game-lobby-simulator/resource /var/www/l1/game-lobby-simulator/game-client-config.json'
   tags:
     - deploy-nodejs
   only:

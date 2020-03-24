@@ -37,7 +37,7 @@ namespace L1.Client
             client.SetBearerToken(tokenResponse.AccessToken);
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
-            var endpoint = "signin/index";
+            const string endpoint = "signin/index";
             var response = await client.PostAsync(endpoint, paramContent);
 
             if (!response.IsSuccessStatusCode)

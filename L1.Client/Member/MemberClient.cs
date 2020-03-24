@@ -36,7 +36,7 @@ namespace L1.Client
             client.SetBearerToken(tokenResponse.AccessToken);
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var endpoint = "member/retrieveendgameinfo";
+            const string endpoint = "member/retrieveendgameinfo";
             var response = await client.PostAsync(endpoint, paramContent);
 
             var responseContent = await response.Content.ReadAsStringAsync();

@@ -7,8 +7,14 @@ namespace L1.Client
 {
     public static class HttpClientManager
     {
-        public static async Task<TokenResponse> GetAccessToken(HttpClient client, AuthenticationInfo authenticationInfo)
+        private static HttpClient identityClient;
+        private static HttpClient apiClient;
+        private static readonly object lockObj = new object();
+
+        public static async Task<TokenResponse> GetAccessToken(AuthenticationInfo authenticationInfo)
         {
+            var client = GetIdentityClient();
+
             var request = new DiscoveryDocumentRequest
             {
                 Address = authenticationInfo.AuthUri.ToString(),
@@ -33,6 +39,42 @@ namespace L1.Client
             });
 
             return tokenResponse;
+        }
+
+        private static HttpClient GetIdentityClient()
+        {
+            if (identityClient == null)
+            {
+                lock (lockObj)
+                {
+                    if (identityClient == null)
+                    {
+                        identityClient = new HttpClient();
+                    }
+                }
+            }
+
+            return identityClient;
+        }
+
+        public static HttpClient GetApiClient(Uri apiUri)
+        {
+            if (apiClient == null)
+            {
+                lock (lockObj)
+                {
+                    if (apiClient == null)
+                    {
+                        apiClient = new HttpClient { BaseAddress = apiUri };
+                    }
+                }
+            }
+            else
+            {
+                apiClient.BaseAddress = apiUri;
+            }
+
+            return apiClient;
         }
     }
 }

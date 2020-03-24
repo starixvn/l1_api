@@ -15,14 +15,14 @@ namespace L1.Client
 
     public class AuthenticationClient : IAuthenticationClient
     {
-        private static readonly HttpClient client = new HttpClient();
+        private readonly HttpClient client;
         private readonly AuthenticationInfo authenticationInfo;
         private readonly Func<HttpClient, AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc;
 
         public AuthenticationClient(AuthenticationInfo authenticationInfo, Func<HttpClient, AuthenticationInfo, Task<TokenResponse>> getAccessTokenFunc = null)
         {
             this.authenticationInfo = authenticationInfo;
-            this.getAccessTokenFunc = getAccessTokenFunc ?? HttpClientManager.GetAccessToken;
+            client = HttpClientManager.GetApiClient(authenticationInfo.ApiUri);
         }
 
         public async Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams, Action<string> errorHandler = null)
@@ -38,8 +38,8 @@ namespace L1.Client
             client.SetBearerToken(tokenResponse.AccessToken);
 
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
-            var action = $"{authenticationInfo.ApiUri}signin/index";
-            var response = await client.PostAsync(action, paramContent);
+            var endpoint = "signin/index";
+            var response = await client.PostAsync(endpoint, paramContent);
 
             if (!response.IsSuccessStatusCode)
             {

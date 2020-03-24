@@ -12,16 +12,16 @@
             Ip = ip;
         }
 
-        public int GameRoundId { get; }
+        public int GameRoundId { get; set; }
 
-        public int GameTypeId { get; }
+        public int GameTypeId { get; set; }
 
-        public int ChoiceId { get; }
+        public int ChoiceId { get; set; }
 
-        public decimal Amount { get; }
+        public decimal Amount { get; set; }
 
-        public string Currency { get; }
+        public string Currency { get; set; }
 
-        public string Ip { get; }
+        public string Ip { get; set; }
     }
 }

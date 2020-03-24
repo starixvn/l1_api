@@ -9,10 +9,10 @@
             Reason = reason;
         }
 
-        public int GameRoundId { get; }
+        public int GameRoundId { get; set; }
 
-        public int GameTypeId { get; }
+        public int GameTypeId { get; set; }
 
-        public string Reason { get; }
+        public string Reason { get; set; }
     }
 }

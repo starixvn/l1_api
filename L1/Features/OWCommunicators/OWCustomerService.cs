@@ -49,7 +49,10 @@ namespace L1.Features.OWCommunicators
         {
             var response = await oWService.Post<PlaceBetResult>(endpoints.PlaceBet, call);
 
-            await logService.LogBetAsync(response);
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogBetAsync(response);
+            }
 
             return response;
         }
@@ -58,7 +61,10 @@ namespace L1.Features.OWCommunicators
         {
             var response = await oWService.Post<EndGameResult>(endpoints.EndGame, call);
 
-            await logService.LogEndGameAsync(response);
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogEndGameAsync(response);
+            }
 
             return response;
         }

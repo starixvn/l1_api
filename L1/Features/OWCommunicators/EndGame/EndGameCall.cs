@@ -14,15 +14,15 @@ namespace L1.Features.OWCommunicators.EndGame
             EndTime = endTime;
         }
 
-        public int GameRoundId { get; }
+        public int GameRoundId { get; set; }
 
-        public int GameTypeId { get; }
+        public int GameTypeId { get; set; }
 
-        public decimal TotalAmount { get; }
+        public decimal TotalAmount { get; set; }
 
-        public decimal TotalWin { get; }
+        public decimal TotalWin { get; set; }
 
-        public int ValidBetAmount { get; }
+        public int ValidBetAmount { get; set; }
 
         public DateTimeOffset EndTime { get; set; }
     }

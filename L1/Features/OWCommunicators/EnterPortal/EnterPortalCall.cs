@@ -9,8 +9,8 @@
             FirstLogin = firstLogin;
         }
 
-        public string CharacterName { get; }
+        public string CharacterName { get; set; }
 
-        public bool FirstLogin { get; }
+        public bool FirstLogin { get; set; }
     }
 }

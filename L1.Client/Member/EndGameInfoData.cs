@@ -2,7 +2,7 @@
 
 namespace L1.Client
 {
-    public class EndGameInfoResponse
+    public class EndGameInfoData
     {
         public decimal TotalAmount { get; set; }
 

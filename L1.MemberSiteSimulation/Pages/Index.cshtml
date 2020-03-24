@@ -37,5 +37,5 @@
     @:Redirect Url:
     <a href="@(Model.SingleSignOnResult.RedirectUri)">@(Model.SingleSignOnResult.RedirectUri)</a>
         }
-    <div>@Model.SingleSignOnResult?.Message</div>
+    <div>@Model.SingleSignOnResult?.Error?.Message</div>
 </div>

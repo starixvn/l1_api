@@ -7,16 +7,16 @@
         <PackageReference Include="IdentityModel" Version="4.1.1" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="Resources\SingleSignOnResultMessage.Designer.cs">
+        <Compile Update="Resources\ResultMessage.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
-            <DependentUpon>SingleSignOnResultMessage.resx</DependentUpon>
+            <DependentUpon>ResultMessage.resx</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Update="Resources\SingleSignOnResultMessage.resx">
+        <EmbeddedResource Update="Resources\ResultMessage.resx">
             <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>SingleSignOnResultMessage.Designer.cs</LastGenOutput>
+            <LastGenOutput>ResultMessage.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
 </Project>

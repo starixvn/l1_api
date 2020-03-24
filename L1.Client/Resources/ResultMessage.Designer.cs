@@ -22,14 +22,14 @@ namespace L1.Client.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SingleSignOnResultMessage {
+    internal class ResultMessage {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SingleSignOnResultMessage() {
+        internal ResultMessage() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace L1.Client.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("L1.Client.Resources.SingleSignOnResultMessage", typeof(SingleSignOnResultMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("L1.Client.Resources.ResultMessage", typeof(ResultMessage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

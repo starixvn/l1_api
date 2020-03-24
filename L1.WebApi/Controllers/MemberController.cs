@@ -43,7 +43,6 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        [AllowAnonymous]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
             var response = await oWCustomerService.PlaceBet(

@@ -9,7 +9,7 @@ namespace L1.Client
 {
     public interface IMemberClient
     {
-        Task<EndGameInfoResponse> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null);
+        Task<EndGameInfoResult> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null);
     }
 
     public class MemberClient : IMemberClient
@@ -23,9 +23,15 @@ namespace L1.Client
             client = HttpClientManager.GetApiClient(authenticationInfo.ApiUri);
         }
 
-        public async Task<EndGameInfoResponse> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null)
+        public async Task<EndGameInfoResult> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null)
         {
             var tokenResponse = await HttpClientManager.GetAccessToken(authenticationInfo);
+
+            if (tokenResponse.IsError)
+            {
+                errorHandler?.Invoke($"{tokenResponse.HttpStatusCode}-{tokenResponse.HttpErrorReason}-{tokenResponse.Raw}");
+                return new EndGameInfoResult(Error.CreateErrorFromResponseStatusCode(tokenResponse.HttpStatusCode));
+            }
 
             client.SetBearerToken(tokenResponse.AccessToken);
 
@@ -35,7 +41,7 @@ namespace L1.Client
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<EndGameInfoResponse>(responseContent);
+            return new EndGameInfoResult(JsonConvert.DeserializeObject<EndGameInfoData>(responseContent));
         }
     }
 }

@@ -10,6 +10,6 @@
 
         public int SiteId { get; set; }
 
-        public string  Seq { get; set; }
+        public string Seq { get; set; }
     }
 }

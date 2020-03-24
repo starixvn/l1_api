@@ -1,7 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
-        <Version>1.0.0-beta01</Version>
+        <Version>1.0.0-beta1</Version>
+        <PackageId>SabaClub.Client</PackageId>
+        <Authors>Saba Club</Authors>
+        <Product>Saba Club</Product>
+        <Description>The Client using to connect to Saba Club API</Description>
+        <Copyright>Saba Club</Copyright>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="IdentityModel" Version="4.1.1" />

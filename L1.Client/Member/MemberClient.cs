@@ -12,7 +12,6 @@ namespace L1.Client.Member
         Task<EndGameInfoResponse> RetrieveEndGameInfo(EndGameInfoRequest request, Action<string> errorHandler = null);
     }
 
-
     public class MemberClient : IMemberClient
     {
         private readonly HttpClient client;
@@ -24,7 +23,7 @@ namespace L1.Client.Member
             client = HttpClientManager.GetApiClient(authenticationInfo.ApiUri);
         }
 
-        public async Task<EndGameInfoResponse> RetrieveEndGameInfo(EndGameInfoRequest request , Action<string> errorHandler = null)
+        public async Task<EndGameInfoResponse> RetrieveEndGameInfo(EndGameInfoRequest request, Action<string> errorHandler = null)
         {
             var tokenResponse = await HttpClientManager.GetAccessToken(authenticationInfo);
 

@@ -18,6 +18,7 @@ export default class EndGame extends React.Component {
       totalWin: (Math.random() * 100) >> 0,
       validBetAmount: (Math.random() * 100) >> 0,
       languageCode: "vi-VN",
+      endTime: new Date().toISOString(),
       result: null,
       resource: {
         game: []
@@ -54,6 +55,7 @@ export default class EndGame extends React.Component {
   }
 
   render() {
+    console.log(this.state.endTime);
     return (
       <div className="section">
         <div className="row">
@@ -107,6 +109,16 @@ export default class EndGame extends React.Component {
                   id="validBetAmount"
                   name="Valid bet amount"
                   value={this.state.validBetAmount}
+                  onChange={this.changeValue}
+                />
+                <Input
+                  type="datetime-local"
+                  id="endTime"
+                  name="End Time"
+                  value={this.state.endTime.substring(
+                    0,
+                    this.state.endTime.length - 1
+                  )}
                   onChange={this.changeValue}
                 />
                 <LanguageSelect

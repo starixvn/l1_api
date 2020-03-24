@@ -1,4 +1,4 @@
-﻿namespace L1.Client.Member
+﻿namespace L1.Client
 {
     public class EndGameInfoRequest
     {
@@ -9,5 +9,7 @@
         public int ObCustId { get; set; }
 
         public int SiteId { get; set; }
+
+        public string  Seq { get; set; }
     }
 }

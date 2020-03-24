@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace L1.Client.Member
+namespace L1.Client
 {
     public class EndGameInfoResponse
     {
@@ -9,6 +9,8 @@ namespace L1.Client.Member
         public decimal TotalWin { get; set; }
 
         public decimal ValidBetAmount { get; set; }
+
+        public string Seq { get; set; }
 
         public DateTimeOffset EndTime { get; set; }
     }

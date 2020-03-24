@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using IdentityModel.Client;
 using Newtonsoft.Json;
 
-namespace L1.Client.Member
+namespace L1.Client
 {
     public interface IMemberClient
     {
-        Task<EndGameInfoResponse> RetrieveEndGameInfo(EndGameInfoRequest request, Action<string> errorHandler = null);
+        Task<EndGameInfoResponse> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null);
     }
 
     public class MemberClient : IMemberClient
@@ -23,7 +23,7 @@ namespace L1.Client.Member
             client = HttpClientManager.GetApiClient(authenticationInfo.ApiUri);
         }
 
-        public async Task<EndGameInfoResponse> RetrieveEndGameInfo(EndGameInfoRequest request, Action<string> errorHandler = null)
+        public async Task<EndGameInfoResponse> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null)
         {
             var tokenResponse = await HttpClientManager.GetAccessToken(authenticationInfo);
 

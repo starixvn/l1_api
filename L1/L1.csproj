@@ -8,9 +8,7 @@
     <ItemGroup>
         <PackageReference Include="IdentityServer4" Version="3.1.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.2" />
-        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.2" />
         <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
-        <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
         <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
         <PackageReference Include="Sentry.AspNetCore" Version="2.1.1" />
     </ItemGroup>

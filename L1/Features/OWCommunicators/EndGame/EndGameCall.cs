@@ -25,6 +25,5 @@ namespace L1.Features.OWCommunicators.EndGame
         public int ValidBetAmount { get; }
 
         public DateTimeOffset EndTime { get; set; }
-
     }
 }

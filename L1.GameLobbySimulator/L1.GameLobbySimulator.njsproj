@@ -38,10 +38,12 @@
     <Content Include="nodemon.json">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="public\bundle.js" />
     <Content Include="public\favicon.ico" />
     <Content Include="public\stylesheets\mini.css" />
     <Content Include="resource\currency.json" />
     <Content Include="resource\game.json" />
+    <Content Include="resource\language.json" />
     <Content Include="routes\index.js" />
     <Content Include="routes\member.js" />
     <Content Include="routes\pages.js" />

@@ -2,6 +2,30 @@
 {
     public class SingleSignOnParams
     {
+        private const string DefaultLanguageCode = "vi-VN";
+
+        public SingleSignOnParams(
+            string clientId,
+            string siteId,
+            int memberId,
+            string memberName,
+            string currency,
+            string iP,
+            string browserUserAgent,
+            string seq)
+            : this(
+                  clientId,
+                  siteId,
+                  memberId,
+                  memberName,
+                  DefaultLanguageCode,
+                  currency,
+                  iP,
+                  browserUserAgent,
+                  seq)
+        {
+        }
+
         public SingleSignOnParams(
             string clientId,
             string siteId,

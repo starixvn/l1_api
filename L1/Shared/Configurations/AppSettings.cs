@@ -13,6 +13,8 @@ namespace L1.Shared.Configurations
         IEnumerable<string> IdentityAudiences { get; set; }
 
         OWServiceSettings OWServiceSettings { get; set; }
+
+        GameServerSetting GameServerSetting { get; set; }
     }
 
     public class AppSettings : IAppSettings
@@ -26,5 +28,7 @@ namespace L1.Shared.Configurations
         public int TokenExpiredSeconds { get; set; }
 
         public OWServiceSettings OWServiceSettings { get; set; }
+
+        public GameServerSetting GameServerSetting { get; set; }
     }
 }

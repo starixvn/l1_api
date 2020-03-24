@@ -74,7 +74,8 @@ namespace L1.Features.Authentications
                 memberAuth.SiteId,
                 memberAuth.Language,
                 memberAuth.Currency,
-                memberAuth.Seq);
+                memberAuth.Seq,
+                memberAuth.ClientId);
         }
 
         private string GetGameClientUrl(MemberAuth memberAuth)

@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using L1.Features.GameServerCommunicators;
+using L1.Features.GameServerCommunicators.RetrieveEndGameInfo;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
@@ -73,9 +75,11 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
+        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model, [FromServices] IGameMemberService gameMemberService)
         {
-            return Ok();
+            var result = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId, model.Seq));
+
+            return Ok(result);
         }
     }
 }

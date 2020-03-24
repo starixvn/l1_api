@@ -22,7 +22,8 @@ namespace L1.Features.Authentications
             string siteId,
             string language,
             string currency,
-            string seq)
+            string seq,
+            string clientId)
             : this(code, message)
         {
             MemberId = memberId;
@@ -32,6 +33,7 @@ namespace L1.Features.Authentications
             MemberBalance = 10000000;
             Currency = currency;
             Seq = seq;
+            ClientId = clientId;
         }
 
         public int MemberId { get; }
@@ -39,6 +41,8 @@ namespace L1.Features.Authentications
         public string MemberName { get; }
 
         public string SiteId { get; }
+
+        public string ClientId { get; }
 
         public string Language { get; }
 
@@ -48,7 +52,7 @@ namespace L1.Features.Authentications
 
         public string Seq { get; }
 
-        public string MemberKey => $"{SiteId}_{MemberId}";
+        public string MemberKey => $"{ClientId}_{MemberId}";
 
         public static VerificationResult CreateErrorResponse(int code)
            => new VerificationResult(code, string.Empty);
@@ -59,7 +63,8 @@ namespace L1.Features.Authentications
             string siteId,
             string language,
             string currency,
-            string seq)
+            string seq,
+            string clientId)
             => new VerificationResult(
                 SuccessCode,
                 string.Empty,
@@ -68,6 +73,7 @@ namespace L1.Features.Authentications
                 siteId,
                 language,
                 currency,
-                seq);
+                seq,
+                clientId);
     }
 }

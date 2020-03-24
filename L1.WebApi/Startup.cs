@@ -26,6 +26,7 @@ namespace L1.WebApi
                 services.AddServices(appSettings);
                 services.AddMongoDBServices(appSettings);
                 services.AddOWServices(appSettings.OWServiceSettings);
+                services.AddGameServerServices(appSettings.GameServerSetting);
 
                 services.AddControllers();
 

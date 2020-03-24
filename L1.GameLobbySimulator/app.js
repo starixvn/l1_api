@@ -2,7 +2,8 @@ const express = require("express");
 const debug = require("debug");
 
 const config = require("./game-client-config");
-require("l1.client.node-js")(config);
+const gameClient = require("l1.client.node-js")(config);
+gameClient.autoUpdateToken();
 
 const routes = require("./routes");
 const applyMiddlewares = require("./middleware");

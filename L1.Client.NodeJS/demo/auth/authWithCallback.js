@@ -1,5 +1,16 @@
-const GameClient = require("../../index")();
 const url = require("url");
+const GameClient = require("../../index");
+
+const config = {
+  apiUrl: "http://api.lumigame.com",
+  authUrl: "http://auth.lumigame.com",
+  client: {
+    id: "licensee1",
+    secret: "123licensee1%^&sit"
+  }
+};
+
+const gameClient = GameClient(config);
 
 const singleSignInParams = {
   siteId: "licensee1",
@@ -13,11 +24,15 @@ const singleSignInParams = {
 };
 
 const withCallback = async () => {
+  console.log("\n\n\n\n\n\n", gameClient);
+  await gameClient.autoUpdateToken();
+  console.log("\n\n\n\n\n\n", gameClient);
+
   console.log("Starting demo Authentication using callback functions");
 
   // Single Sign On
   console.log("\nSingleSignOn\n");
-  GameClient.auth.singleSignOn(
+  gameClient.auth.singleSignOn(
     singleSignInParams,
     (error, singleSignOnResult) => {
       error && console.log(`Single Sign On Error: ${error}`);
@@ -30,7 +45,7 @@ const withCallback = async () => {
         ip: "0.0.0.0"
       };
 
-      GameClient.auth.verifyToken(params, (error, verifyResult) => {
+      gameClient.auth.verifyToken(params, (error, verifyResult) => {
         error && console.log(`Verify Token Error: ${error}`);
 
         console.log(verifyResult);

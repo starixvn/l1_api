@@ -1,5 +1,16 @@
-const GameClient = require("../../index")();
 const url = require("url");
+const GameClient = require("../../index");
+
+const config = {
+  apiUrl: "http://api.lumigame.com",
+  authUrl: "http://auth.lumigame.com",
+  client: {
+    id: "licensee1",
+    secret: "123licensee1%^&sit"
+  }
+};
+
+const gameClient = GameClient(config);
 
 const singleSignInParams = {
   siteId: "licensee1",
@@ -13,12 +24,14 @@ const singleSignInParams = {
 };
 
 const withAsyncAwait = async () => {
+  await gameClient.autoUpdateToken();
+
   console.log("Starting demo Authentication using async/await");
 
   // Get bearer token
   console.log("\nBearer Token\n");
   try {
-    const token = await GameClient.auth.getBearerToken();
+    const token = await gameClient.auth.getBearerToken();
     console.log(token);
   } catch (error) {
     console.log(`Bearer Token On Error: ${error}`);
@@ -27,7 +40,7 @@ const withAsyncAwait = async () => {
   // Single Sign On
   console.log("\nSingleSignOn\n");
   try {
-    const singleSignOnResult = await GameClient.auth.singleSignOn(
+    const singleSignOnResult = await gameClient.auth.singleSignOn(
       singleSignInParams
     );
     console.log(singleSignOnResult);
@@ -38,7 +51,7 @@ const withAsyncAwait = async () => {
   // Verify Token
   console.log("\nVerifyToken\n");
   try {
-    const redirectUrl = await GameClient.auth.singleSignOn(singleSignInParams);
+    const redirectUrl = await gameClient.auth.singleSignOn(singleSignInParams);
     const token = url.parse(redirectUrl, true).query.token;
     const params = {
       token,
@@ -46,7 +59,7 @@ const withAsyncAwait = async () => {
       ip: "0.0.0.0"
     };
 
-    const verifyResult = await GameClient.auth.verifyToken(params);
+    const verifyResult = await gameClient.auth.verifyToken(params);
     console.log(verifyResult);
   } catch (error) {
     console.log(`Verify Token Error: ${error}`);

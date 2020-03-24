@@ -61,6 +61,11 @@
     <Content Include="views\components\member\notify-login.jsx" />
     <Content Include="views\components\member\place-bet.jsx" />
     <Content Include="views\components\member\void-game.jsx" />
+    <Content Include="views\components\select\game.jsx" />
+    <Content Include="views\components\select\language.jsx" />
+    <Content Include="views\components\select\select.jsx" />
+    <Content Include="views\components\setting\game-client.jsx" />
+    <Content Include="views\components\setting\language.jsx" />
     <Content Include="views\components\signin.jsx" />
     <Content Include="views\components\signin\sso.jsx" />
     <Content Include="views\index.jsx">
@@ -90,6 +95,8 @@
     <Folder Include="views\" />
     <Folder Include="views\components\" />
     <Folder Include="views\components\member\" />
+    <Folder Include="views\components\select\" />
+    <Folder Include="views\components\setting\" />
     <Folder Include="views\components\signin\" />
     <Folder Include="views\pages\" />
   </ItemGroup>

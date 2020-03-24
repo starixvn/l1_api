@@ -19,11 +19,11 @@ namespace L1.Features.OWCommunicators
     {
         private readonly HttpClient httpClient;
         private readonly OWEndPoints endpoints;
-        private readonly ILogDataAccess logDataAccess;
+        private readonly ILogService logService;
 
-        public OWFailureHandler(HttpClient httpClient, OWEndPoints endpoints, ILogDataAccess logDataAccess)
+        public OWFailureHandler(HttpClient httpClient, OWEndPoints endpoints, ILogService logService)
         {
-            this.logDataAccess = logDataAccess;
+            this.logService = logService;
             this.httpClient = httpClient;
             this.endpoints = endpoints;
         }
@@ -31,19 +31,12 @@ namespace L1.Features.OWCommunicators
         public async Task Handle<T>(OWRequest request, OWResponse<T> response) where T : IOWResult
         {
             MapErrorMessage(response.Result);
-            await WriteFailedRequestLog(request, response);
+            await logService.LogFailedRequestAsync(response);
 
             if (response.Result.ErrorCode == OWSpecialErrorCodes.UnderMaintenance)
             {
                 await ScheduleMaintenance(request);
             }
-        }
-
-        private Task WriteFailedRequestLog<T>(OWRequest request, OWResponse<T> response) where T : IOWResult
-        {
-            var log = new OWLog(request.TimeStamp, request.Call, response.TimeStamp, response.Result);
-
-            return logDataAccess.WriteAsync(log);
         }
 
         private async Task ScheduleMaintenance(OWRequest request)

@@ -7,5 +7,7 @@ namespace L1.Features.OWCommunicators
         public DateTimeOffset TimeStamp { get; set; }
 
         public T Result { get; set; }
+
+        internal OWRequest Request { get; set; }
     }
 }

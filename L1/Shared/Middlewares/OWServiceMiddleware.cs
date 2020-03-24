@@ -12,6 +12,7 @@ namespace L1.Shared.Middlewares
             services.AddSingleton(new OWAuth(owServiceSettings.Login, owServiceSettings.Password));
             services.AddSingleton(owServiceSettings.Endpoints);
             services.AddScoped<ILogDataAccess, LogDataAccess>();
+            services.AddScoped<ILogService, LogService>();
             services.AddScoped<IOWCustomerService, OWCustomerService>();
 
             services.AddHttpClient<IOWFailureHandler, OWFailureHandler>(httpClient =>

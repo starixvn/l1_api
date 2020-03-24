@@ -44,6 +44,8 @@ namespace L1.Features.OWCommunicators
                 finalResponse = await CreateOWNetworkErrorResponse<T>(call, response);
             }
 
+            finalResponse.Request = request;
+
             if (finalResponse.Result.IsFailed())
             {
                 await failureHandler.Handle<T>(request, finalResponse);

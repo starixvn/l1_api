@@ -7,7 +7,7 @@ namespace L1.Features.OWCommunicators
         public OWRequest(IOWAuth auth, IOWCall call)
         {
             TimeStamp = DateTimeOffset.UtcNow;
-            Auth = auth ?? throw new ArgumentNullException(nameof(auth));
+            Auth = auth;
             Call = call ?? throw new ArgumentNullException(nameof(call));
         }
 

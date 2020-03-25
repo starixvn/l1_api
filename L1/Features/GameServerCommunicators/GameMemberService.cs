@@ -6,7 +6,7 @@ namespace L1.Features.GameServerCommunicators
 {
     public interface IGameMemberService
     {
-        Task<RetrieveEndGameInfoResult> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request);
+        Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
     }
 
     public class GameMemberService : IGameMemberService
@@ -20,12 +20,12 @@ namespace L1.Features.GameServerCommunicators
             this.gameServerEndPoints = gameServerEndPoints;
         }
 
-        public async Task<RetrieveEndGameInfoResult> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
+        public async Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
         {
-            var result = await gameServerService.Post<RetrieveEndGameInfoResult>(gameServerEndPoints.RetrieveEndGameInfo, request);
-            result.Seq = request.Seq;
+            var response = await gameServerService.Post<RetrieveEndGameInfoResult>(gameServerEndPoints.RetrieveEndGameInfo, request);
+            response.Result.Seq = request.Seq;
 
-            return result;
+            return response;
         }
     }
 }

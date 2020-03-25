@@ -31,6 +31,12 @@ namespace L1.Client
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
+            if (!response.IsSuccessStatusCode)
+            {
+                errorHandler?.Invoke($"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}");
+                return new EndGameInfoResult(Error.CreateErrorFromResponseStatusCode(response.StatusCode));
+            }
+
             return new EndGameInfoResult(JsonConvert.DeserializeObject<EndGameInfoData>(responseContent));
         }
     }

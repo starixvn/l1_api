@@ -7,7 +7,7 @@ namespace L1.Features.GameServerCommunicators
 {
     public interface IGameServerService
     {
-        Task<T> Post<T>(string apiEndpoint, GameServerRequest request) where T : GameServerResult, new();
+        Task<GameServerResponse<T>> Post<T>(string apiEndpoint, GameServerRequest request) where T : GameServerResult, new();
     }
 
     public class GameServerService : IGameServerService
@@ -19,7 +19,7 @@ namespace L1.Features.GameServerCommunicators
             this.httpClient = httpClient;
         }
 
-        public async Task<T> Post<T>(string apiEndpoint, GameServerRequest request) where T : GameServerResult, new()
+        public async Task<GameServerResponse<T>> Post<T>(string apiEndpoint, GameServerRequest request) where T : GameServerResult, new()
         {
             const string defaultMediaType = "application/json";
 
@@ -28,7 +28,7 @@ namespace L1.Features.GameServerCommunicators
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            return JsonConvert.DeserializeObject<GameServerResponse<T>>(responseContent);
         }
     }
 }

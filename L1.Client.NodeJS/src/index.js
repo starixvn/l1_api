@@ -1,7 +1,7 @@
 const { Issuer, custom } = require("openid-client");
 const initAuth = require("./auth");
 const initMember = require("./member");
-const beforeTokenExpired = 60 * 60;
+const beforeTokenExpired = 60 * 5;
 const intervalTime = 60000;
 
 custom.setHttpOptionsDefaults({

@@ -14,6 +14,7 @@ namespace L1.WebApi.Controllers
             this.memberAuthService = memberAuthService;
         }
 
+        [AllowAnonymous]
         [HttpGet, HttpPost]
         [Route("index")]
         public string Index(MemberAuth memberAuth)

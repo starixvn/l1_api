@@ -26,16 +26,6 @@ namespace L1.Client
 
         public async Task<SingleSignOnResult> SingleSignOnAsync(SingleSignOnParams signOnParams, Action<string> errorHandler = null)
         {
-            var tokenResponse = await HttpClientManager.GetAccessToken(authenticationInfo);
-
-            if (tokenResponse.IsError)
-            {
-                errorHandler?.Invoke($"{tokenResponse.HttpStatusCode}-{tokenResponse.HttpErrorReason}-{tokenResponse.Raw}");
-                return new SingleSignOnResult(Error.CreateErrorFromResponseStatusCode(tokenResponse.HttpStatusCode));
-            }
-
-            client.SetBearerToken(tokenResponse.AccessToken);
-
             var paramContent = new StringContent(JsonConvert.SerializeObject(signOnParams), Encoding.UTF8, "application/json");
             const string endpoint = "signin/index";
             var response = await client.PostAsync(endpoint, paramContent);

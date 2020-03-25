@@ -16,6 +16,7 @@ namespace L1.WebApi.Controllers
 
         [HttpGet, HttpPost]
         [Route("index")]
+        [AllowAnonymous]
         public string Index(MemberAuth memberAuth)
             => memberAuthService.SignIn(memberAuth).RedirectUri.ToString();
     }

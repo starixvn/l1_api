@@ -11,5 +11,7 @@
         public int SiteId { get; set; }
 
         public string Seq { get; set; }
+
+        public Auth Auth { get; set; }
     }
 }

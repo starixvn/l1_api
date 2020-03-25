@@ -6,7 +6,7 @@ namespace L1.Features.GameServerCommunicators
 {
     public interface IGameMemberService
     {
-        Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
+        Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request);
     }
 
     public class GameMemberService : IGameMemberService

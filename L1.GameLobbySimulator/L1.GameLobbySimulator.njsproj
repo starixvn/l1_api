@@ -66,8 +66,6 @@
     <Content Include="views\components\select\select.jsx" />
     <Content Include="views\components\setting\game-client.jsx" />
     <Content Include="views\components\setting\language.jsx" />
-    <Content Include="views\components\signin.jsx" />
-    <Content Include="views\components\signin\sso.jsx" />
     <Content Include="views\index.jsx">
       <SubType>Code</SubType>
     </Content>

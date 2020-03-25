@@ -1,6 +1,7 @@
 import React from "react";
 import Axios from "axios";
 import { randomString, showAlert } from "../util.jsx";
+import Input from "../components/input.jsx";
 
 export default class SignIn extends React.Component {
   constructor() {
@@ -15,6 +16,10 @@ export default class SignIn extends React.Component {
       siteId: "licensee1",
       ip: "0.0.0.0",
       browserUserAgent: navigator.userAgent,
+      auth: {
+        clientId: "licensee1",
+        clientSecret: "123licensee1%^&sit"
+      },
       token: "",
       redirectUrl: "#",
       verifyResult: null,
@@ -25,6 +30,20 @@ export default class SignIn extends React.Component {
       },
       gameId: "1"
     };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(data) {
+    this.setState(data);
+  }
+
+  handleChangeAuth(event) {
+    const state = this.state;
+
+    state.auth[event.target.id] = event.target.value;
+
+    this.setState(state);
   }
 
   handleChange(event) {
@@ -165,8 +184,6 @@ export default class SignIn extends React.Component {
                       ))}
                     </select>
                   </div>
-                </div>
-                <div className="col-sm-12 col-md-6">
                   <div className="input-group vertical">
                     <label htmlFor="seq">SEQ</label>
                     <input
@@ -177,6 +194,8 @@ export default class SignIn extends React.Component {
                       onChange={event => this.handleChange(event)}
                     />
                   </div>
+                </div>
+                <div className="col-sm-12 col-md-6">
                   <div className="input-group vertical">
                     <label htmlFor="ip">Site Id</label>
                     <input
@@ -205,6 +224,24 @@ export default class SignIn extends React.Component {
                       id="browserUserAgent"
                       placeholder="Your ip: xxx.xxx.xxx.xxx"
                       onChange={event => this.handleChange(event)}
+                    />
+                  </div>
+                  <div className="input-group vertical">
+                    <label htmlFor="clientId">Client ID</label>
+                    <input
+                      type="text"
+                      defaultValue={this.state.auth.clientId}
+                      id="clientId"
+                      onChange={event => this.handleChangeAuth(event)}
+                    />
+                  </div>
+                  <div className="input-group vertical">
+                    <label htmlFor="clientSecret">Client Secret</label>
+                    <input
+                      type="text"
+                      defaultValue={this.state.auth.clientSecret}
+                      id="clientSecret"
+                      onChange={event => this.handleChangeAuth(event)}
                     />
                   </div>
                 </div>

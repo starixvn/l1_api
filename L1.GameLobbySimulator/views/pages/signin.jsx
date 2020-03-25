@@ -110,7 +110,6 @@ export default class SignIn extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="container">
         <div className="section">

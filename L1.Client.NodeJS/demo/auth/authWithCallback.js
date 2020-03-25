@@ -24,9 +24,7 @@ const singleSignInParams = {
 };
 
 const withCallback = async () => {
-  console.log("\n\n\n\n\n\n", gameClient);
   await gameClient.autoUpdateToken();
-  console.log("\n\n\n\n\n\n", gameClient);
 
   console.log("Starting demo Authentication using callback functions");
 

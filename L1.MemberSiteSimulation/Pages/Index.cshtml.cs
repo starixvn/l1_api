@@ -71,7 +71,7 @@ namespace L1.MemberSiteSimulation.Pages
         public string SiteId { get; set; } = "licensee1";
 
         [BindProperty]
-        public int GameId { get; set; } = 1;
+        public byte GameId { get; set; } = 1;
 
         [BindProperty]
         public string Seq { get; set; } = "d8382c1d-6ce0-433d-9233-e7358b10a70b";
@@ -139,7 +139,8 @@ namespace L1.MemberSiteSimulation.Pages
                 currency: Currency,
                 iP: Request.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 browserUserAgent: Request.Headers["User-Agent"].ToString(),
-                seq: Seq);
+                seq: Seq,
+                gameTypeId: GameId);
 
             return await client.SingleSignOnAsync(signInParams);
         }

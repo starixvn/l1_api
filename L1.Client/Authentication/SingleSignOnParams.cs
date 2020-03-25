@@ -13,7 +13,8 @@
             string currency,
             string iP,
             string browserUserAgent,
-            string seq)
+            string seq,
+            byte? gameTypeId)
             : this(
                   clientId,
                   clientSecret,
@@ -24,7 +25,8 @@
                   currency,
                   iP,
                   browserUserAgent,
-                  seq)
+                  seq,
+                  gameTypeId)
         {
         }
 
@@ -38,7 +40,8 @@
             string currency,
             string iP,
             string browserUserAgent,
-            string seq)
+            string seq,
+            byte? gameTypeId)
         {
             Auth = new Auth
             {
@@ -54,6 +57,7 @@
             IP = iP;
             BrowserUserAgent = browserUserAgent;
             Seq = seq;
+            GameTypeId = gameTypeId;
         }
 
         public string ClientId { get; }
@@ -73,6 +77,8 @@
         public string BrowserUserAgent { get; }
 
         public string Seq { get; }
+
+        public byte? GameTypeId { get; }
 
         public Auth Auth { get; }
     }

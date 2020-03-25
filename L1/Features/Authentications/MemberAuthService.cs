@@ -80,7 +80,7 @@ namespace L1.Features.Authentications
 
         private string GetGameClientUrl(MemberAuth memberAuth)
         {
-            var site = siteDataService.GetBySiteId(memberAuth.SiteId);
+            var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
             return site?.GameClientUrl;
         }

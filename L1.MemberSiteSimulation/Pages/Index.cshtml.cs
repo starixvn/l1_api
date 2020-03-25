@@ -131,6 +131,7 @@ namespace L1.MemberSiteSimulation.Pages
 
             var signInParams = new SingleSignOnParams(
                 clientId: ClientId,
+                clientSecret: ClientSecret,
                 siteId: SiteId,
                 memberId: MemberId,
                 memberName: MemberName,

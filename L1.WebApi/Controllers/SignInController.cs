@@ -31,7 +31,6 @@ namespace L1.WebApi.Controllers
                 Language = model.Language,
                 SiteId = model.SiteId,
                 ClientId = model.Auth?.ClientId,
-                ClientSecret = model.Auth?.ClientSecret,
             }).RedirectUri.ToString();
         }
     }

@@ -6,6 +6,7 @@
 
         public SingleSignOnParams(
             string clientId,
+            string clientSecret,
             string siteId,
             int memberId,
             string memberName,
@@ -15,6 +16,7 @@
             string seq)
             : this(
                   clientId,
+                  clientSecret,
                   siteId,
                   memberId,
                   memberName,
@@ -28,6 +30,7 @@
 
         public SingleSignOnParams(
             string clientId,
+            string clientSecret,
             string siteId,
             int memberId,
             string memberName,
@@ -37,7 +40,12 @@
             string browserUserAgent,
             string seq)
         {
-            ClientId = clientId;
+            Auth = new Auth
+            {
+                ClientId = clientId,
+                ClientSecret = clientSecret
+            };
+
             SiteId = siteId;
             MemberId = memberId;
             MemberName = memberName;
@@ -65,5 +73,14 @@
         public string BrowserUserAgent { get; }
 
         public string Seq { get; }
+
+        public Auth Auth { get; }
+    }
+
+    public class Auth
+    {
+        public string ClientId { get; set; }
+
+        public string ClientSecret { get; set; }
     }
 }

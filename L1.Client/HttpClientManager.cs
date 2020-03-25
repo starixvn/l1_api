@@ -69,10 +69,6 @@ namespace L1.Client
                     }
                 }
             }
-            else
-            {
-                apiClient.BaseAddress = apiUri;
-            }
 
             return apiClient;
         }

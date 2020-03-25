@@ -12,9 +12,10 @@ namespace L1.WebApi.Controllers
         private readonly IMemberAuthService memberAuthService;
         private readonly ISiteDataService siteDataService;
 
-        public SignInController(IMemberAuthService memberAuthService)
+        public SignInController(IMemberAuthService memberAuthService, ISiteDataService siteDataService)
         {
             this.memberAuthService = memberAuthService;
+            this.siteDataService = siteDataService;
         }
 
         [AllowAnonymous]

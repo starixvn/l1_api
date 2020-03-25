@@ -11,8 +11,6 @@ namespace L1.Features.Sites
 
         public string SiteId { get; set; }
 
-        public string SiteName { get; set; }
-
         public string BackendApi { get; set; }
 
         public string ClientId { get; set; }

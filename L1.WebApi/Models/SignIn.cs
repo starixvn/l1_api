@@ -18,6 +18,8 @@
 
         public string Seq { get; set; }
 
+        public byte? GameTypeId { get; set; }
+
         public Auth Auth { get; set; }
     }
 

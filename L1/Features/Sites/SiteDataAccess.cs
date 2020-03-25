@@ -11,6 +11,8 @@ namespace L1.Features.Sites
         Site GetByClientId(string id);
 
         Site GetBySiteId(string id);
+
+        bool VerifyClient(string clientId, string clientSecret);
     }
 
     public class SiteDataAccess : ISiteDataAccess
@@ -32,5 +34,8 @@ namespace L1.Features.Sites
 
         public Site GetBySiteId(string id) =>
            siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
+
+        public bool VerifyClient(string clientId, string clientSecret) =>
+          siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
     }
 }

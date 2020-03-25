@@ -105,7 +105,7 @@ namespace L1.MemberSiteSimulation.Pages
 
                 if (SingleSignOnResult.IsSuccessful())
                 {
-                    return Redirect(SingleSignOnResult.RedirectUri.ToString() + $"&gameId={GameId}");
+                    return Redirect(SingleSignOnResult.RedirectUri.ToString());
                 }
                 else
                 {

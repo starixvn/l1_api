@@ -6,7 +6,7 @@ namespace L1.Features.Authentications
 {
     public interface IMemberAuthService
     {
-        SingleSignOnResult SignIn(MemberAuth memberAuth);
+        SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId);
 
         VerificationResult VerifyToken(VerificationParams verificationParams);
     }
@@ -27,7 +27,7 @@ namespace L1.Features.Authentications
             this.appSettings = appSettings;
         }
 
-        public SingleSignOnResult SignIn(MemberAuth memberAuth)
+        public SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId)
         {
             var gameClientUrl = GetGameClientUrl(memberAuth);
 
@@ -49,6 +49,11 @@ namespace L1.Features.Authentications
                 memberAuth.Token = token = Guid.NewGuid().ToString();
                 memberAuth.Time = DateTime.Now;
                 memberAuthDataAccess.Create(memberAuth);
+            }
+
+            if(gameTypeId.HasValue)
+            {
+                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&gameId={gameTypeId.Value}");
             }
 
             return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}");

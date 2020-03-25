@@ -9,6 +9,8 @@ namespace L1.Features.Sites
         Site GetByClientId(string id);
 
         Site GetBySiteId(string id);
+
+        bool VerifyClient(string clientId, string clientSecret);
     }
 
     public class SiteDataService : ISiteDataService
@@ -25,5 +27,8 @@ namespace L1.Features.Sites
         public Site GetByClientId(string id) => siteDataAccess.GetByClientId(id);
 
         public Site GetBySiteId(string id) => siteDataAccess.GetBySiteId(id);
+
+        public bool VerifyClient(string clientId, string clientSecret) => siteDataAccess.VerifyClient(clientId, clientSecret);
+
     }
 }

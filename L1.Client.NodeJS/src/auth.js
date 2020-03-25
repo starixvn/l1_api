@@ -10,10 +10,6 @@ const getBearerToken = ({ authUrl, client }) => async callback => {
 
   return await Issuer.discover(authUrl)
     .then(issuer => new issuer.Client(data))
-    .then(j => {
-      console.log(j);
-      return j;
-    })
     .then(client => client.grant(data))
     .then(token =>
       token.access_token

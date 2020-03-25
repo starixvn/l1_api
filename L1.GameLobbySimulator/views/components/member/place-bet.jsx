@@ -34,7 +34,6 @@ export default class PlaceBet extends React.Component {
   }
 
   changeValue(data) {
-    console.log(data);
     this.setState(data);
   }
 

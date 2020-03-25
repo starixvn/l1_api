@@ -55,7 +55,6 @@ export default class EndGame extends React.Component {
   }
 
   render() {
-    console.log(this.state.endTime);
     return (
       <div className="section">
         <div className="row">

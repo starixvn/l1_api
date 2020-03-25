@@ -23,7 +23,6 @@ namespace L1.Features.GameServerCommunicators
         public async Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
         {
             var response = await gameServerService.Post<RetrieveEndGameInfoResult>(gameServerEndPoints.RetrieveEndGameInfo, request);
-            response.Result.Seq = request.Seq;
 
             return response;
         }

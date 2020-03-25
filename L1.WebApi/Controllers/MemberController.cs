@@ -80,9 +80,10 @@ namespace L1.WebApi.Controllers
         {
             if(siteDataService.VerifyClient(model.Auth.ClientId, model.Auth.ClientSecret))
             {
-                var result = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId, model.Seq));
+                var response = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId));
+                response.Result.Seq = model.Seq;
 
-                return Ok(result);
+                return Ok(response);
             }
 
             return Unauthorized();

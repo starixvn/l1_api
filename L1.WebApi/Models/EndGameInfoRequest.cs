@@ -1,7 +1,10 @@
-﻿namespace L1.WebApi.Models
+﻿using System;
+
+namespace L1.WebApi.Models
 {
     public class EndGameInfoRequest
     {
+        public DateTimeOffset TimeStamp { get; set; }
         public int GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }

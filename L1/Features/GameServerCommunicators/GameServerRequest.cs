@@ -2,17 +2,14 @@
 {
     public class GameServerRequest
     {
-        public GameServerRequest(int obCustId, int siteId, string seq)
+        public GameServerRequest(int obCustId, int siteId)
         {
             ObCustId = obCustId;
             SiteId = siteId;
-            Seq = seq;
         }
 
         public int ObCustId { get; }
 
         public int SiteId { get; }
-
-        public string Seq { get; }
     }
 }

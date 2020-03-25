@@ -2,6 +2,9 @@ import React from "react";
 import Axios from "axios";
 import { randomString, showAlert } from "../util.jsx";
 import Input from "../components/input.jsx";
+import LanguageSelect from "../components/select/language.jsx";
+import CurrencySelect from "../components/select/currency.jsx";
+import GameSelect from "../components/select/game.jsx";
 
 export default class SignIn extends React.Component {
   constructor() {
@@ -10,7 +13,7 @@ export default class SignIn extends React.Component {
     this.state = {
       memberId: (Math.random() * 10000000) >> 0,
       memberName: randomString(8),
-      language: "en-US",
+      language: "vi-VN",
       currency: "UUS",
       seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       siteId: "licensee1",
@@ -23,25 +26,21 @@ export default class SignIn extends React.Component {
       token: "",
       redirectUrl: "#",
       verifyResult: null,
-      resource: {
-        currency: [],
-        game: [],
-        language: []
-      },
-      gameId: "1"
+      gameId: 1
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleChangeAuth = this.handleChangeAuth.bind(this);
   }
 
   handleInputChange(data) {
     this.setState(data);
   }
 
-  handleChangeAuth(event) {
+  handleChangeAuth(data) {
     const state = this.state;
 
-    state.auth[event.target.id] = event.target.value;
+    state.auth = Object.assign({}, state.auth, data);
 
     this.setState(state);
   }
@@ -111,6 +110,7 @@ export default class SignIn extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="container">
         <div className="section">
@@ -119,131 +119,79 @@ export default class SignIn extends React.Component {
               <legend>Get Token</legend>
               <div className="row">
                 <div className="col-sm-12 col-md-6">
-                  <div className="input-group vertical">
-                    <label htmlFor="memberId">Member ID</label>
-                    <input
-                      type="number"
-                      defaultValue={this.state.memberId}
-                      id="memberId"
-                      placeholder="Member ID"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="memberName">Member Username</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.memberName}
-                      id="memberName"
-                      placeholder="Member Username"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="language">Language</label>
-                    <select
-                      className="input"
-                      id="language"
-                      onChange={event => this.handleChange(event)}
-                      value={this.state.language}
-                    >
-                      {this.state.resource.language.map(language => (
-                        <option value={language.value} key={language.value}>
-                          {language.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-group vertical">
-                    <label htmlFor="currency">Currency</label>
-                    <select
-                      id="currency"
-                      onChange={event => this.handleChange(event)}
-                      value={this.state.currency}
-                    >
-                      {this.state.resource.currency.map(curr => (
-                        <option value={curr.value} key={curr.value}>
-                          {curr.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-group vertical">
-                    <label htmlFor="gameId">Game</label>
-                    <select
-                      id="gameId"
-                      onChange={event => this.handleChange(event)}
-                      value={this.state.gameId}
-                    >
-                      {this.state.resource.game.map(game => (
-                        <option value={game.id} key={game.id}>
-                          {game.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="seq">SEQ</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.seq}
-                      id="seq"
-                      placeholder="seq"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
+                  <Input
+                    type="int"
+                    id="memberId"
+                    name="Member ID"
+                    value={this.state.memberId}
+                    onChange={this.handleInputChange}
+                  />
+                  <Input
+                    type="text"
+                    id="memberName"
+                    name="Member Username"
+                    value={this.state.memberName}
+                    onChange={this.handleInputChange}
+                  />
+                  <LanguageSelect
+                    onChange={this.handleInputChange}
+                    id="language"
+                    value={this.state.language}
+                  />
+                  <CurrencySelect
+                    onChange={this.handleInputChange}
+                    id="currency"
+                    value={this.state.currency}
+                  />
+                  <GameSelect
+                    onChange={this.handleInputChange}
+                    id="gameId"
+                    value={this.state.gameId}
+                  />
+                  <Input
+                    type="text"
+                    id="seq"
+                    name="SEQ"
+                    value={this.state.seq}
+                    onChange={this.handleInputChange}
+                  />
                 </div>
                 <div className="col-sm-12 col-md-6">
-                  <div className="input-group vertical">
-                    <label htmlFor="ip">Site Id</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.siteId}
-                      id="ip"
-                      placeholder="Your ip: xxx.xxx.xxx.xxx"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="ip">IP</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.ip}
-                      id="ip"
-                      placeholder="Your ip: xxx.xxx.xxx.xxx"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="browserUserAgent">Browser User Agent</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.browserUserAgent}
-                      id="browserUserAgent"
-                      placeholder="Your ip: xxx.xxx.xxx.xxx"
-                      onChange={event => this.handleChange(event)}
-                    />
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="clientId">Client ID</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.auth.clientId}
-                      id="clientId"
-                      onChange={event => this.handleChangeAuth(event)}
-                    />
-                  </div>
-                  <div className="input-group vertical">
-                    <label htmlFor="clientSecret">Client Secret</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.auth.clientSecret}
-                      id="clientSecret"
-                      onChange={event => this.handleChangeAuth(event)}
-                    />
-                  </div>
+                  <Input
+                    type="text"
+                    id="siteId"
+                    name="Site Id"
+                    value={this.state.seq}
+                    onChange={this.handleInputChange}
+                  />
+                  <Input
+                    type="text"
+                    id="ip"
+                    name="IP"
+                    value={this.state.ip}
+                    onChange={this.handleInputChange}
+                  />
+                  <Input
+                    type="text"
+                    id="browserUserAgent"
+                    name="Browser User Agent"
+                    value={this.state.browserUserAgent}
+                    onChange={this.handleInputChange}
+                  />
+                  <Input
+                    type="text"
+                    id="clientId"
+                    name="Client ID"
+                    value={this.state.auth.clientId}
+                    onChange={this.handleChangeAuth}
+                  />
+                  <Input
+                    type="text"
+                    id="clientSecret"
+                    name="Client Secret"
+                    value={this.state.auth.clientSecret}
+                    onChange={this.handleChangeAuth}
+                  />
                 </div>
               </div>
               <input className="primary" type="submit" value="Get Token" />
@@ -264,16 +212,13 @@ export default class SignIn extends React.Component {
                   {this.state.redirectUrl}
                 </a>
               </div>
-              <div className="input-group vertical">
-                <label htmlFor="token">Token</label>
-                <input
-                  type="text"
-                  value={this.state.token}
-                  id="token"
-                  placeholder="Your token"
-                  onChange={event => this.handleChange(event)}
-                />
-              </div>
+              <Input
+                type="text"
+                id="token"
+                name="Token"
+                value={this.state.token}
+                onChange={this.handleInputChange}
+              />
               <input className="primary" type="submit" value="Verify Token" />
             </fieldset>
           </form>

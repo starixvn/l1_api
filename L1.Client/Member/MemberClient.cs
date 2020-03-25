@@ -25,16 +25,6 @@ namespace L1.Client
 
         public async Task<EndGameInfoResult> RetrieveEndGameInfoAsync(EndGameInfoRequest request, Action<string> errorHandler = null)
         {
-            var tokenResponse = await HttpClientManager.GetAccessToken(authenticationInfo);
-
-            if (tokenResponse.IsError)
-            {
-                errorHandler?.Invoke($"{tokenResponse.HttpStatusCode}-{tokenResponse.HttpErrorReason}-{tokenResponse.Raw}");
-                return new EndGameInfoResult(Error.CreateErrorFromResponseStatusCode(tokenResponse.HttpStatusCode));
-            }
-
-            client.SetBearerToken(tokenResponse.AccessToken);
-
             var paramContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             const string endpoint = "member/retrieveendgameinfo";
             var response = await client.PostAsync(endpoint, paramContent);

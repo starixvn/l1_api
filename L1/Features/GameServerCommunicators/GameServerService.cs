@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -28,7 +29,11 @@ namespace L1.Features.GameServerCommunicators
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<GameServerResponse<T>>(responseContent);
+            return new GameServerResponse<T>
+            {
+                TimeStamp = DateTimeOffset.UtcNow,
+                Result = JsonConvert.DeserializeObject<T>(responseContent)
+            };
         }
     }
 }

@@ -5,8 +5,8 @@ const config = {
   apiUrl: "http://api.lumigame.com",
   authUrl: "http://auth.lumigame.com",
   client: {
-    id: "licensee1",
-    secret: "123licensee1%^&sit"
+    id: "game-server",
+    secret: "gameserver@20luminet&"
   }
 };
 
@@ -25,6 +25,7 @@ const singleSignInParams = {
 
 const withAsyncAwait = async () => {
   await gameClient.autoUpdateToken();
+  console.log(gameClient);
 
   console.log("Starting demo Authentication using async/await");
 

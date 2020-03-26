@@ -51,7 +51,7 @@ namespace L1.Features.Authentications
                 memberAuthDataAccess.Create(memberAuth);
             }
 
-            if(gameTypeId.HasValue)
+            if (gameTypeId.HasValue)
             {
                 return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&gameId={gameTypeId.Value}");
             }

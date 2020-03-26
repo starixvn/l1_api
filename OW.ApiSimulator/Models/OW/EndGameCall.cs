@@ -6,7 +6,7 @@ namespace OW.ApiSimulator.Models.OW
     {
         public int GameRoundId { get; set; }
 
-        public int GameTypeId { get; set; }
+        public byte GameTypeId { get; set; }
 
         public decimal TotalAmount { get; set; }
 

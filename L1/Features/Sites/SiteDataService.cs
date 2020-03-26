@@ -29,6 +29,5 @@ namespace L1.Features.Sites
         public Site GetBySiteId(string id) => siteDataAccess.GetBySiteId(id);
 
         public bool VerifyClient(string clientId, string clientSecret) => siteDataAccess.VerifyClient(clientId, clientSecret);
-
     }
 }

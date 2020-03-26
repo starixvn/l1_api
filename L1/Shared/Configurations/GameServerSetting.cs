@@ -6,7 +6,6 @@ namespace L1.Shared.Configurations
     {
         public Uri BaseUrl { get; set; }
 
-
         public GameServerEndPoints Endpoints { get; set; }
     }
 

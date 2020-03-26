@@ -7,12 +7,12 @@
         <ProjectReference Include="..\L1.Client\L1.Client.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Content Remove="Properties\launchSettings.json" />
+        <Content Remove="Properties\launchSettings.json" />
     </ItemGroup>
     <ItemGroup>
-      <Content Update="Properties\launchSettings.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <Content Update="Properties\launchSettings.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>

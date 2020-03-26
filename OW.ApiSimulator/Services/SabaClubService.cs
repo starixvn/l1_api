@@ -28,7 +28,6 @@ namespace OW.ApiSimulator.Services
             var response = await httpClient.PostAsync("member/RetrieveEndGameInfo", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 
-
             if (response.IsSuccessStatusCode)
             {
                 return JsonConvert.DeserializeObject<SabaResponse<EndGameInfoResult>>(responseContent);

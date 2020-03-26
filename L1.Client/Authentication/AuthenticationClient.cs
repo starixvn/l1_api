@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using IdentityModel.Client;
 using Newtonsoft.Json;
 
 namespace L1.Client
@@ -36,9 +34,10 @@ namespace L1.Client
                 return new SingleSignOnResult(Error.CreateErrorFromResponseStatusCode(response.StatusCode));
             }
 
-            var redirectUrl = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var signInResponse = JsonConvert.DeserializeObject<SignInResponse>(responseContent);
 
-            return new SingleSignOnResult(new Uri(redirectUrl));
+            return new SingleSignOnResult(new Uri(signInResponse.RedirectUrl));
         }
     }
 }

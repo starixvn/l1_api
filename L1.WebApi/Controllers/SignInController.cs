@@ -3,6 +3,7 @@ using L1.Features.Sites;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SignInResult = L1.WebApi.Models.SignInResult;
 
 namespace L1.WebApi.Controllers
 {
@@ -26,7 +27,7 @@ namespace L1.WebApi.Controllers
             if(siteDataService.VerifyClient(model.Auth.ClientId, model.Auth.ClientSecret))
             {
 
-                var redirectUri = memberAuthService.SignIn(new MemberAuth
+                var redirectUrl = memberAuthService.SignIn(new MemberAuth
                 {
                     BrowserUserAgent = model.BrowserUserAgent,
                     Currency = model.Currency,
@@ -39,7 +40,7 @@ namespace L1.WebApi.Controllers
                     ClientId = model.Auth?.ClientId,
                 }, model.GameTypeId).RedirectUri.ToString();
 
-                return Ok(redirectUri);
+                return Ok(new SignInResult { RedirectUrl = redirectUrl });
             }
 
             return Unauthorized();

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -25,10 +26,22 @@ namespace OW.ApiSimulator.Services
         {
             var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
             var response = await httpClient.PostAsync("member/RetrieveEndGameInfo", content);
-
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<SabaResponse<EndGameInfoResult>>(responseContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<SabaResponse<EndGameInfoResult>>(responseContent);
+            }
+
+            return new SabaResponse<EndGameInfoResult>
+            {
+                TimeStamp = DateTime.UtcNow,
+                Result = new EndGameInfoResult
+                {
+                    ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{responseContent}"
+                }
+            };
         }
     }
 }

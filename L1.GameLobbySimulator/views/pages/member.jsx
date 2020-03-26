@@ -4,7 +4,6 @@ import Balance from "../components/member/balance.jsx";
 import PlaceBet from "../components/member/place-bet.jsx";
 import EndGame from "../components/member/end-game.jsx";
 import VoidGame from "../components/member/void-game.jsx";
-import RetrieveEndGame from "../components/member/retrieve-end-game.jsx";
 
 class MemberPage extends React.Component {
   render() {
@@ -15,7 +14,6 @@ class MemberPage extends React.Component {
         <PlaceBet />
         <EndGame />
         <VoidGame />
-        <RetrieveEndGame />
       </div>
     );
   }

@@ -76,6 +76,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model, [FromServices] IGameMemberService gameMemberService, [FromServices] ISiteDataService siteDataService)
         {
             if(siteDataService.VerifyClient(model.Auth.ClientId, model.Auth.ClientSecret))

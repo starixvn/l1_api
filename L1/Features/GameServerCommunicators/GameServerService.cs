@@ -27,13 +27,28 @@ namespace L1.Features.GameServerCommunicators
             var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
             var response = await httpClient.PostAsync(apiEndpoint, content);
 
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            return new GameServerResponse<T>
+            if (response.IsSuccessStatusCode)
             {
-                TimeStamp = DateTimeOffset.UtcNow,
-                Result = JsonConvert.DeserializeObject<T>(responseContent)
-            };
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return new GameServerResponse<T>
+                {
+                    TimeStamp = DateTimeOffset.UtcNow,
+                    Result = JsonConvert.DeserializeObject<T>(responseContent)
+                };
+            }
+
+            return await CreateErrorResponse<T>(response);
         }
+
+        private static async Task<GameServerResponse<T>> CreateErrorResponse<T>(HttpResponseMessage response) where T : GameServerResult, new()
+          => new GameServerResponse<T>
+          {
+              TimeStamp = DateTimeOffset.UtcNow,
+              Result = new T
+              {
+                  ErrorCode = 1,
+                  ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}"
+              }
+          };
     }
 }

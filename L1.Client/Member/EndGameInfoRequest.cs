@@ -8,7 +8,7 @@
 
         public int ObCustId { get; set; }
 
-        public int SiteId { get; set; }
+        public string SiteId { get; set; }
 
         public string Seq { get; set; }
 

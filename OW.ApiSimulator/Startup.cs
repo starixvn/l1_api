@@ -1,9 +1,11 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OW.ApiSimulator.Extensions;
+using OW.ApiSimulator.Services;
 
 namespace OW.ApiSimulator
 {
@@ -20,6 +22,11 @@ namespace OW.ApiSimulator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOW();
+            services.AddHttpClient<ISabaClubService, SabaClubService>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(Configuration["SabaClubSettings:BaseUrl"]);
+            });
+
             services.AddControllersWithViews();
         }
 

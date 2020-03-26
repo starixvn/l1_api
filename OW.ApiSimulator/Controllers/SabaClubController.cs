@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using OW.ApiSimulator.Models;
 using OW.ApiSimulator.Models.OW;
+using OW.ApiSimulator.Services;
 
 namespace OW.ApiSimulator.Controllers
 {
@@ -209,12 +212,25 @@ namespace OW.ApiSimulator.Controllers
         {
             var result = serviceProvider.GetRequiredService<CheckMaintenanceResult>();
             result.Seq = request.Call?.Seq;
-       
+
             return Ok(new OWResponse<CheckMaintenanceResult>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = result
             });
+        }
+
+        [HttpGet]
+        public IActionResult RetrieveEndGameInfo()
+        {
+            return View(new RetriveEndGameInfoViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RetrieveEndGameInfoAsync(RetriveEndGameInfoViewModel viewModel, [FromServices] ISabaClubService sabaClubService)
+        {
+            viewModel.Result = await sabaClubService.RetrieveEndGameInfoAsync(viewModel.Request);
+            return View(viewModel);
         }
     }
 }

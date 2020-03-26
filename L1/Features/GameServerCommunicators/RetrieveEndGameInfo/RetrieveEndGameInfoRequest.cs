@@ -2,7 +2,7 @@
 {
     public class RetrieveEndGameInfoRequest : GameServerRequest
     {
-        public RetrieveEndGameInfoRequest(int gameRoundId, int gameTypeId, int obCustId, int siteId) : base(obCustId, siteId)
+        public RetrieveEndGameInfoRequest(int gameRoundId, int gameTypeId, int obCustId, string siteId) : base(obCustId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;

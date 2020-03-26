@@ -2,7 +2,7 @@
 {
     public class GameServerRequest
     {
-        public GameServerRequest(int obCustId, int siteId)
+        public GameServerRequest(int obCustId, string siteId)
         {
             ObCustId = obCustId;
             SiteId = siteId;
@@ -10,6 +10,6 @@
 
         public int ObCustId { get; }
 
-        public int SiteId { get; }
+        public string SiteId { get; }
     }
 }

@@ -46,7 +46,6 @@ namespace L1.Features.GameServerCommunicators
               TimeStamp = DateTimeOffset.UtcNow,
               Result = new T
               {
-                  ErrorCode = 1,
                   ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}"
               }
           };

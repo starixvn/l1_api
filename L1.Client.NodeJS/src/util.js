@@ -17,6 +17,10 @@ const sendPostRequest = (action, { apiUrl, token }) => (params, callback) =>
       headers: { Authorization: token, LanguageCode: languageCode }
     };
 
+    if (params.languageCode) {
+      delete params.languageCode;
+    }
+
     Axios.post(`${apiUrl}${action}`, params, config)
       .then(data => data.data)
       .then(handleSuccess(resolve, callback))

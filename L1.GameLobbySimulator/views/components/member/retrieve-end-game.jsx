@@ -16,14 +16,27 @@ export default class RetriveEndGame extends React.Component {
       obCustId: (Math.random() * 100) >> 0,
       seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       languageCode: "vi-VN",
+      auth: {
+        clientId: "licensee1",
+        clientSecret: "123licensee1%^&sit"
+      },
       result: null
     };
 
     this.changeValue = this.changeValue.bind(this);
+    this.handleChangeAuth = this.handleChangeAuth.bind(this);
   }
 
   changeValue(data) {
     this.setState(data);
+  }
+
+  handleChangeAuth(data) {
+    const state = this.state;
+
+    state.auth = Object.assign({}, state.auth, data);
+
+    this.setState(state);
   }
 
   handleSubmit(event) {
@@ -86,6 +99,20 @@ export default class RetriveEndGame extends React.Component {
                   onChange={this.changeValue}
                   id="languageCode"
                   value={this.state.languageCode}
+                />
+                <Input
+                  type="text"
+                  id="clientId"
+                  name="Client ID"
+                  value={this.state.auth.clientId}
+                  onChange={this.handleChangeAuth}
+                />
+                <Input
+                  type="text"
+                  id="clientSecret"
+                  name="Client Secret"
+                  value={this.state.auth.clientSecret}
+                  onChange={this.handleChangeAuth}
                 />
                 <input className="primary" type="submit" value="End" />
               </fieldset>

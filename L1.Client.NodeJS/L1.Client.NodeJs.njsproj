@@ -21,9 +21,6 @@
     <NodejsPort>1337</NodejsPort>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="demo\auth\authWithCallback.js">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="demo\auth\authWithPromise.js" />
     <Content Include="demo\auth\index.js" />
     <Content Include="index.js" />

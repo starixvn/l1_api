@@ -10,12 +10,6 @@ const handleError = (reject, callback) => error => {
   reject(error);
 };
 
-const uppercaseKeys = obj =>
-  Object.keys(obj).reduce((result, key) => {
-    result[key[0].toUpperCase() + key.substr(1)] = obj[key];
-    return result;
-  }, {});
-
 const sendPostRequest = (action, { apiUrl, token }) => (params, callback) =>
   new Promise((resolve, reject) => {
     const languageCode = params.languageCode || null;
@@ -36,9 +30,6 @@ const createAction = (metadata, config) =>
   }, {});
 
 module.exports = {
-  handleSuccess,
-  handleError,
-  uppercaseKeys,
   sendPostRequest,
   createAction
 };

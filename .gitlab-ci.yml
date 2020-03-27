@@ -159,7 +159,7 @@ deploy_web_api_SIT:
   tags:
     - deploy-dotnet
   environment:
-    name: SIT
+    name: SIT-WEB-API
  # only:
  #   - /^deploy-test-\d{8}-\d+.*$/
  #   - /^deploy-test-api-\d{8}-\d+.*$/
@@ -191,7 +191,7 @@ deploy_auth_api_SIT:
   tags:
     - deploy-dotnet
   environment:
-    name: SIT
+    name: SIT-AUTH-API
 #  only:
 #    - /^deploy-test-\d{8}-\d+.*$/
 #    - /^deploy-test-auth-api-\d{8}-\d+.*$/

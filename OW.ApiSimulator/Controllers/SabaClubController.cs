@@ -232,5 +232,18 @@ namespace OW.ApiSimulator.Controllers
             viewModel.Result = await sabaClubService.RetrieveEndGameInfoAsync(viewModel.Request);
             return View(viewModel);
         }
+
+        [HttpGet]
+        public IActionResult DailySummary()
+        {
+            return View(new DailySummaryViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DailySummary(DailySummaryViewModel viewModel, [FromServices] ISabaClubService sabaClubService)
+        {
+            viewModel.Result = await sabaClubService.DailySumary(viewModel.Request);
+            return View(viewModel);
+        }
     }
 }

@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Daily Summary";
+}
+
+@model DailySummaryViewModel
+
+<form method="post" id="form">
+    <fieldset>
+        <legend>Auth</legend>
+        <div class="form-group">
+            <label asp-for="Request.Auth.ClientId"></label>
+            <input class="form-control" asp-for="Request.Auth.ClientId" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Request.Auth.ClientSecret"></label>
+            <input class="form-control" asp-for="Request.Auth.ClientSecret" />
+        </div>
+    </fieldset>
+    <div class="form-group">
+        <label asp-for="Request.TimeStamp"></label>
+        <input class="form-control" asp-for="Request.TimeStamp" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Request.Seq"></label>
+        <input class="form-control" asp-for="Request.Seq" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Request.SummarizedDate"></label>
+        <input class="form-control" asp-for="Request.SummarizedDate" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="Submit" />
+</form>
+
+<fieldset>
+    <legend>Result</legend>
+    <pre>
+        @Html.Raw(Json.Serialize(Model.Result))
+    </pre>
+</fieldset>

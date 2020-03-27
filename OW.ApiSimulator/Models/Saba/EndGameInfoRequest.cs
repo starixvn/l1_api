@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace OW.ApiSimulator.Models.Saba
+﻿namespace OW.ApiSimulator.Models.Saba
 {
-    public class EndGameInfoRequest
+    public class EndGameInfoRequest : SabaRequest
     {
-        public DateTimeOffset TimeStamp { get; set; } = DateTimeOffset.UtcNow;
-
         public int GameRoundId { get; set; }
 
         public byte GameTypeId { get; set; }
@@ -13,9 +9,5 @@ namespace OW.ApiSimulator.Models.Saba
         public int ObCustId { get; set; }
 
         public string SiteId { get; set; }
-
-        public string Seq { get; set; } = Guid.NewGuid().ToString();
-
-        public Auth Auth { get; set; } = new Auth();
     }
 }

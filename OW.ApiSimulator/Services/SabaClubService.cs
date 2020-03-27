@@ -10,6 +10,8 @@ namespace OW.ApiSimulator.Services
     public interface ISabaClubService
     {
         Task<SabaResponse<EndGameInfoResult>> RetrieveEndGameInfoAsync(EndGameInfoRequest request);
+
+        Task<SabaResponse<DailySummaryResult>> DailySumary(DailySummaryRequest request);
     }
 
     public class SabaClubService : ISabaClubService
@@ -37,6 +39,27 @@ namespace OW.ApiSimulator.Services
             {
                 TimeStamp = DateTime.UtcNow,
                 Result = new EndGameInfoResult
+                {
+                    ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{responseContent}"
+                }
+            };
+        }
+
+        public async Task<SabaResponse<DailySummaryResult>> DailySumary(DailySummaryRequest request)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
+            var response = await httpClient.PostAsync("member/dailysummarize", content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<SabaResponse<DailySummaryResult>>(responseContent);
+            }
+
+            return new SabaResponse<DailySummaryResult>
+            {
+                TimeStamp = DateTime.UtcNow,
+                Result = new DailySummaryResult
                 {
                     ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{responseContent}"
                 }

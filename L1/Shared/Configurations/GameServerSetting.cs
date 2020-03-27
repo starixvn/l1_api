@@ -12,5 +12,7 @@ namespace L1.Shared.Configurations
     public class GameServerEndPoints
     {
         public string RetrieveEndGameInfo { get; set; }
+
+        public string DailySummary { get; set; }
     }
 }

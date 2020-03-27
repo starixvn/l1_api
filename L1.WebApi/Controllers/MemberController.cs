@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.GameServerCommunicators;
+using L1.Features.GameServerCommunicators.DailySummary;
 using L1.Features.GameServerCommunicators.RetrieveEndGameInfo;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
@@ -82,6 +83,22 @@ namespace L1.WebApi.Controllers
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
                 var response = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId));
+                response.Result.Seq = model.Seq;
+
+                return Ok(response);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model, [FromServices] IGameMemberService gameMemberService, [FromServices] ISiteDataService siteDataService)
+        {
+            if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
+            {
+                var response = await gameMemberService.DailySummary(new DailySummaryRequest(model.SummarizedDate));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);

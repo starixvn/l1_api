@@ -5,17 +5,8 @@ stages:
   - deploy-member-site-simulator
   - deploy-ow-api-simulator
   - deploy-game-lobby-simulator
-  
-#build:
-#  stage: build
-#  script:      
-#    - dotnet clean ./L1.sln
-#    - dotnet restore ./L1.sln
-#    - dotnet build ./L1.sln
-#  tags:
-#    - deploy-dotnet
     
-deploy_web_api:
+deploy_test_web_api:
   stage: deploy-web-api
   before_script:
     - echo "====== Setting SSH Key ======"
@@ -28,7 +19,7 @@ deploy_web_api:
     - dotnet build ./L1.WebApi/L1.WebApi.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api
+    - dotnet publish -c TEST -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api
     - tar -C ./build/api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-api restart'
   artifacts:
@@ -38,10 +29,10 @@ deploy_web_api:
   tags:
     - deploy-dotnet
   only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-api-\d{8}-\d+.*$/
 
-deploy_auth_api:
+deploy_test_auth_api:
   stage: deploy-auth-api
   before_script:
     - echo "====== Setting SSH Key ======"
@@ -54,7 +45,7 @@ deploy_auth_api:
     - dotnet build ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
+    - dotnet publish -c TEST -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
     - tar -C ./build/auth-api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   artifacts:
@@ -64,10 +55,10 @@ deploy_auth_api:
   tags:
     - deploy-dotnet
   only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-auth-api-\d{8}-\d+.*$/
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-auth-api-\d{8}-\d+.*$/
 
-deploy_member_site_simulator:
+deploy_test_member_site_simulator:
   stage: deploy-member-site-simulator
   before_script:
     - echo "====== Setting SSH Key ======"
@@ -80,7 +71,7 @@ deploy_member_site_simulator:
     - dotnet build ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 --self-contained false ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj -o ./build/member-site-simulator
+    - dotnet publish -c TEST -r linux-x64 --self-contained false ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj -o ./build/member-site-simulator
     - tar -C ./build/member-site-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/member-site-simulator/ -jxf -'
     - ssh root@$HOST 'sudo service l1-member-site-simulator restart'
   artifacts:
@@ -90,10 +81,10 @@ deploy_member_site_simulator:
   tags:
     - deploy-dotnet
   only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-member-site-simulator-\d{8}-\d+.*$/
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-member-site-simulator-\d{8}-\d+.*$/
     
-deploy_ow_api_simulator:
+deploy_test_ow_api_simulator:
   stage: deploy-ow-api-simulator
   before_script:
     - echo "====== Setting SSH Key ======"
@@ -106,7 +97,7 @@ deploy_ow_api_simulator:
     - dotnet build ./OW.ApiSimulator/OW.ApiSimulator.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c Release -r linux-x64 --self-contained false ./OW.ApiSimulator/OW.ApiSimulator.csproj -o ./build/ow-api-simulator
+    - dotnet publish -c TEST -r linux-x64 --self-contained false ./OW.ApiSimulator/OW.ApiSimulator.csproj -o ./build/ow-api-simulator
     - tar -C ./build/ow-api-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/ow-api-simulator/ -jxf -'
     - ssh root@$HOST 'sudo service l1-ow-api-simulator restart'
   artifacts:
@@ -116,11 +107,10 @@ deploy_ow_api_simulator:
   tags:
     - deploy-dotnet
   only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-ow-api-simulator-\d{8}-\d+.*$/
-    
-    
-deploy_game_lobby_simulator:
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-ow-api-simulator-\d{8}-\d+.*$/
+      
+deploy_test_game_lobby_simulator:
   stage: deploy-game-lobby-simulator
   before_script:
     - eval $(ssh-agent -s)
@@ -135,5 +125,5 @@ deploy_game_lobby_simulator:
   tags:
     - deploy-nodejs
   only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-game-lobby-simulator-\d{8}-\d+.*$/
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-game-lobby-simulator-\d{8}-\d+.*$/

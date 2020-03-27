@@ -8,7 +8,7 @@
     "webpack:dev": "webpack --watch --mode development",
     "dev": "concurrently --kill-others \"npm run webpack:dev\" \"nodemon .\"",
     "build": "webpack",
-    "build:sit": "webpack && mv game-client-config.SIT.json game-client-config.json"
+    "build:sit": "webpack && cp game-client-config.SIT.json game-client-config.json"
   },
   "description": "GameLobbySimulator",
   "author": {

@@ -77,6 +77,7 @@ deploy_web_api_SIT:
     - echo "====== Pushing git compiled ... ======"
     - git clone git@gitlab.com:l1-compiled/api-compiled.git ./build/api/
     - dotnet publish -c SIT -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api/
+    - cp ./L1.WebApi/gitlab-ci-after-script-SIT.sh ./build/api/
     - cd ./build/api
     - git add .
     - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
@@ -111,6 +112,7 @@ deploy_auth_api_SIT:
     - echo "====== Pushing git compiled ... ======"
     - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git ./build/auth-api/
     - dotnet publish -c SIT -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
+    - cp ./L1.IdentityServerApi/gitlab-ci-after-script-SIT.sh ./build/auth-api/
     - cd ./build/auth-api
     - git add .
     - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi

@@ -1,9 +1,6 @@
 stages:
   - build
   - deploy
-  - deploy-member-site-simulator
-  - deploy-ow-api-simulator
-  - deploy-game-lobby-simulator
     
 deploy_web_api_LOCAL:
   stage: deploy
@@ -63,76 +60,6 @@ deploy_auth_api_LOCAL:
     - /^deploy-local-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
 
-deploy_test_member_site_simulator:
-  stage: deploy-member-site-simulator
-  before_script:
-    - echo "====== Setting SSH Key ======"
-    - eval $(ssh-agent -s)
-    - echo "$SSH_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - dotnet clean ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj
-    - dotnet restore ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj
-    - dotnet build ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj
-  script:   
-    - echo "====== Deploying ... ======"
-    - dotnet publish -c TEST -r linux-x64 --self-contained false ./L1.MemberSiteSimulation/L1.MemberSiteSimulation.csproj -o ./build/member-site-simulator
-    - tar -C ./build/member-site-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/member-site-simulator/ -jxf -'
-    - ssh root@$HOST 'sudo service l1-member-site-simulator restart'
-  artifacts:
-    expire_in: 2 days
-    paths:
-      - './build/member-site-simulator'
-  tags:
-    - deploy-dotnet
-  only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-member-site-simulator-\d{8}-\d+.*$/
-    
-deploy_test_ow_api_simulator:
-  stage: deploy-ow-api-simulator
-  before_script:
-    - echo "====== Setting SSH Key ======"
-    - eval $(ssh-agent -s)
-    - echo "$SSH_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - dotnet clean ./OW.ApiSimulator/OW.ApiSimulator.csproj
-    - dotnet restore ./OW.ApiSimulator/OW.ApiSimulator.csproj
-    - dotnet build ./OW.ApiSimulator/OW.ApiSimulator.csproj
-  script:   
-    - echo "====== Deploying ... ======"
-    - dotnet publish -c TEST -r linux-x64 --self-contained false ./OW.ApiSimulator/OW.ApiSimulator.csproj -o ./build/ow-api-simulator
-    - tar -C ./build/ow-api-simulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/ow-api-simulator/ -jxf -'
-    - ssh root@$HOST 'sudo service l1-ow-api-simulator restart'
-  artifacts:
-    expire_in: 2 days
-    paths:
-      - './build/ow-api-simulator'
-  tags:
-    - deploy-dotnet
-  only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-ow-api-simulator-\d{8}-\d+.*$/
-      
-deploy_test_game_lobby_simulator:
-  stage: deploy-game-lobby-simulator
-  before_script:
-    - eval $(ssh-agent -s)
-    - echo "$SSH_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  script:
-    - tar jcf - ./L1.Client.NodeJS | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/ -jxf -'
-    - tar -C ./L1.GameLobbySimulator/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/game-lobby-simulator/simulator/ -jxf -'
-    - ssh root@$HOST 'npm install --prefix /var/www/l1/game-lobby-simulator/simulator/ && npm run build  --prefix /var/www/l1/game-lobby-simulator/simulator/ | sudo service l1-gamelobby-simulator restart'
-    - ssh root@$HOST 'chmod -R 777 /var/www/l1/game-lobby-simulator/simulator/resource /var/www/l1/game-lobby-simulator/simulator/game-client-config.json'
-  tags:
-    - deploy-nodejs
-  only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-game-lobby-simulator-\d{8}-\d+.*$/
-    
 deploy_web_api_SIT:
   stage: deploy
   before_script:
@@ -162,9 +89,9 @@ deploy_web_api_SIT:
     - deploy-dotnet
   environment:
     name: SIT
- # only:
- #   - /^deploy-test-\d{8}-\d+.*$/
- #   - /^deploy-test-api-\d{8}-\d+.*$/
+  only:
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-api-\d{8}-\d+.*$/
  
 deploy_auth_api_SIT:
   stage: deploy
@@ -194,6 +121,6 @@ deploy_auth_api_SIT:
     - deploy-dotnet
   environment:
     name: SIT
-#  only:
-#    - /^deploy-test-\d{8}-\d+.*$/
-#    - /^deploy-test-auth-api-\d{8}-\d+.*$/
+  only:
+    - /^deploy-test-\d{8}-\d+.*$/
+    - /^deploy-test-auth-api-\d{8}-\d+.*$/

@@ -1,8 +1,0 @@
-{
-  "apiUrl": "http://api.lumigame.com",
-  "authUrl": "http://auth.lumigame.com",
-  "client": {
-    "id": "game-server",
-    "secret": "gameserver@20luminet&"
-  }
-}

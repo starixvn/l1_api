@@ -3,6 +3,7 @@ using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Resources;
 using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.Authentications
 {
@@ -69,20 +70,20 @@ namespace L1.Features.Authentications
             {
                 if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
                 {
-                    SentrySdk.CaptureMessage(VerifyTokenErrors.TokenExpired);
+                    SentrySdk.CaptureMessage(VerifyTokenErrors.TokenExpired, SentryLevel.Warning);
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
 
                 if (memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
                 {
-                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserDeviceNotFound);
+                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserDeviceNotFound, SentryLevel.Warning);
                     return VerificationResult.CreateErrorResponse(VerificationResult.UserDeviceNotFoundCode);
                 }
 
 
                 if (memberAuth.IP != verificationParams?.IP)
                 {
-                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserIpNotFound);
+                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserIpNotFound, SentryLevel.Warning);
                     return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);
                 }
 

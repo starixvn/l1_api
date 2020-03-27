@@ -30,8 +30,9 @@ deploy_web_api_LOCAL:
   environment:
     name: LOCAL
   only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-api-\d{8}-\d+.*$/
+    - /^deploy-local-\d{8}-\d+.*$/
+    - /^deploy-local-api-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
 
 deploy_auth_api_LOCAL:
   stage: deploy
@@ -58,8 +59,9 @@ deploy_auth_api_LOCAL:
   environment:
     name: LOCAL
   only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-auth-api-\d{8}-\d+.*$/
+    - /^deploy-local-\d{8}-\d+.*$/
+    - /^deploy-local-auth-api-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
 
 deploy_test_member_site_simulator:
   stage: deploy-member-site-simulator
@@ -159,7 +161,7 @@ deploy_web_api_SIT:
   tags:
     - deploy-dotnet
   environment:
-    name: SIT-WEB-API
+    name: SIT
  # only:
  #   - /^deploy-test-\d{8}-\d+.*$/
  #   - /^deploy-test-api-\d{8}-\d+.*$/
@@ -191,7 +193,7 @@ deploy_auth_api_SIT:
   tags:
     - deploy-dotnet
   environment:
-    name: SIT-AUTH-API
+    name: SIT
 #  only:
 #    - /^deploy-test-\d{8}-\d+.*$/
 #    - /^deploy-test-auth-api-\d{8}-\d+.*$/

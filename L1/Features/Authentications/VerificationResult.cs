@@ -7,6 +7,7 @@ namespace L1.Features.Authentications
         public const int TokenNotFoundCode = 100;
         public const int TokenExpiredCode = 101;
         public const int UserDeviceNotFoundCode = 102;
+        public const int UserIpNotFoundCode = 103;
 
         public VerificationResult(int code, string message)
         {
@@ -30,7 +31,6 @@ namespace L1.Features.Authentications
             MemberName = memberName;
             SiteId = siteId;
             Language = language;
-            MemberBalance = 10000000;
             Currency = currency;
             Seq = seq;
             ClientId = clientId;

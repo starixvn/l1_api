@@ -24,7 +24,7 @@ namespace L1.WebApi.Controllers
         [Route("index")]
         public IActionResult Index(SignIn model)
         {
-            if (siteDataService.VerifyClient(model.Auth.ClientId, model.Auth.ClientSecret))
+            if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
                 var redirectUrl = memberAuthService.SignIn(new MemberAuth
                 {

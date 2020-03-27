@@ -79,7 +79,7 @@ namespace L1.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model, [FromServices] IGameMemberService gameMemberService, [FromServices] ISiteDataService siteDataService)
         {
-            if (siteDataService.VerifyClient(model.Auth.ClientId, model.Auth.ClientSecret))
+            if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
                 var response = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId));
                 response.Result.Seq = model.Seq;

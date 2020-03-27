@@ -53,6 +53,6 @@ namespace L1.Features.Authentications
         }
 
         public void Update(string id, MemberAuth memberAuth) =>
-            memberAuthCollection.ReplaceOne(book => book.Id == id, memberAuth);
+            memberAuthCollection.ReplaceOne(memberAuth => memberAuth.Id == id, memberAuth);
     }
 }

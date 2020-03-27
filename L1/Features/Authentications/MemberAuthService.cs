@@ -1,6 +1,8 @@
 ﻿using System;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
+using L1.Shared.Resources;
+using Sentry;
 
 namespace L1.Features.Authentications
 {
@@ -63,24 +65,39 @@ namespace L1.Features.Authentications
         {
             var memberAuth = memberAuthDataAccess.GetByToken(verificationParams.Token);
 
-            if (memberAuth == null)
+            if (memberAuth != null)
             {
-                return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
+                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
+                {
+                    SentrySdk.CaptureMessage(VerifyTokenErrors.TokenExpired);
+                    return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
+                }
+
+                if (memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent.ToUpper())
+                {
+                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserDeviceNotFound);
+                    return VerificationResult.CreateErrorResponse(VerificationResult.UserDeviceNotFoundCode);
+                }
+
+
+                if (memberAuth.IP != verificationParams.IP)
+                {
+                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserIpNotFound);
+                    return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);
+                }
+
+                return VerificationResult.CreateSuccessResponse(
+                    memberAuth.MemberId,
+                    memberAuth.MemberName,
+                    memberAuth.SiteId,
+                    memberAuth.Language,
+                    memberAuth.Currency,
+                    memberAuth.Seq,
+                    memberAuth.ClientId);
             }
 
-            if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
-            {
-                return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
-            }
-
-            return VerificationResult.CreateSuccessResponse(
-                memberAuth.MemberId,
-                memberAuth.MemberName,
-                memberAuth.SiteId,
-                memberAuth.Language,
-                memberAuth.Currency,
-                memberAuth.Seq,
-                memberAuth.ClientId);
+            SentrySdk.CaptureMessage(VerifyTokenErrors.TokenNotFound);
+            return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
         }
 
         private string GetGameClientUrl(MemberAuth memberAuth)

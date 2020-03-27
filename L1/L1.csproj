@@ -18,10 +18,15 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>OWErrors.resx</DependentUpon>
         </Compile>
-        <Compile Update="Shared\Resources\Errors.Designer.cs">
+        <Compile Update="Shared\Resources\Errors - Copy.Designer.cs">
+          <DependentUpon>Errors.resx</DependentUpon>
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
+        </Compile>
+        <Compile Update="Shared\Resources\VerifyTokenErrors.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
-            <DependentUpon>Errors.resx</DependentUpon>
+            <DependentUpon>VerifyTokenErrors.resx</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
@@ -29,9 +34,13 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>OWErrors.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Update="Shared\Resources\VerifyTokenErrors.resx">
+          <LastGenOutput>VerifyTokenErrors.Designer.cs</LastGenOutput>
+          <Generator>ResXFileCodeGenerator</Generator>
+        </EmbeddedResource>
         <EmbeddedResource Update="Shared\Resources\Errors.resx">
             <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+            <LastGenOutput>VerifyTokenErrors.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
 </Project>

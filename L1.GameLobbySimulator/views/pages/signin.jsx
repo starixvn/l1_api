@@ -17,7 +17,7 @@ export default class SignIn extends React.Component {
       currency: "UUS",
       seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
       siteId: "licensee1",
-      ip: "0.0.0.0",
+      ip: "",
       browserUserAgent: navigator.userAgent,
       auth: {
         clientId: "licensee1",
@@ -106,7 +106,12 @@ export default class SignIn extends React.Component {
           .then(data => data.data)
           .then(language => ({ language, ...resource }))
       )
-      .then(resource => this.setState({ resource }));
+      .then(resource =>
+        Axios.get("https://api.ipify.org/?format=json")
+          .then(data => data.data)
+          .then(data => ({ ...data, resource }))
+      )
+      .then(data => this.setState(data));
   }
 
   render() {

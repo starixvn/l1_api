@@ -1,6 +1,7 @@
 stages:
   - build
   - deploy-local
+  - deploy-sit
   - deploy-auth-api
   - deploy-member-site-simulator
   - deploy-ow-api-simulator

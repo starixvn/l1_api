@@ -1,13 +1,12 @@
 stages:
   - build
-  - deploy-web-api
-  - deploy-auth-api
+  - deploy
   - deploy-member-site-simulator
   - deploy-ow-api-simulator
   - deploy-game-lobby-simulator
     
 deploy_web_api_LOCAL:
-  stage: deploy-web-api
+  stage: deploy
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -35,7 +34,7 @@ deploy_web_api_LOCAL:
     - /^deploy-test-api-\d{8}-\d+.*$/
 
 deploy_auth_api_LOCAL:
-  stage: deploy-auth-api
+  stage: deploy
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -133,7 +132,7 @@ deploy_test_game_lobby_simulator:
     - /^deploy-test-game-lobby-simulator-\d{8}-\d+.*$/
     
 deploy_web_api_SIT:
-  stage: deploy-web-api
+  stage: deploy
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -166,7 +165,7 @@ deploy_web_api_SIT:
  #   - /^deploy-test-api-\d{8}-\d+.*$/
  
 deploy_auth_api_SIT:
-  stage: deploy-auth-api
+  stage: deploy
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -181,7 +180,7 @@ deploy_auth_api_SIT:
     - echo "====== Pushing git compiled ... ======"
     - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git ./build/auth-api/
     - dotnet publish -c SIT -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
-     - cd ./build/auth-api
+    - cd ./build/auth-api
     - git add .
     - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
     - git push -u origin master

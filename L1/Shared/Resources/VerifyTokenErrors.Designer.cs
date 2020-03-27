@@ -79,7 +79,7 @@ namespace L1.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cant not find user&apos;s device.
+        ///   Looks up a localized string similar to Can not find user&apos;s device.
         /// </summary>
         internal static string UserDeviceNotFound {
             get {
@@ -88,7 +88,7 @@ namespace L1.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cant not find user&apos;s IP.
+        ///   Looks up a localized string similar to Can not find user&apos;s IP.
         /// </summary>
         internal static string UserIpNotFound {
             get {

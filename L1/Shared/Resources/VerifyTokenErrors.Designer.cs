@@ -61,38 +61,11 @@ namespace L1.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The token is expired.
+        ///   Looks up a localized string similar to Invalid User Agent or IP.
         /// </summary>
-        internal static string TokenExpired {
+        internal static string InvalidUserAgentOrIP {
             get {
-                return ResourceManager.GetString("TokenExpired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Can not find token.
-        /// </summary>
-        internal static string TokenNotFound {
-            get {
-                return ResourceManager.GetString("TokenNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Can not find user&apos;s device.
-        /// </summary>
-        internal static string UserDeviceNotFound {
-            get {
-                return ResourceManager.GetString("UserDeviceNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Can not find user&apos;s IP.
-        /// </summary>
-        internal static string UserIpNotFound {
-            get {
-                return ResourceManager.GetString("UserIpNotFound", resourceCulture);
+                return ResourceManager.GetString("InvalidUserAgentOrIP", resourceCulture);
             }
         }
     }

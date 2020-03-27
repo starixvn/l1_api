@@ -117,16 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TokenExpired" xml:space="preserve">
-    <value>The token is expired</value>
-  </data>
-  <data name="TokenNotFound" xml:space="preserve">
-    <value>Can not find token</value>
-  </data>
-  <data name="UserDeviceNotFound" xml:space="preserve">
-    <value>Can not find user's device</value>
-  </data>
-  <data name="UserIpNotFound" xml:space="preserve">
-    <value>Can not find user's IP</value>
+  <data name="InvalidUserAgentOrIP" xml:space="preserve">
+    <value>Invalid User Agent or IP</value>
   </data>
 </root>

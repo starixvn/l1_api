@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Resources;
+using Newtonsoft.Json;
 using Sentry;
 using Sentry.Protocol;
 
@@ -68,23 +70,15 @@ namespace L1.Features.Authentications
 
             if (memberAuth != null)
             {
+                if (memberAuth.IP != verificationParams?.IP || memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
+                {
+                    LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
+                    return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);
+                }
+
                 if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
                 {
-                    SentrySdk.CaptureMessage(VerifyTokenErrors.TokenExpired, SentryLevel.Warning);
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
-                }
-
-                if (memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
-                {
-                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserDeviceNotFound, SentryLevel.Warning);
-                    return VerificationResult.CreateErrorResponse(VerificationResult.UserDeviceNotFoundCode);
-                }
-
-
-                if (memberAuth.IP != verificationParams?.IP)
-                {
-                    SentrySdk.CaptureMessage(VerifyTokenErrors.UserIpNotFound, SentryLevel.Warning);
-                    return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);
                 }
 
                 return VerificationResult.CreateSuccessResponse(
@@ -97,8 +91,12 @@ namespace L1.Features.Authentications
                     memberAuth.ClientId);
             }
 
-            SentrySdk.CaptureMessage(VerifyTokenErrors.TokenNotFound);
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
+        }
+
+        private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
+        {
+            SentrySdk.CaptureMessage($"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}", SentryLevel.Warning);
         }
 
         private string GetGameClientUrl(MemberAuth memberAuth)

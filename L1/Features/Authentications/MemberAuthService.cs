@@ -73,14 +73,14 @@ namespace L1.Features.Authentications
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
 
-                if (memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent.ToUpper())
+                if (memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
                 {
                     SentrySdk.CaptureMessage(VerifyTokenErrors.UserDeviceNotFound);
                     return VerificationResult.CreateErrorResponse(VerificationResult.UserDeviceNotFoundCode);
                 }
 
 
-                if (memberAuth.IP != verificationParams.IP)
+                if (memberAuth.IP != verificationParams?.IP)
                 {
                     SentrySdk.CaptureMessage(VerifyTokenErrors.UserIpNotFound);
                     return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);

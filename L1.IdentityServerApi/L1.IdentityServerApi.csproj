@@ -21,10 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="appsettings.Production.json">
-            <IsTransformFile>true</IsTransformFile>
-            <DependentUpon>appsettings.json</DependentUpon>
-        </None>
         <None Include="appsettings.Development.json">
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>

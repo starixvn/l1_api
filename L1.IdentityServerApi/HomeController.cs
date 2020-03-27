@@ -8,7 +8,7 @@ namespace L1.IdentityServerApi
         [AllowAnonymous]
         public ActionResult Index() => new ContentResult()
         {
-            Content = "Auth server is running",
+            Content = "Auth server is running!!!",
             ContentType = "text/html"
         };
     }

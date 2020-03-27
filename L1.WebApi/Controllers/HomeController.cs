@@ -8,7 +8,7 @@ namespace L1.WebApi.Controllers
         [AllowAnonymous]
         public ActionResult Index() => new ContentResult()
         {
-            Content = "Api is running",
+            Content = "Api is running!!!",
             ContentType = "text/html"
         };
     }

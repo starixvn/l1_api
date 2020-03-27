@@ -124,9 +124,9 @@
     <value>Can not find token</value>
   </data>
   <data name="UserDeviceNotFound" xml:space="preserve">
-    <value>Cant not find user's device</value>
+    <value>Can not find user's device</value>
   </data>
   <data name="UserIpNotFound" xml:space="preserve">
-    <value>Cant not find user's IP</value>
+    <value>Can not find user's IP</value>
   </data>
 </root>

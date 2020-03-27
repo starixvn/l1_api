@@ -1,9 +1,10 @@
 stages:
   - build
-  - deploy
+  - deploy-web-api
+  - deploy-auth-api
     
 deploy_web_api_LOCAL:
-  stage: deploy
+  stage: deploy-web-api
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -32,7 +33,7 @@ deploy_web_api_LOCAL:
     - /^deploy-api-\d{8}-\d+.*$/
 
 deploy_auth_api_LOCAL:
-  stage: deploy
+  stage: deploy-auth-api
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -61,7 +62,7 @@ deploy_auth_api_LOCAL:
     - /^deploy-auth-api-\d{8}-\d+.*$/
 
 deploy_web_api_SIT:
-  stage: deploy
+  stage: deploy-web-api
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -90,11 +91,12 @@ deploy_web_api_SIT:
   environment:
     name: SIT
   only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-api-\d{8}-\d+.*$/
+    - /^deploy-sit-\d{8}-\d+.*$/
+    - /^deploy-sit-api-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
  
 deploy_auth_api_SIT:
-  stage: deploy
+  stage: deploy-auth-api
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -122,5 +124,6 @@ deploy_auth_api_SIT:
   environment:
     name: SIT
   only:
-    - /^deploy-test-\d{8}-\d+.*$/
-    - /^deploy-test-auth-api-\d{8}-\d+.*$/
+    - /^deploy-sit-\d{8}-\d+.*$/
+    - /^deploy-sit-auth-api-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/

@@ -42,4 +42,9 @@
             <TransformOnBuild>true</TransformOnBuild>
         </Content>
     </ItemGroup>
+    <ItemGroup>
+      <None Update="gitlab-ci-after-script-SIT.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

@@ -1,14 +1,13 @@
 stages:
   - build
-  - deploy-local
-  - deploy-sit
+  - deploy-web-api
   - deploy-auth-api
   - deploy-member-site-simulator
   - deploy-ow-api-simulator
   - deploy-game-lobby-simulator
     
 deploy_web_api_LOCAL:
-  stage: deploy-local
+  stage: deploy-web-api
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -29,6 +28,8 @@ deploy_web_api_LOCAL:
       - './build/api'
   tags:
     - deploy-dotnet
+  environment:
+    name: LOCAL
   only:
     - /^deploy-test-\d{8}-\d+.*$/
     - /^deploy-test-api-\d{8}-\d+.*$/
@@ -50,11 +51,13 @@ deploy_auth_api_LOCAL:
     - tar -C ./build/auth-api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   artifacts:
-    expire_in: 2 days
+    expire_in: 1 days
     paths:
       - './build/auth-api'
   tags:
     - deploy-dotnet
+  environment:
+    name: LOCAL
   only:
     - /^deploy-test-\d{8}-\d+.*$/
     - /^deploy-test-auth-api-\d{8}-\d+.*$/
@@ -130,7 +133,7 @@ deploy_test_game_lobby_simulator:
     - /^deploy-test-game-lobby-simulator-\d{8}-\d+.*$/
     
 deploy_web_api_SIT:
-  stage: deploy-sit
+  stage: deploy-web-api
   before_script:
     - echo "====== Setting SSH Key ======"
     - eval $(ssh-agent -s)
@@ -156,6 +159,40 @@ deploy_web_api_SIT:
       - './build/api/'
   tags:
     - deploy-dotnet
+  environment:
+    name: SIT
  # only:
  #   - /^deploy-test-\d{8}-\d+.*$/
  #   - /^deploy-test-api-\d{8}-\d+.*$/
+ 
+deploy_auth_api_SIT:
+  stage: deploy-auth-api
+  before_script:
+    - echo "====== Setting SSH Key ======"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - dotnet clean ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
+    - dotnet restore ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
+    - dotnet build ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
+    - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+  script:   
+    - echo "====== Pushing git compiled ... ======"
+    - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git ./build/auth-api/
+    - dotnet publish -c SIT -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
+     - cd ./build/auth-api
+    - git add .
+    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
+    - git push -u origin master
+  artifacts:
+    expire_in: 1 days
+    paths:
+      - './build/auth-api'
+  tags:
+    - deploy-dotnet
+  environment:
+    name: SIT
+#  only:
+#    - /^deploy-test-\d{8}-\d+.*$/
+#    - /^deploy-test-auth-api-\d{8}-\d+.*$/

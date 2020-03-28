@@ -1,4 +1,5 @@
-﻿using L1.Features.Authentications;
+﻿using System.Linq;
+using L1.Features.Authentications;
 using L1.Features.Sites;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -26,11 +27,13 @@ namespace L1.WebApi.Controllers
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
+                var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
+
                 var redirectUrl = memberAuthService.SignIn(new MemberAuth
                 {
                     BrowserUserAgent = model.BrowserUserAgent,
                     Currency = model.Currency,
-                    IP = model.IP,
+                    IP = ip,
                     MemberId = model.MemberId,
                     MemberName = model.MemberName,
                     Seq = model.Seq,

@@ -38,7 +38,8 @@ namespace L1.Features.Authentications
 
         public MemberAuth GetLatest(MemberAuth memberAuth) =>
             memberAuthCollection
-                .Find(x => x.IP == memberAuth.IP && x.MemberId == memberAuth.MemberId && x.SiteId == memberAuth.SiteId)
+                .Find(x => x.IP == memberAuth.IP && x.MemberId == memberAuth.MemberId && x.SiteId == memberAuth.SiteId
+                    && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper())
                 .SortByDescending(x => x.Time)
                 .Limit(1)
                 .FirstOrDefault();

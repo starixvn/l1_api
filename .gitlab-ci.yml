@@ -16,7 +16,7 @@ deploy_web_api_LOCAL:
     - dotnet build ./L1.WebApi/L1.WebApi.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c TEST -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api
     - tar -C ./build/api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-api restart'
   artifacts:
@@ -45,7 +45,7 @@ deploy_auth_api_LOCAL:
     - dotnet build ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c TEST -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
     - tar -C ./build/auth-api/ -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   artifacts:

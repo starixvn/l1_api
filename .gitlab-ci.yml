@@ -1,3 +1,7 @@
+variables:
+    WEB_API_BUILD_PATH: ./build/api/
+    AUTH_API_BUILD_AUTH: ./build/auth-api
+
 stages:
   - build
   - deploy-web-api
@@ -132,3 +136,67 @@ deploy_auth_api_SIT:
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
+
+deploy_web_api_UAT:
+  stage: deploy-web-api
+  before_script:
+    - echo "====== Setting SSH Key ======"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - dotnet clean ./L1.WebApi/L1.WebApi.csproj
+    - dotnet restore ./L1.WebApi/L1.WebApi.csproj
+    - dotnet build ./L1.WebApi/L1.WebApi.csproj
+    - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+  script:   
+    - echo "====== Pushing git compiled ... ======"
+    - git clone --branch UAT git@gitlab.com:l1-compiled/api-compiled.git ./build/api/
+    - dotnet publish -c UAT -r linux-x64 --self-contained false ./L1.WebApi/L1.WebApi.csproj -o ./build/api/
+    - cp ./L1.WebApi/gitlab-ci-after-script-UAT.sh ./build/api/
+    - cd ./build/api
+    - git add .
+    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
+    - git push -u origin UAT
+    - echo "==============Waiting for after script execution=============="
+    - sleep 60
+  tags:
+    - deploy-dotnet
+  environment:
+    name: UAT
+  # only:
+  #   - /^deploy-uat-\d{8}-\d+.*$/
+  #   - /^deploy-uat-api-\d{8}-\d+.*$/
+  #   - /^deploy-api-\d{8}-\d+.*$/
+ 
+deploy_auth_api_UAT:
+  stage: deploy-auth-api
+  before_script:
+    - echo "====== Setting SSH Key ======"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - dotnet clean ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
+    - dotnet restore ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
+    - dotnet build ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
+    - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+  script:   
+    - echo "====== Pushing git compiled ... ======"
+    - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git ./build/auth-api/
+    - dotnet publish -c UAT -r linux-x64 --self-contained false ./L1.IdentityServerApi/L1.IdentityServerApi.csproj -o ./build/auth-api
+    - cp ./L1.IdentityServerApi/gitlab-ci-after-script-UAT.sh ./build/auth-api/
+    - cd ./build/auth-api
+    - git add .
+    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
+    - git push -u origin UAT
+    - echo "==============Waiting for after script execution=============="
+    - sleep 60
+  tags:
+    - deploy-dotnet
+  environment:
+    name: UAT
+  # only:
+  #   - /^deploy-uat-\d{8}-\d+.*$/
+  #   - /^deploy-uat-auth-api-\d{8}-\d+.*$/
+  #   - /^deploy-auth-api-\d{8}-\d+.*$/

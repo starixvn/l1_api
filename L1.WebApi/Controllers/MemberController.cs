@@ -31,7 +31,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
         {
             var response = await oWCustomerService.EnterPortal(
-                new EnterPortalCall(model.Seq, model.MemberId, model.SiteId, model.CharacterName, model.FirstLogin));
+                new EnterPortalCall(model.Seq, model.ObCustId, model.SiteId, model.CharacterName, model.FirstLogin));
 
             return Ok(response);
         }
@@ -42,7 +42,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
             var response = await oWCustomerService.GetBalance(
-                new GetBalanceCall(model.MemberId, model.SiteId));
+                new GetBalanceCall(model.ObCustId, model.SiteId));
 
             return Ok(response);
         }
@@ -53,7 +53,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
             var response = await oWCustomerService.PlaceBet(
-                new PlaceBetCall(model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.ChoiceId, model.Amount, model.Currency, model.Ip));
+                new PlaceBetCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.ChoiceId, model.Amount, model.Currency, model.Ip));
 
             return Ok(response);
         }
@@ -64,7 +64,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
             var response = await oWCustomerService.EndGame(
-                new EndGameCall(model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount, model.EndTime));
+                new EndGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount, model.EndTime));
 
             return Ok(response);
         }
@@ -75,7 +75,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
             var response = await oWCustomerService.VoidGame(
-                new VoidGameCall(model.MemberId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
+                new VoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
 
             return Ok(response);
         }

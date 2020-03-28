@@ -2,7 +2,7 @@
 {
     public abstract class MemberRequest
     {
-        public int MemberId { get; set; }
+        public int ObCustId { get; set; }
 
         public string SiteId { get; set; }
     }

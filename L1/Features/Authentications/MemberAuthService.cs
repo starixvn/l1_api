@@ -70,7 +70,7 @@ namespace L1.Features.Authentications
 
             if (memberAuth != null)
             {
-                if (memberAuth.IP != verificationParams?.IP || memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
+                if (memberAuth.BrowserUserAgent.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
                 {
                     LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
                     return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);

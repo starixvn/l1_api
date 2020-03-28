@@ -2,7 +2,7 @@
 {
     public class PlaceBetResult : OWResult
     {
-        public int? ObTransId { get; set; }
+        public long? ObTransId { get; set; }
 
         public int? ObCustId { get; set; }
 

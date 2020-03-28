@@ -12,6 +12,6 @@ namespace L1.Features.GameServerCommunicators.RetrieveEndGameInfo
 
         public string Seq { get; set; }
 
-        public DateTimeOffset EndTime { get; set; }
+        public DateTimeOffset? EndTime { get; set; }
     }
 }

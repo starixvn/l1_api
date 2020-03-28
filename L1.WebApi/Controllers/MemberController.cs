@@ -27,6 +27,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
         {
             var response = await oWCustomerService.EnterPortal(
@@ -37,6 +38,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
             var response = await oWCustomerService.GetBalance(
@@ -47,6 +49,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
             var response = await oWCustomerService.PlaceBet(
@@ -57,6 +60,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
             var response = await oWCustomerService.EndGame(
@@ -67,6 +71,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
             var response = await oWCustomerService.VoidGame(

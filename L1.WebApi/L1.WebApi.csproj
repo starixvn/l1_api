@@ -52,8 +52,8 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-      <None Update="gitlab-ci-after-script.sh">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="gitlab-ci-after-script.sh">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

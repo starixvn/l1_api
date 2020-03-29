@@ -16,10 +16,12 @@ const sendPostRequest = (
   { apiUrl, token, useAuthenticate, requestTimeout }
 ) => (params, callback) =>
   new Promise((resolve, reject) => {
-    const languageCode = params.languageCode || null;
+    const languageCode = params.languageCode
+      ? { LanguageCode: params.languageCode }
+      : {};
     const authorization = useAuthenticate ? { Authorization: token } : {};
     const config = {
-      headers: { ...authorization, LanguageCode: languageCode },
+      headers: { ...authorization, ...languageCode },
       timeout: requestTimeout || defaultTimeout
     };
 

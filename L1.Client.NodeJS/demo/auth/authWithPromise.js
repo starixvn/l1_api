@@ -7,20 +7,26 @@ const config = {
   client: {
     id: "game-server",
     secret: "gameserver@20luminet&"
-  }
+  },
+  requestTimeout: 10000,
+  useAuthenticate: true
 };
 
 const gameClient = GameClient(config);
 
 const singleSignInParams = {
-  siteId: "licensee1",
+  siteId: "4100300",
   memberId: 12344321,
   memberName: "MemberName",
   language: "en-US",
   currency: "UUS",
-  ip: "0.0.0.0",
-  browserUserAgent: "Browser Agent",
-  seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b"
+  ip: "202.78.231.34",
+  browserUserAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
+  seq: "d8382c1d-6ce0-433d-9233-e7358b10a70b",
+  auth: {
+    clientId: "licensee1",
+    clientSecret: "123licensee1%^&sit"
+  }
 };
 
 const withAsyncAwait = async () => {

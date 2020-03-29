@@ -1,5 +1,4 @@
 variables:
-    GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
     WEB_API_BUILD_PATH: ./build/api
     WEB_API_ROOT_PATH: ./L1.WebApi
     AUTH_API_ROOT_PATH: ./L1.IdentityServerApi
@@ -63,7 +62,7 @@ sit_deploy_web_api:
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
     - echo "====== Pushing git compiled ... ======"
-    - git clone $GIT_COMPILED_REPO $WEB_API_BUILD_PATH
+    - git clone git@gitlab.com:l1-compiled/api-compiled.git $WEB_API_BUILD_PATH
     - dotnet publish -c SIT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
     - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-SIT.sh $WEB_API_BUILD_PATH
     - cd $WEB_API_BUILD_PATH
@@ -89,7 +88,7 @@ sit_deploy_auth_api:
     - dotnet build $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
     - echo "====== Pushing git compiled ... ======"
-    - git clone $GIT_COMPILED_REPO ./build/auth-api/
+    - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git ./build/auth-api/
     - dotnet publish -c SIT -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o ./build/auth-api
     - cp $AUTH_API_ROOT_PATH//gitlab-ci-after-script-SIT.sh ./build/auth-api/
     - cd ./build/auth-api
@@ -115,7 +114,7 @@ uat_deploy_web_api:
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
     - echo "====== Pushing git compiled ... ======"
-    - git clone --branch UAT $GIT_COMPILED_REPO $WEB_API_BUILD_PATH
+    - git clone --branch UAT git@gitlab.com:l1-compiled/api-compiled.git $WEB_API_BUILD_PATH
     - dotnet publish -c UAT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
     - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-UAT.sh $WEB_API_BUILD_PATH
     - cd $WEB_API_BUILD_PATH
@@ -141,7 +140,7 @@ uat_deploy_auth_api:
     - dotnet build $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
     - echo "====== Pushing git compiled ... ======"
-    - git clone --branch UAT $GIT_COMPILED_REPO $AUTH_API_BUILD_AUTH
+    - git clone --branch UAT git@gitlab.com:l1-compiled/identity-api-compiled.git $AUTH_API_BUILD_AUTH
     - dotnet publish -c UAT -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o $AUTH_API_BUILD_AUTH
     - cp $AUTH_API_ROOT_PATH/gitlab-ci-after-script-UAT.sh $AUTH_API_BUILD_AUTH
     - cd $AUTH_API_BUILD_AUTH

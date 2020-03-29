@@ -18,7 +18,7 @@ stages:
     
 local_deploy_web_api:
   stage: deploy-web-api
-    before_script:
+  before_script:
     - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj

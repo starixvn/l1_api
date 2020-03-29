@@ -18,11 +18,10 @@ stages:
     
 local_deploy_web_api:
   stage: deploy-web-api
-  before_script:
+  script:
     - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
-  script:
     - echo "====== Deploying ... ======"
     - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
     - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
@@ -38,11 +37,10 @@ local_deploy_web_api:
 
 local_deploy_auth_api:
   stage: deploy-auth-api
-  before_script:
+  script:   
     - dotnet clean $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - dotnet restore $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
     - dotnet build $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
-  script:   
     - echo "====== Deploying ... ======"
     - dotnet publish -c LOCAL -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o $AUTH_API_BUILD_AUTH
     - tar -C $AUTH_API_BUILD_AUTH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
@@ -58,12 +56,11 @@ local_deploy_auth_api:
 
 sit_deploy_web_api:
   stage: deploy-web-api
-  before_script:
+  script:   
     - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-  script:   
     - echo "====== Pushing git compiled ... ======"
     - git clone git@gitlab.com:l1-compiled/api-compiled.git $WEB_API_BUILD_PATH
     - dotnet publish -c SIT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
@@ -85,12 +82,11 @@ sit_deploy_web_api:
  
 sit_deploy_auth_api:
   stage: deploy-auth-api
-  before_script:
+  script:   
     - dotnet clean $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - dotnet restore $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - dotnet build $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-  script:   
     - echo "====== Pushing git compiled ... ======"
     - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git ./build/auth-api/
     - dotnet publish -c SIT -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o ./build/auth-api
@@ -112,12 +108,11 @@ sit_deploy_auth_api:
 
 uat_deploy_web_api:
   stage: deploy-web-api
-  before_script:
+  script:   
     - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-  script:   
     - echo "====== Pushing git compiled ... ======"
     - git clone --branch UAT git@gitlab.com:l1-compiled/api-compiled.git $WEB_API_BUILD_PATH
     - dotnet publish -c UAT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
@@ -139,12 +134,11 @@ uat_deploy_web_api:
  
 uat_deploy_auth_api:
   stage: deploy-auth-api
-  before_script:
+  script:   
     - dotnet clean $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - dotnet restore $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - dotnet build $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-  script:   
     - echo "====== Pushing git compiled ... ======"
     - git clone git@gitlab.com:l1-compiled/identity-api-compiled.git $AUTH_API_BUILD_AUTH
     - dotnet publish -c UAT -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o $AUTH_API_BUILD_AUTH

@@ -34,6 +34,7 @@ local_deploy_web_api:
   environment:
     name: LOCAL
   only:
+    - /^deploy-\d{8}-\d+.*$/
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-api-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/
@@ -53,6 +54,7 @@ local_deploy_auth_api:
   environment:
     name: LOCAL
   only:
+    - /^deploy-\d{8}-\d+.*$/
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
@@ -65,20 +67,25 @@ sit_deploy_web_api:
     - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
     - echo "====== Pushing git compiled ... ======"
-    - git clone $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
+    - git clone --branch SIT $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
     - dotnet publish -c SIT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
     - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-SIT.sh $WEB_API_BUILD_PATH
     - cd $WEB_API_BUILD_PATH
     - git add .
-    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
-    - git push -u origin master
-    - echo "==============Waiting for after script execution=============="
-    - sleep 60
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin SIT;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
   tags:
     - deploy-dotnet
   environment:
     name: SIT
   only:
+    - /^deploy-\d{8}-\d+.*$/
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-api-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/
@@ -91,20 +98,25 @@ sit_deploy_auth_api:
     - dotnet build $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
     - echo "====== Pushing git compiled ... ======"
-    - git clone $AUTH_API_GIT_COMPILED_REPO $AUTH_API_BUILD_AUTH
+    - git clone --branch SIT $AUTH_API_GIT_COMPILED_REPO $AUTH_API_BUILD_AUTH
     - dotnet publish -c SIT -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o $AUTH_API_BUILD_AUTH
     - cp $AUTH_API_ROOT_PATH//gitlab-ci-after-script-SIT.sh $AUTH_API_BUILD_AUTH
     - cd $AUTH_API_BUILD_AUTH
     - git add .
-    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
-    - git push -u origin master
-    - echo "==============Waiting for after script execution=============="
-    - sleep 60
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin SIT;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
   tags:
     - deploy-dotnet
   environment:
     name: SIT
   only:
+    - /^deploy-\d{8}-\d+.*$/
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
@@ -122,18 +134,23 @@ uat_deploy_web_api:
     - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-UAT.sh $WEB_API_BUILD_PATH
     - cd $WEB_API_BUILD_PATH
     - git add .
-    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
-    - git push -u origin UAT
-    - echo "==============Waiting for after script execution=============="
-    - sleep 60
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin UAT;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
   tags:
     - deploy-dotnet
   environment:
     name: UAT
-  # only:
-  #   - /^deploy-uat-\d{8}-\d+.*$/
-  #   - /^deploy-uat-api-\d{8}-\d+.*$/
-  #   - /^deploy-api-\d{8}-\d+.*$/
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-uat-\d{8}-\d+.*$/
+    - /^deploy-uat-api-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
  
 uat_deploy_auth_api:
   stage: deploy-auth-api
@@ -148,15 +165,20 @@ uat_deploy_auth_api:
     - cp $AUTH_API_ROOT_PATH/gitlab-ci-after-script-UAT.sh $AUTH_API_BUILD_AUTH
     - cd $AUTH_API_BUILD_AUTH
     - git add .
-    - if [ -z "$(git status --porcelain)" ]; then echo "Nothing change"; else git commit -m "$COMMIT_MESSAGE"; fi
-    - git push -u origin UAT
-    - echo "==============Waiting for after script execution=============="
-    - sleep 60
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin UAT;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
   tags:
     - deploy-dotnet
   environment:
     name: UAT
-  # only:
-  #   - /^deploy-uat-\d{8}-\d+.*$/
-  #   - /^deploy-uat-auth-api-\d{8}-\d+.*$/
-  #   - /^deploy-auth-api-\d{8}-\d+.*$/
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-uat-\d{8}-\d+.*$/
+    - /^deploy-uat-auth-api-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/

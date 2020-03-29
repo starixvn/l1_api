@@ -15,13 +15,13 @@ class GameClient {
     this.member = initMember(this.config);
   }
 
-  async autoUpdateToken() {
-    await this.updateToken();
+  async autoUpdateToken(callback) {
+    await this.updateToken(callback);
 
     this.interval = setInterval(() => {
       if (this.isTokenExpired()) {
         (async () => {
-          await this.updateToken();
+          await this.updateToken(callback);
         })();
       }
     }, intervalTime);
@@ -45,6 +45,8 @@ class GameClient {
       callback && callback(null, "Get bearer token successfully.");
     } catch (error) {
       callback && callback("Get bearer token failure: " + error);
+
+      throw error;
     }
   }
 

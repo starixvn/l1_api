@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.GameServerCommunicators
 {
@@ -37,7 +39,13 @@ namespace L1.Features.GameServerCommunicators
                 };
             }
 
-            return await CreateErrorResponse<T>(response);
+            var failureResponse = await CreateErrorResponse<T>(response);
+
+            SentrySdk.CaptureMessage(
+                $"Request to Saba Club failed at ${DateTimeOffset.UtcNow} - {failureResponse.Result.ErrorDescription}",
+                SentryLevel.Warning);
+
+            return failureResponse;
         }
 
         private static async Task<GameServerResponse<T>> CreateErrorResponse<T>(HttpResponseMessage response) where T : GameServerResult, new()

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.OWCommunicators.Log;
@@ -7,6 +8,8 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Newtonsoft.Json;
+using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
 {
@@ -32,6 +35,8 @@ namespace L1.Features.OWCommunicators
         {
             MapErrorMessage(response.Result);
             await logService.LogFailedRequestAsync(response);
+
+            SentrySdk.CaptureMessage($"Request to OW failed at ${DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}", SentryLevel.Warning);
 
             if (response.Result.ErrorCode == OWSpecialErrorCodes.UnderMaintenance)
             {

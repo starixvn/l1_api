@@ -1,8 +1,4 @@
 variables:
-    WEB_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
-    WEB_API_BUILD_PATH: ./build/api
-    WEB_API_ROOT_PATH: ./L1.WebApi
-
     AUTH_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
     AUTH_API_ROOT_PATH: ./L1.IdentityServerApi
     AUTH_API_BUILD_AUTH: ./build/auth-api
@@ -18,26 +14,6 @@ stages:
   - build
   - deploy-web-api
   - deploy-auth-api
-    
-local_deploy_web_api:
-  stage: deploy-web-api
-  script:
-    - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - echo "====== Deploying ... ======"
-    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
-    - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
-    - ssh root@$HOST 'sudo service l1-api restart'
-  tags:
-    - deploy-dotnet
-  environment:
-    name: LOCAL
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-local-\d{8}-\d+.*$/
-    - /^deploy-local-api-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
 
 local_deploy_auth_api:
   stage: deploy-auth-api
@@ -58,37 +34,6 @@ local_deploy_auth_api:
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
-
-sit_deploy_web_api:
-  stage: deploy-web-api
-  script:   
-    - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-    - echo "====== Pushing git compiled ... ======"
-    - git clone --branch SIT $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
-    - dotnet publish -c SIT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
-    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-SIT.sh $WEB_API_BUILD_PATH
-    - cd $WEB_API_BUILD_PATH
-    - git add .
-    - if [ -z "$(git status --porcelain)" ]; 
-      then 
-        echo "Nothing change"; 
-      else 
-       git commit -m "$COMMIT_MESSAGE"; git push -u origin SIT;
-       echo "==============Waiting for after script execution==============";
-       sleep 60; 
-      fi
-  tags:
-    - deploy-dotnet
-  environment:
-    name: SIT
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-sit-\d{8}-\d+.*$/
-    - /^deploy-sit-api-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
  
 sit_deploy_auth_api:
   stage: deploy-auth-api
@@ -121,37 +66,6 @@ sit_deploy_auth_api:
     - /^deploy-sit-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
 
-uat_deploy_web_api:
-  stage: deploy-web-api
-  script:   
-    - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-    - echo "====== Pushing git compiled ... ======"
-    - git clone --branch UAT $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
-    - dotnet publish -c UAT -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
-    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-UAT.sh $WEB_API_BUILD_PATH
-    - cd $WEB_API_BUILD_PATH
-    - git add .
-    - if [ -z "$(git status --porcelain)" ]; 
-      then 
-        echo "Nothing change"; 
-      else 
-       git commit -m "$COMMIT_MESSAGE"; git push -u origin UAT;
-       echo "==============Waiting for after script execution==============";
-       sleep 60; 
-      fi
-  tags:
-    - deploy-dotnet
-  environment:
-    name: UAT
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-uat-\d{8}-\d+.*$/
-    - /^deploy-uat-api-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
- 
 uat_deploy_auth_api:
   stage: deploy-auth-api
   script:   
@@ -182,3 +96,6 @@ uat_deploy_auth_api:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
+
+includes:
+  - .gitlab-ci-web-api.yml

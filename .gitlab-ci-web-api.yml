@@ -1,0 +1,84 @@
+.build-web-api:
+  stage: deploy-web-api
+  script:   
+    - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
+    - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
+    - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
+    - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+    
+  variables:
+    WEB_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
+    WEB_API_BUILD_PATH: ./build/api
+    WEB_API_ROOT_PATH: ./L1.WebApi
+  tags:
+    - deploy-dotnet
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
+
+.base-deploy-kbt:
+  script: 
+    - if [ "$CI_ENVIRONMENT_NAME" == "PRO" ]; 
+      then
+        echo "$GIT_BRANCH" > master;
+      else
+        echo "$GIT_BRANCH" > $CI_ENVIRONMENT_NAME;
+      fi
+    - echo "====== Pushing git compiled ... ======"
+    - git clone --branch $GIT_BRANCH $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
+    - dotnet publish -c $GIT_BRANCH -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
+    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-$GIT_BRANCH.sh $WEB_API_BUILD_PATH
+    - cd $WEB_API_BUILD_PATH
+    - git add .
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin $GIT_BRANCH;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
+
+local_deploy_web_api:
+  extends: .build-web-api
+  script:
+    - echo "====== Deploying ... ======"
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
+    - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
+    - ssh root@$HOST 'sudo service l1-api restart'
+  environment:
+    name: LOCAL
+  only:
+    - /^deploy-local-\d{8}-\d+.*$/
+    - /^deploy-local-api-\d{8}-\d+.*$/
+
+sit_deploy_web_api:
+  extends: 
+    - .build-web-api
+    - .base-deploy-kbt
+  environment:
+    name: SIT
+  only:
+    - /^deploy-sit-\d{8}-\d+.*$/
+    - /^deploy-sit-api-\d{8}-\d+.*$/
+
+uat_deploy_web_api:
+  extends: 
+    - .build-web-api
+    - .base-deploy-kbt
+  environment:
+    name: UAT
+  only:
+    - /^deploy-uat-\d{8}-\d+.*$/
+    - /^deploy-uat-api-\d{8}-\d+.*$/
+
+prod_deploy_web_api:
+  extends: 
+    - .build-web-api
+    - .base-deploy-kbt
+  environment:
+    name: PRO
+  when: manual
+  only:
+    - master
+

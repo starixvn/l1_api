@@ -7,19 +7,34 @@ variables:
 .base-web-api:
   stage: deploy
   tags:
-    - deploy-dotnet-2
+    - deploy-dotnet
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - forward_deployment_failure
+      - archived_failure
   only:
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/
 
 build:web-api:
-  extends: 
-    - .base-web-api
   stage: build
   script:   
     - dotnet clean $ROOT_PATH/$PROJECT_NAME
     - dotnet restore $ROOT_PATH/$PROJECT_NAME
     - dotnet build $ROOT_PATH/$PROJECT_NAME
+  tags:
+    - deploy-dotnet
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
+    - /^deploy-local-\d{8}-\d+.*$/
+    - /^deploy-local-api-\d{8}-\d+.*$/
+    - /^deploy-sit-\d{8}-\d+.*$/
+    - /^deploy-sit-api-\d{8}-\d+.*$/
+    - /^deploy-uat-\d{8}-\d+.*$/
+    - /^deploy-uat-api-\d{8}-\d+.*$/
 
 local_deploy:web_api:
   extends: 
@@ -62,6 +77,7 @@ uat_deploy:web_api:
     - /^deploy-uat-api-\d{8}-\d+.*$/
 
 prod_deploy:web_api:
+  resource_group: web_api
   extends: 
     - .base-web-api
     - .push-git-compiled

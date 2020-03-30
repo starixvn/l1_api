@@ -7,18 +7,32 @@ variables:
 .base-identity-api:
   stage: deploy
   tags:
-    - deploy-dotnet
+    - deploy-dotnet-2
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - forward_deployment_failure
+      - archived_failure
   only:
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
 
-build-identity-api:
-  extends: .base-identity-api
+build:identity-api:
   stage: build
   script:   
     - dotnet clean $ROOT_PATH/$PROJECT_NAME
     - dotnet restore $ROOT_PATH/$PROJECT_NAME
     - dotnet build $ROOT_PATH/$PROJECT_NAME
+  tags:
+    - deploy-dotnet-2
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
+    - /^deploy-sit-\d{8}-\d+.*$/
+    - /^deploy-sit-auth-api-\d{8}-\d+.*$/
+    - /^deploy-uat-\d{8}-\d+.*$/
+    - /^deploy-uat-auth-api-\d{8}-\d+.*$/
 
 local_deploy:auth_api:
   extends: .base-identity-api
@@ -53,14 +67,19 @@ uat_deploy:auth_api:
     - .push-git-compiled
   environment:
     name: UAT
+  dependencies:
+    - build:identity-api
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-auth-api-\d{8}-\d+.*$/
 
 prod_deploy:auth_api:
-  extends: 
+  resource_group: auth_api
+  extends:
     - .base-identity-api
     - .push-git-compiled
+  retry:
+    max: 2
   dependencies:
     - build:identity-api
   environment:

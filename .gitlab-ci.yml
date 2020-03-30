@@ -13,4 +13,4 @@ before_script:
 include:
   - .gitlab-ci-push-git-compiled.yml
   - .gitlab-ci-web-api.yml
-#  - .gitlab-ci-identity-api.yml
+  - .gitlab-ci-identity-api.yml

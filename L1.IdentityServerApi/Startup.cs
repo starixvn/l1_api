@@ -63,7 +63,6 @@ namespace L1.IdentityServerApi
             //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             //});
 
-            app.UseAuthorization();
             app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>

@@ -1,8 +1,10 @@
-﻿namespace L1.Features.GameServerCommunicators
+﻿using L1.Shared.Constants;
+
+namespace L1.Features.GameServerCommunicators
 {
     public abstract class GameServerResult
     {
-        public string ErrorCode { get; set; }
+        public string ErrorCode { get; set; } = ErrorCodes.SuccessCode;
 
         public string ErrorDescription { get; set; }
     }

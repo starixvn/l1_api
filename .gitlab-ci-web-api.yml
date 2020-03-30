@@ -16,7 +16,7 @@
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/
 
-.base-deploy-kbt:
+.push-git-compiled:
   script: 
     - if [ "$CI_ENVIRONMENT_NAME" == "PRO" ]; 
       then
@@ -28,7 +28,7 @@
     - echo "====== Pushing git compiled ... ======"
     - git clone --branch $GIT_BRANCH $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
     - dotnet publish -c $GIT_BRANCH -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
-    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-${GIT_BRANCH}.sh $WEB_API_BUILD_PATH
+    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-${CI_ENVIRONMENT_NAME}.sh $WEB_API_BUILD_PATH
     - cd $WEB_API_BUILD_PATH
     - git add .
     - if [ -z "$(git status --porcelain)" ]; 
@@ -56,7 +56,7 @@ local_deploy_web_api:
 sit_deploy_web_api:
   extends: 
     - .build-web-api
-    - .base-deploy-kbt
+    - .push-git-compiled
   environment:
     name: SIT
   only:
@@ -66,7 +66,7 @@ sit_deploy_web_api:
 uat_deploy_web_api:
   extends: 
     - .build-web-api
-    - .base-deploy-kbt
+    - .push-git-compiled
   environment:
     name: UAT
   only:
@@ -76,7 +76,7 @@ uat_deploy_web_api:
 prod_deploy_web_api:
   extends: 
     - .build-web-api
-    - .base-deploy-kbt
+    - .push-git-compiled
   environment:
     name: PRO
   when: manual

@@ -38,9 +38,6 @@ variables:
       - runner_system_failure
       - forward_deployment_failure
       - archived_failure
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
 
 build:web-api:
   stage: build
@@ -76,6 +73,8 @@ local_deploy:web_api:
   only:
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-api-\d{8}-\d+.*$/
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
 
 sit_deploy:web_api:
   extends: 
@@ -88,6 +87,8 @@ sit_deploy:web_api:
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-api-\d{8}-\d+.*$/
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
 
 uat_deploy:web_api:
   extends: 
@@ -100,6 +101,8 @@ uat_deploy:web_api:
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-api-\d{8}-\d+.*$/
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
 
 prod_deploy:web_api:
   resource_group: web_api
@@ -115,4 +118,6 @@ prod_deploy:web_api:
   allow_failure: false
   only:
     - master
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-api-\d{8}-\d+.*$/
 

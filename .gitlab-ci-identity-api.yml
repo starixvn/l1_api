@@ -4,6 +4,30 @@ variables:
   BUILD_PATH: ./build/auth-api
   PROJECT_NAME: L1.IdentityServerApi.csproj
 
+.push-git-compiled:
+  script: 
+    - if [ "$CI_ENVIRONMENT_NAME" == "PRO" ]; 
+      then
+        export GIT_BRANCH=master;
+      else
+        export GIT_BRANCH=$CI_ENVIRONMENT_NAME;
+      fi
+    - echo $GIT_BRANCH
+    - echo "====== Pushing git compiled ... ======"
+    - git clone --branch $GIT_BRANCH $GIT_COMPILED_REPO $BUILD_PATH
+    - dotnet publish -c $CI_ENVIRONMENT_NAME -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
+    - cp $ROOT_PATH/gitlab-ci-after-script-${CI_ENVIRONMENT_NAME}.sh $BUILD_PATH
+    - cd $BUILD_PATH
+    - git add .
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin $GIT_BRANCH;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
+
 .base-identity-api:
   stage: deploy
   tags:
@@ -14,9 +38,6 @@ variables:
       - runner_system_failure
       - forward_deployment_failure
       - archived_failure
-  only:
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-auth-api-\d{8}-\d+.*$/
 
 build:identity-api:
   stage: build
@@ -51,6 +72,8 @@ local_deploy:auth_api:
   only:
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-auth-api-\d{8}-\d+.*$/
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
  
 sit_deploy_auth_api:
   extends: 
@@ -63,6 +86,8 @@ sit_deploy_auth_api:
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-auth-api-\d{8}-\d+.*$/
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
 
 uat_deploy:auth_api:
   extends: 
@@ -75,6 +100,8 @@ uat_deploy:auth_api:
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-auth-api-\d{8}-\d+.*$/
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
 
 prod_deploy:auth_api:
   resource_group: auth_api
@@ -92,3 +119,5 @@ prod_deploy:auth_api:
   when: manual
   only:
     - master
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/

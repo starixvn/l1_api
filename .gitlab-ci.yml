@@ -11,6 +11,5 @@ before_script:
   - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
 
 include:
-  - .gitlab-ci-push-git-compiled.yml
   - .gitlab-ci-web-api.yml
   - .gitlab-ci-identity-api.yml

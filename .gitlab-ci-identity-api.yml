@@ -1,5 +1,5 @@
 .build-identity-api:
-  stage: deploy-identity-api
+  stage: deploy
   script:   
     - dotnet clean $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
     - dotnet restore $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
@@ -53,6 +53,7 @@ prod_deploy_auth_api:
     - .push-git-compiled
   environment:
     name: PRO
+  allow_failure: false
   when: manual
   only:
     - master

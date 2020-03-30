@@ -1,7 +1,6 @@
 stages:
   - build
-  - deploy-web-api
-  - deploy-identity-api
+  - deploy
 
 before_script:
   - echo "====== Setting SSH Key ======"

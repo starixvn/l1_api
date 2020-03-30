@@ -1,5 +1,5 @@
 .build-web-api:
-  stage: deploy-web-api
+  stage: deploy
   script:   
     - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
     - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj

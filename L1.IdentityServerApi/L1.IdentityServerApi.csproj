@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
@@ -19,7 +20,6 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
-
     <ItemGroup>
         <None Include="appsettings.Development.json">
             <IsTransformFile>true</IsTransformFile>
@@ -37,15 +37,18 @@
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>
         </None>
+        <None Include="appsettings.PRO.json">
+            <IsTransformFile>true</IsTransformFile>
+            <DependentUpon>appsettings.json</DependentUpon>
+        </None>
     </ItemGroup>
-
     <ItemGroup>
+        <Content Remove="appsettings.PRO.json" />
         <Content Remove="appsettings.UAT.json" />
         <Content Remove="appsettings.LOCAL.json" />
         <Content Remove="appsettings.SIT.json" />
         <Content Remove="appsettings.Development.json" />
     </ItemGroup>
-
     <ItemGroup>
         <Content Update="appsettings.json">
             <TransformOnBuild>true</TransformOnBuild>

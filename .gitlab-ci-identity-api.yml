@@ -1,0 +1,58 @@
+.build-identity-api:
+  stage: deploy-identity-api
+  script:   
+    - dotnet clean $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
+    - dotnet restore $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
+    - dotnet build $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
+  variables:
+    AUTH_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
+    AUTH_API_ROOT_PATH: ./L1.IdentityServerApi
+    AUTH_API_BUILD_AUTH: ./build/auth-api
+  tags:
+    - deploy-dotnet
+  only:
+    - /^deploy-\d{8}-\d+.*$/
+    - /^deploy-auth-api-\d{8}-\d+.*$/
+
+local_deploy_auth_api:
+  extends: .build-identity-api
+  script:   
+    - echo "====== Deploying ... ======"
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o $AUTH_API_BUILD_AUTH
+    - tar -C $AUTH_API_BUILD_AUTH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
+    - ssh root@$HOST 'sudo service l1-identity-api restart'
+  environment:
+    name: LOCAL
+  only:
+    - /^deploy-local-\d{8}-\d+.*$/
+    - /^deploy-local-auth-api-\d{8}-\d+.*$/
+ 
+sit_deploy_auth_api:
+  extends: 
+    - .build-identity-api
+    - .push-git-compiled
+  environment:
+    name: SIT
+  only:
+    - /^deploy-sit-\d{8}-\d+.*$/
+    - /^deploy-sit-auth-api-\d{8}-\d+.*$/
+
+uat_deploy_auth_api:
+  extends: 
+    - .build-identity-api
+    - .push-git-compiled
+  environment:
+    name: UAT
+  only:
+    - /^deploy-uat-\d{8}-\d+.*$/
+    - /^deploy-uat-auth-api-\d{8}-\d+.*$/
+
+prod_deploy_auth_api:
+  extends: 
+    - .build-identity-api
+    - .push-git-compiled
+  environment:
+    name: PRO
+  when: manual
+  only:
+    - master

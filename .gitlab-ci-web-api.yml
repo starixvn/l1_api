@@ -1,8 +1,32 @@
 variables:
-  GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
-  ROOT_PATH: ./L1.WebApi
-  BUILD_PATH: ./build/web-api
-  PROJECT_NAME: L1.WebApi.csproj
+  WEB_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
+  WEB_API_ROOT_PATH: ./L1.WebApi
+  WEB_API_BUILD_PATH: ./build/web-api
+  WEB_API_PROJECT_NAME: L1.WebApi.csproj
+
+.web-api-push-git-compiled:
+  script: 
+    - if [ "$CI_ENVIRONMENT_NAME" == "PRO" ]; 
+      then
+        export GIT_BRANCH=master;
+      else
+        export GIT_BRANCH=$CI_ENVIRONMENT_NAME;
+      fi
+    - echo $GIT_BRANCH
+    - echo "====== Pushing git compiled ... ======"
+    - git clone --branch $GIT_BRANCH $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
+    - dotnet publish -c $CI_ENVIRONMENT_NAME -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME -o $WEB_API_BUILD_PATH
+    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-${CI_ENVIRONMENT_NAME}.sh $WEB_API_BUILD_PATH
+    - cd $WEB_API_BUILD_PATH
+    - git add .
+    - if [ -z "$(git status --porcelain)" ]; 
+      then 
+        echo "Nothing change"; 
+      else 
+       git commit -m "$COMMIT_MESSAGE"; git push -u origin $GIT_BRANCH;
+       echo "==============Waiting for after script execution==============";
+       sleep 60; 
+      fi
 
 .base-web-api:
   stage: deploy
@@ -21,9 +45,9 @@ variables:
 build:web-api:
   stage: build
   script:   
-    - dotnet clean $ROOT_PATH/$PROJECT_NAME
-    - dotnet restore $ROOT_PATH/$PROJECT_NAME
-    - dotnet build $ROOT_PATH/$PROJECT_NAME
+    - dotnet clean $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME
+    - dotnet restore $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME
+    - dotnet build $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME
   tags:
     - deploy-dotnet
   only:
@@ -42,8 +66,8 @@ local_deploy:web_api:
     - .base-web-api
   script:
     - echo "====== Deploying ... ======"
-    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
-    - tar -C $BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME -o $WEB_API_BUILD_PATH
+    - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-api restart'
   environment:
     name: LOCAL
@@ -56,7 +80,7 @@ local_deploy:web_api:
 sit_deploy:web_api:
   extends: 
     - .base-web-api
-    - .push-git-compiled
+    - .web-api-push-git-compiled
   environment:
     name: SIT
   dependencies:
@@ -68,7 +92,7 @@ sit_deploy:web_api:
 uat_deploy:web_api:
   extends: 
     - .base-web-api
-    - .push-git-compiled
+    - .web-api-push-git-compiled
   environment:
     name: UAT
   dependencies:
@@ -81,7 +105,7 @@ prod_deploy:web_api:
   resource_group: web_api
   extends: 
     - .base-web-api
-    - .push-git-compiled
+    - .web-api-push-git-compiled
   environment:
     name: PRO
     url: http://api.saba.vin/

@@ -56,6 +56,7 @@ prod_deploy_web_api:
     - .push-git-compiled
   environment:
     name: PRO
+    url: http://api.saba.vin/
   when: manual
   allow_failure: false
   only:

@@ -55,6 +55,7 @@ prod_deploy_auth_api:
     - .push-git-compiled
   environment:
     name: PRO
+    url: http://auth.saba.vin/
   allow_failure: false
   when: manual
   only:

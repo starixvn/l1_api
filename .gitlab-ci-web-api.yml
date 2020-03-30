@@ -10,9 +10,8 @@ variables:
     - dotnet clean $WEB_API_ROOT_PATH/$PROJECT_NAME
     - dotnet restore $WEB_API_ROOT_PATH/$PROJECT_NAME
     - dotnet build $WEB_API_ROOT_PATH/$PROJECT_NAME
-
   tags:
-    - deploy-dotnet
+    - deploy-dotnet-2
   only:
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/

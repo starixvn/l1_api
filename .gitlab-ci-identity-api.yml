@@ -1,13 +1,15 @@
+ variables:
+    GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
+    ROOT_PATH: ./L1.IdentityServerApi
+    BUILD_PATH: ./build/auth-api
+    PROJECT_NAME: L1.IdentityServerApi.csproj
+
 .build-identity-api:
   stage: deploy
   script:   
-    - dotnet clean $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj
-    - dotnet restore $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
-    - dotnet build $AUTH_API_ROOT_PATH//L1.IdentityServerApi.csproj
-  variables:
-    AUTH_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
-    AUTH_API_ROOT_PATH: ./L1.IdentityServerApi
-    AUTH_API_BUILD_AUTH: ./build/auth-api
+    - dotnet clean $ROOT_PATH/$PROJECT_NAME
+    - dotnet restore $ROOT_PATH/$PROJECT_NAME
+    - dotnet build $ROOT_PATH/$PROJECT_NAME
   tags:
     - deploy-dotnet
   only:
@@ -18,8 +20,8 @@ local_deploy_auth_api:
   extends: .build-identity-api
   script:   
     - echo "====== Deploying ... ======"
-    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $AUTH_API_ROOT_PATH/L1.IdentityServerApi.csproj -o $AUTH_API_BUILD_AUTH
-    - tar -C $AUTH_API_BUILD_AUTH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
+    - tar -C $BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   environment:
     name: LOCAL

@@ -1,13 +1,16 @@
+variables:
+  GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
+  ROOT_PATH: ./L1.WebApi
+  BUILD_PATH: ./build/web-api
+  PROJECT_NAME: L1.WebApi.csproj
+  
 .build-web-api:
   stage: deploy
   script:   
-    - dotnet clean $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet restore $WEB_API_ROOT_PATH/L1.WebApi.csproj
-    - dotnet build $WEB_API_ROOT_PATH/L1.WebApi.csproj
-  variables:
-    WEB_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
-    WEB_API_BUILD_PATH: ./build/api
-    WEB_API_ROOT_PATH: ./L1.WebApi
+    - dotnet clean $WEB_API_ROOT_PATH/$PROJECT_NAME
+    - dotnet restore $WEB_API_ROOT_PATH/$PROJECT_NAME
+    - dotnet build $WEB_API_ROOT_PATH/$PROJECT_NAME
+
   tags:
     - deploy-dotnet
   only:
@@ -18,8 +21,8 @@ local_deploy_web_api:
   extends: .build-web-api
   script:
     - echo "====== Deploying ... ======"
-    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
-    - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
+    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
+    - tar -C $BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
     - ssh root@$HOST 'sudo service l1-api restart'
   environment:
     name: LOCAL

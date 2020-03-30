@@ -27,6 +27,7 @@ build:web-api:
   tags:
     - deploy-dotnet
   only:
+    - master
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/
     - /^deploy-local-\d{8}-\d+.*$/

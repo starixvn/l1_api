@@ -27,8 +27,11 @@ build:identity-api:
   tags:
     - deploy-dotnet-2
   only:
+    - master
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
+    - /^deploy-local-\d{8}-\d+.*$/
+    - /^deploy-local-auth-api-\d{8}-\d+.*$/
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-auth-api-\d{8}-\d+.*$/
     - /^deploy-uat-\d{8}-\d+.*$/

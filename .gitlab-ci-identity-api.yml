@@ -1,8 +1,8 @@
- variables:
-    GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
-    ROOT_PATH: ./L1.IdentityServerApi
-    BUILD_PATH: ./build/auth-api
-    PROJECT_NAME: L1.IdentityServerApi.csproj
+variables:
+  GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/identity-api-compiled.git
+  ROOT_PATH: ./L1.IdentityServerApi
+  BUILD_PATH: ./build/auth-api
+  PROJECT_NAME: L1.IdentityServerApi.csproj
 
 .build-identity-api:
   stage: deploy

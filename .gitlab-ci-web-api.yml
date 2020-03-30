@@ -28,7 +28,7 @@
     - echo "====== Pushing git compiled ... ======"
     - git clone --branch $GIT_BRANCH $WEB_API_GIT_COMPILED_REPO $WEB_API_BUILD_PATH
     - dotnet publish -c $GIT_BRANCH -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/L1.WebApi.csproj -o $WEB_API_BUILD_PATH
-    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-$GIT_BRANCH.sh $WEB_API_BUILD_PATH
+    - cp $WEB_API_ROOT_PATH/gitlab-ci-after-script-${GIT_BRANCH}.sh $WEB_API_BUILD_PATH
     - cd $WEB_API_BUILD_PATH
     - git add .
     - if [ -z "$(git status --porcelain)" ]; 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Route("[controller]"), AllowAnonymous]
+    [ApiController, Route("[controller]"), Authorize]
     public class AuthVerificationController
     {
         private readonly IMemberAuthService memberAuthService;

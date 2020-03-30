@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Resources;
@@ -66,13 +67,14 @@ namespace L1.Features.Authentications
         public VerificationResult VerifyToken(VerificationParams verificationParams)
         {
             var memberAuth = memberAuthDataAccess.GetByToken(verificationParams.Token);
+            var ip = verificationParams.IP.Split(',').FirstOrDefault()?.Trim();
 
             if (memberAuth != null)
             {
-                if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
+                if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper() || memberAuth.IP != ip)
                 {
                     LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
-                    return VerificationResult.CreateErrorResponse(VerificationResult.UserIpNotFoundCode);
+                    return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
                 }
 
                 if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)

@@ -37,9 +37,6 @@ namespace L1.IdentityServerApi
                 .AddIdentityClients()
                 .AddIdentityApiResources()
                 .AddDeveloperSigningCredential();
-
-                services.AddControllers();
-                services.AddMvc();
             }
             catch
             {
@@ -56,19 +53,12 @@ namespace L1.IdentityServerApi
 
             app.ConfigureExceptionHandler();
 
-            app.UseRouting();
-
             //app.UseForwardedHeaders(new ForwardedHeadersOptions
             //{
             //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             //});
 
             app.UseIdentityServer();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-            });
         }
     }
 }

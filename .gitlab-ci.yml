@@ -97,5 +97,5 @@ uat_deploy_auth_api:
     - /^deploy-uat-auth-api-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
 
-includes:
+include:
   - .gitlab-ci-web-api.yml

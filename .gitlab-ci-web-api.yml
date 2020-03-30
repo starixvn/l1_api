@@ -20,9 +20,9 @@
   script: 
     - if [ "$CI_ENVIRONMENT_NAME" == "PRO" ]; 
       then
-        echo "$GIT_BRANCH" > master;
+        export GIT_BRANCH=master;
       else
-        echo "$GIT_BRANCH" > $CI_ENVIRONMENT_NAME;
+        export GIT_BRANCH=$CI_ENVIRONMENT_NAME;
       fi
     - echo $GIT_BRANCH
     - echo "====== Pushing git compiled ... ======"

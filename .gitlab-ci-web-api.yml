@@ -3,21 +3,25 @@ variables:
   ROOT_PATH: ./L1.WebApi
   BUILD_PATH: ./build/web-api
   PROJECT_NAME: L1.WebApi.csproj
-  
-.build-web-api:
+
+.base-web-api:
   stage: deploy
-  script:   
-    - dotnet clean $WEB_API_ROOT_PATH/$PROJECT_NAME
-    - dotnet restore $WEB_API_ROOT_PATH/$PROJECT_NAME
-    - dotnet build $WEB_API_ROOT_PATH/$PROJECT_NAME
   tags:
     - deploy-dotnet-2
   only:
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-api-\d{8}-\d+.*$/
 
-local_deploy_web_api:
-  extends: .build-web-api
+build:web-api:
+  stage: build
+  script:   
+    - dotnet clean $WEB_API_ROOT_PATH/$PROJECT_NAME
+    - dotnet restore $WEB_API_ROOT_PATH/$PROJECT_NAME
+    - dotnet build $WEB_API_ROOT_PATH/$PROJECT_NAME
+
+local_deploy:web_api:
+  extends: 
+    - .base-web-api
   script:
     - echo "====== Deploying ... ======"
     - dotnet publish -c LOCAL -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
@@ -25,37 +29,45 @@ local_deploy_web_api:
     - ssh root@$HOST 'sudo service l1-api restart'
   environment:
     name: LOCAL
+  dependencies:
+    - build:web-api
   only:
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-api-\d{8}-\d+.*$/
 
-sit_deploy_web_api:
+sit_deploy:web_api:
   extends: 
-    - .build-web-api
+    - .base-web-api
     - .push-git-compiled
   environment:
     name: SIT
+  dependencies:
+    - build:web-api
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-api-\d{8}-\d+.*$/
 
-uat_deploy_web_api:
+uat_deploy:web_api:
   extends: 
-    - .build-web-api
+    - .base-web-api
     - .push-git-compiled
   environment:
     name: UAT
+  dependencies:
+    - build:web-api
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-api-\d{8}-\d+.*$/
 
-prod_deploy_web_api:
+prod_deploy:web_api:
   extends: 
-    - .build-web-api
+    - .base-web-api
     - .push-git-compiled
   environment:
     name: PRO
     url: http://api.saba.vin/
+  dependencies:
+    - build:web-api
   when: manual
   allow_failure: false
   only:

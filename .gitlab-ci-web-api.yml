@@ -13,13 +13,13 @@ variables:
     - /^deploy-api-\d{8}-\d+.*$/
 
 build:web-api:
+  extends: 
+    - .base-web-api
   stage: build
   script:   
     - dotnet clean $ROOT_PATH/$PROJECT_NAME
     - dotnet restore $ROOT_PATH/$PROJECT_NAME
     - dotnet build $ROOT_PATH/$PROJECT_NAME
-  tags:
-    - deploy-dotnet-2
 
 local_deploy:web_api:
   extends: 

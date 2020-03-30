@@ -4,20 +4,24 @@ variables:
   BUILD_PATH: ./build/auth-api
   PROJECT_NAME: L1.IdentityServerApi.csproj
 
-.build-identity-api:
+.base-identity-api:
   stage: deploy
-  script:   
-    - dotnet clean $ROOT_PATH/$PROJECT_NAME
-    - dotnet restore $ROOT_PATH/$PROJECT_NAME
-    - dotnet build $ROOT_PATH/$PROJECT_NAME
   tags:
     - deploy-dotnet
   only:
     - /^deploy-\d{8}-\d+.*$/
     - /^deploy-auth-api-\d{8}-\d+.*$/
 
-local_deploy_auth_api:
-  extends: .build-identity-api
+build-identity-api:
+  extends: .base-identity-api
+  stage: build
+  script:   
+    - dotnet clean $ROOT_PATH/$PROJECT_NAME
+    - dotnet restore $ROOT_PATH/$PROJECT_NAME
+    - dotnet build $ROOT_PATH/$PROJECT_NAME
+
+local_deploy:auth_api:
+  extends: .base-identity-api
   script:   
     - echo "====== Deploying ... ======"
     - dotnet publish -c LOCAL -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
@@ -25,23 +29,27 @@ local_deploy_auth_api:
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   environment:
     name: LOCAL
+  dependencies:
+    - build:identity-api
   only:
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-auth-api-\d{8}-\d+.*$/
  
 sit_deploy_auth_api:
   extends: 
-    - .build-identity-api
+    - .base-identity-api
     - .push-git-compiled
   environment:
     name: SIT
+  dependencies:
+    - build:identity-api
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-auth-api-\d{8}-\d+.*$/
 
-uat_deploy_auth_api:
+uat_deploy:auth_api:
   extends: 
-    - .build-identity-api
+    - .base-identity-api
     - .push-git-compiled
   environment:
     name: UAT
@@ -49,10 +57,12 @@ uat_deploy_auth_api:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-auth-api-\d{8}-\d+.*$/
 
-prod_deploy_auth_api:
+prod_deploy:auth_api:
   extends: 
-    - .build-identity-api
+    - .base-identity-api
     - .push-git-compiled
+  dependencies:
+    - build:identity-api
   environment:
     name: PRO
     url: http://auth.saba.vin/

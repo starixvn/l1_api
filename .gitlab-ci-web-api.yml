@@ -15,9 +15,9 @@ variables:
 build:web-api:
   stage: build
   script:   
-    - dotnet clean $WEB_API_ROOT_PATH/$PROJECT_NAME
-    - dotnet restore $WEB_API_ROOT_PATH/$PROJECT_NAME
-    - dotnet build $WEB_API_ROOT_PATH/$PROJECT_NAME
+    - dotnet clean $ROOT_PATH/$PROJECT_NAME
+    - dotnet restore $ROOT_PATH/$PROJECT_NAME
+    - dotnet build $ROOT_PATH/$PROJECT_NAME
   tags:
     - deploy-dotnet-2
 

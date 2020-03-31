@@ -49,7 +49,7 @@ const withAsyncAwait = async () => {
   // Verify Token
   console.log("\nVerifyToken\n");
   try {
-    const redirectUrl = await gameClient.auth.singleSignOn(singleSignInParams);
+    const redirectUrl = await gameClient.auth.singleSignOn(singleSignInParams, {requestTimeout: 2000});
     const token = url.parse(redirectUrl, true).query.token;
     const params = {
       token,

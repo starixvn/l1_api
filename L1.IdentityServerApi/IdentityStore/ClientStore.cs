@@ -18,6 +18,11 @@ namespace L1.IdentityServerApi.IdentityStore
         {
             var site = siteDataService.GetByClientId(clientId);
 
+            if (site == null)
+            {
+                return Task.FromResult(default(Client));
+            }
+
             return Task.FromResult(new Client
             {
                 ClientId = site.ClientId,

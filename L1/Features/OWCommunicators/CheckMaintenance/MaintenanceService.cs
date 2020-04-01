@@ -108,7 +108,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
                 await httpClient.PostAsync(endpoint, content);
 
                 SentrySdk.CaptureMessage(
-                    $"Maintenance notification to: {endpoint} with: {content}",
+                    $"Maintenance notification to: {endpoint} with: {serializedContent}",
                     SentryLevel.Info);
             }
             catch (Exception ex)

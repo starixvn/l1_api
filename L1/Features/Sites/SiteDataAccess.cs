@@ -33,9 +33,9 @@ namespace L1.Features.Sites
             siteCollection.Find(site => site.ClientId == id).FirstOrDefault();
 
         public Site GetBySiteId(string id) =>
-           siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
+            siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
 
         public bool VerifyClient(string clientId, string clientSecret) =>
-          siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
+            siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
     }
 }

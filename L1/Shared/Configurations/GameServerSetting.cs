@@ -14,5 +14,7 @@ namespace L1.Shared.Configurations
         public string RetrieveEndGameInfo { get; set; }
 
         public string DailySummary { get; set; }
+
+        public string UnderMaintenance { get; set; }
     }
 }

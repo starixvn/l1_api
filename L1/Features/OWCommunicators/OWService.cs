@@ -48,7 +48,7 @@ namespace L1.Features.OWCommunicators
 
             if (finalResponse.Result.IsFailed())
             {
-                await failureHandler.Handle<T>(request, finalResponse);
+                await failureHandler.Handle<T>(finalResponse);
             }
 
             return finalResponse;

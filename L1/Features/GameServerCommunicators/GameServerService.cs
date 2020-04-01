@@ -42,7 +42,7 @@ namespace L1.Features.GameServerCommunicators
             var failureResponse = await CreateErrorResponse<T>(response);
 
             SentrySdk.CaptureMessage(
-                $"Request to Saba Club failed at ${DateTimeOffset.UtcNow} - {failureResponse.Result.ErrorDescription}",
+                $"Request to Saba Club failed at {DateTimeOffset.UtcNow} - {failureResponse.Result.ErrorDescription}",
                 SentryLevel.Warning);
 
             return failureResponse;

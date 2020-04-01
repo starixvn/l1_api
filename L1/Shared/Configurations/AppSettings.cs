@@ -14,7 +14,9 @@ namespace L1.Shared.Configurations
 
         OWServiceSettings OWServiceSettings { get; set; }
 
-        GameServerSetting GameServerSetting { get; set; }
+        GameServerSetting GameServerSettings { get; set; }
+
+        AdminApiSettings AdminApiSettings { get; set; }
     }
 
     public class AppSettings : IAppSettings
@@ -29,6 +31,8 @@ namespace L1.Shared.Configurations
 
         public OWServiceSettings OWServiceSettings { get; set; }
 
-        public GameServerSetting GameServerSetting { get; set; }
+        public GameServerSetting GameServerSettings { get; set; }
+
+        public AdminApiSettings AdminApiSettings { get; set; }
     }
 }

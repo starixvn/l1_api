@@ -6,7 +6,7 @@ stages:
 
 before_script:
   - eval $(ssh-agent -s)
-  - echo "$TARGET_SERVER_SECRET_KEY_BASE64" | ssh-add -
+  - echo "$SSH_KEY" | ssh-add -
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)

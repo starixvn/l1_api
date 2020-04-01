@@ -31,7 +31,7 @@ variables:
 .base-web-api:
   stage: deploy
   tags:
-    - deploy-dotnet
+    - docker
   retry:
     max: 2
     when:
@@ -46,7 +46,7 @@ build:web-api:
     - dotnet restore $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME
     - dotnet build $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME
   tags:
-    - deploy-dotnet
+    - docker
   only:
     - master
     - /^deploy-\d{8}-\d+.*$/
@@ -68,7 +68,7 @@ local_deploy:web_api:
     - ssh root@$HOST 'sudo service l1-api restart'
   environment:
     name: LOCAL
-  dependencies:
+  needs:
     - build:web-api
   only:
     - /^deploy-local-\d{8}-\d+.*$/
@@ -82,7 +82,7 @@ sit_deploy:web_api:
     - .web-api-push-git-compiled
   environment:
     name: SIT
-  dependencies:
+  needs:
     - build:web-api
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
@@ -96,7 +96,7 @@ uat_deploy:web_api:
     - .web-api-push-git-compiled
   environment:
     name: UAT
-  dependencies:
+  needs:
     - build:web-api
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
@@ -112,7 +112,7 @@ prod_deploy:web_api:
   environment:
     name: PRO
     url: http://api.saba.vin/
-  dependencies:
+  needs:
     - build:web-api
   when: manual
   allow_failure: false

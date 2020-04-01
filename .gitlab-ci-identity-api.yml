@@ -46,7 +46,7 @@ build:identity-api:
     - dotnet restore $ROOT_PATH/$PROJECT_NAME
     - dotnet build $ROOT_PATH/$PROJECT_NAME
   tags:
-    - deploy-dotnet-2
+    - docker
   only:
     - master
     - /^deploy-\d{8}-\d+.*$/
@@ -67,7 +67,7 @@ local_deploy:auth_api:
     - ssh root@$HOST 'sudo service l1-identity-api restart'
   environment:
     name: LOCAL
-  dependencies:
+  needs:
     - build:identity-api
   only:
     - /^deploy-local-\d{8}-\d+.*$/
@@ -81,7 +81,7 @@ sit_deploy_auth_api:
     - .push-git-compiled
   environment:
     name: SIT
-  dependencies:
+  needs:
     - build:identity-api
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
@@ -95,7 +95,7 @@ uat_deploy:auth_api:
     - .push-git-compiled
   environment:
     name: UAT
-  dependencies:
+  needs:
     - build:identity-api
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
@@ -110,7 +110,7 @@ prod_deploy:auth_api:
     - .push-git-compiled
   retry:
     max: 2
-  dependencies:
+  needs:
     - build:identity-api
   environment:
     name: PRO

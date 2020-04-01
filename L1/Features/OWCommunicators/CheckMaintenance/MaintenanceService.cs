@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Polly;
 using Polly.Retry;
 using Sentry;
@@ -93,7 +94,16 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         {
             try
             {
-                var content = new StringContent(JsonConvert.SerializeObject(notification), Encoding.UTF8, DefaultMediaType);
+                var contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+                var serializerSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = contractResolver
+                };
+                var serializedContent = JsonConvert.SerializeObject(notification, serializerSettings);
+                var content = new StringContent(serializedContent, Encoding.UTF8, DefaultMediaType);
 
                 await httpClient.PostAsync(endpoint, content);
 

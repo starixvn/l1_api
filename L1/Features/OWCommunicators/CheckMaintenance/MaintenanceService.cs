@@ -96,6 +96,10 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
                 var content = new StringContent(JsonConvert.SerializeObject(notification), Encoding.UTF8, DefaultMediaType);
 
                 await httpClient.PostAsync(endpoint, content);
+
+                SentrySdk.CaptureMessage(
+                    $"Maintenance notification to: {endpoint} with: {content}",
+                    SentryLevel.Info);
             }
             catch (Exception ex)
             {

@@ -62,7 +62,7 @@ local_deploy:auth_api:
   extends: .base-identity-api
   script:
     - apt-get update
-    - apt-get install build-essential
+    - apt-get --assume-yes install build-essential
     - echo "====== Deploying ... ======"
     - dotnet publish -c LOCAL -r linux-x64 --self-contained false $ROOT_PATH/$PROJECT_NAME -o $BUILD_PATH
     - tar -C $BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/identity-api/ -jxf -'

@@ -67,7 +67,6 @@ local_deploy:web_api:
     - echo "====== Deploying ... ======"
     - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME -o $WEB_API_BUILD_PATH
     - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
-  #  - rsync -a ./ root@$HOST /var/www/l1/api/
     - ssh root@$HOST 'sudo service l1-api restart'
   environment:
     name: LOCAL

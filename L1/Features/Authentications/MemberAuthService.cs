@@ -71,7 +71,7 @@ namespace L1.Features.Authentications
 
             if (memberAuth != null)
             {
-                if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper() || memberAuth.IP != ip)
+                if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
                 {
                     LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
                     return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);

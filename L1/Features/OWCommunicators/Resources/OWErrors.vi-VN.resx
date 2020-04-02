@@ -118,31 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="2002" xml:space="preserve">
-    <value>Tài khoản hiện đang bị khóa.</value>
+    <value>Tài khoản đã bị đóng. Vui lòng liên hệ với cấp trên để biết chi tiết, cảm ơn bạn.</value>
   </data>
   <data name="2003" xml:space="preserve">
-    <value>Tài khoản này không tồn tại.</value>
+    <value>Đã xảy ra lỗi. Vui lòng liên hệ bộ phận CSKH để biết chi tiết, cảm ơn bạn.</value>
   </data>
   <data name="2004" xml:space="preserve">
     <value>Địa chỉ IP này bị chặn.</value>
   </data>
   <data name="3002" xml:space="preserve">
-    <value>Bạn hiện không có đủ tiền trong tài khoản.</value>
+    <value>Tài khoản của bạn thiếu tiền.</value>
   </data>
   <data name="3003" xml:space="preserve">
-    <value>Bạn đã vượt hạn mức cho phép trong game.</value>
+    <value>Khoản tiền cược của bạn đã vượt quá cài đặt giới hạn cược, vui lòng thử lại.</value>
   </data>
   <data name="3004" xml:space="preserve">
-    <value>Bạn chưa được cấp quyền để chơi game này.</value>
+    <value>Trò chơi bị vô hiệu hóa. Vui lòng liên hệ với cấp trên để biết chi tiết, cảm ơn bạn.</value>
   </data>
   <data name="3006" xml:space="preserve">
-    <value>Tiền thắng đạt hạn mức cho phép. Vui lòng liên hệ quản lý của bạn.</value>
+    <value>Đã đạt giới hạn thắng cược! Vui lòng liên hệ với cấp trên, cảm ơn bạn.</value>
   </data>
   <data name="3007" xml:space="preserve">
-    <value>Tiền thua chạm mức cho phép. Vui lòng liên hệ quản lý của bạn.</value>
+    <value>Đã đạt giới hạn thua cược! Vui lòng liên hệ với cấp trên, cảm ơn bạn.</value>
   </data>
   <data name="3014" xml:space="preserve">
-    <value>Bạn đã vượt hạn mức tiền thắng được cho phép bởi cấp trên.</value>
+    <value>Trò chơi không khả dụng vào thời điểm này. Vui lòng liên hệ với bộ phận CSKH để biết chi tiết, cảm ơn bạn</value>
   </data>
   <data name="4012" xml:space="preserve">
     <value>Không tìm thấy người chơi này.</value>
@@ -152,5 +152,17 @@
   </data>
   <data name="5003" xml:space="preserve">
     <value>Hệ thống đang được bảo trì.</value>
+  </data>
+  <data name="2005" xml:space="preserve">
+    <value>Tài khoản đã bị đóng. Vui lòng liên hệ bộ phận CSKH để biết chi tiết.</value>
+  </data>
+  <data name="3010" xml:space="preserve">
+    <value>Tài khoản đã bị treo. Vui lòng liên hệ với cấp trên để biết chi tiết, cảm ơn bạn</value>
+  </data>
+  <data name="3013" xml:space="preserve">
+    <value>Tài khoản đã bị treo. Vui lòng liên hệ với cấp trên để biết chi tiết, cảm ơn bạn</value>
+  </data>
+  <data name="2001" xml:space="preserve">
+    <value>Tài khoản hoặc mật khẩu đăng nhập không đúng.</value>
   </data>
 </root>

@@ -118,39 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="2002" xml:space="preserve">
-    <value>Account is locked</value>
+    <value>Account has been closed. Please contact your upline for details, thank you.</value>
   </data>
   <data name="2003" xml:space="preserve">
-    <value>Account does not exist</value>
+    <value>An error has occurred. Please contact CSD for details, thank you.</value>
   </data>
   <data name="2004" xml:space="preserve">
-    <value>The IP address is restricted</value>
+    <value>Your IP address is restricted.</value>
   </data>
   <data name="3002" xml:space="preserve">
-    <value>Player has insufficient funds</value>
+    <value>Your account has Insufficient funds. </value>
   </data>
   <data name="3003" xml:space="preserve">
-    <value>The player exceeded their game limit</value>
+    <value>Your stake had exceeded your bet limit settings, please try again.</value>
   </data>
   <data name="3004" xml:space="preserve">
-    <value>The player is not permitted to play this game</value>
+    <value>Game disabled. Please contact your upline for details, thank you.</value>
   </data>
   <data name="3006" xml:space="preserve">
-    <value>Win limit hit! Please contact your upline, thank you</value>
+    <value>Win limit hit! Please contact your upline, thank you.</value>
   </data>
   <data name="3007" xml:space="preserve">
-    <value>Lose limit hit! Please contact your upline, thank you</value>
+    <value>Lose limit hit ! Please contact your upline, thank you.</value>
   </data>
   <data name="3014" xml:space="preserve">
-    <value>The player exceeded company win limit</value>
+    <value>The game is unavailable at the moment. Please contact CSD for details, thank you.</value>
   </data>
   <data name="4012" xml:space="preserve">
-    <value>Member/User not found</value>
+    <value>User was not found.</value>
   </data>
   <data name="5002" xml:space="preserve">
     <value>Network error.</value>
   </data>
   <data name="5003" xml:space="preserve">
-    <value>Under maintenance</value>
+    <value>The game is under maintenance.</value>
+  </data>
+  <data name="2001" xml:space="preserve">
+    <value>Incorrect login name or password.</value>
+  </data>
+  <data name="2005" xml:space="preserve">
+    <value>Account has been closed. Please contact CSD for details.</value>
+  </data>
+  <data name="3010" xml:space="preserve">
+    <value>Account has been suspended. Please contact your upline for details, thank you.</value>
+  </data>
+  <data name="3013" xml:space="preserve">
+    <value>Account has been suspended. Please contact your upline for details, thank you.</value>
   </data>
 </root>

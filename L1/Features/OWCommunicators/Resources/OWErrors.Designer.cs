@@ -61,7 +61,16 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Account is locked.
+        ///   Looks up a localized string similar to Incorrect login name or password..
+        /// </summary>
+        internal static string _2001 {
+            get {
+                return ResourceManager.GetString("2001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account has been closed. Please contact your upline for details, thank you..
         /// </summary>
         internal static string _2002 {
             get {
@@ -70,7 +79,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Account does not exist.
+        ///   Looks up a localized string similar to An error has occurred. Please contact CSD for details, thank you..
         /// </summary>
         internal static string _2003 {
             get {
@@ -79,7 +88,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The IP address is restricted.
+        ///   Looks up a localized string similar to Your IP address is restricted..
         /// </summary>
         internal static string _2004 {
             get {
@@ -88,7 +97,16 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Player has insufficient funds.
+        ///   Looks up a localized string similar to Account has been closed. Please contact CSD for details..
+        /// </summary>
+        internal static string _2005 {
+            get {
+                return ResourceManager.GetString("2005", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your account has Insufficient funds. .
         /// </summary>
         internal static string _3002 {
             get {
@@ -97,7 +115,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The player exceeded their game limit.
+        ///   Looks up a localized string similar to Your stake had exceeded your bet limit settings, please try again..
         /// </summary>
         internal static string _3003 {
             get {
@@ -106,7 +124,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The player is not permitted to play this game.
+        ///   Looks up a localized string similar to Game disabled. Please contact your upline for details, thank you..
         /// </summary>
         internal static string _3004 {
             get {
@@ -115,7 +133,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Win limit hit! Please contact your upline, thank you.
+        ///   Looks up a localized string similar to Win limit hit! Please contact your upline, thank you..
         /// </summary>
         internal static string _3006 {
             get {
@@ -124,7 +142,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lose limit hit! Please contact your upline, thank you.
+        ///   Looks up a localized string similar to Lose limit hit ! Please contact your upline, thank you..
         /// </summary>
         internal static string _3007 {
             get {
@@ -133,7 +151,25 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The player exceeded company win limit.
+        ///   Looks up a localized string similar to Account has been suspended. Please contact your upline for details, thank you..
+        /// </summary>
+        internal static string _3010 {
+            get {
+                return ResourceManager.GetString("3010", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account has been suspended. Please contact your upline for details, thank you..
+        /// </summary>
+        internal static string _3013 {
+            get {
+                return ResourceManager.GetString("3013", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The game is unavailable at the moment. Please contact CSD for details, thank you..
         /// </summary>
         internal static string _3014 {
             get {
@@ -142,7 +178,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Member/User not found.
+        ///   Looks up a localized string similar to User was not found..
         /// </summary>
         internal static string _4012 {
             get {
@@ -160,7 +196,7 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Under maintenance.
+        ///   Looks up a localized string similar to The game is under maintenance..
         /// </summary>
         internal static string _5003 {
             get {

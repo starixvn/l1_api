@@ -20,24 +20,25 @@ namespace L1.Shared.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
+            var cultureInfo = DefaultCulture;
             var request = context.Request;
-            var headerContainLanguageKey = request.Headers.Keys.Contains(LanguageKey);
+            var headerContainsLanguageKey = request.Headers.Keys.Contains(LanguageKey);
 
-            if (headerContainLanguageKey)
+            if (headerContainsLanguageKey)
             {
                 var languageCode = request.Headers[LanguageKey];
 
                 if (!string.IsNullOrWhiteSpace(languageCode))
                 {
-                    var cultureInfo = new CultureInfo(languageCode);
-
-                    Thread.CurrentThread.CurrentCulture = cultureInfo ?? DefaultCulture;
-                    Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
-
-                    Thread.CurrentThread.CurrentCulture.DateTimeFormat = DefaultCulture.DateTimeFormat;
-                    Thread.CurrentThread.CurrentCulture.NumberFormat = DefaultCulture.NumberFormat;
+                    cultureInfo = new CultureInfo(languageCode);
                 }
             }
+
+            Thread.CurrentThread.CurrentCulture = cultureInfo ?? DefaultCulture;
+            Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+
+            Thread.CurrentThread.CurrentCulture.DateTimeFormat = DefaultCulture.DateTimeFormat;
+            Thread.CurrentThread.CurrentCulture.NumberFormat = DefaultCulture.NumberFormat;
 
             await next(context);
         }

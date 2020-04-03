@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Route("[controller]"), AllowAnonymous]
+    [ApiController, Route("[controller]"), Authorize]
     public class MemberController : ControllerBase
     {
         private readonly IOWCustomerService oWCustomerService;

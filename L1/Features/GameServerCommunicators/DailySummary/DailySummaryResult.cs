@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace L1.Features.GameServerCommunicators.DailySummary
 {
@@ -12,8 +11,6 @@ namespace L1.Features.GameServerCommunicators.DailySummary
 
     public class SummaryItem
     {
-        public DateTimeOffset EventDate { get; set; }
-
         public string Currency { get; set; }
 
         public decimal Stake { get; set; }

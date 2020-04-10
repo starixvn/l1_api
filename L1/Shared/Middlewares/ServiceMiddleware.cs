@@ -17,7 +17,11 @@ namespace L1.Shared.Middlewares
 
         public static void AddMongoDBServices(this IServiceCollection services, IAppSettings appSettings)
         {
-            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
+            var conventionPack = new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
+                new IgnoreExtraElementsConvention(true)
+            };
             ConventionRegistry.Register("camelCase", conventionPack, t => true);
             var client = new MongoClient(appSettings.MongoDBSettings.ConnectionString);
 

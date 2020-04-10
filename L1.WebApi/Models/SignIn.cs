@@ -2,6 +2,8 @@
 {
     public class SignIn
     {
+        public string Domain { get; set; }
+
         public string BrowserUserAgent { get; set; }
 
         public string Currency { get; set; }

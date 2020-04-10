@@ -12,6 +12,8 @@ namespace L1.Features.Authentications
 
         public string IP { get; set; }
 
+        public string Domain { get; set; }
+
         public string BrowserUserAgent { get; set; }
 
         public string Token { get; set; }

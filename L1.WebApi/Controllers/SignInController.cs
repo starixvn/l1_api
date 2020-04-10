@@ -31,6 +31,7 @@ namespace L1.WebApi.Controllers
 
                 var redirectUrl = memberAuthService.SignIn(new MemberAuth
                 {
+                    Domain = model.Domain,
                     BrowserUserAgent = model.BrowserUserAgent,
                     Currency = model.Currency,
                     IP = ip,
@@ -39,7 +40,7 @@ namespace L1.WebApi.Controllers
                     Seq = model.Seq,
                     Language = model.Language,
                     SiteId = model.SiteId,
-                    ClientId = model.Auth?.ClientId,
+                    ClientId = model.Auth?.ClientId
                 }, model.GameTypeId).RedirectUri.ToString();
 
                 return Ok(new SignInResult { RedirectUrl = redirectUrl });

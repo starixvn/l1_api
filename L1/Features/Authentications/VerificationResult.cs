@@ -23,7 +23,8 @@ namespace L1.Features.Authentications
             string language,
             string currency,
             string seq,
-            string clientId)
+            string clientId,
+            string domain)
             : this(code, message)
         {
             MemberId = memberId;
@@ -33,6 +34,7 @@ namespace L1.Features.Authentications
             Currency = currency;
             Seq = seq;
             ClientId = clientId;
+            Domain = domain;
         }
 
         public int MemberId { get; }
@@ -43,9 +45,9 @@ namespace L1.Features.Authentications
 
         public string ClientId { get; }
 
-        public string Language { get; }
+        public string Domain { get; }
 
-        public decimal MemberBalance { get; }
+        public string Language { get; }
 
         public string Currency { get; }
 
@@ -63,7 +65,8 @@ namespace L1.Features.Authentications
             string language,
             string currency,
             string seq,
-            string clientId)
+            string clientId,
+            string domain)
             => new VerificationResult(
                 SuccessCode,
                 string.Empty,
@@ -73,6 +76,7 @@ namespace L1.Features.Authentications
                 language,
                 currency,
                 seq,
-                clientId);
+                clientId,
+                domain);
     }
 }

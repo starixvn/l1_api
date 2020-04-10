@@ -51,7 +51,8 @@ namespace L1.Features.Authentications
             }
             else
             {
-                memberAuth.Token = token = Guid.NewGuid().ToString();
+                token = Guid.NewGuid().ToString();
+                memberAuth.Token = token;
                 memberAuth.Time = DateTime.Now;
                 memberAuthDataAccess.Create(memberAuth);
             }
@@ -67,7 +68,6 @@ namespace L1.Features.Authentications
         public VerificationResult VerifyToken(VerificationParams verificationParams)
         {
             var memberAuth = memberAuthDataAccess.GetByToken(verificationParams.Token);
-            var ip = verificationParams.IP.Split(',').FirstOrDefault()?.Trim();
 
             if (memberAuth != null)
             {
@@ -89,7 +89,8 @@ namespace L1.Features.Authentications
                     memberAuth.Language,
                     memberAuth.Currency,
                     memberAuth.Seq,
-                    memberAuth.ClientId);
+                    memberAuth.ClientId,
+                    memberAuth.Domain);
             }
 
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
@@ -97,7 +98,9 @@ namespace L1.Features.Authentications
 
         private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
-            SentrySdk.CaptureMessage($"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}", SentryLevel.Warning);
+            SentrySdk.CaptureMessage(
+                $"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
+                SentryLevel.Warning);
         }
 
         private string GetGameClientUrl(MemberAuth memberAuth)

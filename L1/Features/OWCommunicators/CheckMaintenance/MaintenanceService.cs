@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Polly;
 using Polly.Retry;
 using Sentry;
@@ -73,7 +72,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private async Task HandleMaintenanceSchedule(MaintenanceResult maintenanceSchedule)
         {
             var isUnderMaintenance = maintenanceSchedule.IsUnderMaintenance();
-            var maintenanceNotification = isUnderMaintenance ? new MaintenanceNotification(true) : new MaintenanceNotification(false);
+            var maintenanceNotification = new MaintenanceNotification(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance);
 
             if (isUnderMaintenance)
             {
@@ -94,15 +93,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         {
             try
             {
-                var contractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                };
-                var serializerSettings = new JsonSerializerSettings
-                {
-                    ContractResolver = contractResolver
-                };
-                var serializedContent = JsonConvert.SerializeObject(notification, serializerSettings);
+                var serializedContent = JsonConvert.SerializeObject(notification);
                 var content = new StringContent(serializedContent, Encoding.UTF8, DefaultMediaType);
 
                 await httpClient.PostAsync(endpoint, content);

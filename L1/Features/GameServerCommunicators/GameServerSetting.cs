@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace L1.Shared.Configurations
+namespace L1.Features.GameServerCommunicators
 {
     public class GameServerSetting
     {

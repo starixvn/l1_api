@@ -1,10 +1,9 @@
-﻿using L1.Features.OWCommunicators;
+﻿using L1.Features.IdentityClient;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.OWCommunicators.Log;
-using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace L1.Shared.Middlewares
+namespace L1.Features.OWCommunicators
 {
     public static class OWServiceMiddleware
     {
@@ -19,10 +18,12 @@ namespace L1.Shared.Middlewares
 
             services.AddHttpClient<IMaintenanceService, MaintenanceService>();
 
-            services.AddHttpClient<IOWService, OWService>(httpClient =>
-            {
-                httpClient.BaseAddress = owServiceSettings.BaseUrl;
-            });
+            services
+                .AddHttpClient<IOWService, OWService>(httpClient =>
+                {
+                    httpClient.BaseAddress = owServiceSettings.BaseUrl;
+                })
+                .AddHttpMessageHandler<ProtectedApiBearerTokenHandler>(); ;
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using L1.Features.GameServerCommunicators;
-using L1.Shared.Configurations;
+﻿using L1.Features.IdentityClient;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace L1.Shared.Middlewares
+namespace L1.Features.GameServerCommunicators
 {
     public static class GameServiceMiddleware
     {
@@ -11,10 +10,12 @@ namespace L1.Shared.Middlewares
             services.AddSingleton(gameServerSetting.Endpoints);
             services.AddScoped<IGameMemberService, GameMemberService>();
 
-            services.AddHttpClient<IGameServerService, GameServerService>(httpClient =>
-            {
-                httpClient.BaseAddress = gameServerSetting.BaseUrl;
-            });
+            services
+                .AddHttpClient<IGameServerService, GameServerService>(httpClient =>
+                {
+                    httpClient.BaseAddress = gameServerSetting.BaseUrl;
+                })
+                .AddHttpMessageHandler<ProtectedApiBearerTokenHandler>();
         }
     }
 }

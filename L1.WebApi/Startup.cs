@@ -1,3 +1,6 @@
+using L1.Features.GameServerCommunicators;
+using L1.Features.IdentityClient;
+using L1.Features.OWCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +26,9 @@ namespace L1.WebApi
             try
             {
                 var appSettings = services.AddSettings(Configuration);
-                services.AddServices(appSettings);
+
+                services.AddIdentityService(appSettings.IdentityServerConfigs);
+                services.AddServices();
                 services.AddMongoDBServices(appSettings);
                 services.AddOWServices(appSettings.OWServiceSettings);
                 services.AddGameServerServices(appSettings.GameServerSettings);
@@ -34,7 +39,7 @@ namespace L1.WebApi
                     .AddAuthentication("Bearer")
                     .AddJwtBearer("Bearer", options =>
                     {
-                        options.Authority = appSettings.IdentityServer;
+                        options.Authority = appSettings.IdentityServerConfigs.Address;
                         options.RequireHttpsMetadata = false;
 
                         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters

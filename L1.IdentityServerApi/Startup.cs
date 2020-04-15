@@ -25,7 +25,8 @@ namespace L1.IdentityServerApi
             try
             {
                 var appSettings = services.AddSettings(Configuration);
-                services.AddServices(appSettings);
+
+                services.AddServices();
 
                 var builder = services.AddIdentityServer(options =>
                 {
@@ -52,12 +53,6 @@ namespace L1.IdentityServerApi
             }
 
             app.ConfigureExceptionHandler();
-
-            //app.UseForwardedHeaders(new ForwardedHeadersOptions
-            //{
-            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            //});
-
             app.UseIdentityServer();
         }
     }

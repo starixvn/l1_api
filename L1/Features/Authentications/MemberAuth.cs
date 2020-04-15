@@ -27,8 +27,6 @@ namespace L1.Features.Authentications
 
         public string MemberName { get; set; }
 
-        public string SiteName { get; set; }
-
         public string SiteId { get; set; }
 
         public string Currency { get; set; }

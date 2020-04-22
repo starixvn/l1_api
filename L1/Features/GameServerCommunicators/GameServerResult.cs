@@ -2,7 +2,7 @@
 
 namespace L1.Features.GameServerCommunicators
 {
-    public abstract class GameServerResult
+    public class GameServerResult
     {
         public string ErrorCode { get; set; } = ErrorCodes.SuccessCode;
 

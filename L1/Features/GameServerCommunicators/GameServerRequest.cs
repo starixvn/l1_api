@@ -1,6 +1,6 @@
 ﻿namespace L1.Features.GameServerCommunicators
 {
-    public class GameServerRequest
+    public abstract class GameServerRequest
     {
     }
 }

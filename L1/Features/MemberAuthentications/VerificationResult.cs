@@ -1,6 +1,6 @@
 ﻿using L1.Shared.Models;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public class VerificationResult : BaseResult
     {

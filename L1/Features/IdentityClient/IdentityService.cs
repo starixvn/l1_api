@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
-using L1.Shared.Configurations;
 
 namespace L1.Features.IdentityClient
 {

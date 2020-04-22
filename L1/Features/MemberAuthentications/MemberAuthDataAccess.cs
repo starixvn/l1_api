@@ -2,7 +2,7 @@
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthDataAccess
     {

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Sentry;
 using Sentry.Protocol;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthService
     {

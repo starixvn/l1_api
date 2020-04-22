@@ -1,5 +1,4 @@
-﻿using L1.Features.Authentications;
-using L1.Features.IdentityClient;
+﻿using L1.Features.IdentityClient;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +11,6 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<IMemberAuthDataAccess, MemberAuthDataAccess>();
-            services.AddSingleton<IMemberAuthService, MemberAuthService>();
             services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
             services.AddSingleton<ISiteDataService, SiteDataService>();
 

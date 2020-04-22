@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public class MemberAuth
     {

@@ -1,5 +1,6 @@
 using L1.Features.GameServerCommunicators;
 using L1.Features.IdentityClient;
+using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace L1.WebApi
                 services.AddIdentityService(appSettings.IdentityServerConfigs);
                 services.AddServices();
                 services.AddMongoDBServices(appSettings);
+                services.AddMemberAuthentications();
                 services.AddOWServices(appSettings.OWServiceSettings);
                 services.AddGameServerServices(appSettings.GameServerSettings);
 

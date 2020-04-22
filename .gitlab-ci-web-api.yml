@@ -1,5 +1,4 @@
 variables:
-  WEB_API_GIT_COMPILED_REPO: git@gitlab.com:l1-compiled/api-compiled.git
   WEB_API_ROOT_PATH: ./L1.WebApi
   WEB_API_BUILD_PATH: ./build/web-api
   WEB_API_PROJECT_NAME: L1.WebApi.csproj
@@ -49,29 +48,13 @@ build:web-api:
     - docker
   only:
     - master
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
-    - /^deploy-local-\d{8}-\d+.*$/
-    - /^deploy-local-api-\d{8}-\d+.*$/
-    - /^deploy-sit-\d{8}-\d+.*$/
-    - /^deploy-sit-api-\d{8}-\d+.*$/
-    - /^deploy-uat-\d{8}-\d+.*$/
-    - /^deploy-uat-api-\d{8}-\d+.*$/
 
 local_deploy:web_api:
   extends: 
     - .base-web-api
-  script:
-    - apt-get update
-    - apt-get --assume-yes install build-essential
-    - echo "====== Deploying ... ======"
-    - dotnet publish -c LOCAL -r linux-x64 --self-contained false $WEB_API_ROOT_PATH/$WEB_API_PROJECT_NAME -o $WEB_API_BUILD_PATH
-    - tar -C $WEB_API_BUILD_PATH -jcf - ./ | ssh root@$HOST 'tar -C /var/www/l1/api/ -jxf -'
-    - ssh root@$HOST 'sudo service l1-api restart'
+    - .web-api-push-git-compiled
   environment:
     name: LOCAL
-  needs:
-    - build:web-api
   only:
     - /^deploy-local-\d{8}-\d+.*$/
     - /^deploy-local-api-\d{8}-\d+.*$/
@@ -84,8 +67,6 @@ sit_deploy:web_api:
     - .web-api-push-git-compiled
   environment:
     name: SIT
-  needs:
-    - build:web-api
   only:
     - /^deploy-sit-\d{8}-\d+.*$/
     - /^deploy-sit-api-\d{8}-\d+.*$/
@@ -98,8 +79,6 @@ uat_deploy:web_api:
     - .web-api-push-git-compiled
   environment:
     name: UAT
-  needs:
-    - build:web-api
   only:
     - /^deploy-uat-\d{8}-\d+.*$/
     - /^deploy-uat-api-\d{8}-\d+.*$/
@@ -120,6 +99,4 @@ prod_deploy:web_api:
   allow_failure: false
   only:
     - master
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-api-\d{8}-\d+.*$/
 

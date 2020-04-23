@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 
 namespace L1.IdentityServerApi
 {
@@ -22,26 +23,22 @@ namespace L1.IdentityServerApi
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            try
-            {
-                var appSettings = services.AddSettings(Configuration);
+            var appSettings = services.AddSettings(Configuration);
 
-                services.AddServices();
+            services.AddServices();
 
-                var builder = services.AddIdentityServer(options =>
-                {
-                    options.Caching.ResourceStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
-                    options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));
-                })
-                .AddMongoDb(appSettings.MongoDBSettings.ConnectionString)
-                .AddInMemoryCaching()
-                .AddIdentityClients()
-                .AddIdentityApiResources()
-                .AddDeveloperSigningCredential();
-            }
-            catch
+            var builder = services.AddIdentityServer(options =>
             {
-            }
+                options.Caching.ResourceStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
+                options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));
+            })
+            .AddMongoDb(appSettings.MongoDBSettings.ConnectionString)
+            .AddInMemoryCaching()
+            .AddIdentityClients()
+            .AddIdentityApiResources()
+            .AddDeveloperSigningCredential();
+
+            IdentityModelEventSource.ShowPII = true;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

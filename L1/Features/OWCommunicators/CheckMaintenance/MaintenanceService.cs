@@ -5,17 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.GameServerCommunicators;
-using L1.Shared.Configurations;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
 using Sentry;
 using Sentry.Protocol;
+using AdminApi = L1.Features.AdminApiCommunicators.UnderMaintenance;
+using Game = L1.Features.GameServerCommunicators.UnderMaintenance;
 
 namespace L1.Features.OWCommunicators.CheckMaintenance
 {
     public interface IMaintenanceService
     {
+        Task<bool> IsUnderMaintenance();
+
         Task ObserveMaintenanceSchedule(OWRequest request);
     }
 
@@ -27,17 +30,23 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
 
         private readonly HttpClient httpClient;
         private readonly OWServiceSettings owServiceSettings;
-        private readonly GameServerSettings gameServerSetting;
-        private readonly AdminApiSettings adminApiSettings;
+        private readonly IGameMemberService gameMemberService;
+        private readonly IAdminApiService adminApiService;
 
-        public MaintenanceService(HttpClient httpClient, IAppSettings appSettings)
+        public MaintenanceService(
+            HttpClient httpClient,
+            OWServiceSettings owServiceSettings,
+            IGameMemberService gameMemberService,
+            IAdminApiService adminApiService)
         {
             this.httpClient = httpClient;
-
-            owServiceSettings = appSettings.OWServiceSettings;
-            gameServerSetting = appSettings.GameServerSettings;
-            adminApiSettings = appSettings.AdminApiSettings;
+            this.owServiceSettings = owServiceSettings;
+            this.gameMemberService = gameMemberService;
+            this.adminApiService = adminApiService;
         }
+
+        public Task<bool> IsUnderMaintenance()
+            => Task.FromResult(UnderMaintenanceCounter == 0);
 
         public async Task ObserveMaintenanceSchedule(OWRequest request)
         {
@@ -74,40 +83,18 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private async Task HandleMaintenanceSchedule(MaintenanceResult maintenanceSchedule)
         {
             var isUnderMaintenance = maintenanceSchedule.IsUnderMaintenance();
-            var maintenanceNotification = new MaintenanceNotification(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance);
 
-            if (isUnderMaintenance)
-            {
-                SentrySdk.CaptureMessage(
-                    $"Maintenance schedule: {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}",
-                    SentryLevel.Info);
-            }
-            else
+            if (!isUnderMaintenance)
             {
                 Interlocked.Exchange(ref UnderMaintenanceCounter, 0);
             }
 
-            await SendMaintenanceNotification(maintenanceNotification, new Uri(gameServerSetting.BaseUrl, gameServerSetting.Endpoints.UnderMaintenance));
-            await SendMaintenanceNotification(maintenanceNotification, new Uri(adminApiSettings.BaseUrl, adminApiSettings.Endpoints.UnderMaintenance));
-        }
+            SentrySdk.CaptureMessage(
+                $"Received maintenance schedule: {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}",
+                SentryLevel.Info);
 
-        private async Task SendMaintenanceNotification(MaintenanceNotification notification, Uri endpoint)
-        {
-            try
-            {
-                var serializedContent = JsonConvert.SerializeObject(notification);
-                var content = new StringContent(serializedContent, Encoding.UTF8, DefaultMediaType);
-
-                await httpClient.PostAsync(endpoint, content);
-
-                SentrySdk.CaptureMessage(
-                    $"Maintenance notification to: {endpoint} with: {serializedContent}",
-                    SentryLevel.Info);
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureMessage(ex.ToString(), SentryLevel.Error);
-            }
+            await gameMemberService.UnderMaintenance(new Game.MaintenanceRequest(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance));
+            await adminApiService.UnderMaintenance(new AdminApi.MaintenanceRequest(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance));
         }
 
         private static AsyncRetryPolicy<MaintenanceResult> CreateObservationPolicy()

@@ -25,19 +25,11 @@ namespace L1.Features.GameServerCommunicators
             this.gameServerEndPoints = gameServerEndPoints;
         }
 
-        public async Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
-        {
-            var response = await gameServerService.Post<RetrieveEndGameInfoResult>(gameServerEndPoints.RetrieveEndGameInfo, request);
+        public Task<GameServerResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
+            => gameServerService.Post<RetrieveEndGameInfoResult>(gameServerEndPoints.RetrieveEndGameInfo, request);
 
-            return response;
-        }
-
-        public async Task<GameServerResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request)
-        {
-            var response = await gameServerService.Post<DailySummaryResult>(gameServerEndPoints.DailySummary, request);
-
-            return response;
-        }
+        public Task<GameServerResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request)
+            => gameServerService.Post<DailySummaryResult>(gameServerEndPoints.DailySummary, request);
 
         public Task UnderMaintenance(MaintenanceRequest request)
             => gameServerService.PostAndForget(gameServerEndPoints.UnderMaintenance, request);

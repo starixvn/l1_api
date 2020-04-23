@@ -1,4 +1,4 @@
-﻿using L1.Features.IdentityClient;
+﻿using L1.Features.BackendAuthentications;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;

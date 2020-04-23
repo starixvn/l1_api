@@ -1,4 +1,4 @@
-﻿using L1.Features.IdentityClient;
+﻿using L1.Features.BackendAuthentications;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.GameServerCommunicators

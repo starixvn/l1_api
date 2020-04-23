@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 
-namespace L1.Features.IdentityClient
+namespace L1.Features.BackendAuthentications
 {
     public class ProtectedApiBearerTokenHandler : DelegatingHandler
     {
-        private readonly IIdentityService identityService;
+        private readonly IBackendAuthService identityService;
 
-        public ProtectedApiBearerTokenHandler(IIdentityService identityService)
+        public ProtectedApiBearerTokenHandler(IBackendAuthService identityService)
         {
             this.identityService = identityService;
         }

@@ -1,5 +1,4 @@
-﻿using L1.Features.IdentityClient;
-using L1.Features.OWCommunicators.CheckMaintenance;
+﻿using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.OWCommunicators.Log;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,12 +17,10 @@ namespace L1.Features.OWCommunicators
 
             services.AddHttpClient<IMaintenanceService, MaintenanceService>();
 
-            services
-                .AddHttpClient<IOWService, OWService>(httpClient =>
-                {
-                    httpClient.BaseAddress = owServiceSettings.BaseUrl;
-                })
-                .AddHttpMessageHandler<ProtectedApiBearerTokenHandler>(); ;
+            services.AddHttpClient<IOWService, OWService>(httpClient =>
+            {
+                httpClient.BaseAddress = owServiceSettings.BaseUrl;
+            });
         }
     }
 }

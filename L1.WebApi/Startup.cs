@@ -1,5 +1,5 @@
+using L1.Features.BackendAuthentications;
 using L1.Features.GameServerCommunicators;
-using L1.Features.IdentityClient;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Shared.Middlewares;
@@ -28,7 +28,7 @@ namespace L1.WebApi
             {
                 var appSettings = services.AddSettings(Configuration);
 
-                services.AddIdentityService(appSettings.IdentityServerConfigs);
+                services.AddBackendAuthService(appSettings.BackendAuthConfigs);
                 services.AddServices();
                 services.AddMongoDBServices(appSettings);
                 services.AddMemberAuthentications();
@@ -41,7 +41,7 @@ namespace L1.WebApi
                     .AddAuthentication("Bearer")
                     .AddJwtBearer("Bearer", options =>
                     {
-                        options.Authority = appSettings.IdentityServerConfigs.Address;
+                        options.Authority = appSettings.BackendAuthConfigs.Address;
                         options.RequireHttpsMetadata = false;
 
                         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters

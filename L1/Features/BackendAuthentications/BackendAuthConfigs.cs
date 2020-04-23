@@ -1,6 +1,6 @@
-﻿namespace L1.Features.IdentityClient
+﻿namespace L1.Features.BackendAuthentications
 {
-    public class IdentityServerConfigs
+    public class BackendAuthConfigs
     {
         public string Address { get; set; }
 

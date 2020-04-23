@@ -3,29 +3,29 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 
-namespace L1.Features.IdentityClient
+namespace L1.Features.BackendAuthentications
 {
-    public interface IIdentityService
+    public interface IBackendAuthService
     {
         Task<TokenResponse> GetAccessToken();
     }
 
-    public class IdentityService : IIdentityService
+    public class BackendAuthService : IBackendAuthService
     {
         private readonly HttpClient httpClient;
-        private readonly IdentityServerConfigs identityServerConfigs;
+        private readonly BackendAuthConfigs backendAuthConfigs;
 
-        public IdentityService(HttpClient httpClient, IdentityServerConfigs identityServerConfigs)
+        public BackendAuthService(HttpClient httpClient, BackendAuthConfigs backendAuthConfigs)
         {
             this.httpClient = httpClient;
-            this.identityServerConfigs = identityServerConfigs;
+            this.backendAuthConfigs = backendAuthConfigs;
         }
 
         public async Task<TokenResponse> GetAccessToken()
         {
             var request = new DiscoveryDocumentRequest
             {
-                Address = identityServerConfigs.Address,
+                Address = backendAuthConfigs.Address,
                 Policy = new DiscoveryPolicy
                 {
                     RequireHttps = false
@@ -42,9 +42,9 @@ namespace L1.Features.IdentityClient
             return await httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
-                ClientId = identityServerConfigs.ClientId,
-                ClientSecret = identityServerConfigs.ClientSecret,
-                Scope = identityServerConfigs.Scope,
+                ClientId = backendAuthConfigs.ClientId,
+                ClientSecret = backendAuthConfigs.ClientSecret,
+                Scope = backendAuthConfigs.Scope,
             });
         }
     }

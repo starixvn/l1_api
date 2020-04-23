@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
-using L1.Features.IdentityClient;
+using L1.Features.BackendAuthentications;
 
 namespace L1.Shared.Configurations
 {
     public partial interface IAppSettings
     {
-        IdentityServerConfigs IdentityServerConfigs { get; set; }
+        BackendAuthConfigs BackendAuthConfigs { get; set; }
 
         IEnumerable<string> IdentityAudiences { get; set; }
     }
 
     public partial class AppSettings : IAppSettings
     {
-        public IdentityServerConfigs IdentityServerConfigs { get; set; }
+        public BackendAuthConfigs BackendAuthConfigs { get; set; }
 
         public IEnumerable<string> IdentityAudiences { get; set; }
     }

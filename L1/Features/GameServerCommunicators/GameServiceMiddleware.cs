@@ -5,15 +5,15 @@ namespace L1.Features.GameServerCommunicators
 {
     public static class GameServiceMiddleware
     {
-        public static void AddGameServerServices(this IServiceCollection services, GameServerSetting gameServerSetting)
+        public static void AddGameServerServices(this IServiceCollection services, GameServerSettings gameServerSettings)
         {
-            services.AddSingleton(gameServerSetting.Endpoints);
+            services.AddSingleton(gameServerSettings.Endpoints);
             services.AddScoped<IGameMemberService, GameMemberService>();
 
             services
                 .AddHttpClient<IGameServerService, GameServerService>(httpClient =>
                 {
-                    httpClient.BaseAddress = gameServerSetting.BaseUrl;
+                    httpClient.BaseAddress = gameServerSettings.BaseUrl;
                 })
                 .AddHttpMessageHandler<ProtectedApiBearerTokenHandler>();
         }

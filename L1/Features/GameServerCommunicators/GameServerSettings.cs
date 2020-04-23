@@ -2,7 +2,7 @@
 
 namespace L1.Features.GameServerCommunicators
 {
-    public class GameServerSetting
+    public class GameServerSettings
     {
         public Uri BaseUrl { get; set; }
 

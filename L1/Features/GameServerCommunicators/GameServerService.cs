@@ -51,15 +51,13 @@ namespace L1.Features.GameServerCommunicators
 
         public async Task PostAndForget(string apiEndpoint, GameServerRequest request)
         {
-            var response = await Post(apiEndpoint, request);
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var failureReason = $"{response.StatusCode}-{response.ReasonPhrase}";
-
-                SentrySdk.CaptureMessage(
-                $"Fire and forget to Saba Club's {apiEndpoint} failed at {DateTimeOffset.UtcNow} - {failureReason}",
-                SentryLevel.Warning);
+                await Post(apiEndpoint, request);
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureMessage(ex.ToString(), SentryLevel.Error);
             }
         }
 

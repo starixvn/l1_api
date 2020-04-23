@@ -27,7 +27,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
 
         private readonly HttpClient httpClient;
         private readonly OWServiceSettings owServiceSettings;
-        private readonly GameServerSetting gameServerSetting;
+        private readonly GameServerSettings gameServerSetting;
         private readonly AdminApiSettings adminApiSettings;
 
         public MaintenanceService(HttpClient httpClient, IAppSettings appSettings)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 
@@ -12,6 +13,9 @@ namespace L1.Features.BackendAuthentications
 
     public class BackendAuthService : IBackendAuthService
     {
+        private static TokenResponse TokenResponse;
+        private static DateTimeOffset LastTokenRequestTime;
+
         private readonly HttpClient httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
 
@@ -23,29 +27,37 @@ namespace L1.Features.BackendAuthentications
 
         public async Task<TokenResponse> GetAccessToken()
         {
-            var request = new DiscoveryDocumentRequest
+            if (TokenResponse == null || LastTokenRequestTime.AddSeconds(TokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1))
             {
-                Address = backendAuthConfigs.Address,
-                Policy = new DiscoveryPolicy
+                var request = new DiscoveryDocumentRequest
                 {
-                    RequireHttps = false
+                    Address = backendAuthConfigs.Address,
+                    Policy = new DiscoveryPolicy
+                    {
+                        RequireHttps = false
+                    }
+                };
+
+                var disco = await httpClient.GetDiscoveryDocumentAsync(request);
+
+                if (disco.IsError)
+                {
+                    throw new InvalidOperationException(disco.Error);
                 }
-            };
 
-            var disco = await httpClient.GetDiscoveryDocumentAsync(request);
+                var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+                {
+                    Address = disco.TokenEndpoint,
+                    ClientId = backendAuthConfigs.ClientId,
+                    ClientSecret = backendAuthConfigs.ClientSecret,
+                    Scope = backendAuthConfigs.Scope,
+                });
 
-            if (disco.IsError)
-            {
-                throw new InvalidOperationException(disco.Error);
+                Interlocked.Exchange(ref TokenResponse, newTokenResponse);
+                LastTokenRequestTime = DateTimeOffset.UtcNow;
             }
 
-            return await httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = disco.TokenEndpoint,
-                ClientId = backendAuthConfigs.ClientId,
-                ClientSecret = backendAuthConfigs.ClientSecret,
-                Scope = backendAuthConfigs.Scope,
-            });
+            return TokenResponse;
         }
     }
 }

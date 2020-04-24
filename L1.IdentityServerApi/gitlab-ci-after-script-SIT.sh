@@ -7,7 +7,7 @@ if [ "$HEADHASH" != "$UPSTREAMHASH" ]; then
   git checkout -- .;
   git pull;
   echo "Restart service";
-  sudo systemctl restart l1-identity-api-sit.service;
+  sudo systemctl restart l2-identity-api-sit.service;
 else
     echo "Up-to-date";
 fi

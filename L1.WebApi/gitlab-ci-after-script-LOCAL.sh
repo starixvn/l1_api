@@ -7,7 +7,7 @@ if [ "$HEADHASH" != "$UPSTREAMHASH" ]; then
   git checkout -- .;
   git pull;
   echo "Restart service";
-  sudo systemctl restart l2-api.service;
+  sudo systemctl restart l2-api-1.service;
 else
     echo "Up-to-date";
 fi

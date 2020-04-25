@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using L1.Shared.Constants;
 using MongoDB.Driver;
@@ -43,11 +42,10 @@ namespace L1.Features.Sites
             => siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
 
         public bool VerifyClient(string clientId, string clientSecret, string currency)
-            => siteCollection
-                .Find(
-                    site => site.ClientId == clientId
-                    && site.ClientSecret == clientSecret
-                    && site.ValidCurrencies.Contains(currency, StringComparer.OrdinalIgnoreCase))
-                .Any();
+        {
+            var filter = Builders<Site>.Filter.AnyEq(site => site.ValidCurrencies, currency.ToUpperInvariant());
+
+            return siteCollection.Find(filter).Any();
+        }
     }
 }

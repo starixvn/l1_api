@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -13,6 +15,8 @@ namespace L1.Features.Sites
         Site GetBySiteId(string id);
 
         bool VerifyClient(string clientId, string clientSecret);
+
+        bool VerifyClient(string clientId, string clientSecret, string currency);
     }
 
     public class SiteDataAccess : ISiteDataAccess
@@ -35,7 +39,15 @@ namespace L1.Features.Sites
         public Site GetBySiteId(string id) =>
             siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
 
-        public bool VerifyClient(string clientId, string clientSecret) =>
-            siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
+        public bool VerifyClient(string clientId, string clientSecret)
+            => siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
+
+        public bool VerifyClient(string clientId, string clientSecret, string currency)
+            => siteCollection
+                .Find(
+                    site => site.ClientId == clientId
+                    && site.ClientSecret == clientSecret
+                    && site.ValidCurrencies.Contains(currency, StringComparer.OrdinalIgnoreCase))
+                .Any();
     }
 }

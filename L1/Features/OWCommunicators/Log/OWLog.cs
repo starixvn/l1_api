@@ -12,7 +12,6 @@ namespace L1.Features.OWCommunicators.Log
             Call = call;
             ResponseTimeStamp = responseTimeStamp;
             Result = result;
-            LogTimeStamp = DateTimeOffset.UtcNow;
         }
 
         [BsonRepresentation(BsonType.String)]
@@ -24,8 +23,5 @@ namespace L1.Features.OWCommunicators.Log
         public DateTimeOffset ResponseTimeStamp { get; }
 
         public IOWResult Result { get; }
-
-        [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset LogTimeStamp { get; }
     }
 }

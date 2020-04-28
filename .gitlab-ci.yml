@@ -5,6 +5,16 @@ stages:
   - deploy
 
 before_script:
+  - echo $CURRENT_TAG
+  - if echo "$CI_COMMIT_TAG" | grep -q "$CURRENT_TAG";
+    then
+      echo "Continue deploying";
+    elif [ "$CI_COMMIT_BRANCH" == "master" ]; then
+      echo "Continue deploying";
+    else
+      echo "This job has tag is not used for current repository";
+      exit 1;
+    fi
   - eval $(ssh-agent -s)
   - echo "$SSH_KEY" | ssh-add -
   - mkdir -p ~/.ssh

@@ -4,11 +4,11 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWCall
     {
-        string Seq { get; }
+        string Seq { get; set; }
 
-        int ObCustId { get; }
+        int ObCustId { get; set; }
 
-        string SiteId { get; }
+        string SiteId { get; set; }
     }
 
     public class OWCall : IOWCall
@@ -25,10 +25,10 @@ namespace L1.Features.OWCommunicators
             ObCustId = obCustId;
         }
 
-        public string Seq { get; }
+        public string Seq { get; set; }
 
-        public int ObCustId { get; }
+        public int ObCustId { get; set; }
 
-        public string SiteId { get; }
+        public string SiteId { get; set; }
     }
 }

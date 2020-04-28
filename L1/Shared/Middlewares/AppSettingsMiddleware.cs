@@ -11,7 +11,6 @@ namespace L1.Shared.Middlewares
             var appSettings = new AppSettings();
 
             configuration.GetSection("AppSettings").Bind(appSettings);
-
             services.AddSingleton<IAppSettings>(appSettings);
 
             return appSettings;

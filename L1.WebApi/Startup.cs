@@ -1,3 +1,8 @@
+using L1.Features.AdminApiCommunicators;
+using L1.Features.BackendAuthentications;
+using L1.Features.GameServerCommunicators;
+using L1.Features.MemberAuthentications;
+using L1.Features.OWCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,35 +25,33 @@ namespace L1.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            try
-            {
-                var appSettings = services.AddSettings(Configuration);
-                services.AddServices(appSettings);
-                services.AddMongoDBServices(appSettings);
-                services.AddOWServices(appSettings.OWServiceSettings);
-                services.AddGameServerServices(appSettings.GameServerSettings);
+            var appSettings = services.AddSettings(Configuration);
 
-                services.AddControllers();
+            services.AddBackendAuthService(appSettings.BackendAuthConfigs);
+            services.AddServices();
+            services.AddMongoDBServices(appSettings);
+            services.AddMemberAuthentications();
+            services.AddOWServices(appSettings.OWServiceSettings);
+            services.AddGameServerServices(appSettings.GameServerSettings);
+            services.AddAdminApiServices(appSettings.AdminApiSettings);
 
-                services
-                    .AddAuthentication("Bearer")
-                    .AddJwtBearer("Bearer", options =>
+            services.AddControllers();
+
+            services
+                .AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = appSettings.BackendAuthConfigs.Address;
+                    options.RequireHttpsMetadata = false;
+
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
-                        options.Authority = appSettings.IdentityServer;
-                        options.RequireHttpsMetadata = false;
+                        ValidateIssuer = true,
+                        ValidAudiences = appSettings.IdentityAudiences
+                    };
+                });
 
-                        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidAudiences = appSettings.IdentityAudiences
-                        };
-                    });
-
-                services.AddMvc();
-            }
-            catch
-            {
-            }
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

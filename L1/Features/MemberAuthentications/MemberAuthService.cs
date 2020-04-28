@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Resources;
@@ -7,7 +6,7 @@ using Newtonsoft.Json;
 using Sentry;
 using Sentry.Protocol;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthService
     {
@@ -74,6 +73,7 @@ namespace L1.Features.Authentications
                 if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
                 {
                     LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
+
                     return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
                 }
 

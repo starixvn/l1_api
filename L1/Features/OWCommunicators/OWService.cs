@@ -60,7 +60,7 @@ namespace L1.Features.OWCommunicators
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = new T
                 {
-                    ErrorCode = 5001,
+                    ErrorCode = OWSpecialErrorCodes.NetworkError,
                     ErrorDescription = await GetErrorResponseContent(response),
                     Seq = call.Seq
                 }

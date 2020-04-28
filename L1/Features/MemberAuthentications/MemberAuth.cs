@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public class MemberAuth
     {
@@ -26,8 +26,6 @@ namespace L1.Features.Authentications
         public int MemberId { get; set; }
 
         public string MemberName { get; set; }
-
-        public string SiteName { get; set; }
 
         public string SiteId { get; set; }
 

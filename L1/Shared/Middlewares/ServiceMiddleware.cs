@@ -1,5 +1,4 @@
-﻿using System;
-using L1.Features.Authentications;
+﻿using L1.Features.BackendAuthentications;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,26 +9,24 @@ namespace L1.Shared.Middlewares
 {
     public static class ServiceMiddleware
     {
-        public static void AddServices(this IServiceCollection services, AppSettings appSettings)
+        public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<Func<DateTimeOffset>>(() => DateTimeOffset.Now);
+            services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
+            services.AddSingleton<ISiteDataService, SiteDataService>();
+
+            services.AddTransient<ProtectedApiBearerTokenHandler>();
         }
 
         public static void AddMongoDBServices(this IServiceCollection services, IAppSettings appSettings)
         {
-            var conventionPack = new ConventionPack
+            var camelIgnoringExtraElementConventions = new ConventionPack
             {
                 new CamelCaseElementNameConvention(),
                 new IgnoreExtraElementsConvention(true)
             };
-            ConventionRegistry.Register("camelCase", conventionPack, t => true);
-            var client = new MongoClient(appSettings.MongoDBSettings.ConnectionString);
 
-            services.AddSingleton<IMongoClient>(client);
-            services.AddSingleton<IMemberAuthDataAccess, MemberAuthDataAccess>();
-            services.AddSingleton<IMemberAuthService, MemberAuthService>();
-            services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
-            services.AddSingleton<ISiteDataService, SiteDataService>();
+            ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
+            services.AddSingleton<IMongoClient>(new MongoClient(appSettings.MongoDBSettings.ConnectionString));
         }
     }
 }

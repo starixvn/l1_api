@@ -5,7 +5,6 @@ using L1.Features.OWCommunicators.GetBalance;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
-using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators
 {
@@ -35,15 +34,11 @@ namespace L1.Features.OWCommunicators
             this.endpoints = endpoints;
         }
 
-        public async Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
-        {
-            return await oWService.Post<EnterPortalResult>(endpoints.EnterPortal, call);
-        }
+        public Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
+            => oWService.Post<EnterPortalResult>(endpoints.EnterPortal, call);
 
-        public async Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
-        {
-            return await oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
-        }
+        public Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
+            => oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
 
         public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call)
         {
@@ -69,9 +64,7 @@ namespace L1.Features.OWCommunicators
             return response;
         }
 
-        public async Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
-        {
-            return await oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
-        }
+        public Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
+            => oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
     }
 }

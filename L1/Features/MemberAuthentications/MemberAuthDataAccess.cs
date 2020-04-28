@@ -2,7 +2,7 @@
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
-namespace L1.Features.Authentications
+namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthDataAccess
     {
@@ -41,7 +41,7 @@ namespace L1.Features.Authentications
                 .Find(
                     x => x.IP == memberAuth.IP
                     && x.MemberId == memberAuth.MemberId
-                    && x.SiteId == memberAuth.SiteId
+                    && x.SiteId.ToUpper() == memberAuth.SiteId.ToUpper()
                     && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper())
                 .SortByDescending(x => x.Time)
                 .Limit(1)
@@ -53,6 +53,7 @@ namespace L1.Features.Authentications
         public MemberAuth Create(MemberAuth memberAuth)
         {
             memberAuthCollection.InsertOne(memberAuth);
+
             return memberAuth;
         }
 

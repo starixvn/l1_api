@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace L1.Features.OWCommunicators.CheckMaintenance
+namespace L1.Features.GameServerCommunicators.UnderMaintenance
 {
-    internal class MaintenanceNotification
+    public class MaintenanceRequest : GameServerRequest
     {
-        public MaintenanceNotification(DateTimeOffset? startTime, DateTimeOffset? endTime, bool isUM)
+        public MaintenanceRequest(DateTimeOffset? startTime, DateTimeOffset? endTime, bool isUM)
         {
             StartTime = startTime;
             EndTime = endTime;

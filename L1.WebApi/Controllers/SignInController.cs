@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using L1.Features.Authentications;
+using L1.Features.MemberAuthentications;
 using L1.Features.Sites;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;

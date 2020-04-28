@@ -10,8 +10,14 @@ namespace L1.IdentityServerApi.Extensions
     {
         public static IIdentityServerBuilder AddMongoDb(this IIdentityServerBuilder builder, string connectionString)
         {
-            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("camelCase", conventionPack, t => true);
+            var camelIgnoringExtraElementConventions = new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
+                new IgnoreExtraElementsConvention(true)
+            };
+
+            ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
+
             var client = new MongoClient(connectionString);
             builder.Services.AddSingleton<IMongoClient>(client);
             builder.Services.AddSingleton<ISiteDataAccess, SiteDataAccess>();

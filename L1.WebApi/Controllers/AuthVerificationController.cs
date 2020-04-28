@@ -1,4 +1,4 @@
-﻿using L1.Features.Authentications;
+﻿using L1.Features.MemberAuthentications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

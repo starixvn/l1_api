@@ -60,10 +60,10 @@ local_deploy:auth_api:
   environment:
     name: LOCAL
   only:
-    - /^deploy-local-\d{8}-\d+.*$/
-    - /^deploy-local-auth-api-\d{8}-\d+.*$/
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-auth-api-\d{8}-\d+.*$/
+    - /^l1-deploy-local-\d{8}-\d+.*$/
+    - /^l1-deploy-local-auth-api-\d{8}-\d+.*$/
+    - /^l1-deploy-\d{8}-\d+.*$/
+    - /^l1-deploy-auth-api-\d{8}-\d+.*$/
  
 sit_deploy_auth_api:
   extends: 
@@ -72,10 +72,10 @@ sit_deploy_auth_api:
   environment:
     name: SIT
   only:
-    - /^deploy-sit-\d{8}-\d+.*$/
-    - /^deploy-sit-auth-api-\d{8}-\d+.*$/
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-auth-api-\d{8}-\d+.*$/
+    - /^l1-deploy-sit-\d{8}-\d+.*$/
+    - /^l1-deploy-sit-auth-api-\d{8}-\d+.*$/
+    - /^l1-deploy-\d{8}-\d+.*$/
+    - /^l1-deploy-auth-api-\d{8}-\d+.*$/
 
 uat_deploy:auth_api:
   extends: 
@@ -84,10 +84,10 @@ uat_deploy:auth_api:
   environment:
     name: UAT
   only:
-    - /^deploy-uat-\d{8}-\d+.*$/
-    - /^deploy-uat-auth-api-\d{8}-\d+.*$/
-    - /^deploy-\d{8}-\d+.*$/
-    - /^deploy-auth-api-\d{8}-\d+.*$/
+    - /^l1-deploy-uat-\d{8}-\d+.*$/
+    - /^l1-deploy-uat-auth-api-\d{8}-\d+.*$/
+    - /^l1-deploy-\d{8}-\d+.*$/
+    - /^l1-deploy-auth-api-\d{8}-\d+.*$/
 
 prod_deploy:auth_api:
   resource_group: auth_api

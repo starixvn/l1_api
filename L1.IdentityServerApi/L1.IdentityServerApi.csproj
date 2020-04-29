@@ -21,10 +21,6 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <None Include="appsettings.Development.json">
-            <IsTransformFile>true</IsTransformFile>
-            <DependentUpon>appsettings.json</DependentUpon>
-        </None>
         <None Include="appsettings.SIT.json">
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>
@@ -47,7 +43,6 @@
         <Content Remove="appsettings.UAT.json" />
         <Content Remove="appsettings.LOCAL.json" />
         <Content Remove="appsettings.SIT.json" />
-        <Content Remove="appsettings.Development.json" />
     </ItemGroup>
     <ItemGroup>
         <Content Update="appsettings.json">

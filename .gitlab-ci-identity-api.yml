@@ -59,11 +59,16 @@ local_deploy:auth_api:
     - .push-git-compiled
   environment:
     name: LOCAL
-  only:
-    - /^l1-deploy-local-\d{8}-\d+.*$/
-    - /^l1-deploy-local-auth-api-\d{8}-\d+.*$/
-    - /^l1-deploy-\d{8}-\d+.*$/
-    - /^l1-deploy-auth-api-\d{8}-\d+.*$/
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-local-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-local-auth-api-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-auth-api-\d{8}-\d+.*$/
+      when: always
+    - when: never
  
 sit_deploy_auth_api:
   extends: 
@@ -71,11 +76,16 @@ sit_deploy_auth_api:
     - .push-git-compiled
   environment:
     name: SIT
-  only:
-    - /^l1-deploy-sit-\d{8}-\d+.*$/
-    - /^l1-deploy-sit-auth-api-\d{8}-\d+.*$/
-    - /^l1-deploy-\d{8}-\d+.*$/
-    - /^l1-deploy-auth-api-\d{8}-\d+.*$/
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-sit-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-sit-auth-api-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-auth-api-\d{8}-\d+.*$/
+      when: always
+    - when: never
 
 uat_deploy:auth_api:
   extends: 
@@ -83,11 +93,16 @@ uat_deploy:auth_api:
     - .push-git-compiled
   environment:
     name: UAT
-  only:
-    - /^l1-deploy-uat-\d{8}-\d+.*$/
-    - /^l1-deploy-uat-auth-api-\d{8}-\d+.*$/
-    - /^l1-deploy-\d{8}-\d+.*$/
-    - /^l1-deploy-auth-api-\d{8}-\d+.*$/
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-uat-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-uat-auth-api-\d{8}-\d+.*$/
+      when: always
+    - if: $CI_COMMIT_TAG =~ /^l1-deploy-auth-api-\d{8}-\d+.*$/
+      when: always
+    - when: never
 
 prod_deploy:auth_api:
   resource_group: auth_api
@@ -102,6 +117,6 @@ prod_deploy:auth_api:
     name: PRO
     url: http://auth.saba.vin/
   allow_failure: false
-  when: manual
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: manual

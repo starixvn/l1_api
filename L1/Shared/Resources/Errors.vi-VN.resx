@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SB0001" xml:space="preserve">
-    <value>Đã xảy ra lỗi. Vui lòng liên hệ với bộ phận CSKH để biết chi tiết, cảm ơn bạn.</value>
+    <value>Đã xảy ra lỗi. Vui lòng liên hệ với bộ phận CSKH để biết chi tiết.</value>
   </data>
 </root>

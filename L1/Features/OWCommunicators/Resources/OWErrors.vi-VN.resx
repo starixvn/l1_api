@@ -165,4 +165,10 @@
   <data name="2001" xml:space="preserve">
     <value>Tài khoản hoặc mật khẩu đăng nhập không đúng.</value>
   </data>
+  <data name="3008" xml:space="preserve">
+    <value>Hạn mức cược của bạn cho trò chơi này chưa được thiết lập. Vui lòng liên hệ với cấp trên.</value>
+  </data>
+  <data name="3009" xml:space="preserve">
+    <value>Hạn mức cược của bạn đã được cập nhật, vui lòng thử lại.</value>
+  </data>
 </root>

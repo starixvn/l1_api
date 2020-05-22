@@ -165,4 +165,10 @@
   <data name="3013" xml:space="preserve">
     <value>Account has been suspended. Please contact your upline for details, thank you.</value>
   </data>
+  <data name="3008" xml:space="preserve">
+    <value>You have no bet limit setting for this game, please contact your upline to set it.</value>
+  </data>
+  <data name="3009" xml:space="preserve">
+    <value>Your bet limit had been updated, please try again</value>
+  </data>
 </root>

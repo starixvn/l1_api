@@ -151,6 +151,24 @@ namespace L1.Features.OWCommunicators.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have no bet limit setting for this game, please contact your upline to set it..
+        /// </summary>
+        internal static string _3008 {
+            get {
+                return ResourceManager.GetString("3008", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your bet limit had been updated, please try again.
+        /// </summary>
+        internal static string _3009 {
+            get {
+                return ResourceManager.GetString("3009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account has been suspended. Please contact your upline for details, thank you..
         /// </summary>
         internal static string _3010 {

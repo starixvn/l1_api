@@ -1,4 +1,6 @@
-﻿namespace L1.WebApi.Models
+﻿using System;
+
+namespace L1.WebApi.Models
 {
     public class PlaceBet : MemberRequest
     {
@@ -13,5 +15,7 @@
         public string Currency { get; set; }
 
         public string Ip { get; set; }
+
+        public DateTimeOffset? RoundEndTime { get; set; }
     }
 }

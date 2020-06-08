@@ -1,14 +1,26 @@
-﻿namespace L1.Features.OWCommunicators.PlaceBet
+﻿using System;
+
+namespace L1.Features.OWCommunicators.PlaceBet
 {
     public class PlaceBetCall : OWCall
     {
-        public PlaceBetCall(int obCustId, string siteId, int gameRoundId, byte gameTypeId, int choiceId, decimal amount, string currency, string ip) : base(obCustId, siteId)
+        public PlaceBetCall(
+            int obCustId,
+            string siteId,
+            int gameRoundId,
+            byte gameTypeId,
+            int choiceId,
+            decimal amount,
+            string currency,
+            DateTimeOffset? roundEndTime,
+            string ip) : base(obCustId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
             ChoiceId = choiceId;
             Amount = amount;
             Currency = currency;
+            RoundEndTime = roundEndTime;
             Ip = ip;
         }
 
@@ -21,6 +33,8 @@
         public decimal Amount { get; set; }
 
         public string Currency { get; set; }
+
+        public DateTimeOffset? RoundEndTime { get; set; }
 
         public string Ip { get; set; }
     }

@@ -22,7 +22,8 @@ namespace L1.Shared.Middlewares
             var camelIgnoringExtraElementConventions = new ConventionPack
             {
                 new CamelCaseElementNameConvention(),
-                new IgnoreExtraElementsConvention(true)
+                new IgnoreExtraElementsConvention(true),
+                new IgnoreIfDefaultConvention(true)
             };
 
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);

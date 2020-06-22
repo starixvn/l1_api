@@ -1,4 +1,6 @@
 ﻿using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace L1.Features.OWCommunicators.PlaceBet
 {
@@ -34,6 +36,7 @@ namespace L1.Features.OWCommunicators.PlaceBet
 
         public string Currency { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? RoundEndTime { get; set; }
 
         public string Ip { get; set; }

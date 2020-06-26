@@ -49,8 +49,17 @@ namespace L1.WebApi.Controllers
         [Route("[action]")]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
-            var response = await oWCustomerService.PlaceBet(
-                new PlaceBetCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.ChoiceId, model.Amount, model.Currency, model.Ip));
+            var placeBetCall = new PlaceBetCall(
+                model.ObCustId,
+                model.SiteId,
+                model.GameRoundId,
+                model.GameTypeId,
+                model.ChoiceId,
+                model.Amount,
+                model.Currency,
+                model.RoundEndTime,
+                model.Ip);
+            var response = await oWCustomerService.PlaceBet(placeBetCall);
 
             return Ok(response);
         }

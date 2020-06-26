@@ -8,7 +8,7 @@ namespace L1.Features.OWCommunicators.Log
     {
         public OWLog(DateTimeOffset requestTimeStamp, IOWCall call, DateTimeOffset responseTimeStamp, IOWResult result)
         {
-            LogTimestamp = DateTimeOffset.UtcNow;
+            LogTimeStamp = DateTimeOffset.UtcNow;
             RequestTimeStamp = requestTimeStamp;
             Call = call;
             ResponseTimeStamp = responseTimeStamp;
@@ -16,7 +16,7 @@ namespace L1.Features.OWCommunicators.Log
         }
 
         [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset LogTimestamp { get; set; }
+        public DateTimeOffset LogTimeStamp { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset RequestTimeStamp { get; set; }

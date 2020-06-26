@@ -1,4 +1,6 @@
 ﻿using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace L1.Features.OWCommunicators.EndGame
 {
@@ -24,6 +26,7 @@ namespace L1.Features.OWCommunicators.EndGame
 
         public int ValidBetAmount { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? EndTime { get; set; }
     }
 }

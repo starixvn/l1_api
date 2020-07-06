@@ -90,7 +90,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
             }
 
             SentrySdk.CaptureMessage(
-                $"Received maintenance schedule: {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}",
+                $"Received maintenance schedule: IsUM: {isUnderMaintenance} - {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}",
                 SentryLevel.Info);
 
             await gameMemberService.UnderMaintenance(new Game.MaintenanceRequest(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance));

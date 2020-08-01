@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.DailySummary;
+using L1.Features.AdminApiCommunicators.AddSpins;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using L1.Shared.Constants;
 using Newtonsoft.Json;
@@ -16,6 +17,8 @@ namespace L1.Features.AdminApiCommunicators
         Task UnderMaintenance(MaintenanceRequest request);
 
         Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request);
+        
+        Task<AdminApiResponse<AddSpinResult>> AddSpins(AddSpinRequest request);
 
         Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
     }
@@ -36,6 +39,9 @@ namespace L1.Features.AdminApiCommunicators
 
         public Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request)
             => Post<DailySummaryResult>(adminApiEndPoints.DailySummary, request);
+            
+        public Task<AdminApiResponse<AddSpinResult>> AddSpins(AddSpinRequest request)
+            => Post<AddSpinResult>(adminApiEndPoints.AddSpins, request);
 
         public async Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new()
         {

@@ -14,5 +14,6 @@ namespace L1.Features.AdminApiCommunicators
         public string UnderMaintenance { get; set; }
 
         public string DailySummary { get; set; }
+        public string AddSpins { get; set; }
     }
 }

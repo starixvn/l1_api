@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
+using L1.Features.AdminApiCommunicators.AddSpins;
 using L1.Features.GameServerCommunicators;
 using L1.Features.GameServerCommunicators.RetrieveEndGameInfo;
 using L1.Features.OWCommunicators;
@@ -109,6 +110,22 @@ namespace L1.WebApi.Controllers
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
                 var response = await adminApiService.DailySummary(new DailySummaryRequest(model.SummarizedDate));
+                response.Result.Seq = model.Seq;
+
+                return Ok(response);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddSpins([FromBody] AddSpins model, [FromServices] IAdminApiService adminApiService, [FromServices] ISiteDataService siteDataService)
+        {
+            if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
+            {
+                var response = await adminApiService.AddSpins(new AddSpinRequest(model.ObCustId, model.Spins));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);

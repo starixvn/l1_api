@@ -12,5 +12,7 @@ namespace L1.Features.AdminApiCommunicators
     public class AdminApiEndPoints
     {
         public string UnderMaintenance { get; set; }
+
+        public string DailySummary { get; set; }
     }
 }

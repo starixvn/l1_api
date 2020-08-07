@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace L1.Features.GameServerCommunicators.DailySummary
+namespace L1.Features.AdminApiCommunicators.DailySummary
 {
-    public class DailySummaryResult : GameServerResult
+    public class DailySummaryResult : AdminApiResult
     {
         public string Seq { get; set; }
 

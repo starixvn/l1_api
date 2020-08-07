@@ -13,6 +13,8 @@ namespace L1.Features.AdminApiCommunicators
     public interface IAdminApiService
     {
         Task UnderMaintenance(MaintenanceRequest request);
+
+        Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
     }
 
     public class AdminApiService : IAdminApiService

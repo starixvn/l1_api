@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
 using L1.Features.GameServerCommunicators;
 using L1.Features.GameServerCommunicators.RetrieveEndGameInfo;
@@ -103,11 +104,11 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model, [FromServices] IGameMemberService gameMemberService, [FromServices] ISiteDataService siteDataService)
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model, [FromServices] IAdminApiService adminApiService, [FromServices] ISiteDataService siteDataService)
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
-                var response = await gameMemberService.DailySummary(new DailySummaryRequest(model.SummarizedDate));
+                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.SummarizedDate));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);

@@ -60,7 +60,8 @@ namespace L1.WebApi.Controllers
                 model.Amount,
                 model.Currency,
                 model.RoundEndTime,
-                model.Ip);
+                model.Ip,
+                model.FreeBet);
             var response = await oWCustomerService.PlaceBet(placeBetCall);
 
             return Ok(response);
@@ -71,7 +72,16 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
             var response = await oWCustomerService.EndGame(
-                new EndGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount, model.EndTime));
+                new EndGameCall(
+                    model.ObCustId,
+                    model.SiteId,
+                    model.GameRoundId,
+                    model.GameTypeId,
+                    model.TotalAmount,
+                    model.TotalWin,
+                    model.ValidBetAmount,
+                    model.EndTime,
+                    model.FreeBet));
 
             return Ok(response);
         }
@@ -93,7 +103,14 @@ namespace L1.WebApi.Controllers
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
-                var response = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId));
+                var response = await gameMemberService.RetrieveEndGameInfoAsync(
+                    new RetrieveEndGameInfoRequest(
+                        model.GameRoundId,
+                        model.GameTypeId,
+                        model.ObCustId,
+                        model.SiteId,
+                        model.FreeBet));
+
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);

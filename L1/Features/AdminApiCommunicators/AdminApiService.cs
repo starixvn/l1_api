@@ -17,7 +17,7 @@ namespace L1.Features.AdminApiCommunicators
         Task UnderMaintenance(MaintenanceRequest request);
 
         Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request);
-        
+
         Task<AdminApiResponse<AddSpinResult>> AddSpins(AddSpinRequest request);
 
         Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
@@ -39,7 +39,7 @@ namespace L1.Features.AdminApiCommunicators
 
         public Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request)
             => Post<DailySummaryResult>(adminApiEndPoints.DailySummary, request);
-            
+
         public Task<AdminApiResponse<AddSpinResult>> AddSpins(AddSpinRequest request)
             => Post<AddSpinResult>(adminApiEndPoints.AddSpins, request);
 

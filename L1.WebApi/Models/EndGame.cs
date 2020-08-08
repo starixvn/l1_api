@@ -15,5 +15,7 @@ namespace L1.WebApi.Models
         public int ValidBetAmount { get; set; }
 
         public DateTimeOffset EndTime { get; set; }
+
+        public bool FreeBet { get; set; }
     }
 }

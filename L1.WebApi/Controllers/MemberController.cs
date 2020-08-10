@@ -101,7 +101,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
             var response = await oWCustomerService.VoidGame(
-                new VoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
+                new VoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
 
             return Ok(response);
         }

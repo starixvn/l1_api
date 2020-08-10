@@ -21,10 +21,20 @@ namespace L1.WebApi.Controllers
     public class MemberController : ControllerBase
     {
         private readonly IOWCustomerService oWCustomerService;
+        private readonly IAdminApiService adminApiService;
+        private readonly IGameMemberService gameMemberService;
+        private readonly ISiteDataService siteDataService;
 
-        public MemberController(IOWCustomerService oWCustomerService)
+        public MemberController(
+            IOWCustomerService oWCustomerService,
+            IAdminApiService adminApiService,
+            IGameMemberService gameMemberService,
+            ISiteDataService siteDataService)
         {
             this.oWCustomerService = oWCustomerService;
+            this.adminApiService = adminApiService;
+            this.gameMemberService = gameMemberService;
+            this.siteDataService = siteDataService;
         }
 
         [HttpPost]
@@ -99,7 +109,7 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model, [FromServices] IGameMemberService gameMemberService, [FromServices] ISiteDataService siteDataService)
+        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
@@ -122,7 +132,7 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model, [FromServices] IAdminApiService adminApiService, [FromServices] ISiteDataService siteDataService)
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
@@ -138,7 +148,7 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> AddSpins([FromBody] AddSpins model, [FromServices] IAdminApiService adminApiService, [FromServices] ISiteDataService siteDataService)
+        public async Task<IActionResult> AddSpins([FromBody] AddSpins model)
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {

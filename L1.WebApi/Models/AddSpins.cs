@@ -6,6 +6,8 @@ namespace L1.WebApi.Models
     {
         public DateTimeOffset TimeStamp { get; set; }
 
+        public string Key { get; set; }
+
         public int ObCustId { get; set; }
 
         public byte Spins { get; set; }

@@ -152,7 +152,7 @@ namespace L1.WebApi.Controllers
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
-                var response = await adminApiService.AddSpins(new AddSpinRequest(model.ObCustId, model.Spins));
+                var response = await adminApiService.AddSpins(new AddSpinRequest(model.Key, model.ObCustId, model.Spins));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);

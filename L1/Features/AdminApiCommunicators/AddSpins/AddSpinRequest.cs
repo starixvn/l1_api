@@ -2,11 +2,14 @@
 {
     public class AddSpinRequest : AdminApiRequest
     {
-        public AddSpinRequest(int obCustId, byte spins)
-        {            
+        public AddSpinRequest(string key, int obCustId, byte spins)
+        {
+            Key = key;
             ObCustId = obCustId;
             Spins = spins;
         }
+
+        public string Key { get; }
 
         public int ObCustId { get; }
 

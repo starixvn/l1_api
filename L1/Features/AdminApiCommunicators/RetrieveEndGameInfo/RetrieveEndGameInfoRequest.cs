@@ -1,6 +1,6 @@
-﻿namespace L1.Features.GameServerCommunicators.RetrieveEndGameInfo
+﻿namespace L1.Features.AdminApiCommunicators.RetrieveEndGameInfo
 {
-    public class RetrieveEndGameInfoRequest : GameServerRequest
+    public class RetrieveEndGameInfoRequest : AdminApiRequest
     {
         public RetrieveEndGameInfoRequest(int gameRoundId, byte gameTypeId, int obCustId, string siteId, bool freeBet)
         {

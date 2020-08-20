@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
+using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.GameServerCommunicators;
-using L1.Features.GameServerCommunicators.RetrieveEndGameInfo;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
@@ -112,7 +112,7 @@ namespace L1.WebApi.Controllers
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
-                var response = await gameMemberService.RetrieveEndGameInfoAsync(
+                var response = await adminApiService.RetrieveEndGameInfoAsync(
                     new RetrieveEndGameInfoRequest(
                         model.GameRoundId,
                         model.GameTypeId,

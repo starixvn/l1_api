@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace L1.Features.GameServerCommunicators.RetrieveEndGameInfo
+namespace L1.Features.AdminApiCommunicators.RetrieveEndGameInfo
 {
-    public class RetrieveEndGameInfoResult : GameServerResult
+    public class RetrieveEndGameInfoResult : AdminApiResult
     {
         public decimal TotalAmount { get; set; }
 

@@ -15,5 +15,7 @@ namespace L1.Features.AdminApiCommunicators
 
         public string DailySummary { get; set; }
         public string AddSpins { get; set; }
+
+        public string RetrieveEndGameInfo { get; set; }
     }
 }

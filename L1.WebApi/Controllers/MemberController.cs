@@ -2,7 +2,6 @@
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
 using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
-using L1.Features.GameServerCommunicators;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
@@ -21,18 +20,15 @@ namespace L1.WebApi.Controllers
     {
         private readonly IOWCustomerService oWCustomerService;
         private readonly IAdminApiService adminApiService;
-        private readonly IGameMemberService gameMemberService;
         private readonly ISiteDataService siteDataService;
 
         public MemberController(
             IOWCustomerService oWCustomerService,
             IAdminApiService adminApiService,
-            IGameMemberService gameMemberService,
             ISiteDataService siteDataService)
         {
             this.oWCustomerService = oWCustomerService;
             this.adminApiService = adminApiService;
-            this.gameMemberService = gameMemberService;
             this.siteDataService = siteDataService;
         }
 

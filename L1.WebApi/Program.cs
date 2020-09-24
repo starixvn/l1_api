@@ -22,7 +22,7 @@ namespace L1.WebApi
             return WebHost.CreateDefaultBuilder(args)
                 .UseSentry()
                 .UseStartup<Startup>()
-                .UseUrls($"http://localhost:{configuration["AppSettings:HostingPort"]}");
+                .UseUrls($"http://0.0.0.0:{configuration["AppSettings:HostingPort"]}");
         }
     }
 }

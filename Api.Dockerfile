@@ -5,7 +5,6 @@ ARG DEPLOY_ENV=DEV
 RUN echo $DEPLOY_ENV
 
 COPY ./L1 ./L1
-COPY ./L1.WebApi ./L1.WebApi
 COPY ./L1.WebApi/L1.WebApi.csproj ./L1.WebApi/L1.WebApi.csproj
 
 WORKDIR /src/L1.WebApi

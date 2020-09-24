@@ -5,7 +5,6 @@ ARG DEPLOY_ENV=DEV
 RUN echo $DEPLOY_ENV
 
 COPY ./L1 ./L1
-COPY ./L1.IdentityServerApi ./L1.IdentityServerApi
 COPY ./L1.IdentityServerApi/L1.IdentityServerApi.csproj ./L1.IdentityServerApi/L1.IdentityServerApi.csproj
 
 WORKDIR /src/L1.IdentityServerApi

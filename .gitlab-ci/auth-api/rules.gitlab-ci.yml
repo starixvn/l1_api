@@ -1,26 +1,26 @@
 .if-deploy-all: &if-deploy-all
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-\d{8}-\d+.*$/'
 
 .if-deploy-local: &if-deploy-local
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-local-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-local-\d{8}-\d+.*$/'
 
 .if-deploy-sit: &if-deploy-sit
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-sit-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-sit-\d{8}-\d+.*$/'
 
 .if-deploy-uat: &if-deploy-uat
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-uat-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-uat-\d{8}-\d+.*$/'
 
 .if-deploy-all-auth: &if-deploy-all-auth
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-auth-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-auth-\d{8}-\d+.*$/'
 
 .if-deploy-auth-local: &if-deploy-auth-local
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-local-auth-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-local-auth-\d{8}-\d+.*$/'
 
 .if-deploy-auth-sit: &if-deploy-auth-sit
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-sit-auth-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-sit-auth-\d{8}-\d+.*$/'
 
 .if-deploy-auth-uat: &if-deploy-auth-uat
-  if: '$CI_COMMIT_TAG =~ /^l1-deploy-uat-auth-\d{8}-\d+.*$/'
+  if: '$CI_COMMIT_TAG =~ /^l2-deploy-uat-auth-\d{8}-\d+.*$/'
 
 .deploy-auth:local:rules:
   rules:

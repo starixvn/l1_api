@@ -3,7 +3,7 @@ services:
   - docker:19.03.12-dind
 
 variables:
-  PROJECT_NAME: l1-api
+  PROJECT_NAME: l2-api
 
 stages:
   - test
@@ -14,7 +14,7 @@ stages:
 include:
   - project: 'lumi-ops/ci-scripts'
     ref: master
-    file: 'rules/l1-rules.gitlab-ci.yml'
+    file: 'rules/l2-rules.gitlab-ci.yml'
   - project: 'lumi-ops/ci-scripts'
     ref: master
     file: 'sonarqube/sonarqube-dotnet.gitlab-ci.yml'

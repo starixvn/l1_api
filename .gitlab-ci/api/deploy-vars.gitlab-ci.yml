@@ -1,8 +1,8 @@
 .deploy_vars_api:
   variables:
-    WORKING_PATH: /var/www/l1/api/
-    DOCKER_SERVICE_NAME: l1-api
-    DOCKER_IMAGE_PATH: l1/docker-registry/api
+    WORKING_PATH: /var/www/l2/api/
+    DOCKER_SERVICE_NAME: l2-api
+    DOCKER_IMAGE_PATH: l2/docker-registry/api
     DOCKER_FILE_PATH: ./
     DOCKER_FILE_NAME: Api.Dockerfile
     DOCKER_NETWORK_NAME: api

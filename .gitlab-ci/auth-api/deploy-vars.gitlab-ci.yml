@@ -1,0 +1,8 @@
+.deploy_vars_auth_api:
+  variables:
+    WORKING_PATH: /var/www/l1/auth-api/
+    DOCKER_SERVICE_NAME: l1-auth-api
+    DOCKER_IMAGE_PATH: l1/docker-registry/auth-api
+    DOCKER_FILE_PATH: ./
+    DOCKER_FILE_NAME: AuthApi.Dockerfile
+    DOCKER_NETWORK_NAME: api

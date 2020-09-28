@@ -17,5 +17,7 @@ namespace L1.WebApi.Models
         public string Ip { get; set; }
 
         public DateTimeOffset? RoundEndTime { get; set; }
+
+        public bool FreeBet { get; set; }
     }
 }

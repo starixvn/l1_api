@@ -1,28 +1,34 @@
-image: mcr.microsoft.com/dotnet/core/sdk:3.1
+image: docker:19.03.12
+services:
+  - docker:19.03.12-dind
+
+variables:
+  PROJECT_NAME: l1-api
 
 stages:
+  - test
   - build
+  - post-build
   - deploy
 
-before_script:
-  - echo $CURRENT_TAG
-  - if echo "$CI_COMMIT_TAG" | grep -q "$CURRENT_TAG";
-    then
-      echo "Continue deploying";
-    elif [ "$CI_COMMIT_BRANCH" == "master" ]; then
-      echo "Continue deploying";
-    else
-      echo "This job has tag is not used for current repository";
-      exit 1;
-    fi
-  - eval $(ssh-agent -s)
-  - echo "$SSH_KEY" | ssh-add -
-  - mkdir -p ~/.ssh
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-  - git config --global user.email "luminet.minigame.app@gmail.com"
-  - git config --global user.name "Luminet"
-
 include:
-  - .gitlab-ci-web-api.yml
-  - .gitlab-ci-identity-api.yml
+  - project: 'lumi-ops/ci-scripts'
+    ref: master
+    file: 'rules/l1-rules.gitlab-ci.yml'
+  - project: 'lumi-ops/ci-scripts'
+    ref: master
+    file: 'sonarqube/sonarqube-dotnet.gitlab-ci.yml'
+  - project: 'lumi-ops/ci-scripts'
+    ref: master
+    file: 'docker/before-script-docker.gitlab-ci.yml'
+  - project: 'lumi-ops/ci-scripts'
+    ref: master
+    file: 'docker/build-docker-image-dotnet.gitlab-ci.yml'
+  - project: 'lumi-ops/ci-scripts'
+    ref: master
+    file: 'docker/post-build-docker-image.gitlab-ci.yml'
+  - project: 'lumi-ops/ci-scripts'
+    ref: master
+    file: 'docker/deploy-docker-cocos.gitlab-ci.yml'
+  - .gitlab-ci/api/api.gitlab-ci.yml
+  - .gitlab-ci/auth-api/auth-api.gitlab-ci.yml

@@ -34,13 +34,13 @@
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>
         </None>
-        <None Include="appsettings.PRO.json">
+        <None Include="appsettings.PROD.json">
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <Content Remove="appsettings.PRO.json" />
+        <Content Remove="appsettings.PROD.json" />
         <Content Remove="appsettings.UAT.json" />
         <Content Remove="appsettings.LOCAL.json" />
         <Content Remove="appsettings.SIT.json" />
@@ -52,10 +52,5 @@
         <Content Update="appsettings.json">
             <TransformOnBuild>true</TransformOnBuild>
         </Content>
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="gitlab-ci-after-script-SIT.sh">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 </Project>

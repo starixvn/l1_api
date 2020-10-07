@@ -39,6 +39,9 @@ namespace L1.IdentityServerApi
             .AddDeveloperSigningCredential();
 
             IdentityModelEventSource.ShowPII = true;
+
+            services.AddControllers();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +54,12 @@ namespace L1.IdentityServerApi
 
             app.ConfigureExceptionHandler();
             app.UseIdentityServer();
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

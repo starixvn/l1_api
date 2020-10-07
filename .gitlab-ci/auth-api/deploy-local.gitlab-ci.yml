@@ -18,14 +18,18 @@ post_build_auth_api_local:
 deploy_auth_api_local:
   extends:
     - .deploy_vars_auth_api
-    - .base_deploy_local
-    - .deploy-auth:local:rules
-  needs: ['post_build_auth_api_local']
+    - .base_deploy_swarm_service
+    - .deploy-api:local:rules
+  needs: ['post_build_api_local']
   variables:
     SERVER_IP: $LOCAL_IP
     SERVER_USER: $LOCAL_USER
     SERVER_PORT: $LOCAL_SSH_PORT
-    DOCKER_PUBLIC_PORT: 7771
-    DOCKER_PRIVATE_PORT: 7771
+    SWARM_NODES: $LOCAL_SWARM_CLUSTER
+    SWARM_REPLICAS: 1
+    NODE_LABEL: L1
+    DOCKER_PUBLIC_PORT: 8101
+    DOCKER_PRIVATE_PORT: 8101
+    DOCKER_NETWORK_NAME: lumi-network
   environment:
     name: LOCAL

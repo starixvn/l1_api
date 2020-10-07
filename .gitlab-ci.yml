@@ -30,5 +30,8 @@ include:
   - project: 'lumi-ops/ci-scripts'
     ref: master
     file: 'docker/deploy-docker-cocos.gitlab-ci.yml'
+  - project: "lumi-ops/ci-scripts"
+    ref: master
+    file: "docker/deploy-swarm-service.gitlab-ci.yml"
   - .gitlab-ci/api/api.gitlab-ci.yml
   - .gitlab-ci/auth-api/auth-api.gitlab-ci.yml

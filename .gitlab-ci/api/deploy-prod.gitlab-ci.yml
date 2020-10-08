@@ -22,7 +22,7 @@ deploy_api_prod:
     - .deploy:prod:rules
   needs: ['post_build_api_prod']
   variables:
-    SERVER_IP: $PROD_IP
+    SERVER_IP: $PROD_API_IP
     SERVER_USER: $PROD_USER
     SERVER_PORT: $PROD_SSH_PORT
     DOCKER_PUBLIC_PORT: 8500

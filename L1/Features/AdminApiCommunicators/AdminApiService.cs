@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.DailySummary;
+using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using L1.Shared.Constants;
 using Newtonsoft.Json;
@@ -16,6 +17,8 @@ namespace L1.Features.AdminApiCommunicators
         Task UnderMaintenance(MaintenanceRequest request);
 
         Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request);
+
+        Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request);
 
         Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
     }
@@ -92,5 +95,8 @@ namespace L1.Features.AdminApiCommunicators
                   ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}"
               }
           };
+
+        public Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
+        => Post<RetrieveEndGameInfoResult>(adminApiEndPoints.RetrieveEndGameInfo, request);
     }
 }

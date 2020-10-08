@@ -1,0 +1,31 @@
+build_image_auth_api_prod:
+  extends:
+    - .deploy_vars_auth_api
+    - .build_image
+    - .deploy:prod-auto:rules
+  environment:
+    name: PROD
+
+post_build_auth_api_prod:
+  extends:
+    - .deploy_vars_auth_api
+    - .post_build
+    - .deploy:prod-auto:rules
+  needs: ['build_image_auth_api_prod']
+  environment:
+    name: PROD
+
+deploy_auth_api_prod:
+  extends:
+    - .deploy_vars_auth_api
+    - .base_deploy_kbt
+    - .deploy:prod:rules
+  needs: ['post_build_auth_api_prod']
+  variables:
+    SERVER_IP: $PROD_IP
+    SERVER_USER: $PROD_USER
+    SERVER_PORT: $PROD_SSH_PORT
+    DOCKER_PUBLIC_PORT: 8513
+    DOCKER_PRIVATE_PORT: 8513
+  environment:
+    name: PROD

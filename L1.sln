@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{752CF051
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L1.IdentityServerApi", "L1.IdentityServerApi\L1.IdentityServerApi.csproj", "{07538971-516B-42CF-B1EA-F9DB95CD447A}"
 EndProject
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "L1.Client.NodeJS", "L1.Client.NodeJS\L1.Client.NodeJS.njsproj", "{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +37,6 @@ Global
 		{07538971-516B-42CF-B1EA-F9DB95CD447A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07538971-516B-42CF-B1EA-F9DB95CD447A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07538971-516B-42CF-B1EA-F9DB95CD447A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,7 +46,6 @@ Global
 		{C71C6C2A-8728-4B6B-9631-EC204AFE0D57} = {752CF051-175E-49CB-94AE-AB029533D17A}
 		{D4433A9A-6E9E-410C-B789-44C54B5E677C} = {F3954B1F-1697-49A2-9078-BF2421D3F94B}
 		{07538971-516B-42CF-B1EA-F9DB95CD447A} = {F3954B1F-1697-49A2-9078-BF2421D3F94B}
-		{3BE56A2B-5A47-45A2-91C9-A6BC278FBDB7} = {F3954B1F-1697-49A2-9078-BF2421D3F94B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {518D8074-0A9E-4A68-9805-72577565CDA7}

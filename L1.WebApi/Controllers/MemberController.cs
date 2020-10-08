@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
-using L1.Features.GameServerCommunicators;
-using L1.Features.GameServerCommunicators.RetrieveEndGameInfo;
+using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
@@ -20,10 +19,17 @@ namespace L1.WebApi.Controllers
     public class MemberController : ControllerBase
     {
         private readonly IOWCustomerService oWCustomerService;
+        private readonly IAdminApiService adminApiService;
+        private readonly ISiteDataService siteDataService;
 
-        public MemberController(IOWCustomerService oWCustomerService)
+        public MemberController(
+            IOWCustomerService oWCustomerService,
+            IAdminApiService adminApiService,
+            ISiteDataService siteDataService)
         {
             this.oWCustomerService = oWCustomerService;
+            this.adminApiService = adminApiService;
+            this.siteDataService = siteDataService;
         }
 
         [HttpPost]
@@ -59,7 +65,8 @@ namespace L1.WebApi.Controllers
                 model.Amount,
                 model.Currency,
                 model.RoundEndTime,
-                model.Ip);
+                model.Ip,
+                model.FreeBet);
             var response = await oWCustomerService.PlaceBet(placeBetCall);
 
             return Ok(response);
@@ -70,7 +77,16 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
             var response = await oWCustomerService.EndGame(
-                new EndGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.TotalAmount, model.TotalWin, model.ValidBetAmount, model.EndTime));
+                new EndGameCall(
+                    model.ObCustId,
+                    model.SiteId,
+                    model.GameRoundId,
+                    model.GameTypeId,
+                    model.TotalAmount,
+                    model.TotalWin,
+                    model.ValidBetAmount,
+                    model.EndTime,
+                    model.FreeBet));
 
             return Ok(response);
         }
@@ -80,7 +96,7 @@ namespace L1.WebApi.Controllers
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
             var response = await oWCustomerService.VoidGame(
-                new VoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
+                new VoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
 
             return Ok(response);
         }
@@ -88,11 +104,18 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model, [FromServices] IGameMemberService gameMemberService, [FromServices] ISiteDataService siteDataService)
+        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
-                var response = await gameMemberService.RetrieveEndGameInfoAsync(new RetrieveEndGameInfoRequest(model.GameRoundId, model.GameTypeId, model.ObCustId, model.SiteId));
+                var response = await adminApiService.RetrieveEndGameInfoAsync(
+                    new RetrieveEndGameInfoRequest(
+                        model.GameRoundId,
+                        model.GameTypeId,
+                        model.ObCustId,
+                        model.SiteId,
+                        model.FreeBet));
+
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);
@@ -104,7 +127,7 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model, [FromServices] IAdminApiService adminApiService, [FromServices] ISiteDataService siteDataService)
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {

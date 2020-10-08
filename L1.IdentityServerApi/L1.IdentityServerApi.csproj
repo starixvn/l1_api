@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <CodeAnalysisRuleSet>..\.sonarlint\l1-apicsharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="IdentityServer4" Version="3.1.2" />
@@ -33,25 +34,23 @@
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>
         </None>
-        <None Include="appsettings.PRO.json">
+        <None Include="appsettings.PROD.json">
             <IsTransformFile>true</IsTransformFile>
             <DependentUpon>appsettings.json</DependentUpon>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <Content Remove="appsettings.PRO.json" />
+        <Content Remove="appsettings.PROD.json" />
         <Content Remove="appsettings.UAT.json" />
         <Content Remove="appsettings.LOCAL.json" />
         <Content Remove="appsettings.SIT.json" />
     </ItemGroup>
     <ItemGroup>
+      <AdditionalFiles Include="..\.sonarlint\l1-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+    </ItemGroup>
+    <ItemGroup>
         <Content Update="appsettings.json">
             <TransformOnBuild>true</TransformOnBuild>
         </Content>
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="gitlab-ci-after-script-SIT.sh">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 </Project>

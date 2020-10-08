@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <CodeAnalysisRuleSet>..\.sonarlint\l1-apicsharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
+    <ItemGroup>
+      <AdditionalFiles Include="..\.sonarlint\l1-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+    </ItemGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>

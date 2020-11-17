@@ -1,17 +1,9 @@
-build_image_auth_api_sit:
-  extends:
-    - .deploy_vars_auth_api
-    - .build_image
-    - .deploy-auth:sit:rules
-  environment:
-    name: SIT
-
 post_build_auth_api_sit:
   extends:
     - .deploy_vars_auth_api
     - .post_build
     - .deploy-auth:sit:rules
-  needs: ['build_image_auth_api_sit']
+  needs: ['build_image_auth_api']
   environment:
     name: SIT
 

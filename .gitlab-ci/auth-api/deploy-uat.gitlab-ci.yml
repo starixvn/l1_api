@@ -1,17 +1,9 @@
-build_image_auth_api_uat:
-  extends:
-    - .deploy_vars_auth_api
-    - .build_image
-    - .deploy-auth:uat:rules
-  environment:
-    name: UAT
-
 post_build_auth_api_uat:
   extends:
     - .deploy_vars_auth_api
     - .post_build
     - .deploy-auth:uat:rules
-  needs: ['build_image_auth_api_uat']
+  needs: ['build_image_auth_api']
   environment:
     name: UAT
 

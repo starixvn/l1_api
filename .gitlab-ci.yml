@@ -1,7 +1,3 @@
-image: docker:19.03.12
-services:
-  - docker:19.03.12-dind
-
 variables:
   PROJECT_NAME: l2-api
 

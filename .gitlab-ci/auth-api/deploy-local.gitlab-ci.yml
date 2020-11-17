@@ -1,17 +1,9 @@
-build_image_auth_api_local:
-  extends:
-    - .deploy_vars_auth_api
-    - .build_image
-    - .deploy-auth:local:rules
-  environment:
-    name: LOCAL
-
 post_build_auth_api_local:
   extends:
     - .deploy_vars_auth_api
     - .post_build
     - .deploy-auth:local:rules
-  needs: ['build_image_auth_api_local']
+  needs: ['build_image_auth_api']
   environment:
     name: LOCAL
 

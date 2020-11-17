@@ -1,17 +1,9 @@
-build_image_api_sit:
-  extends:
-    - .deploy_vars_api
-    - .build_image
-    - .deploy-api:sit:rules
-  environment:
-    name: SIT
-
 post_build_api_sit:
   extends:
     - .deploy_vars_api
     - .post_build
     - .deploy-api:sit:rules
-  needs: ['build_image_api_sit']
+  needs: ['build_image_api']
   environment:
     name: SIT
 

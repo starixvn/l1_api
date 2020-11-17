@@ -1,0 +1,5 @@
+build_image_auth_api:
+    extends:
+      - .deploy_vars_auth_api
+      - .build_image_no_env
+      - .build:image-auth:rules

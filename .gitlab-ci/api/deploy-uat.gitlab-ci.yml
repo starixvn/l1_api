@@ -1,17 +1,9 @@
-build_image_api_uat:
-  extends:
-    - .deploy_vars_api
-    - .build_image
-    - .deploy-api:uat:rules
-  environment:
-    name: UAT
-
 post_build_api_uat:
   extends:
     - .deploy_vars_api
     - .post_build
     - .deploy-api:uat:rules
-  needs: ['build_image_api_uat']
+  needs: ['build_image_api']
   environment:
     name: UAT
 

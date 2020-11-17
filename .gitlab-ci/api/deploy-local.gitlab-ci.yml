@@ -1,17 +1,9 @@
-build_image_api_local:
-  extends:
-    - .deploy_vars_api
-    - .build_image
-    - .deploy-api:local:rules
-  environment:
-    name: LOCAL
-
 post_build_api_local:
   extends:
     - .deploy_vars_api
     - .post_build
     - .deploy-api:local:rules
-  needs: ['build_image_api_local']
+  needs: ['build_image_api']
   environment:
     name: LOCAL
 

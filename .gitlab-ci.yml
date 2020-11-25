@@ -1,33 +1,4 @@
-variables:
-  PROJECT_NAME: l2-api
-
-stages:
-  - test
-  - build
-  - post-build
-  - deploy
-
 include:
-  - project: 'lumi-ops/ci-scripts'
-    ref: master
-    file: 'rules/l2-rules.gitlab-ci.yml'
-  - project: 'lumi-ops/ci-scripts'
-    ref: master
-    file: 'sonarqube/sonarqube-dotnet.gitlab-ci.yml'
-  - project: 'lumi-ops/ci-scripts'
-    ref: master
-    file: 'docker/before-script-docker.gitlab-ci.yml'
-  - project: 'lumi-ops/ci-scripts'
-    ref: master
-    file: 'docker/build-docker-image-dotnet.gitlab-ci.yml'
-  - project: 'lumi-ops/ci-scripts'
-    ref: master
-    file: 'docker/post-build-docker-image.gitlab-ci.yml'
-  - project: 'lumi-ops/ci-scripts'
-    ref: master
-    file: 'docker/deploy-docker-cocos.gitlab-ci.yml'
-  - project: "lumi-ops/ci-scripts"
-    ref: master
-    file: "docker/deploy-swarm-service.gitlab-ci.yml"
-  - .gitlab-ci/api/api.gitlab-ci.yml
-  - .gitlab-ci/auth-api/auth-api.gitlab-ci.yml
+  - project: 'ci/luminet/api-ci'
+    ref: L2
+    file: 'gitlab-ci.yml'

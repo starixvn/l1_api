@@ -1,8 +1,0 @@
-include:
-  - .gitlab-ci/auth-api/build.gitlab-ci.yml
-  - .gitlab-ci/auth-api/deploy-vars.gitlab-ci.yml
-  - .gitlab-ci/auth-api/rules.gitlab-ci.yml
-  - .gitlab-ci/auth-api/deploy-local.gitlab-ci.yml
-  - .gitlab-ci/auth-api/deploy-sit.gitlab-ci.yml
-  - .gitlab-ci/auth-api/deploy-uat.gitlab-ci.yml
-  - .gitlab-ci/auth-api/deploy-prod.gitlab-ci.yml

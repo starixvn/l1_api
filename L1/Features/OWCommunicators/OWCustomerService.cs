@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
@@ -9,7 +8,8 @@ using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using Polly;
-using Polly.Retry;
+using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
 {
@@ -96,6 +96,10 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogHitJackpotAsync(response);
+            }
+            else
+            {
+                SentrySdk.CaptureMessage($"Call HitJackpot failed for CustId {call.ObCustId}", SentryLevel.Fatal);
             }
 
             return response;

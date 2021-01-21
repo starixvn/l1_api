@@ -68,6 +68,7 @@ namespace L1.WebApi.Controllers
                 model.RoundEndTime,
                 model.Ip,
                 model.FreeBet,
+                model.FreeSpin,
                 model.ContributionRate,
                 model.ContributionAmount);
             var response = await oWCustomerService.PlaceBet(placeBetCall);

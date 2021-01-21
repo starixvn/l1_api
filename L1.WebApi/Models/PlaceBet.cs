@@ -18,6 +18,8 @@ namespace L1.WebApi.Models
 
         public DateTimeOffset? RoundEndTime { get; set; }
 
+        public bool FreeSpin { get; set; }
+
         public bool FreeBet { get; set; }
 
         public float ContributionRate { get; set; }

@@ -17,6 +17,7 @@ namespace L1.Features.OWCommunicators.PlaceBet
             DateTimeOffset? roundEndTime,
             string ip,
             bool freeBet,
+            bool freeSpin,
             float contributionRate,
             decimal contributionAmount) : base(obCustId, siteId)
         {
@@ -28,6 +29,7 @@ namespace L1.Features.OWCommunicators.PlaceBet
             RoundEndTime = roundEndTime;
             Ip = ip;
             FreeBet = freeBet;
+            FreeSpin = freeSpin;
             ContributionRate = contributionRate;
             ContributionAmount = contributionAmount;
         }
@@ -48,6 +50,8 @@ namespace L1.Features.OWCommunicators.PlaceBet
         public string Ip { get; set; }
 
         public bool FreeBet { get; set; }
+
+        public bool FreeSpin { get; set; }
 
         public float ContributionRate { get; set; }
 

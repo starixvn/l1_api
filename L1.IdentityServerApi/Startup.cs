@@ -26,6 +26,7 @@ namespace L1.IdentityServerApi
             var appSettings = services.AddSettings(Configuration);
 
             services.AddServices();
+            services.AddHealthChecks();
 
             var builder = services.AddIdentityServer(options =>
             {
@@ -58,6 +59,7 @@ namespace L1.IdentityServerApi
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }

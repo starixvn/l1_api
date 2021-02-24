@@ -24,8 +24,6 @@ namespace L1.Features.OWCommunicators
         Task<OWResponse<EndGameResult>> EndGame(EndGameCall call);
 
         Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call);
-
-        Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
     }
 
     public class OWCustomerService : IOWCustomerService
@@ -78,28 +76,6 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogVoidGameAsync(response);
-            }
-
-            return response;
-        }
-
-        public async Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call)
-        {
-            const double retryDelayInSeconds = 30;
-            const int numberOfRetries = 6;
-
-            var response = await Policy
-                .HandleResult<OWResponse<HitJackpotResult>>(response => response.Result.IsFailed())
-                .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
-                .ExecuteAsync(() => oWService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
-
-            if (response.Result.IsSuccessful())
-            {
-                await logService.LogHitJackpotAsync(response);
-            }
-            else
-            {
-                SentrySdk.CaptureMessage($"Call HitJackpot failed for CustId {call.ObCustId}", SentryLevel.Fatal);
             }
 
             return response;

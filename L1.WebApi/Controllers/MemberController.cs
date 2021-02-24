@@ -143,21 +143,5 @@ namespace L1.WebApi.Controllers
 
             return Unauthorized();
         }
-
-        [HttpPost]
-        [Route("[action]")]
-        [AllowAnonymous]
-        public async Task<IActionResult> HitJackpot([FromBody] HitJackpot model)
-        {
-            var hitJackpotCall = new HitJackpotCall(
-                model.ObCustId,
-                model.SiteId,
-                model.GameRoundId,
-                model.GameTypeId,
-                model.WinningAmount);
-            var response = await oWCustomerService.HitJackpot(hitJackpotCall);
-
-            return Ok(response);
-        }
     }
 }

@@ -6,7 +6,6 @@ using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
-using L1.Features.OWCommunicators.HitJackpot;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.Features.Sites;

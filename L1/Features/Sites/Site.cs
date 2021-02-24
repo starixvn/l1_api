@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace L1.Features.Sites
@@ -18,5 +19,7 @@ namespace L1.Features.Sites
         public string ClientSecret { get; set; }
 
         public string GameClientUrl { get; set; }
+
+        public IEnumerable<string> ValidCurrencies { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace L1.IdentityServerApi.Extensions
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
 
             var client = new MongoClient(connectionString);
+
             builder.Services.AddSingleton<IMongoClient>(client);
             builder.Services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
             builder.Services.AddSingleton<ISiteDataService, SiteDataService>();

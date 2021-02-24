@@ -12,7 +12,7 @@ namespace L1.WebApi.Models
 
         public decimal TotalWin { get; set; }
 
-        public int ValidBetAmount { get; set; }
+        public decimal ValidBetAmount { get; set; }
 
         public DateTimeOffset EndTime { get; set; }
 

@@ -25,7 +25,7 @@ namespace L1.WebApi.Controllers
         [Route("index")]
         public IActionResult Index(SignIn model)
         {
-            if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
+            if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret, model.Currency))
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 

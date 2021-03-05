@@ -146,7 +146,6 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        [AllowAnonymous]
         public async Task<IActionResult> HitJackpot([FromBody] HitJackpot model)
         {
             var hitJackpotCall = new HitJackpotCall(

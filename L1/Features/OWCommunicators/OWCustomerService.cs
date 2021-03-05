@@ -64,7 +64,16 @@ namespace L1.Features.OWCommunicators
             return response;
         }
 
-        public Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
-            => oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
+        public async Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
+        {
+            var response = await oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogVoidGameAsync(response);
+            }
+
+            return response;
+        }
     }
 }

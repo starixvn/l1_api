@@ -26,5 +26,7 @@ namespace L1.Features.OWCommunicators
         public string VoidGame { get; set; }
 
         public string CheckMaintenance { get; set; }
+
+        public string GetBetLimit { get; set; }
     }
 }

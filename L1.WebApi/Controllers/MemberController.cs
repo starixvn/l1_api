@@ -6,6 +6,7 @@ using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
+using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.Features.Sites;
@@ -141,6 +142,15 @@ namespace L1.WebApi.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> GetBetLimit([FromBody] GetBetLimit model)
+        {
+            var response = await oWCustomerService.GetBetLimit(new GetBetLimitCall(model.ObCustId, model.SiteId));
+
+            return Ok(response);
         }
     }
 }

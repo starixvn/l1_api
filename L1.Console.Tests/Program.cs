@@ -26,7 +26,6 @@ namespace L1.Tests
                 Address = disco.TokenEndpoint,
                 ClientId = "client",
                 ClientSecret = "secret",
-
                 Scope = "api1"
             });
 

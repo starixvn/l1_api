@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -35,7 +36,7 @@ namespace L1.Features.Sites
         public Site GetBySiteId(string id) =>
             siteCollection.Find(site => site.SiteId == id).FirstOrDefault();
 
-        public bool VerifyClient(string clientId, string clientSecret) =>
-            siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
+        public bool VerifyClient(string clientId, string clientSecret)
+            => siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
     }
 }

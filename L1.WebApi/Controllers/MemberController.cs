@@ -66,7 +66,10 @@ namespace L1.WebApi.Controllers
                 model.Currency,
                 model.RoundEndTime,
                 model.Ip,
-                model.FreeBet);
+                model.FreeBet,
+                model.FreeSpin,
+                model.ContributionRate,
+                model.ContributionAmount);
             var response = await oWCustomerService.PlaceBet(placeBetCall);
 
             return Ok(response);

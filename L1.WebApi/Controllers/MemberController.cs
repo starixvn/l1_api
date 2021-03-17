@@ -6,6 +6,7 @@ using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
+using L1.Features.OWCommunicators.HitJackpot;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.Features.Sites;
@@ -66,7 +67,10 @@ namespace L1.WebApi.Controllers
                 model.Currency,
                 model.RoundEndTime,
                 model.Ip,
-                model.FreeBet);
+                model.FreeBet,
+                model.FreeSpin,
+                model.ContributionRate,
+                model.ContributionAmount);
             var response = await oWCustomerService.PlaceBet(placeBetCall);
 
             return Ok(response);
@@ -138,6 +142,21 @@ namespace L1.WebApi.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> HitJackpot([FromBody] HitJackpot model)
+        {
+            var hitJackpotCall = new HitJackpotCall(
+                model.ObCustId,
+                model.SiteId,
+                model.GameRoundId,
+                model.GameTypeId,
+                model.WinningAmount);
+            var response = await oWCustomerService.HitJackpot(hitJackpotCall);
+
+            return Ok(response);
         }
     }
 }

@@ -12,8 +12,8 @@ namespace L1.Features.OWCommunicators.EndGame
             int gameRoundId, 
             byte gameTypeId, 
             decimal totalAmount, 
-            decimal totalWin, 
-            int validBetAmount, 
+            decimal totalWin,
+            decimal validBetAmount, 
             DateTimeOffset endTime,
             bool freeBet) : base(obCustId, siteId)
         {
@@ -34,7 +34,7 @@ namespace L1.Features.OWCommunicators.EndGame
 
         public decimal TotalWin { get; set; }
 
-        public int ValidBetAmount { get; set; }
+        public decimal ValidBetAmount { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? EndTime { get; set; }

@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
+using L1.Features.OWCommunicators.HitJackpot;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
+using Polly;
+using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
 {
@@ -19,6 +24,8 @@ namespace L1.Features.OWCommunicators
         Task<OWResponse<EndGameResult>> EndGame(EndGameCall call);
 
         Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call);
+
+        Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
     }
 
     public class OWCustomerService : IOWCustomerService
@@ -64,7 +71,38 @@ namespace L1.Features.OWCommunicators
             return response;
         }
 
-        public Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
-            => oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
+        public async Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
+        {
+            var response = await oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogVoidGameAsync(response);
+            }
+
+            return response;
+        }
+
+        public async Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call)
+        {
+            const double retryDelayInSeconds = 30;
+            const int numberOfRetries = 6;
+
+            var response = await Policy
+                .HandleResult<OWResponse<HitJackpotResult>>(response => response.Result.IsFailed())
+                .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
+                .ExecuteAsync(() => oWService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogHitJackpotAsync(response);
+            }
+            else
+            {
+                SentrySdk.CaptureMessage($"Call HitJackpot failed for CustId {call.ObCustId}", SentryLevel.Fatal);
+            }
+
+            return response;
+        }
     }
 }

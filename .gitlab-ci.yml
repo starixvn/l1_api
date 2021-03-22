@@ -2,4 +2,3 @@ include:
   - project: 'ci/repos-ci/pentagon_l1_game_api'
     ref: master
     file: 'gitlab-ci.yml'
-    

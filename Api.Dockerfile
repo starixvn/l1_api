@@ -1,4 +1,4 @@
-FROM git3.nexdev.net:5050/lumi-ops/docker-images/dotnet/core/sdk:3.1 AS builder
+FROM registry.nexdev.net:5050/docker/dotnet/core/sdk:3.1 AS builder
 WORKDIR /src
 
 COPY ./L1 ./L1
@@ -9,13 +9,9 @@ RUN dotnet restore -v diag
 
 COPY ./L1.WebApi .
 
-ARG CACHEBUST=1 
-ARG DEPLOY_ENV=DEV
-RUN echo $DEPLOY_ENV $CACHEBUST
+RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
-RUN dotnet publish -c $DEPLOY_ENV -r linux-x64 --self-contained false -o /app 
-
-FROM git3.nexdev.net:5050/lumi-ops/docker-images/dotnet/core/aspnet:3.1 AS base
+FROM registry.nexdev.net:5050/docker/dotnet/core/aspnet:3.1-buster-slim AS base
 
 WORKDIR /app
 COPY --from=builder /app .

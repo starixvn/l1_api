@@ -4,6 +4,7 @@ using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
 using L1.Features.OWCommunicators.HitJackpot;
+using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
@@ -25,6 +26,7 @@ namespace L1.Features.OWCommunicators
 
         Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call);
 
+        Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call);
         Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
     }
 
@@ -101,6 +103,13 @@ namespace L1.Features.OWCommunicators
             {
                 SentrySdk.CaptureMessage($"Call HitJackpot failed for CustId {call.ObCustId}", SentryLevel.Fatal);
             }
+
+            return response;
+        }
+
+        public async Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
+        {
+            var response = await oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
 
             return response;
         }

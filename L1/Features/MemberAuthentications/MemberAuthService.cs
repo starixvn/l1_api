@@ -107,7 +107,7 @@ namespace L1.Features.MemberAuthentications
         {
             var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
-            return memberAuth.IsMobi ? site?.GameClientUrl : site?.GameMobiClientUrl;
+            return memberAuth.IsMobi ? site?.GameMobiClientUrl : site?.GameClientUrl;
         }
     }
 }

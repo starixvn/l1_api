@@ -29,6 +29,7 @@ namespace L1.WebApi.Controllers
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
+
                 var redirectUrl = memberAuthService.SignIn(new MemberAuth
                 {
                     Domain = model.Domain,

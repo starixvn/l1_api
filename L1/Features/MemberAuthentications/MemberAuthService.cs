@@ -35,10 +35,6 @@ namespace L1.Features.MemberAuthentications
         {
             var gameClientUrl = GetGameClientUrl(memberAuth);
 
-            SentrySdk.CaptureMessage(
-                $"{DateTime.UtcNow}. IsMobi {memberAuth.IsMobi}. Client Url: {gameClientUrl}.",
-                SentryLevel.Warning);
-
             if (string.IsNullOrWhiteSpace(gameClientUrl))
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
@@ -111,7 +107,7 @@ namespace L1.Features.MemberAuthentications
         {
             var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
-            return site?.GameClientUrl;
+            return memberAuth.IsMobi ? site?.GameClientUrl : site?.GameMobiClientUrl;
         }
     }
 }

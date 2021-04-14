@@ -20,6 +20,6 @@ namespace L1.Features.Sites
 
         public string GameClientUrl { get; set; }
 
-        public bool IsMobi { get; set; }
+        public string GameMobiClientUrl { get; set; }
     }
 }

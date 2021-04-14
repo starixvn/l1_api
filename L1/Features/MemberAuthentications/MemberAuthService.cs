@@ -35,6 +35,10 @@ namespace L1.Features.MemberAuthentications
         {
             var gameClientUrl = GetGameClientUrl(memberAuth);
 
+            SentrySdk.CaptureMessage(
+                $"{DateTime.UtcNow}. IsMobi {memberAuth.IsMobi}. Client Url: {gameClientUrl}.",
+                SentryLevel.Warning);
+
             if (string.IsNullOrWhiteSpace(gameClientUrl))
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);

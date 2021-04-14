@@ -40,7 +40,8 @@ namespace L1.WebApi.Controllers
                     Seq = model.Seq,
                     Language = model.Language,
                     SiteId = model.SiteId,
-                    ClientId = model.Auth?.ClientId
+                    ClientId = model.Auth?.ClientId,
+                    IsMobi = model.IsMobi
                 }, model.GameTypeId).RedirectUri.ToString();
 
                 return Ok(new SignInResult { RedirectUrl = redirectUrl });

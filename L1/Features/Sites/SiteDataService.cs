@@ -6,7 +6,7 @@ namespace L1.Features.Sites
     {
         IEnumerable<Site> GetAll();
 
-        Site GetByClientId(string id);
+        Site GetByClientId(string id, bool isMobi = false);
 
         Site GetBySiteId(string id);
 
@@ -24,7 +24,7 @@ namespace L1.Features.Sites
 
         public IEnumerable<Site> GetAll() => siteDataAccess.GetAll();
 
-        public Site GetByClientId(string id) => siteDataAccess.GetByClientId(id);
+        public Site GetByClientId(string id, bool isMobi = false) => siteDataAccess.GetByClientId(id, isMobi);
 
         public Site GetBySiteId(string id) => siteDataAccess.GetBySiteId(id);
 

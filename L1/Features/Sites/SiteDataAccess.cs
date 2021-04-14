@@ -9,7 +9,7 @@ namespace L1.Features.Sites
     {
         IEnumerable<Site> GetAll();
 
-        Site GetByClientId(string id);
+        Site GetByClientId(string id, bool isMobi);
 
         Site GetBySiteId(string id);
 
@@ -30,8 +30,8 @@ namespace L1.Features.Sites
         public IEnumerable<Site> GetAll() =>
             siteCollection.Find(site => true).ToList();
 
-        public Site GetByClientId(string id) =>
-            siteCollection.Find(site => site.ClientId == id).FirstOrDefault();
+        public Site GetByClientId(string id, bool isMobi) =>
+            siteCollection.Find(site => site.ClientId == id && site.IsMobi == isMobi).FirstOrDefault();
 
         public Site GetBySiteId(string id) =>
             siteCollection.Find(site => site.SiteId == id).FirstOrDefault();

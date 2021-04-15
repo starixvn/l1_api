@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators.Log
 {

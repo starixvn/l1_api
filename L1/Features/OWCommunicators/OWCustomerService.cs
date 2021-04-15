@@ -6,6 +6,7 @@ using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
+using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators
 {
@@ -28,12 +29,14 @@ namespace L1.Features.OWCommunicators
     {
         private readonly IOWService oWService;
         private readonly ILogService logService;
+        private readonly IAppSettings appSettings;
         private readonly OWEndPoints endpoints;
 
-        public OWCustomerService(IOWService oWService, ILogService logService, OWEndPoints endpoints)
+        public OWCustomerService(IOWService oWService, ILogService logService, IAppSettings appSettings, OWEndPoints endpoints)
         {
             this.oWService = oWService;
             this.logService = logService;
+            this.appSettings = appSettings;
             this.endpoints = endpoints;
         }
 
@@ -50,6 +53,11 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(response);
+
+                if (call.Amount >= appSettings.HighStake)
+                {
+                    //https://bot.nexdev.net/skynex/api/messages/forwardwithtoken?token=0A40aOc7CtpzjbBSJu8KNWQRoXyjRvf9&message=abcxyz&conversationId=-1001200717520
+                }
             }
 
             return response;

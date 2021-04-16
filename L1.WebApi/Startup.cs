@@ -1,5 +1,6 @@
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
+using L1.Features.ChatbotApiCommunicators;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Shared.Middlewares;
@@ -32,6 +33,7 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddChatbotApiServices(appSettings.ChatbotApiSettings);
 
             services.AddControllers();
 

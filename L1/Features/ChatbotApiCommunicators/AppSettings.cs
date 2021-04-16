@@ -1,6 +1,6 @@
 ﻿using L1.Features.ChatbotApiCommunicators;
 
-namespace L1.Features.TelegramCommunicators
+namespace L1.Shared.Configurations
 {
     public partial interface IAppSettings
     {

@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using L1.Features.ChatbotApiCommunicators;
+using L1.Features.ChatbotApiCommunicators.ForwardMessage;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
@@ -30,13 +32,20 @@ namespace L1.Features.OWCommunicators
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly IAppSettings appSettings;
+        private readonly IChatbotApiService chatbotService;
         private readonly OWEndPoints endpoints;
 
-        public OWCustomerService(IOWService oWService, ILogService logService, IAppSettings appSettings, OWEndPoints endpoints)
+        public OWCustomerService(
+            IOWService oWService,
+            ILogService logService,
+            IAppSettings appSettings,
+            IChatbotApiService chatbotService,
+            OWEndPoints endpoints)
         {
             this.oWService = oWService;
             this.logService = logService;
             this.appSettings = appSettings;
+            this.chatbotService = chatbotService;
             this.endpoints = endpoints;
         }
 
@@ -56,7 +65,7 @@ namespace L1.Features.OWCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                    //https://bot.nexdev.net/skynex/api/messages/forwardwithtoken?token=0A40aOc7CtpzjbBSJu8KNWQRoXyjRvf9&message=abcxyz&conversationId=-1001200717520
+                    await chatbotService.ForwardMessage(new ForwardMessageRequest("-1001437835976", "high class betting..."));                    
                 }
             }
 

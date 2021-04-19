@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.ChatbotApiCommunicators;
 using L1.Features.ChatbotApiCommunicators.ForwardMessage;
+using L1.Features.ChatbotApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
@@ -62,14 +63,7 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(response);
-
-                if (call.Amount >= appSettings.HighStake)
-                {
-                    const string conversationId = "-1001437835976";
-                    const string message = "high class betting...";
-
-                    await chatbotService.ForwardMessage(new ForwardMessageRequest(conversationId, message));
-                }
+                chatbotService.NotifyHighStake(new NotifyHighStakeRequest(call.Amount, call.GameTypeId));
             }
 
             return response;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using L1.Features.ChatbotApiCommunicators.ForwardMessage;
+using L1.Features.ChatbotApiCommunicators.NotifyHighStake;
 using Sentry;
 using Sentry.Protocol;
 
@@ -10,7 +11,9 @@ namespace L1.Features.ChatbotApiCommunicators
 {
     public interface IChatbotApiService
     {
-        Task ForwardMessage(ForwardMessageRequest request);
+        void ForwardMessage(ForwardMessageRequest request);
+
+        void NotifyHighStake(NotifyHighStakeRequest request);
     }
 
     public class ChatbotApiService : IChatbotApiService
@@ -24,26 +27,40 @@ namespace L1.Features.ChatbotApiCommunicators
             this.chatbotApiSettings = chatbotApiSettings;
         }
 
-        public Task ForwardMessage(ForwardMessageRequest request)
+        public void NotifyHighStake(NotifyHighStakeRequest request)
+        {
+            if (request.Amount >= chatbotApiSettings.HighStake)
+            {
+                var conversationSetting = chatbotApiSettings.Conversations.HighStake;
+                var message = string.Format(conversationSetting.MessageTemplate, request.GameTypeId);
+
+                ForwardMessage(new ForwardMessageRequest(conversationSetting.ConversationId, message));
+            }
+        }
+
+        public void ForwardMessage(ForwardMessageRequest request)
         {
             var parameters = new Dictionary<string, string> {
                 { "conversationId", request.ConversationId },
                 { "message", request.Message }
             };
 
-            return PostAndForget(chatbotApiSettings.Endpoints.ForwardMessage, parameters);
+            PostAndForget(chatbotApiSettings.Endpoints.ForwardMessage, parameters);
         }
 
-        private async Task PostAndForget(string apiEndpoint, Dictionary<string, string> parameters)
+        private void PostAndForget(string apiEndpoint, Dictionary<string, string> parameters)
         {
-            try
+            _ = Task.Run(async () =>
             {
-                await Post(apiEndpoint, parameters);
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureMessage(ex.ToString(), SentryLevel.Error);
-            }
+                try
+                {
+                    await Post(apiEndpoint, parameters);
+                }
+                catch (Exception ex)
+                {
+                    SentrySdk.CaptureMessage(ex.ToString(), SentryLevel.Error);
+                }
+            });
         }
 
         private Task<HttpResponseMessage> Post(string apiEndpoint, Dictionary<string, string> parameters)

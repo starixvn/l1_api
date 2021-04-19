@@ -65,7 +65,10 @@ namespace L1.Features.OWCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                    await chatbotService.ForwardMessage(new ForwardMessageRequest("-1001437835976", "high class betting..."));                    
+                    const string conversationId = "-1001437835976";
+                    const string message = "high class betting...";
+
+                    await chatbotService.ForwardMessage(new ForwardMessageRequest(conversationId, message));                    
                 }
             }
 

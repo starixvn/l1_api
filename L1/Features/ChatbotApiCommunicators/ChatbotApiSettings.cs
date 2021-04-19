@@ -13,6 +13,6 @@ namespace L1.Features.ChatbotApiCommunicators
 
     public class ChatbotApiEndPoints
     {
-        public string FowardMessage { get; set; }
+        public string ForwardMessage { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace L1.Features.ChatbotApiCommunicators
                 { "message", request.Message }
             };
 
-            return PostAndForget(chatbotApiSettings.Endpoints.FowardMessage, parameters);
+            return PostAndForget(chatbotApiSettings.Endpoints.ForwardMessage, parameters);
         }
 
         private async Task PostAndForget(string apiEndpoint, Dictionary<string, string> parameters)

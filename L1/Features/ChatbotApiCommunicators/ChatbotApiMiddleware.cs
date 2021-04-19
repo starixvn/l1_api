@@ -6,7 +6,8 @@ namespace L1.Features.ChatbotApiCommunicators
     {
         public static void AddChatbotApiServices(this IServiceCollection services, ChatbotApiSettings chatbotApiSettings)
         {
-            services.AddSingleton(chatbotApiSettings.Endpoints);
+            services.AddSingleton(chatbotApiSettings);
+
             services
                 .AddHttpClient<IChatbotApiService, ChatbotApiService>(httpClient =>
                 {

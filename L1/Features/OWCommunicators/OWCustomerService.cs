@@ -68,7 +68,7 @@ namespace L1.Features.OWCommunicators
                     const string conversationId = "-1001437835976";
                     const string message = "high class betting...";
 
-                    await chatbotService.ForwardMessage(new ForwardMessageRequest(conversationId, message));                    
+                    await chatbotService.ForwardMessage(new ForwardMessageRequest(conversationId, message));
                 }
             }
 

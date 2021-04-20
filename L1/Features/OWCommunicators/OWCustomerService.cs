@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using L1.Features.ChatbotApiCommunicators;
-using L1.Features.ChatbotApiCommunicators.ForwardMessage;
-using L1.Features.ChatbotApiCommunicators.NotifyHighStake;
+using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
@@ -33,20 +32,20 @@ namespace L1.Features.OWCommunicators
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly IAppSettings appSettings;
-        private readonly IChatbotApiService chatbotService;
+        private readonly IAdminApiService adminApiSerivce;
         private readonly OWEndPoints endpoints;
 
         public OWCustomerService(
             IOWService oWService,
             ILogService logService,
             IAppSettings appSettings,
-            IChatbotApiService chatbotService,
+            IAdminApiService adminApiSerivce,
             OWEndPoints endpoints)
         {
             this.oWService = oWService;
             this.logService = logService;
             this.appSettings = appSettings;
-            this.chatbotService = chatbotService;
+            this.adminApiSerivce = adminApiSerivce;
             this.endpoints = endpoints;
         }
 
@@ -63,7 +62,11 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(response);
-                chatbotService.NotifyHighStake(new NotifyHighStakeRequest(call.Amount, call.GameTypeId));
+
+                if (call.Amount >= appSettings.HighStake)
+                {
+                    _ = Task.Run(() => adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(call.ObCustId, call.GameTypeId, call.Amount)));
+                }
             }
 
             return response;

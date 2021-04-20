@@ -12,6 +12,8 @@ namespace L1.Features.OWCommunicators.Log
         Task LogEndGameAsync<T>(OWResponse<T> response) where T : IOWResult;
 
         Task LogVoidGameAsync<T>(OWResponse<T> response) where T : IOWResult;
+
+        Task LogBalanceAsync<T>(OWResponse<T> response) where T : IOWResult;
     }
 
     public class LogService : ILogService
@@ -49,6 +51,13 @@ namespace L1.Features.OWCommunicators.Log
             var log = ConvertToOWLog(response);
 
             await logDataAccess.WriteFailedRequestAsync(log);
+        }
+
+        public async Task LogBalanceAsync<T>(OWResponse<T> response) where T : IOWResult
+        {
+            var log = ConvertToOWLog(response);
+
+            await logDataAccess.WriteBalanceAsync(log);
         }
 
         private OWLog ConvertToOWLog<T>(OWResponse<T> response) where T : IOWResult

@@ -52,17 +52,8 @@ namespace L1.Features.OWCommunicators
         public Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
             => oWService.Post<EnterPortalResult>(endpoints.EnterPortal, call);
 
-        public async Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
-        {
-            var response = await oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
-
-            if (response.Result.IsSuccessful())
-            {
-                await logService.LogBalanceAsync(response);
-            }
-
-            return response;
-        }
+        public Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
+            => oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
 
         public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call)
         {

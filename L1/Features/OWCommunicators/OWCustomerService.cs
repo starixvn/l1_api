@@ -65,7 +65,7 @@ namespace L1.Features.OWCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                    _ = Task.Run(() => adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(call.ObCustId, call.GameTypeId, call.Amount)));
+                    _ = Task.Run(() => adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(call.ObCustId, call.GameTypeId, call.Amount, call.Currency)));
                 }
             }
 

@@ -18,27 +18,20 @@ namespace L1.Features.BackendAuthentications
 
         private readonly HttpClient httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
+        private readonly IDiscoveryCache discoveryCache;
 
-        public BackendAuthService(HttpClient httpClient, BackendAuthConfigs backendAuthConfigs)
+        public BackendAuthService(HttpClient httpClient, BackendAuthConfigs backendAuthConfigs, IDiscoveryCache discoveryCache)
         {
             this.httpClient = httpClient;
             this.backendAuthConfigs = backendAuthConfigs;
+            this.discoveryCache = discoveryCache;
         }
 
         public async Task<TokenResponse> GetAccessToken()
         {
             if (TokenResponse == null || LastTokenRequestTime.AddSeconds(TokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1))
             {
-                var request = new DiscoveryDocumentRequest
-                {
-                    Address = backendAuthConfigs.Address,
-                    Policy = new DiscoveryPolicy
-                    {
-                        RequireHttps = false
-                    }
-                };
-
-                var disco = await httpClient.GetDiscoveryDocumentAsync(request);
+                var disco = await discoveryCache.GetAsync();
 
                 if (disco.IsError)
                 {

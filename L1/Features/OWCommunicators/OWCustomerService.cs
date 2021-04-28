@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
@@ -6,6 +8,7 @@ using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
+using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators
 {
@@ -28,12 +31,21 @@ namespace L1.Features.OWCommunicators
     {
         private readonly IOWService oWService;
         private readonly ILogService logService;
+        private readonly IAppSettings appSettings;
+        private readonly IAdminApiService adminApiSerivce;
         private readonly OWEndPoints endpoints;
 
-        public OWCustomerService(IOWService oWService, ILogService logService, OWEndPoints endpoints)
+        public OWCustomerService(
+            IOWService oWService,
+            ILogService logService,
+            IAppSettings appSettings,
+            IAdminApiService adminApiSerivce,
+            OWEndPoints endpoints)
         {
             this.oWService = oWService;
             this.logService = logService;
+            this.appSettings = appSettings;
+            this.adminApiSerivce = adminApiSerivce;
             this.endpoints = endpoints;
         }
 
@@ -50,6 +62,11 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(response);
+
+                if (call.Amount >= appSettings.HighStake)
+                {
+                    _ = Task.Run(() => adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(call.ObCustId, call.GameTypeId, call.Amount, call.Currency)));
+                }
             }
 
             return response;

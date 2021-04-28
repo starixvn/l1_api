@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.DailySummary;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using L1.Shared.Constants;
@@ -21,6 +22,8 @@ namespace L1.Features.AdminApiCommunicators
         Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request);
 
         Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
+
+        Task NotifyHighStake(NotifyHighStakeRequest request);
     }
 
     public class AdminApiService : IAdminApiService
@@ -39,6 +42,12 @@ namespace L1.Features.AdminApiCommunicators
 
         public Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request)
             => Post<DailySummaryResult>(adminApiEndPoints.DailySummary, request);
+
+        public Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
+            => Post<RetrieveEndGameInfoResult>(adminApiEndPoints.RetrieveEndGameInfo, request);
+
+        public Task NotifyHighStake(NotifyHighStakeRequest request)
+            => PostAndForget(adminApiEndPoints.NotifyHighStake, request);
 
         public async Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new()
         {
@@ -95,8 +104,5 @@ namespace L1.Features.AdminApiCommunicators
                   ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}"
               }
           };
-
-        public Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
-        => Post<RetrieveEndGameInfoResult>(adminApiEndPoints.RetrieveEndGameInfo, request);
     }
 }

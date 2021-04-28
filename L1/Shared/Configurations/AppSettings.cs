@@ -5,6 +5,8 @@
         int TokenExpiredSeconds { get; set; }
 
         MongoDBSettings MongoDBSettings { get; set; }
+
+        public int HighStake { get; set; }
     }
 
     public partial class AppSettings : IAppSettings
@@ -12,5 +14,7 @@
         public int TokenExpiredSeconds { get; set; }
 
         public MongoDBSettings MongoDBSettings { get; set; }
+
+        public int HighStake { get; set; }
     }
 }

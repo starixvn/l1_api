@@ -25,7 +25,7 @@ namespace L1.IdentityServerApi.Extensions
             builder.Services.AddSingleton<IMongoClient>(client);
             builder.Services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
             builder.Services.AddSingleton<ISiteDataService, SiteDataService>();
-            builder.Services.AddSingleton<ISigningCredentialsDataAccess, SigningCredentialsDataAccess>();
+            builder.Services.AddScoped<ISigningCredentialsDataAccess, SigningCredentialsDataAccess>();
 
             return builder;
         }
@@ -38,8 +38,8 @@ namespace L1.IdentityServerApi.Extensions
 
         public static IIdentityServerBuilder AddSigningCredentialStore(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddSingleton<ISigningCredentialStore, SigningCredentialStore>();
-            builder.Services.AddSingleton<IValidationKeysStore, SigningCredentialStore>();
+            builder.Services.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
+            builder.Services.AddScoped<IValidationKeysStore, SigningCredentialStore>();
 
             return builder;
         }

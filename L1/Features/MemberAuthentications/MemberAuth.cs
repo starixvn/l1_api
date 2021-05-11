@@ -34,5 +34,7 @@ namespace L1.Features.MemberAuthentications
         public string Seq { get; set; }
 
         public string ClientId { get; set; }
+
+        public bool IsMobi { get; set; }
     }
 }

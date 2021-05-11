@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
@@ -34,12 +36,21 @@ namespace L1.Features.OWCommunicators
     {
         private readonly IOWService oWService;
         private readonly ILogService logService;
+        private readonly IAppSettings appSettings;
+        private readonly IAdminApiService adminApiSerivce;
         private readonly OWEndPoints endpoints;
 
-        public OWCustomerService(IOWService oWService, ILogService logService, OWEndPoints endpoints)
+        public OWCustomerService(
+            IOWService oWService,
+            ILogService logService,
+            IAppSettings appSettings,
+            IAdminApiService adminApiSerivce,
+            OWEndPoints endpoints)
         {
             this.oWService = oWService;
             this.logService = logService;
+            this.appSettings = appSettings;
+            this.adminApiSerivce = adminApiSerivce;
             this.endpoints = endpoints;
         }
 

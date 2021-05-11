@@ -48,8 +48,10 @@ namespace L1.WebApi.Controllers
                     Language = model.Language,
                     SiteId = model.SiteId,
                     ClientId = model.Auth?.ClientId,
-                    IsMobi = model.IsMobi
-                }, model.GameTypeId);
+                    IsMobi = model.IsMobi,
+                    SiteName = model.SiteName,
+                    IsCash = model.IsCash
+                }, model.GameTypeId).RedirectUri.ToString();
 
                 await WriteSignInLog(requestTime, model, result);
 

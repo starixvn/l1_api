@@ -9,6 +9,7 @@ using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 
 namespace L1.Features.OWCommunicators
 {
@@ -18,7 +19,7 @@ namespace L1.Features.OWCommunicators
 
         Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call);
 
-        Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call);
+        Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = Systems.Cocos);
 
         Task<OWResponse<EndGameResult>> EndGame(EndGameCall call);
 
@@ -55,13 +56,13 @@ namespace L1.Features.OWCommunicators
         public Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
             => oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
 
-        public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call)
+        public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = Systems.Cocos)
         {
             var response = await oWService.Post<PlaceBetResult>(endpoints.PlaceBet, call);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(response);
+                await logService.LogBetAsync(response, system);
 
                 if (call.Amount >= appSettings.HighStake)
                 {

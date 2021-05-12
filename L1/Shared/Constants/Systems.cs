@@ -2,7 +2,7 @@
 {
     internal static class Systems
     {
-        public const byte Cocos = 0;
-        public const byte Mobi = 1;
+        public const byte Cocos = 1;
+        public const byte Mobi = 2;
     }
 }

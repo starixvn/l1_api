@@ -42,7 +42,8 @@ namespace L1.Features.MemberAuthentications
                     x => x.IP == memberAuth.IP
                     && x.MemberId == memberAuth.MemberId
                     && x.SiteId.ToUpper() == memberAuth.SiteId.ToUpper()
-                    && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper())
+                    && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper()
+                    && x.IsMobi == memberAuth.IsMobi)
                 .SortByDescending(x => x.Time)
                 .Limit(1)
                 .FirstOrDefault();

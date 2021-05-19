@@ -71,7 +71,7 @@ namespace L1.WebApi.Controllers
                 model.FreeSpin,
                 model.ContributionRate,
                 model.ContributionAmount);
-            var response = await oWCustomerService.PlaceBet(placeBetCall);
+            var response = await oWCustomerService.PlaceBet(placeBetCall, model.System);
 
             return Ok(response);
         }

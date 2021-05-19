@@ -1,4 +1,5 @@
 ﻿using System;
+using L1.Shared.Constants;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -6,13 +7,14 @@ namespace L1.Features.OWCommunicators.Log
 {
     public class OWLog
     {
-        public OWLog(DateTimeOffset requestTimeStamp, IOWCall call, DateTimeOffset responseTimeStamp, IOWResult result)
+        public OWLog(DateTimeOffset requestTimeStamp, IOWCall call, DateTimeOffset responseTimeStamp, IOWResult result, byte system = Systems.Cocos)
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
             RequestTimeStamp = requestTimeStamp;
             Call = call;
             ResponseTimeStamp = responseTimeStamp;
             Result = result;
+            System = system;
         }
 
         [BsonRepresentation(BsonType.String)]
@@ -27,5 +29,7 @@ namespace L1.Features.OWCommunicators.Log
         public DateTimeOffset ResponseTimeStamp { get; set; }
 
         public IOWResult Result { get; set; }
+
+        public byte System { get; set; }
     }
 }

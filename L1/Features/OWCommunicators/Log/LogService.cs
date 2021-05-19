@@ -7,7 +7,7 @@ namespace L1.Features.OWCommunicators.Log
     {
         Task LogFailedRequestAsync<T>(OWResponse<T> response) where T : IOWResult;
 
-        Task LogBetAsync<T>(OWResponse<T> response) where T : IOWResult;
+        Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : IOWResult;
 
         Task LogEndGameAsync<T>(OWResponse<T> response) where T : IOWResult;
 
@@ -23,9 +23,10 @@ namespace L1.Features.OWCommunicators.Log
             this.logDataAccess = logDataAccess;
         }
 
-        public async Task LogBetAsync<T>(OWResponse<T> response) where T : IOWResult
+        public async Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : IOWResult
         {
             var log = ConvertToOWLog(response);
+            log.System = system;
 
             await logDataAccess.WriteBetAsync(log);
         }

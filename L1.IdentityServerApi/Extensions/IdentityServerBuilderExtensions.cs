@@ -1,4 +1,6 @@
-﻿using L1.Features.Sites;
+﻿using IdentityServer4.Stores;
+using L1.Features.SigningCredentials;
+using L1.Features.Sites;
 using L1.IdentityServerApi.IdentityStore;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
@@ -23,6 +25,7 @@ namespace L1.IdentityServerApi.Extensions
             builder.Services.AddSingleton<IMongoClient>(client);
             builder.Services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
             builder.Services.AddSingleton<ISiteDataService, SiteDataService>();
+            builder.Services.AddScoped<ISigningCredentialsDataAccess, SigningCredentialsDataAccess>();
 
             return builder;
         }
@@ -32,5 +35,13 @@ namespace L1.IdentityServerApi.Extensions
 
         public static IIdentityServerBuilder AddIdentityApiResources(this IIdentityServerBuilder builder) =>
             builder.AddResourceStoreCache<ResourceStore>();
+
+        public static IIdentityServerBuilder AddSigningCredentialStore(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
+            builder.Services.AddScoped<IValidationKeysStore, SigningCredentialStore>();
+
+            return builder;
+        }
     }
 }

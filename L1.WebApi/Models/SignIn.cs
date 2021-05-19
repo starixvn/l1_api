@@ -22,6 +22,8 @@
 
         public byte? GameTypeId { get; set; }
 
+        public bool IsMobi { get; set; }
+
         public Auth Auth { get; set; }
     }
 }

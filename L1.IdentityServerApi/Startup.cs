@@ -34,10 +34,10 @@ namespace L1.IdentityServerApi
                 options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));
             })
             .AddMongoDb(appSettings.MongoDBSettings.ConnectionString)
+            .AddIdentityApiResources()
             .AddInMemoryCaching()
             .AddIdentityClients()
-            .AddIdentityApiResources()
-            .AddDeveloperSigningCredential();
+            .AddSigningCredentialStore();
 
             IdentityModelEventSource.ShowPII = true;
 

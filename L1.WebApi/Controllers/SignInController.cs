@@ -51,10 +51,9 @@ namespace L1.WebApi.Controllers
                     IsMobi = model.IsMobi
                 }, model.GameTypeId);
 
-                var redirectUrl = result.RedirectUri.ToString();
                 await WriteSignInLog(requestTime, model, result);
 
-                return Ok(new SignInResult { RedirectUrl = redirectUrl });
+                return Ok(new SignInResult { RedirectUrl = result.RedirectUrl });
             }
 
             await WriteSignInLog(requestTime, model, SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize));
@@ -64,7 +63,12 @@ namespace L1.WebApi.Controllers
 
         private Task WriteSignInLog(DateTimeOffset requestTime, SignIn model, SingleSignOnResult result)
         {
-            var log = new SBLog(model, result, requestTime, DateTimeOffset.UtcNow);
+            var formattedResult = new SingleSignOnResult(result.Code, result.Message)
+            {
+                RedirectUrl = result.RedirectUrl
+            };
+
+            var log = new SBLog(model, formattedResult, requestTime, DateTimeOffset.UtcNow);
 
             return logService.LogSignInAsync(log);
         }

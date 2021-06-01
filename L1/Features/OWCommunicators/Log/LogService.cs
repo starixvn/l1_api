@@ -54,9 +54,7 @@ namespace L1.Features.OWCommunicators.Log
         }
 
         public Task LogSignInAsync(SBLog log)
-        {
-            return logDataAccess.WriteSignInAsync(log);
-        }
+            => logDataAccess.WriteSignInAsync(log);
 
         private OWLog ConvertToOWLog<T>(OWResponse<T> response) where T : IOWResult
             => new OWLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result);

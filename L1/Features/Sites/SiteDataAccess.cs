@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -14,6 +15,8 @@ namespace L1.Features.Sites
         Site GetBySiteId(string id);
 
         bool VerifyClient(string clientId, string clientSecret);
+
+        Task<bool> VerifyClient(string clientId, string clientSecret, string currency);
     }
 
     public class SiteDataAccess : ISiteDataAccess
@@ -38,5 +41,15 @@ namespace L1.Features.Sites
 
         public bool VerifyClient(string clientId, string clientSecret)
             => siteCollection.Find(site => site.ClientId == clientId && site.ClientSecret == clientSecret).Any();
+
+        public async Task<bool> VerifyClient(string clientId, string clientSecret, string currency)
+        {
+            var filter = Builders<Site>.Filter.And(
+                Builders<Site>.Filter.Eq(site => site.ClientId, clientId),
+                Builders<Site>.Filter.Eq(site => site.ClientSecret, clientSecret),
+                Builders<Site>.Filter.AnyEq(site => site.ValidCurrencies, currency.ToUpperInvariant()));
+
+            return (await siteCollection.FindAsync(filter)).Any();
+        }
     }
 }

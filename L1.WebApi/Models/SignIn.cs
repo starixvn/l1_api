@@ -1,6 +1,8 @@
-﻿namespace L1.WebApi.Models
+﻿using L1.Shared.Models;
+
+namespace L1.WebApi.Models
 {
-    public class SignIn
+    public class SignIn : Request
     {
         public string Domain { get; set; }
 
@@ -12,13 +14,7 @@
 
         public string IP { get; set; }
 
-        public int MemberId { get; set; }
-
-        public string MemberName { get; set; }
-
-        public string SiteId { get; set; }
-
-        public string Seq { get; set; }
+        public string MemberName { get; set; }     
 
         public byte? GameTypeId { get; set; }
 

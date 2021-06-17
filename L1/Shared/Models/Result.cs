@@ -16,6 +16,7 @@
         public const int IdentityServerNotExistCode = 4;
         public const int ServerErrorCode = 5;
         public const int GameServerNotFoundCode = 6;
+        public const int Unauthorize = 7;
 
         public int Code { get; protected set; }
 

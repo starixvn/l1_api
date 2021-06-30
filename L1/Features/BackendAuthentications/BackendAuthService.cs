@@ -14,7 +14,7 @@ namespace L1.Features.BackendAuthentications
     public class BackendAuthService : IBackendAuthService
     {
         private static TokenResponse TokenResponse;
-        private static DateTimeOffset LastTokenRequestTime;
+        private static long lastRequestTicks;
 
         private readonly HttpClient httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
@@ -29,7 +29,7 @@ namespace L1.Features.BackendAuthentications
 
         public async Task<TokenResponse> GetAccessToken()
         {
-            if (TokenResponse == null || LastTokenRequestTime.AddSeconds(TokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1))
+            if (TokenResponse == null || new DateTimeOffset(lastRequestTicks, TimeSpan.Zero).AddSeconds(TokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1))
             {
                 var disco = await discoveryCache.GetAsync();
 
@@ -47,7 +47,7 @@ namespace L1.Features.BackendAuthentications
                 });
 
                 Interlocked.Exchange(ref TokenResponse, newTokenResponse);
-                LastTokenRequestTime = DateTimeOffset.UtcNow;
+                Interlocked.Exchange(ref lastRequestTicks, DateTimeOffset.UtcNow.Ticks);
             }
 
             return TokenResponse;

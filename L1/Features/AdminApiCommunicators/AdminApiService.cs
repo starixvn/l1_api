@@ -91,7 +91,7 @@ namespace L1.Features.AdminApiCommunicators
 
             var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
 
-            return httpClient.PostAsync(apiEndpoint, content);
+            return httpClient.PostAsync(new Uri(apiEndpoint), content);
         }
 
         private static async Task<AdminApiResponse<T>> CreateErrorResponse<T>(HttpResponseMessage response) where T : AdminApiResult, new()

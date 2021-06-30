@@ -1,6 +1,10 @@
 ﻿namespace L1.Features.AdminApiCommunicators
 {
-    public abstract class AdminApiRequest
+    public class AdminApiRequest
     {
+        protected AdminApiRequest()
+        {
+
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace L1.IdentityServerApi
             services.AddServices();
             services.AddHealthChecks();
 
-            var builder = services.AddIdentityServer(options =>
+            services.AddIdentityServer(options =>
             {
                 options.Caching.ResourceStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
                 options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));

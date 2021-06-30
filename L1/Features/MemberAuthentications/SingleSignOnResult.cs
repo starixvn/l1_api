@@ -10,11 +10,14 @@ namespace L1.Features.MemberAuthentications
             Code = code;
             Message = message;
             RedirectUri = redirectUri;
+            RedirectUrl = RedirectUri == null ? string.Empty : RedirectUri.ToString();
         }
 
         public static SingleSignOnResult ServerErrorResult => new SingleSignOnResult(ServerErrorCode, string.Empty);
 
         public Uri RedirectUri { get; }
+
+        public string RedirectUrl { get; set; }
 
         public static SingleSignOnResult CreateSuccessResponse(string redirectUrl)
             => new SingleSignOnResult(SuccessCode, string.Empty, new Uri(redirectUrl));

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using L1.Shared.Configurations;
 
 namespace L1.Features.OWCommunicators.Log
 {
@@ -13,6 +12,7 @@ namespace L1.Features.OWCommunicators.Log
 
         Task LogVoidGameAsync<T>(OWResponse<T> response) where T : IOWResult;
         Task LogHitJackpotAsync<T>(OWResponse<T> response) where T : IOWResult;
+        Task LogSignInAsync(SBLog log);
     }
 
     public class LogService : ILogService
@@ -60,7 +60,10 @@ namespace L1.Features.OWCommunicators.Log
             await logDataAccess.WriteHitJackpotAsync(log);
         }
 
-        private OWLog ConvertToOWLog<T>(OWResponse<T> response) where T : IOWResult
+        public Task LogSignInAsync(SBLog log)
+            => logDataAccess.WriteSignInAsync(log);
+
+        private static OWLog ConvertToOWLog<T>(OWResponse<T> response) where T : IOWResult
             => new OWLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result);
     }
 }

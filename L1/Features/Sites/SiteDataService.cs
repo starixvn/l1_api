@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace L1.Features.Sites
 {
@@ -12,7 +13,7 @@ namespace L1.Features.Sites
 
         bool VerifyClient(string clientId, string clientSecret);
 
-        bool VerifyClient(string clientId, string clientSecret, string currency);
+        Task<bool> VerifyClient(string clientId, string clientSecret, string currency);
     }
 
     public class SiteDataService : ISiteDataService
@@ -33,7 +34,7 @@ namespace L1.Features.Sites
         public bool VerifyClient(string clientId, string clientSecret)
             => siteDataAccess.VerifyClient(clientId, clientSecret);
 
-        public bool VerifyClient(string clientId, string clientSecret, string currency)
+        public Task<bool> VerifyClient(string clientId, string clientSecret, string currency)
             => siteDataAccess.VerifyClient(clientId, clientSecret, currency);
     }
 }

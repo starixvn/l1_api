@@ -21,7 +21,7 @@ namespace L1.Features.Sites
         public string GameClientUrl { get; set; }
 
         public IEnumerable<string> ValidCurrencies { get; set; }
-        
+
         public string GameMobiClientUrl { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace L1.Features.OWCommunicators
 
             var request = new OWRequest(auth, call);
             var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
-            var response = await httpClient.PostAsync(apiEndpoint, content);
+            var response = await httpClient.PostAsync(new Uri(apiEndpoint), content);
             OWResponse<T> finalResponse;
 
             if (response.IsSuccessStatusCode)

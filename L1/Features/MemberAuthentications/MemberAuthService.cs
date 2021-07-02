@@ -35,7 +35,7 @@ namespace L1.Features.MemberAuthentications
         {
             var gameClientUrl = GetGameClientUrl(memberAuth);
 
-            if (string.IsNullOrWhiteSpace(gameClientUrl))
+            if (gameClientUrl == null)
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
@@ -103,11 +103,11 @@ namespace L1.Features.MemberAuthentications
                 SentryLevel.Warning);
         }
 
-        private string GetGameClientUrl(MemberAuth memberAuth)
+        private Uri GetGameClientUrl(MemberAuth memberAuth)
         {
             var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
-            return memberAuth.IsMobi ? site?.GameMobiClientUrl : site?.GameClientUrl;
+            return new Uri(memberAuth.IsMobi ? site?.GameMobiClientUrl : site?.GameClientUrl);
         }
     }
 }

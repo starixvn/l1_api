@@ -39,6 +39,7 @@ namespace L1.Features.MemberAuthentications
         public MemberAuth GetLatest(MemberAuth memberAuth) =>
             memberAuthCollection
                 .Find(
+#pragma warning disable S1067 // Expressions should not be too complex
                     x => x.IP == memberAuth.IP
                     && x.MemberId == memberAuth.MemberId
                     && x.SiteId.ToUpper() == memberAuth.SiteId.ToUpper()

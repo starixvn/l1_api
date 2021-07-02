@@ -24,7 +24,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
     {
         private const string DefaultMediaType = "application/json";
 
-        private static int UnderMaintenanceCounter = 0;
+        private static int UnderMaintenanceCounter;
 
         private readonly HttpClient httpClient;
         private readonly OWServiceSettings owServiceSettings;
@@ -85,8 +85,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
             }
 
             SentrySdk.CaptureMessage(
-                $"Received maintenance schedule: IsUM: {isUnderMaintenance} - {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}",
-                SentryLevel.Info);
+                $"Received maintenance schedule: IsUM: {isUnderMaintenance} - {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}");
             
             await adminApiService.UnderMaintenance(new AdminApi.MaintenanceRequest(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance));
         }

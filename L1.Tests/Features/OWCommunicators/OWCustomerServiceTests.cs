@@ -18,16 +18,16 @@ namespace L1.Tests.Features.OWCommunicators
 {
     public class OWCustomerServiceTests
     {
+        private readonly OWEndPoints endpoints = Substitute.For<OWEndPoints>();
+        private readonly ILogService logService = Substitute.For<ILogService>();
+        private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
+        private readonly IAdminApiService adminApiSerivce = Substitute.For<IAdminApiService>();
+        private readonly IOWService owService = Substitute.For<IOWService>();
+
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithEnterPortalEndpoint(EnterPortalCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var appSettings = Substitute.For<IAppSettings>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
-            var owService = Substitute.For<IOWService>();
-
+            // Arrange          
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
@@ -40,13 +40,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithBalanceEndpoint(GetBalanceCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var appSettings = Substitute.For<IAppSettings>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
-            var owService = Substitute.For<IOWService>();
-
+            // Arrange            
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
@@ -59,13 +53,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task GetBetLimit_ShouldPostWithBetLimitEndpoint(GetBetLimitCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var appSettings = Substitute.For<IAppSettings>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
-            var owService = Substitute.For<IOWService>();
-
+            // Arrange          
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
@@ -79,12 +67,7 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task PlaceBet_SuccessfulResponse_LogBet(PlaceBetCall call)
         {
             // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var appSettings = Substitute.For<IAppSettings>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
             var response = new OWResponse<PlaceBetResult> { Result = new PlaceBetResult { Balance = 2000 } };
-            var owService = Substitute.For<IOWService>();
             owService.Post<PlaceBetResult>(endpoints.PlaceBet, call)
                 .Returns(x => Task.FromResult(response));
 
@@ -100,15 +83,9 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task PlaceBet_HighStake_ShouldNotify(PlaceBetCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
-            var owService = Substitute.For<IOWService>();
-            var appSettings = Substitute.For<IAppSettings>();
+            // Arrange         
             appSettings.HighStake.Returns(500);
             call.Amount = appSettings.HighStake;
-
             var response = new OWResponse<PlaceBetResult> { Result = new PlaceBetResult { Balance = 2000 } };
             owService.Post<PlaceBetResult>(endpoints.PlaceBet, call).Returns(x => Task.FromResult(response));
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
@@ -123,13 +100,8 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EndGame_SuccessfulResponse_LogEndGame(EndGameCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var appSettings = Substitute.For<IAppSettings>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
+            // Arrange          
             var response = new OWResponse<EndGameResult> { Result = new EndGameResult () };
-            var owService = Substitute.For<IOWService>();
             owService.Post<EndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
 
@@ -146,13 +118,8 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EndGame_SuccessfulResponse_Returns(EndGameCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
-            var appSettings = Substitute.For<IAppSettings>();
+            // Arrange        
             var response = new OWResponse<EndGameResult> { Result = new EndGameResult() };
-            var owService = Substitute.For<IOWService>();
             owService.Post<EndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
 
@@ -168,13 +135,8 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task VoidGame_SuccessfulResponse_LogVoidGame(VoidGameCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var appSettings = Substitute.For<IAppSettings>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
+            // Arrange         
             var response = new OWResponse<VoidGameResult> { Result = new VoidGameResult() };
-            var owService = Substitute.For<IOWService>();
             owService.Post<VoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
 
@@ -191,13 +153,8 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task VoidGame_SuccessfulResponse_Returns(VoidGameCall call)
         {
-            // Arrange
-            var endpoints = Substitute.For<OWEndPoints>();
-            var logService = Substitute.For<ILogService>();
-            var adminApiSerivce = Substitute.For<IAdminApiService>();
-            var appSettings = Substitute.For<IAppSettings>();
+            // Arrange          
             var response = new OWResponse<VoidGameResult> { Result = new VoidGameResult() };
-            var owService = Substitute.For<IOWService>();
             owService.Post<VoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
 

@@ -14,6 +14,7 @@ namespace L1.Features.MemberAuthentications
             Message = message;
         }
 
+#pragma warning disable S107 // Methods should not have too many parameters
         public VerificationResult(
             int code,
             string message,
@@ -25,6 +26,7 @@ namespace L1.Features.MemberAuthentications
             string seq,
             string clientId,
             string domain)
+#pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
         {
             MemberId = memberId;
@@ -58,6 +60,7 @@ namespace L1.Features.MemberAuthentications
         public static VerificationResult CreateErrorResponse(int code)
            => new VerificationResult(code, string.Empty);
 
+#pragma warning disable S107 // Methods should not have too many parameters
         public static VerificationResult CreateSuccessResponse(
             int memberId,
             string memberName,
@@ -67,6 +70,7 @@ namespace L1.Features.MemberAuthentications
             string seq,
             string clientId,
             string domain)
+#pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
                 string.Empty,

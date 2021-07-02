@@ -6,6 +6,7 @@ namespace L1.Features.OWCommunicators.EndGame
 {
     public class EndGameCall : OWCall
     {
+#pragma warning disable S107 // Methods should not have too many parameters
         public EndGameCall(
             int obCustId, 
             string siteId, 
@@ -15,7 +16,9 @@ namespace L1.Features.OWCommunicators.EndGame
             decimal totalWin,
             decimal validBetAmount, 
             DateTimeOffset endTime,
-            bool freeBet) : base(obCustId, siteId)
+            bool freeBet)
+#pragma warning restore S107 // Methods should not have too many parameters
+            : base(obCustId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;

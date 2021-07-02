@@ -66,13 +66,13 @@ namespace L1.Features.OWCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                   await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
-                       call.ObCustId, 
-                       call.GameTypeId, 
-                       call.Amount, 
-                       call.Currency,
-                       call.ChoiceId,
-                       system));
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                        call.ObCustId,
+                        call.GameTypeId,
+                        call.Amount,
+                        call.Currency,
+                        call.ChoiceId,
+                        system));
                 }
             }
 
@@ -103,11 +103,7 @@ namespace L1.Features.OWCommunicators
             return response;
         }
 
-        public async Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
-        {
-            var response = await oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
-
-            return response;
-        }
+        public Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
+        => oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
     }
 }

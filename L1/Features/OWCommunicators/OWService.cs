@@ -14,10 +14,10 @@ namespace L1.Features.OWCommunicators
     public class OWService : IOWService
     {
         private readonly HttpClient httpClient;
-        private readonly OWAuth auth;
+        private readonly IOWAuth auth;
         private readonly IOWFailureHandler failureHandler;
 
-        public OWService(HttpClient httpClient, OWAuth auth, IOWFailureHandler failureHandler)
+        public OWService(HttpClient httpClient, IOWAuth auth, IOWFailureHandler failureHandler)
         {
             this.httpClient = httpClient;
             this.auth = auth;

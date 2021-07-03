@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
@@ -13,8 +11,6 @@ namespace L1.Tests.Features.OWCommunicators
 {
     public class OWServiceTests
     {
-        private HttpClient httpClient;
-        private readonly IHttpClientFactory httpClientFactory;
         private readonly IOWAuth auth;
         private readonly IOWFailureHandler failureHandler;
 
@@ -27,18 +23,13 @@ namespace L1.Tests.Features.OWCommunicators
         {
             auth = Substitute.For<IOWAuth>();
             failureHandler = Substitute.For<IOWFailureHandler>();
-            httpClientFactory = Substitute.For<IHttpClientFactory>();
         }
 
         [Theory, AutoData]
         public async Task Post_Success_ReturnsOWResponse(OWCall call)
         {
             // Arrange
-            httpClient = new HttpClient(new MockHttpMessageHandler(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent)))
-            {
-                BaseAddress = new Uri("https://localhost")
-            };
-            httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent));
             var service = new OWService(httpClient, auth, failureHandler);
 
             // Act
@@ -52,11 +43,7 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task Post_Failed_ReturnsOWResponse(OWCall call)
         {
             // Arrange
-            httpClient = new HttpClient(new MockHttpMessageHandler(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty)))
-            {
-                BaseAddress = new Uri("https://localhost")
-            };
-            httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+            var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty));
             var service = new OWService(httpClient, auth, failureHandler);
 
             // Act

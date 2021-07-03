@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoFixture;
 using IdentityModel.Client;
 using L1.Features.BackendAuthentications;
+using L1.Tests._Shared;
 using NSubstitute;
 using Xunit;
 
@@ -11,7 +15,7 @@ namespace L1.Tests.Features.BackendAuthentications
 {
     public class BackendAuthServiceTests
     {
-        private readonly HttpClient httpClient;
+        private HttpClient httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
         private readonly Fixture fixture = new Fixture();
@@ -20,23 +24,36 @@ namespace L1.Tests.Features.BackendAuthentications
 
         public BackendAuthServiceTests()
         {
-            //this.httpClient = NSubstitute.su;
-            this.backendAuthConfigs = fixture.Create<BackendAuthConfigs>();
-            this.discoveryCache = Substitute.For<IDiscoveryCache>();
+            httpClient = MockHttpClient.Create(HttpStatusCode.BadRequest, fixture.Create<string>());
+            backendAuthConfigs = fixture.Create<BackendAuthConfigs>();
+            discoveryCache = Substitute.For<IDiscoveryCache>();
             backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
         }
 
 
         [Fact]
-        public void GetAccessToken_DiscoveryDocumentResponseErrorIsTrue_ThrowInvalidOperationException()
+        public void GetAccessToken_DiscoErrorIsTrue_HttpClientInvokeRequestClientCredentialsTokenAsync()
         {
             // Arrange
-            bool isResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks) => true;
-            DiscoveryDocumentResponse disco = Substitute.For<DiscoveryDocumentResponse>();    
-            discoveryCache.GetAsync().Returns(disco);
+            //TokenResponse expectedTokenReponse = fixture.Create<TokenResponse>();
+            //bool isResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks) => true;
+            //DiscoveryDocumentResponse disco = Substitute.For<DiscoveryDocumentResponse>();    
+            //discoveryCache.GetAsync().Returns(disco);
+            //var clientCredentialsToken = new ClientCredentialsTokenRequest
+            //{
+            //    Address = disco.TokenEndpoint,
+            //    ClientId = backendAuthConfigs.ClientId,
+            //    ClientSecret = backendAuthConfigs.ClientSecret,
+            //    Scope = backendAuthConfigs.Scope,
+            //};
+      
 
-            //Act & Assert
-            Assert.ThrowsAsync<InvalidOperationException>(() => backendAuthService.GetAccessToken(isResponseTokenExpired));
+
+            //// Act
+            //var actual =  backendAuthService.GetAccessToken(isResponseTokenExpired);
+
+            //// Assert
+            //httpClient.Received().RequestClientCredentialsTokenAsync(clientCredentialsToken);
         }
     }
 }

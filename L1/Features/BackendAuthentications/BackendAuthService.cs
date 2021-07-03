@@ -31,13 +31,10 @@ namespace L1.Features.BackendAuthentications
         public async Task<TokenResponse> GetAccessToken()
             =>  await GetAccessToken(null);
 
-        public async Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired = null)
+        public async Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired)
         {
-            if (isResponseTokenExpired == null)
-            {
-                isResponseTokenExpired = IsResponseTokenExpired; 
-            }
-
+            isResponseTokenExpired ??= IsResponseTokenExpired; 
+          
             if (isResponseTokenExpired(TokenResponse, LastRequestTicks))
             {
                 var disco = await discoveryCache.GetAsync();
@@ -66,7 +63,7 @@ namespace L1.Features.BackendAuthentications
             return TokenResponse;
         }
 
-        private bool IsResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks)
+        private  bool IsResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks)
                 => tokenResponse == null || new DateTimeOffset(lastRequestTicks, TimeSpan.Zero)
                         .AddSeconds(tokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1);
     }

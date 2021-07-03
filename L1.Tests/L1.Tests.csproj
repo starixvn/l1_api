@@ -26,10 +26,4 @@
     <ProjectReference Include="..\L1\L1.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Features\BackendAuthentications\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Features\BackendAuthentications\" />
-  </ItemGroup>
 </Project>

@@ -30,11 +30,13 @@ namespace L1.Features.AdminApiCommunicators
     {
         private readonly HttpClient httpClient;
         private readonly AdminApiEndPoints adminApiEndPoints;
+        private readonly ISentryClient sentryClient;
 
-        public AdminApiService(HttpClient httpClient, AdminApiEndPoints adminApiEndPoints)
+        public AdminApiService(HttpClient httpClient, AdminApiEndPoints adminApiEndPoints, ISentryClient sentryClient)
         {
             this.httpClient = httpClient;
             this.adminApiEndPoints = adminApiEndPoints;
+            this.sentryClient = sentryClient;
         }
 
         public Task UnderMaintenance(MaintenanceRequest request)
@@ -66,7 +68,7 @@ namespace L1.Features.AdminApiCommunicators
 
             var failureResponse = await CreateErrorResponse<T>(response);
 
-            SentrySdk.CaptureMessage(
+            sentryClient.CaptureMessage(
                 $"Request to Saba Admin API's {apiEndpoint} failed at {DateTimeOffset.UtcNow} - {failureResponse.Result.ErrorDescription}",
                 SentryLevel.Warning);
 
@@ -81,7 +83,7 @@ namespace L1.Features.AdminApiCommunicators
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureMessage(ex.ToString(), SentryLevel.Error);
+                sentryClient.CaptureMessage(ex.ToString(), SentryLevel.Error);
             }
         }
 

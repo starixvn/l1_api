@@ -20,15 +20,18 @@ namespace L1.Features.MemberAuthentications
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
         private readonly ISiteDataService siteDataService;
         private readonly IAppSettings appSettings;
+        private readonly ISentryClient sentryClient;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
             ISiteDataService siteDataService,
-            IAppSettings appSettings)
+            IAppSettings appSettings,
+            ISentryClient sentryClient)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
             this.siteDataService = siteDataService;
             this.appSettings = appSettings;
+            this.sentryClient = sentryClient;
         }
 
         public SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId)
@@ -96,9 +99,9 @@ namespace L1.Features.MemberAuthentications
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
         }
 
-        private static void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
+        private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
-            SentrySdk.CaptureMessage(
+            sentryClient.CaptureMessage(
                 $"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
                 SentryLevel.Warning);
         }
@@ -107,7 +110,12 @@ namespace L1.Features.MemberAuthentications
         {
             var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
-            return new Uri(memberAuth.IsMobi ? site?.GameMobiClientUrl : site?.GameClientUrl);
+            if (site == null)
+            {
+                return null;
+            }
+
+            return new Uri(memberAuth.IsMobi ? site.GameMobiClientUrl : site.GameClientUrl);
         }
     }
 }

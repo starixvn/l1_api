@@ -19,11 +19,13 @@ namespace L1.Features.OWCommunicators
     {
         private readonly ILogService logService;
         private readonly IMaintenanceService maintenanceService;
+        private readonly ISentryClient sentryClient;
 
-        public OWFailureHandler(ILogService logService, IMaintenanceService maintenanceService)
+        public OWFailureHandler(ILogService logService, IMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
             this.logService = logService;
             this.maintenanceService = maintenanceService;
+            this.sentryClient = sentryClient;
         }
 
         public async Task Handle<T>(OWResponse<T> response) where T : IOWResult
@@ -31,7 +33,7 @@ namespace L1.Features.OWCommunicators
             MapErrorMessage(response.Result);
             await logService.LogFailedRequestAsync(response);
 
-            SentrySdk.CaptureMessage(
+            sentryClient.CaptureMessage(
                 $"Request to OW failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
                 SentryLevel.Warning);
 

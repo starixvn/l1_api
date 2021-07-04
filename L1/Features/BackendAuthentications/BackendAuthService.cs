@@ -9,7 +9,7 @@ namespace L1.Features.BackendAuthentications
     public interface IBackendAuthService
     {
         Task<TokenResponse> GetAccessToken();
-        Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired = null);
+        Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired);
     }
 
     public class BackendAuthService : IBackendAuthService
@@ -56,7 +56,7 @@ namespace L1.Features.BackendAuthentications
                         Scope = backendAuthConfigs.Scope,
                     };
 
-                    var newTokenResponse = TokenResponse;
+                    TokenResponse newTokenResponse;
 
                     if (requestClientCredentialsTokenAsync == null)
                     {

@@ -9,7 +9,27 @@ namespace L1.Features.BackendAuthentications
     public interface IBackendAuthService
     {
         Task<TokenResponse> GetAccessToken();
-        Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired = null);
+        Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired);
+    }
+
+    public interface IHttpClientWrapper
+    {
+        Task<TokenResponse> RequestClientCredentialsTokenAsync(
+            ClientCredentialsTokenRequest clientCredentials,
+            CancellationToken cancellationToken);
+    }
+
+    public class HttpClientWrapper : IHttpClientWrapper
+    {
+        private readonly HttpClient httpClient;
+
+        public HttpClientWrapper(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
+
+        public Task<TokenResponse> RequestClientCredentialsTokenAsync(ClientCredentialsTokenRequest clientCredentials, CancellationToken cancellationToken)
+             => httpClient.RequestClientCredentialsTokenAsync(clientCredentials, cancellationToken);
     }
 
     public class BackendAuthService : IBackendAuthService
@@ -17,38 +37,34 @@ namespace L1.Features.BackendAuthentications
         private static TokenResponse TokenResponse;
         private static long LastRequestTicks;
 
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientWrapper httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
-        private readonly Func<ClientCredentialsTokenRequest, CancellationToken, Task<TokenResponse>> requestClientCredentialsTokenAsync;
 
-        public BackendAuthService(HttpClient httpClient,
+
+        public BackendAuthService(IHttpClientWrapper httpClient,
             BackendAuthConfigs backendAuthConfigs,
-            IDiscoveryCache discoveryCache,
-            Func<ClientCredentialsTokenRequest, CancellationToken, Task<TokenResponse>> requestClientCredentialsTokenAsync = null)
+            IDiscoveryCache discoveryCache)
         {
             this.httpClient = httpClient;
             this.backendAuthConfigs = backendAuthConfigs;
             this.discoveryCache = discoveryCache;
-            this.requestClientCredentialsTokenAsync = requestClientCredentialsTokenAsync;
-
         }
 
         public async Task<TokenResponse> GetAccessToken()
             => await GetAccessToken(null);
 
-        public async Task<TokenResponse> GetAccessToken(
-            Func<TokenResponse, long, bool> isResponseTokenExpired)
+        public async Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> checkResponseTokenFunc)
         {
-            isResponseTokenExpired ??= IsResponseTokenExpired;
+            checkResponseTokenFunc ??= IsResponseTokenExpired;
 
-            if (isResponseTokenExpired(TokenResponse, LastRequestTicks))
+            if (checkResponseTokenFunc(TokenResponse, LastRequestTicks))
             {
                 var disco = await discoveryCache.GetAsync();
 
                 if (!disco.IsError)
                 {
-                    var clientCredentialsTokenRequest = new ClientCredentialsTokenRequest
+                    var clientCredentials = new ClientCredentialsTokenRequest
                     {
                         Address = disco.TokenEndpoint,
                         ClientId = backendAuthConfigs.ClientId,
@@ -56,18 +72,8 @@ namespace L1.Features.BackendAuthentications
                         Scope = backendAuthConfigs.Scope,
                     };
 
-                    var newTokenResponse = TokenResponse;
+                    var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default);
 
-                    if (requestClientCredentialsTokenAsync == null)
-                    {
-                        newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
-                    }
-                    else
-                    {
-                        newTokenResponse = await requestClientCredentialsTokenAsync.Invoke(clientCredentialsTokenRequest, default);
-                    }
-
-                      
                     Interlocked.Exchange(ref TokenResponse, newTokenResponse);
                     Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
                 }

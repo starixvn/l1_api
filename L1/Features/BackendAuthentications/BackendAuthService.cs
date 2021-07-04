@@ -9,6 +9,7 @@ namespace L1.Features.BackendAuthentications
     public interface IBackendAuthService
     {
         Task<TokenResponse> GetAccessToken();
+
         Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired);
     }
 
@@ -31,7 +32,6 @@ namespace L1.Features.BackendAuthentications
             this.backendAuthConfigs = backendAuthConfigs;
             this.discoveryCache = discoveryCache;
             this.requestClientCredentialsTokenAsync = requestClientCredentialsTokenAsync;
-
         }
 
         public async Task<TokenResponse> GetAccessToken()
@@ -56,18 +56,10 @@ namespace L1.Features.BackendAuthentications
                         Scope = backendAuthConfigs.Scope,
                     };
 
-                    TokenResponse newTokenResponse;
+                    var newTokenResponse = requestClientCredentialsTokenAsync == null
+                        ? await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest)
+                        : await requestClientCredentialsTokenAsync.Invoke(clientCredentialsTokenRequest, default);
 
-                    if (requestClientCredentialsTokenAsync == null)
-                    {
-                        newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
-                    }
-                    else
-                    {
-                        newTokenResponse = await requestClientCredentialsTokenAsync.Invoke(clientCredentialsTokenRequest, default);
-                    }
-
-                      
                     Interlocked.Exchange(ref TokenResponse, newTokenResponse);
                     Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
                 }

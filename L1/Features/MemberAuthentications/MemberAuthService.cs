@@ -59,12 +59,9 @@ namespace L1.Features.MemberAuthentications
                 memberAuthDataAccess.Create(memberAuth);
             }
 
-            if (gameTypeId.HasValue)
-            {
-                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&gameId={gameTypeId.Value}");
-            }
-
-            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}");
+            return gameTypeId.HasValue
+                ? SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&gameId={gameTypeId.Value}")
+                : SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}");
         }
 
         public VerificationResult VerifyToken(VerificationParams verificationParams)

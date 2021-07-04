@@ -9,7 +9,7 @@ namespace L1.Features.BackendAuthentications
     public interface IBackendAuthService
     {
         Task<TokenResponse> GetAccessToken();
-        Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired);
+        Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> checkResponseTokenFunc);
     }
 
     public interface IHttpClientWrapper

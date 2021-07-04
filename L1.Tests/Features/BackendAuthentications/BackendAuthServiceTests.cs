@@ -19,7 +19,7 @@ namespace L1.Tests.Features.BackendAuthentications
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
         private readonly Fixture fixture = new Fixture();
-        private readonly BackendAuthService backendAuthService;
+        private BackendAuthService backendAuthService;
 
 
         public BackendAuthServiceTests()
@@ -27,33 +27,44 @@ namespace L1.Tests.Features.BackendAuthentications
             httpClient = MockHttpClient.Create(HttpStatusCode.BadRequest, fixture.Create<string>());
             backendAuthConfigs = fixture.Create<BackendAuthConfigs>();
             discoveryCache = Substitute.For<IDiscoveryCache>();
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
         }
 
 
         [Fact]
-        public void GetAccessToken_DiscoErrorIsTrue_HttpClientInvokeRequestClientCredentialsTokenAsync()
+        public void GetAccessToken_DiscoErrorIsFalse_InvokeRequestClientCredentialsTokenAsync()
         {
             // Arrange
-            //TokenResponse expectedTokenReponse = fixture.Create<TokenResponse>();
-            //bool isResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks) => true;
-            //DiscoveryDocumentResponse disco = Substitute.For<DiscoveryDocumentResponse>();    
-            //discoveryCache.GetAsync().Returns(disco);
-            //var clientCredentialsToken = new ClientCredentialsTokenRequest
-            //{
-            //    Address = disco.TokenEndpoint,
-            //    ClientId = backendAuthConfigs.ClientId,
-            //    ClientSecret = backendAuthConfigs.ClientSecret,
-            //    Scope = backendAuthConfigs.Scope,
-            //};
-      
+            var expectedTokenReponse = fixture.Create<TokenResponse>();
+
+            static bool isResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks) => true;
+
+            var disco = new DiscoveryDocumentResponse();
+            discoveryCache.GetAsync().Returns(disco);
 
 
-            //// Act
-            //var actual =  backendAuthService.GetAccessToken(isResponseTokenExpired);
+            var clientCredentialsTokenRequest = new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = backendAuthConfigs.ClientId,
+                ClientSecret = backendAuthConfigs.ClientSecret,
+                Scope = backendAuthConfigs.Scope
+            };
 
-            //// Assert
-            //httpClient.Received().RequestClientCredentialsTokenAsync(clientCredentialsToken);
+            var requestClientCredentialsTokenAsync
+                = Substitute.For<Func<ClientCredentialsTokenRequest, CancellationToken, Task<TokenResponse>>>();
+
+            requestClientCredentialsTokenAsync
+                .Invoke(clientCredentialsTokenRequest, default)
+                .Returns(expectedTokenReponse);
+
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, requestClientCredentialsTokenAsync);
+
+
+            // Act
+            var actual = backendAuthService.GetAccessToken(isResponseTokenExpired);
+
+            // Assert
+            requestClientCredentialsTokenAsync.ReceivedWithAnyArgs().Invoke(clientCredentialsTokenRequest, default);
         }
     }
 }

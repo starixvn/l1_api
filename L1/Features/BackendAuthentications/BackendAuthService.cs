@@ -20,37 +20,54 @@ namespace L1.Features.BackendAuthentications
         private readonly HttpClient httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
+        private readonly Func<ClientCredentialsTokenRequest, CancellationToken, Task<TokenResponse>> requestClientCredentialsTokenAsync;
 
-        public BackendAuthService(HttpClient httpClient, BackendAuthConfigs backendAuthConfigs, IDiscoveryCache discoveryCache)
+        public BackendAuthService(HttpClient httpClient,
+            BackendAuthConfigs backendAuthConfigs,
+            IDiscoveryCache discoveryCache,
+            Func<ClientCredentialsTokenRequest, CancellationToken, Task<TokenResponse>> requestClientCredentialsTokenAsync = null)
         {
             this.httpClient = httpClient;
             this.backendAuthConfigs = backendAuthConfigs;
             this.discoveryCache = discoveryCache;
+            this.requestClientCredentialsTokenAsync = requestClientCredentialsTokenAsync;
+
         }
 
         public async Task<TokenResponse> GetAccessToken()
-            =>  await GetAccessToken(null);
+            => await GetAccessToken(null);
 
-        public async Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> isResponseTokenExpired)
+        public async Task<TokenResponse> GetAccessToken(
+            Func<TokenResponse, long, bool> isResponseTokenExpired)
         {
-            isResponseTokenExpired ??= IsResponseTokenExpired; 
-          
+            isResponseTokenExpired ??= IsResponseTokenExpired;
+
             if (isResponseTokenExpired(TokenResponse, LastRequestTicks))
             {
                 var disco = await discoveryCache.GetAsync();
 
                 if (!disco.IsError)
                 {
+                    var clientCredentialsTokenRequest = new ClientCredentialsTokenRequest
+                    {
+                        Address = disco.TokenEndpoint,
+                        ClientId = backendAuthConfigs.ClientId,
+                        ClientSecret = backendAuthConfigs.ClientSecret,
+                        Scope = backendAuthConfigs.Scope,
+                    };
 
-                    var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(
-                        new ClientCredentialsTokenRequest
-                        {
-                            Address = disco.TokenEndpoint,
-                            ClientId = backendAuthConfigs.ClientId,
-                            ClientSecret = backendAuthConfigs.ClientSecret,
-                            Scope = backendAuthConfigs.Scope,
-                        });
+                    var newTokenResponse = TokenResponse;
 
+                    if (requestClientCredentialsTokenAsync == null)
+                    {
+                        newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
+                    }
+                    else
+                    {
+                        newTokenResponse = await requestClientCredentialsTokenAsync.Invoke(clientCredentialsTokenRequest, default);
+                    }
+
+                      
                     Interlocked.Exchange(ref TokenResponse, newTokenResponse);
                     Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
                 }
@@ -58,12 +75,12 @@ namespace L1.Features.BackendAuthentications
                 {
                     throw new InvalidOperationException(disco.Error);
                 }
-            }        
+            }
 
             return TokenResponse;
         }
 
-        private  bool IsResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks)
+        private static bool IsResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks)
                 => tokenResponse == null || new DateTimeOffset(lastRequestTicks, TimeSpan.Zero)
                         .AddSeconds(tokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1);
     }

@@ -51,7 +51,7 @@ namespace L1.WebApi.Controllers
                     IsMobi = model.IsMobi,
                     SiteName = model.SiteName,
                     IsCash = model.IsCash
-                }, model.GameTypeId).RedirectUri.ToString();
+                }, model.GameTypeId);
 
                 await WriteSignInLog(requestTime, model, result);
 

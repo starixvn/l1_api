@@ -5,7 +5,7 @@ using L1.Features.Sites;
 using NSubstitute;
 using Xunit;
 
-namespace L1.Tests
+namespace L1.Tests.Features.Sites
 {
     public class SiteDataServiceTests
     {

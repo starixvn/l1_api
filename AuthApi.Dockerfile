@@ -1,4 +1,4 @@
-FROM registry.nexdev.net:5050/docker/dotnet/core/sdk:3.1 AS builder
+FROM registry.nexdev.net:5050/docker/dotnet/core/sdk:5.0 AS builder
 WORKDIR /src
 
 COPY ./L1 ./L1
@@ -11,7 +11,7 @@ COPY ./L1.IdentityServerApi .
 
 RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
-FROM registry.nexdev.net:5050/docker/dotnet/core/aspnet:3.1-buster-slim AS base
+FROM registry.nexdev.net:5050/docker/dotnet/core/aspnet:5.0-buster-slim AS base
 
 WORKDIR /app
 COPY --from=builder /app .

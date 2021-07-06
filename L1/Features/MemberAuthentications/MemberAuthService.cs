@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using L1.Constants;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Resources;
@@ -36,7 +38,7 @@ namespace L1.Features.MemberAuthentications
 
         public SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId)
         {
-            var gameClientUrl = GetGameClientUrl(memberAuth);
+            var gameClientUrl = GetGameClientUrl(memberAuth, gameTypeId);
 
             if (gameClientUrl == null)
             {
@@ -103,7 +105,7 @@ namespace L1.Features.MemberAuthentications
                 SentryLevel.Warning);
         }
 
-        private Uri GetGameClientUrl(MemberAuth memberAuth)
+        private Uri GetGameClientUrl(MemberAuth memberAuth, byte? gameTypeId)
         {
             var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
@@ -112,7 +114,12 @@ namespace L1.Features.MemberAuthentications
                 return null;
             }
 
-            return new Uri(memberAuth.IsMobi ? site.GameMobiClientUrl : site.GameClientUrl);
+            if (memberAuth.IsMobi)
+            {
+                return new Uri(KenoSoccer.GameIds.Any(x => x == gameTypeId) ? site.GameMobiKenoSoccerClientUrl : site.GameMobiClientUrl);
+            }
+
+            return new Uri(site.GameClientUrl);
         }
     }
 }

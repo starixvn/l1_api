@@ -23,8 +23,8 @@ namespace L1.IdentityServerApi.Extensions
             var client = new MongoClient(connectionString);
 
             builder.Services.AddSingleton<IMongoClient>(client);
-            builder.Services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
-            builder.Services.AddSingleton<ISiteDataService, SiteDataService>();
+            builder.Services.AddScoped<ISiteDataAccess, SiteDataAccess>();
+            builder.Services.AddScoped<ISiteDataService, SiteDataService>();
             builder.Services.AddScoped<ISigningCredentialsDataAccess, SigningCredentialsDataAccess>();
 
             return builder;

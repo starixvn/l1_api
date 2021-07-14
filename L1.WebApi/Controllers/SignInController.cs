@@ -49,7 +49,7 @@ namespace L1.WebApi.Controllers
                     SiteId = model.SiteId,
                     ClientId = model.Auth?.ClientId,
                     IsMobi = model.IsMobi
-                }, model.GameTypeId).RedirectUri.ToString();
+                }, model.GameTypeId);
 
                 await WriteSignInLog(requestTime, model, result);
 

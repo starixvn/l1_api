@@ -9,6 +9,7 @@ namespace L1.Features.BackendAuthentications
     public interface IBackendAuthService
     {
         Task<TokenResponse> GetAccessToken();
+
         Task<TokenResponse> GetAccessToken(Func<TokenResponse, long, bool> checkResponseTokenFunc);
     }
 
@@ -40,7 +41,6 @@ namespace L1.Features.BackendAuthentications
         private readonly IHttpClientWrapper httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
-
 
         public BackendAuthService(IHttpClientWrapper httpClient,
             BackendAuthConfigs backendAuthConfigs,

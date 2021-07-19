@@ -23,7 +23,5 @@ namespace L1.Features.Sites
         public IEnumerable<string> ValidCurrencies { get; set; }
 
         public string GameMobiClientUrl { get; set; }
-
-        public string GameMobiKenoSoccerClientUrl { get; set; }
     }
 }

@@ -24,10 +24,10 @@ namespace L1.Tests.Features.AdminApiCommunicators
         {
             adminApiEndPoints = new AdminApiEndPoints
             {
-                DailySummary = "http://localhost/DailySummary",
-                NotifyHighStake = "http://localhost/NotifyHighStake",
-                RetrieveEndGameInfo = "http://localhost/RetrieveEndGameInfo",
-                UnderMaintenance = "http://localhost/UnderMaintenance"
+                DailySummary = "/DailySummary",
+                NotifyHighStake = "/NotifyHighStake",
+                RetrieveEndGameInfo = "/RetrieveEndGameInfo",
+                UnderMaintenance = "/UnderMaintenance"
             };
 
             sentryClient = Substitute.For<ISentryClient>();

@@ -33,7 +33,7 @@ namespace L1.Tests.Features.OWCommunicators
             var service = new OWService(httpClient, auth, failureHandler);
 
             // Act
-            var result = await service.Post<OWResult>("https://localhost", call);
+            var result = await service.Post<OWResult>("/aaa", call);
 
             // Assert
             Assert.IsType<OWResponse<OWResult>>(result);
@@ -47,7 +47,7 @@ namespace L1.Tests.Features.OWCommunicators
             var service = new OWService(httpClient, auth, failureHandler);
 
             // Act
-            var response = await service.Post<OWResult>("https://localhost", call);
+            var response = await service.Post<OWResult>("/aaa", call);
 
             // Assert
             Assert.IsType<OWResponse<OWResult>>(response);

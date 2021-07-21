@@ -58,10 +58,10 @@ namespace L1.Features.MemberAuthentications
 
             if (gameTypeId.HasValue)
             {
-                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&gameId={gameTypeId.Value}");
+                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&lang={memberAuth.Language}&gameId={gameTypeId.Value}");
             }
 
-            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}");
+            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&lang={memberAuth.Language}");
         }
 
         public VerificationResult VerifyToken(VerificationParams verificationParams)

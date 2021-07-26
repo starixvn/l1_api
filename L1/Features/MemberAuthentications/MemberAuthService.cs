@@ -93,7 +93,8 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Currency,
                     memberAuth.Seq,
                     memberAuth.ClientId,
-                    memberAuth.Domain);
+                    memberAuth.Domain,
+                    memberAuth.SiteName);
             }
 
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);

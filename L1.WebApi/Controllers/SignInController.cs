@@ -48,7 +48,8 @@ namespace L1.WebApi.Controllers
                     Language = model.Language,
                     SiteId = model.SiteId,
                     ClientId = model.Auth?.ClientId,
-                    IsMobi = model.IsMobi
+                    IsMobi = model.IsMobi,
+                    SiteName = model.SiteName
                 }, model.GameTypeId);
 
                 await WriteSignInLog(requestTime, model, result);

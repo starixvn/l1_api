@@ -20,6 +20,8 @@ namespace L1.WebApi.Models
 
         public bool IsMobi { get; set; }
 
+        public string SiteName { get; set; }
+
         public Auth Auth { get; set; }
     }
 }

@@ -44,7 +44,7 @@ namespace L1.Features.MemberAuthentications
                     && x.MemberId == memberAuth.MemberId
                     && x.SiteId.ToUpper() == memberAuth.SiteId.ToUpper()
                     && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper()
-                    && x.IsMobi == memberAuth.IsMobi
+                    && x.AppType == memberAuth.AppType
                     && x.Language.ToUpper() == memberAuth.Language.ToUpper())
                 .SortByDescending(x => x.Time)
                 .Limit(1)

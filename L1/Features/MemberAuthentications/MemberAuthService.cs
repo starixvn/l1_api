@@ -1,6 +1,7 @@
 ﻿using System;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Newtonsoft.Json;
 using Sentry;
@@ -116,7 +117,12 @@ namespace L1.Features.MemberAuthentications
                 return null;
             }
 
-            return new Uri(memberAuth.IsMobi ? site.GameMobiClientUrl : site.GameClientUrl);
+            if(memberAuth.AppType == AppTypes.MiniSabaClub)
+            {
+                return new Uri(site.MiniSabaGameClientUrl);
+            }
+
+            return new Uri(memberAuth.AppType == AppTypes.SabaMobi ? site.GameMobiClientUrl : site.GameClientUrl);
         }
     }
 }

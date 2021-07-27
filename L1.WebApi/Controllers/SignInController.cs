@@ -48,7 +48,7 @@ namespace L1.WebApi.Controllers
                     Language = model.Language,
                     SiteId = model.SiteId,
                     ClientId = model.Auth?.ClientId,
-                    IsMobi = model.IsMobi,
+                    AppType = model.AppType
                     SiteName = model.SiteName
                 }, model.GameTypeId);
 

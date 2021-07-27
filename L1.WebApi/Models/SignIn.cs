@@ -1,4 +1,5 @@
-﻿using L1.Shared.Models;
+﻿using L1.Shared.Constants;
+using L1.Shared.Models;
 
 namespace L1.WebApi.Models
 {
@@ -18,7 +19,7 @@ namespace L1.WebApi.Models
 
         public byte? GameTypeId { get; set; }
 
-        public bool IsMobi { get; set; }
+        public byte AppType { get; set; } = AppTypes.SabaClub;
 
         public string SiteName { get; set; }
 

@@ -95,7 +95,8 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Seq,
                     memberAuth.ClientId,
                     memberAuth.Domain,
-                    memberAuth.SiteName);
+                    memberAuth.SiteName,
+                    memberAuth.AppType);
             }
 
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);

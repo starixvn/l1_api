@@ -27,7 +27,8 @@ namespace L1.Features.MemberAuthentications
             string seq,
             string clientId,
             string domain,
-            string siteName
+            string siteName,
+            byte appType)
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
@@ -41,6 +42,7 @@ namespace L1.Features.MemberAuthentications
             ClientId = clientId;
             Domain = domain;
             SiteName = siteName;
+            AppType = appType;
         }
 
         public int MemberId { get; }
@@ -62,6 +64,8 @@ namespace L1.Features.MemberAuthentications
         public string MemberKey => $"{ClientId}_{MemberId}";
 
         public string SiteName { get; set; }
+        
+        public byte AppType { get; set; }
 
         public static VerificationResult CreateErrorResponse(int code)
            => new VerificationResult(code, string.Empty);
@@ -77,7 +81,8 @@ namespace L1.Features.MemberAuthentications
             string seq,
             string clientId,
             string domain,
-            string siteName)
+            string siteName,
+            byte appType)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
@@ -90,6 +95,7 @@ namespace L1.Features.MemberAuthentications
                 seq,
                 clientId,
                 domain,
-                siteName);
+                siteName,
+                appType);
     }
 }

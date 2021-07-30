@@ -28,6 +28,7 @@ namespace L1.Features.OWCommunicators
         public string CheckMaintenance { get; set; }
 
         public string HitJackpot { get; set; }
+
         public string GetBetLimit { get; set; }
     }
 }

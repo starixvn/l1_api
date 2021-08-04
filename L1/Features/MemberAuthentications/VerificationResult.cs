@@ -28,7 +28,7 @@ namespace L1.Features.MemberAuthentications
             string clientId,
             string domain,
             string siteName,
-            byte appType)
+            byte appType
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)

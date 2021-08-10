@@ -11,7 +11,7 @@ namespace L1.WebApi.Models
 
         public string Currency { get; set; }
 
-        public string Language { get; set; }
+        public string Language { get; set; } = "en-US";
 
         public string IP { get; set; }
 
@@ -19,9 +19,9 @@ namespace L1.WebApi.Models
 
         public byte? GameTypeId { get; set; }
 
-        public byte AppType { get; set; }
+        public byte AppType { get; set; } = AppTypes.SabaClub;
 
-        public string SiteName { get; set; }
+        public string SiteName { get; set; } 
 
         public Auth Auth { get; set; }
     }

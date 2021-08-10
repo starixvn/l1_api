@@ -5,5 +5,10 @@
         public const byte SabaClub = 1;
         public const byte SabaMobi = 2;
         public const byte MiniSabaClub = 3;
+
+        public static bool IsValid(byte appType)
+        {
+            return appType == SabaClub || appType == SabaMobi || appType == MiniSabaClub;
+        }
     }
 }

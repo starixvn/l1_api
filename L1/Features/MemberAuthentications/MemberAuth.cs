@@ -1,5 +1,4 @@
 ﻿using System;
-using L1.Shared.Constants;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -22,7 +21,7 @@ namespace L1.Features.MemberAuthentications
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime Time { get; set; }
 
-        public string Language { get; set; } = "en-US";
+        public string Language { get; set; }
 
         public int MemberId { get; set; }
 
@@ -36,7 +35,7 @@ namespace L1.Features.MemberAuthentications
 
         public string ClientId { get; set; }
 
-        public byte AppType { get; set; } = AppTypes.SabaClub;
+        public byte AppType { get; set; }
 
         public string SiteName { get; set; }
     }

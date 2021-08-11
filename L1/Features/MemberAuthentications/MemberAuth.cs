@@ -35,6 +35,8 @@ namespace L1.Features.MemberAuthentications
 
         public string ClientId { get; set; }
 
-        public bool IsMobi { get; set; }
+        public byte AppType { get; set; }
+
+        public string SiteName { get; set; }
     }
 }

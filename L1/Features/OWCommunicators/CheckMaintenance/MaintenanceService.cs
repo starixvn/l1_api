@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
 using Sentry;
-using Sentry.Protocol;
 using AdminApi = L1.Features.AdminApiCommunicators.UnderMaintenance;
 
 namespace L1.Features.OWCommunicators.CheckMaintenance
@@ -24,20 +23,23 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
     {
         private const string DefaultMediaType = "application/json";
 
-        private static int UnderMaintenanceCounter = 0;
+        private static int UnderMaintenanceCounter;
 
         private readonly HttpClient httpClient;
         private readonly OWServiceSettings owServiceSettings;
         private readonly IAdminApiService adminApiService;
+        private readonly ISentryClient sentryClient;
 
         public MaintenanceService(
             HttpClient httpClient,
             OWServiceSettings owServiceSettings,
-            IAdminApiService adminApiService)
+            IAdminApiService adminApiService,
+            ISentryClient sentryClient)
         {
             this.httpClient = httpClient;
             this.owServiceSettings = owServiceSettings;
             this.adminApiService = adminApiService;
+            this.sentryClient = sentryClient;
         }
 
         public Task<bool> IsUnderMaintenance()
@@ -84,10 +86,9 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
                 Interlocked.Exchange(ref UnderMaintenanceCounter, 0);
             }
 
-            SentrySdk.CaptureMessage(
-                $"Received maintenance schedule: IsUM: {isUnderMaintenance} - {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}",
-                SentryLevel.Info);
-            
+            sentryClient.CaptureMessage(
+                $"Received maintenance schedule: IsUM: {isUnderMaintenance} - {maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime}");
+
             await adminApiService.UnderMaintenance(new AdminApi.MaintenanceRequest(maintenanceSchedule.StartTime, maintenanceSchedule.EndTime, isUnderMaintenance));
         }
 

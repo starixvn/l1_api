@@ -6,8 +6,8 @@ namespace L1.Features.MemberAuthentications
     {
         public static void AddMemberAuthentications(this IServiceCollection services)
         {
-            services.AddSingleton<IMemberAuthDataAccess, MemberAuthDataAccess>();
-            services.AddSingleton<IMemberAuthService, MemberAuthService>();
+            services.AddScoped<IMemberAuthDataAccess, MemberAuthDataAccess>();
+            services.AddScoped<IMemberAuthService, MemberAuthService>();
         }
     }
 }

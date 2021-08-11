@@ -19,7 +19,7 @@ namespace L1.Features.OWCommunicators
 
         Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call);
 
-        Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = Systems.Cocos);
+        Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = AppTypes.SabaClub);
 
         Task<OWResponse<EndGameResult>> EndGame(EndGameCall call);
 
@@ -56,7 +56,7 @@ namespace L1.Features.OWCommunicators
         public Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
             => oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
 
-        public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = Systems.Cocos)
+        public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = AppTypes.SabaClub)
         {
             var response = await oWService.Post<PlaceBetResult>(endpoints.PlaceBet, call);
 
@@ -66,13 +66,13 @@ namespace L1.Features.OWCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                   await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
-                       call.ObCustId, 
-                       call.GameTypeId, 
-                       call.Amount, 
-                       call.Currency,
-                       call.ChoiceId,
-                       system));
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                        call.ObCustId,
+                        call.GameTypeId,
+                        call.Amount,
+                        call.Currency,
+                        call.ChoiceId,
+                        system));
                 }
             }
 
@@ -103,11 +103,7 @@ namespace L1.Features.OWCommunicators
             return response;
         }
 
-        public async Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
-        {
-            var response = await oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
-
-            return response;
-        }
+        public Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
+        => oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
     }
 }

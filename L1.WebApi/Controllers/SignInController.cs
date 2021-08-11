@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.Sites;
+using L1.Shared.Constants;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,8 @@ namespace L1.WebApi.Controllers
                     Language = model.Language,
                     SiteId = model.SiteId,
                     ClientId = model.Auth?.ClientId,
-                    IsMobi = model.IsMobi
+                    AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
+                    SiteName = model.SiteName
                 }, model.GameTypeId);
 
                 await WriteSignInLog(requestTime, model, result);

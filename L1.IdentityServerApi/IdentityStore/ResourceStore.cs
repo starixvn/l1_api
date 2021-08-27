@@ -45,7 +45,7 @@ namespace L1.IdentityServerApi.IdentityStore
             return Task.FromResult(result);
         }
 
-        private IEnumerable<ApiResource> GetAllApiResources(IEnumerable<Site> sites)
+        private static IEnumerable<ApiResource> GetAllApiResources(IEnumerable<Site> sites)
         {
             return sites.Select(site => new ApiResource(site.SiteId, site.SiteId));
         }

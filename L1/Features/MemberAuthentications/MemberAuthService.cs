@@ -1,6 +1,7 @@
 ﻿using System;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Newtonsoft.Json;
 using Sentry;
@@ -20,22 +21,25 @@ namespace L1.Features.MemberAuthentications
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
         private readonly ISiteDataService siteDataService;
         private readonly IAppSettings appSettings;
+        private readonly ISentryClient sentryClient;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
             ISiteDataService siteDataService,
-            IAppSettings appSettings)
+            IAppSettings appSettings,
+            ISentryClient sentryClient)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
             this.siteDataService = siteDataService;
             this.appSettings = appSettings;
+            this.sentryClient = sentryClient;
         }
 
         public SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId)
         {
             var gameClientUrl = GetGameClientUrl(memberAuth);
 
-            if (string.IsNullOrWhiteSpace(gameClientUrl))
+            if (gameClientUrl == null)
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
@@ -58,10 +62,10 @@ namespace L1.Features.MemberAuthentications
 
             if (gameTypeId.HasValue)
             {
-                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&lang={memberAuth.Language}&gameId={gameTypeId.Value}");
+                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&lang={memberAuth.Language}&gameId={gameTypeId.Value}");
             }
 
-            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.TrimEnd('/')}/?token={token}&lang={memberAuth.Language}");
+            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&lang={memberAuth.Language}");
         }
 
         public VerificationResult VerifyToken(VerificationParams verificationParams)
@@ -90,7 +94,9 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Currency,
                     memberAuth.Seq,
                     memberAuth.ClientId,
-                    memberAuth.Domain);
+                    memberAuth.Domain,
+                    memberAuth.SiteName,
+                    memberAuth.AppType);
             }
 
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
@@ -98,16 +104,26 @@ namespace L1.Features.MemberAuthentications
 
         private static void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
-            SentrySdk.CaptureMessage(
+            sentryClient.CaptureMessage(
                 $"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
                 SentryLevel.Warning);
         }
 
-        private string GetGameClientUrl(MemberAuth memberAuth)
+        private Uri GetGameClientUrl(MemberAuth memberAuth)
         {
             var site = siteDataService.GetByClientId(memberAuth.ClientId);
 
-            return memberAuth.IsMobi ? site?.GameMobiClientUrl : site?.GameClientUrl;
+            if (site == null)
+            {
+                return null;
+            }
+
+            if(memberAuth.AppType == AppTypes.MiniSabaClub)
+            {
+                return new Uri(site.MiniSabaGameClientUrl);
+            }
+
+            return new Uri(memberAuth.AppType == AppTypes.SabaMobi ? site.GameMobiClientUrl : site.GameClientUrl);
         }
     }
 }

@@ -14,10 +14,10 @@ namespace L1.Features.OWCommunicators
     public class OWService : IOWService
     {
         private readonly HttpClient httpClient;
-        private readonly OWAuth auth;
+        private readonly IOWAuth auth;
         private readonly IOWFailureHandler failureHandler;
 
-        public OWService(HttpClient httpClient, OWAuth auth, IOWFailureHandler failureHandler)
+        public OWService(HttpClient httpClient, IOWAuth auth, IOWFailureHandler failureHandler)
         {
             this.httpClient = httpClient;
             this.auth = auth;
@@ -30,7 +30,7 @@ namespace L1.Features.OWCommunicators
 
             var request = new OWRequest(auth, call);
             var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
-            var response = await httpClient.PostAsync(apiEndpoint, content);
+            var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
             OWResponse<T> finalResponse;
 
             if (response.IsSuccessStatusCode)

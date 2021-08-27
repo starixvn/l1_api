@@ -7,7 +7,7 @@ namespace L1.Features.OWCommunicators.Log
 {
     public class OWLog
     {
-        public OWLog(DateTimeOffset requestTimeStamp, IOWCall call, DateTimeOffset responseTimeStamp, IOWResult result, byte system = Systems.Cocos)
+        public OWLog(DateTimeOffset requestTimeStamp, IOWCall call, DateTimeOffset responseTimeStamp, IOWResult result, byte system = AppTypes.SabaClub)
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
             RequestTimeStamp = requestTimeStamp;

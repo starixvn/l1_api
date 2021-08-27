@@ -9,7 +9,7 @@ namespace L1.Features.OWCommunicators
         public static void AddOWServices(this IServiceCollection services, OWServiceSettings owServiceSettings)
         {
             services.AddSingleton(owServiceSettings);
-            services.AddSingleton(new OWAuth(owServiceSettings.Login, owServiceSettings.Password));
+            services.AddSingleton<IOWAuth>(new OWAuth(owServiceSettings.Login, owServiceSettings.Password));
             services.AddSingleton(owServiceSettings.Endpoints);
 
             services.AddScoped<ILogDataAccess, LogDataAccess>();

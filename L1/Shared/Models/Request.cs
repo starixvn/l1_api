@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace L1.Shared.Models
+﻿namespace L1.Shared.Models
 {
     public interface IRequest
     {

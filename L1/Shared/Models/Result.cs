@@ -7,7 +7,7 @@
         string Message { get; }
     }
 
-    public abstract class BaseResult : IResult
+    public class BaseResult : IResult
     {
         public const int SuccessCode = 0;
         public const int ClientIdqDoesNotExistCode = 1;
@@ -17,6 +17,8 @@
         public const int ServerErrorCode = 5;
         public const int GameServerNotFoundCode = 6;
         public const int Unauthorize = 7;
+
+        protected BaseResult() { }
 
         public int Code { get; protected set; }
 

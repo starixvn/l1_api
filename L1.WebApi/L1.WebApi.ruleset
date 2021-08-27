@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SonarQube - l1-game-round-result Nexcel CSharp" ToolsVersion="16.0">
+  <Include Path="..\.sonarlint\l1-apicsharp.ruleset" Action="Default" />
+  <Include Path="..\.sonarlint\l1-game-round-resultcsharp.ruleset" Action="Default" />
+</RuleSet>

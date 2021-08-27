@@ -1,0 +1,33 @@
+{
+  "Env": "LOCAL_1",
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "AppSettings": {
+    "HostingPort": 5000,
+    "MongoDBSettings": {
+            "ConnectionString": "mongodb://lmn_backend:LmnBackend@10.10.50.13:37104/?replicaSet=L2pLocal"
+    }
+  },
+  "IdentityClientCaching": 30,
+  "IdentityResourceCaching": 30,
+  "Sentry": {
+<<<<<<< HEAD
+    "Dsn": "https://fabd7b5972094d698fe1a24862a8f8ea@sentry.lumigame.com/39",
+=======
+    "Dsn": "https://2cce276b55fd4c7b8044485f545942dd@sentry.lumigame.com/37",
+>>>>>>> L1_master
+    "IncludeRequestPayload": true,
+    "SendDefaultPii": true,
+    "MinimumBreadcrumbLevel": "Debug",
+    "MinimumEventLevel": "Warning",
+    "AttachStackTrace": true,
+    "Debug": true,
+    "DiagnosticsLevel": "Error"
+  }
+}

@@ -39,11 +39,12 @@ namespace L1.Features.MemberAuthentications
         public MemberAuth GetLatest(MemberAuth memberAuth) =>
             memberAuthCollection
                 .Find(
+#pragma warning disable S1067 // Expressions should not be too complex
                     x => x.IP == memberAuth.IP
                     && x.MemberId == memberAuth.MemberId
                     && x.SiteId.ToUpper() == memberAuth.SiteId.ToUpper()
                     && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper()
-                    && x.IsMobi == memberAuth.IsMobi
+                    && x.AppType == memberAuth.AppType
                     && x.Language.ToUpper() == memberAuth.Language.ToUpper())
                 .SortByDescending(x => x.Time)
                 .Limit(1)

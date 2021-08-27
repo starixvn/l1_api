@@ -14,6 +14,8 @@ namespace L1.Features.MemberAuthentications
             Message = message;
         }
 
+#pragma warning disable S107 // Methods should not have too many parameters
+
         public VerificationResult(
             int code,
             string message,
@@ -24,7 +26,11 @@ namespace L1.Features.MemberAuthentications
             string currency,
             string seq,
             string clientId,
-            string domain)
+            string domain,
+            string siteName,
+            byte appType
+            )
+#pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
         {
             MemberId = memberId;
@@ -35,6 +41,8 @@ namespace L1.Features.MemberAuthentications
             Seq = seq;
             ClientId = clientId;
             Domain = domain;
+            SiteName = siteName;
+            AppType = appType;
         }
 
         public int MemberId { get; }
@@ -55,8 +63,14 @@ namespace L1.Features.MemberAuthentications
 
         public string MemberKey => $"{ClientId}_{MemberId}";
 
+        public string SiteName { get; set; }
+        
+        public byte AppType { get; set; }
+
         public static VerificationResult CreateErrorResponse(int code)
            => new VerificationResult(code, string.Empty);
+
+#pragma warning disable S107 // Methods should not have too many parameters
 
         public static VerificationResult CreateSuccessResponse(
             int memberId,
@@ -66,7 +80,10 @@ namespace L1.Features.MemberAuthentications
             string currency,
             string seq,
             string clientId,
-            string domain)
+            string domain,
+            string siteName,
+            byte appType)
+#pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
                 string.Empty,
@@ -77,6 +94,8 @@ namespace L1.Features.MemberAuthentications
                 currency,
                 seq,
                 clientId,
-                domain);
+                domain,
+                siteName,
+                appType);
     }
 }

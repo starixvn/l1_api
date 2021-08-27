@@ -50,7 +50,7 @@ namespace L1.WebApi.Controllers
                     SiteId = model.SiteId,
                     ClientId = model.Auth?.ClientId,
                     AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
-                    SiteName = model.SiteName
+                    SiteName = model.SiteName,
                     IsCash = model.IsCash
                 }, model.GameTypeId);
 

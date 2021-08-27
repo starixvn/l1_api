@@ -102,7 +102,7 @@ namespace L1.Features.MemberAuthentications
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
         }
 
-        private static void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
+        private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
             sentryClient.CaptureMessage(
                 $"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",

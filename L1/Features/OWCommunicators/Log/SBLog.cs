@@ -9,6 +9,7 @@ namespace L1.Features.OWCommunicators.Log
     {
         public SBLog(IRequest request, IResult result, DateTimeOffset requestTimeStamp, DateTimeOffset responseTimeStamp)
         {
+            LogTimeStamp = DateTimeOffset.UtcNow;
             RequestTimeStamp = requestTimeStamp;
             Request = request;
             ResponseTimeStamp = responseTimeStamp;

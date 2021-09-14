@@ -15,6 +15,8 @@ namespace L1.Features.OWCommunicators.Log
         Task WriteVoidGameAsync(OWLog log);
         Task WriteHitJackpotAsync(OWLog log);
         Task WriteSignInAsync(SBLog log);
+
+        Task WriteRetrieveEndGameAsync(SBLog log);
     }
 
     public class LogDataAccess : ILogDataAccess
@@ -25,6 +27,7 @@ namespace L1.Features.OWCommunicators.Log
         private const string VoidGamesCollectionName = "void_games";
         private const string HitJackpotCollectionName = "hit_jackpots";
         private const string SignInCollectionName = "signin_requests";
+        private const string RetrieveEndGameCollectionName = "retrieve_requests";
 
         private readonly IMongoCollection<OWLog> failedRequestsCollection;
         private readonly IMongoCollection<OWLog> betsCollection;
@@ -32,6 +35,7 @@ namespace L1.Features.OWCommunicators.Log
         private readonly IMongoCollection<OWLog> voidGamesCollection;
         private readonly IMongoCollection<OWLog> hitJackpotsCollection;
         private readonly IMongoCollection<SBLog> signInCollection;
+        private readonly IMongoCollection<SBLog> retrieveCollection;
 
         public LogDataAccess(IMongoClient mongoClient)
         {
@@ -43,6 +47,7 @@ namespace L1.Features.OWCommunicators.Log
             voidGamesCollection = database.GetCollection<OWLog>(VoidGamesCollectionName);
             hitJackpotsCollection = database.GetCollection<OWLog>(HitJackpotCollectionName);
             signInCollection = database.GetCollection<SBLog>(SignInCollectionName);
+            retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
         }
 
         public Task WriteFailedRequestAsync(OWLog log)
@@ -62,5 +67,8 @@ namespace L1.Features.OWCommunicators.Log
             
         public Task WriteSignInAsync(SBLog log)       
             => signInCollection.InsertOneAsync(log);
+
+        public Task WriteRetrieveEndGameAsync(SBLog log)
+            => retrieveCollection.InsertOneAsync(log);
     }
 }

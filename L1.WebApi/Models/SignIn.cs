@@ -15,6 +15,8 @@ namespace L1.WebApi.Models
 
         public string IP { get; set; }
 
+        public int MemberId { get; set; }
+
         public string MemberName { get; set; }     
 
         public byte? GameTypeId { get; set; }

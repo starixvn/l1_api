@@ -13,6 +13,8 @@ namespace L1.Features.OWCommunicators.Log
         Task LogVoidGameAsync<T>(OWResponse<T> response) where T : IOWResult;
 
         Task LogSignInAsync(SBLog log);
+
+        Task LogRetrieveEndGameAsync(SBLog log);
     }
 
     public class LogService : ILogService
@@ -55,6 +57,9 @@ namespace L1.Features.OWCommunicators.Log
 
         public Task LogSignInAsync(SBLog log)
             => logDataAccess.WriteSignInAsync(log);
+
+        public Task LogRetrieveEndGameAsync(SBLog log)
+            => logDataAccess.WriteRetrieveEndGameAsync(log);
 
         private static OWLog ConvertToOWLog<T>(OWResponse<T> response) where T : IOWResult
             => new OWLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result);

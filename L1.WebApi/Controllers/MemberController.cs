@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
 using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
@@ -7,6 +8,7 @@ using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
 using L1.Features.OWCommunicators.GetBetLimit;
+using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
 using L1.Features.Sites;
@@ -22,15 +24,18 @@ namespace L1.WebApi.Controllers
         private readonly IOWCustomerService oWCustomerService;
         private readonly IAdminApiService adminApiService;
         private readonly ISiteDataService siteDataService;
+        private readonly ILogService logService;
 
         public MemberController(
             IOWCustomerService oWCustomerService,
             IAdminApiService adminApiService,
-            ISiteDataService siteDataService)
+            ISiteDataService siteDataService,
+            ILogService logService)
         {
             this.oWCustomerService = oWCustomerService;
             this.adminApiService = adminApiService;
             this.siteDataService = siteDataService;
+            this.logService = logService;
         }
 
         [HttpPost]
@@ -112,6 +117,7 @@ namespace L1.WebApi.Controllers
         {
             if (siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret))
             {
+                var requestTime = DateTimeOffset.UtcNow;
                 var response = await adminApiService.RetrieveEndGameInfoAsync(
                     new RetrieveEndGameInfoRequest(
                         model.GameRoundId,
@@ -122,10 +128,19 @@ namespace L1.WebApi.Controllers
 
                 response.Result.Seq = model.Seq;
 
+                await WriteRetrieveEndGameLog(requestTime, model, response.Result);
+
                 return Ok(response);
             }
 
             return Unauthorized();
+        }
+
+        private Task WriteRetrieveEndGameLog(DateTimeOffset requestTime, EndGameInfoRequest request, RetrieveEndGameInfoResult result)
+        {
+            var log = new SBLog(request, result, requestTime, DateTimeOffset.UtcNow);
+
+            return logService.LogRetrieveEndGameAsync(log);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using L1.Shared.Models;
+﻿using L1.Shared.Constants;
+using L1.Shared.Models;
 
 namespace L1.WebApi.Models
 {
@@ -10,17 +11,19 @@ namespace L1.WebApi.Models
 
         public string Currency { get; set; }
 
-        public string Language { get; set; }
+        public string Language { get; set; } = "en-US";
 
         public string IP { get; set; }
+
+        public int MemberId { get; set; }
 
         public string MemberName { get; set; }     
 
         public byte? GameTypeId { get; set; }
 
-        public bool IsMobi { get; set; }
+        public byte AppType { get; set; } = AppTypes.SabaClub;
 
-        public string SiteName { get; set; }
+        public string SiteName { get; set; } 
 
         public bool IsCash { get; set; }
 

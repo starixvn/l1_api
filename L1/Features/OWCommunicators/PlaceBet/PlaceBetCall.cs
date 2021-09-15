@@ -6,6 +6,7 @@ namespace L1.Features.OWCommunicators.PlaceBet
 {
     public class PlaceBetCall : OWCall
     {
+#pragma warning disable S107 // Methods should not have too many parameters
         public PlaceBetCall(
             int obCustId,
             string siteId,
@@ -20,6 +21,7 @@ namespace L1.Features.OWCommunicators.PlaceBet
             bool freeSpin,
             float contributionRate,
             decimal contributionAmount) : base(obCustId, siteId)
+#pragma warning restore S107 // Methods should not have too many parameters
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;

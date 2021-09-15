@@ -11,8 +11,8 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<ISiteDataAccess, SiteDataAccess>();
-            services.AddSingleton<ISiteDataService, SiteDataService>();
+            services.AddScoped<ISiteDataAccess, SiteDataAccess>();
+            services.AddScoped<ISiteDataService, SiteDataService>();
 
             services.AddTransient<ProtectedApiBearerTokenHandler>();
         }

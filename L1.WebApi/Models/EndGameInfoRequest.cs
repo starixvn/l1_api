@@ -1,8 +1,9 @@
 ﻿using System;
+using L1.Shared.Models;
 
 namespace L1.WebApi.Models
 {
-    public class EndGameInfoRequest
+    public class EndGameInfoRequest : IRequest
     {
         public DateTimeOffset TimeStamp { get; set; }
 

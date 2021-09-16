@@ -88,5 +88,19 @@ namespace L1.Tests.Features.OWCommunicators.Log
             // Assert
             await logDataAccess.Received().WriteSignInAsync(Arg.Any<SBLog>());
         }
+
+        [Theory, AutoData]
+        public async Task LogRetrieveEndGameAsync_Always_WriteRetrieveEndGameAsync(Request request, VerificationResult result)
+        {
+            // Arrange
+            var service = new LogService(logDataAccess);
+            var log = new SBLog(request, result, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+
+            // Act
+            await service.LogRetrieveEndGameAsync(log);
+
+            // Assert
+            await logDataAccess.Received().WriteRetrieveEndGameAsync(Arg.Any<SBLog>());
+        }
     }
 }

@@ -19,5 +19,18 @@ namespace L1.Tests._Shared
 
             return httpClient;
         }
+
+        public static HttpClient CreateErrorClient()
+        {
+            var httpClientFactory = Substitute.For<IHttpClientFactory>();
+            var httpClient = new HttpClient(new MockErrorHttpMessageHandler())
+            {
+                BaseAddress = new Uri("https://localhost")
+            };
+
+            httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+            return httpClient;
+        }
     }
 }

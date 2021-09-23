@@ -53,6 +53,7 @@ namespace L1.Features.OWCommunicators
 
             if (finalResponse.Result.IsFailed())
             {
+                finalResponse.AccessKey = accessKey;
                 await failureHandler.Handle<T>(finalResponse);
             }
 

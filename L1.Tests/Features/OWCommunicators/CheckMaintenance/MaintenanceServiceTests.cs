@@ -16,8 +16,6 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
 {
     public class MaintenanceServiceTests
     {
-        private const string DefaultMediaType = "application/json";
-
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
         private readonly OWServiceSettings owServiceSettings;

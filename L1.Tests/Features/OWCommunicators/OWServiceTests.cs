@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
+using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -11,8 +12,8 @@ namespace L1.Tests.Features.OWCommunicators
 {
     public class OWServiceTests
     {
-        private readonly IOWAuth auth;
         private readonly IOWFailureHandler failureHandler;
+        private readonly IAppSettings appSettings;
 
         private readonly OWResponse<OWResult> defaultContent = new OWResponse<OWResult>
         {
@@ -21,8 +22,9 @@ namespace L1.Tests.Features.OWCommunicators
 
         public OWServiceTests()
         {
-            auth = Substitute.For<IOWAuth>();
             failureHandler = Substitute.For<IOWFailureHandler>();
+            appSettings = Substitute.For<IAppSettings>();
+            appSettings.OWServiceSettings = new OWServiceSettings { SecretKey = "aaa" };
         }
 
         [Theory, AutoData]
@@ -30,7 +32,7 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent));
-            var service = new OWService(httpClient, auth, failureHandler);
+            var service = new OWService(httpClient, failureHandler, appSettings);
 
             // Act
             var result = await service.Post<OWResult>("/aaa", call);
@@ -44,7 +46,7 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty));
-            var service = new OWService(httpClient, auth, failureHandler);
+            var service = new OWService(httpClient, failureHandler, appSettings);
 
             // Act
             var response = await service.Post<OWResult>("/aaa", call);

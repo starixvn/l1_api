@@ -12,7 +12,7 @@ namespace L1.Tests.Features.OWCommunicators
             // Act
             try
             {
-                new OWRequest(null, null);
+                new OWRequest(null);
             }
             catch (Exception ex)
             {

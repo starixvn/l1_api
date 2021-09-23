@@ -4,11 +4,9 @@ namespace L1.Features.OWCommunicators
 {
     public class OWServiceSettings
     {
-        public Uri BaseUrl { get; set; }
+        public Uri BaseUrl { get; set; }      
 
-        public string Login { get; set; }
-
-        public string Password { get; set; }
+        public string SecretKey { get; set; }
 
         public OWEndPoints Endpoints { get; set; }
     }

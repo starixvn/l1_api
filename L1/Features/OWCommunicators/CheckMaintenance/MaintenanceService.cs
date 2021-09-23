@@ -58,7 +58,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private async Task<MaintenanceResult> GetMaintenanceSchedule(OWRequest request)
         {
             var checkingMaintenanceCall = new OWCall(request.Call.ObCustId, request.Call.SiteId);
-            var owRequestBody = new OWRequest(null, checkingMaintenanceCall);
+            var owRequestBody = new OWRequest(checkingMaintenanceCall);
             var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
             var url = new Uri(owServiceSettings.BaseUrl, owServiceSettings.Endpoints.CheckMaintenance);
             var response = await httpClient.PostAsync(url, content);

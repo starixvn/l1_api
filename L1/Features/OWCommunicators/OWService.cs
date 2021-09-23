@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using L1.Shared.Configurations;
 using Newtonsoft.Json;
 
 namespace L1.Features.OWCommunicators
@@ -14,22 +15,26 @@ namespace L1.Features.OWCommunicators
     public class OWService : IOWService
     {
         private readonly HttpClient httpClient;
-        private readonly IOWAuth auth;
         private readonly IOWFailureHandler failureHandler;
+        private readonly string secretKey;
 
-        public OWService(HttpClient httpClient, IOWAuth auth, IOWFailureHandler failureHandler)
+        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, IAppSettings appSettings)
         {
             this.httpClient = httpClient;
-            this.auth = auth;
             this.failureHandler = failureHandler;
+            secretKey = appSettings.OWServiceSettings.SecretKey;
         }
 
         public async Task<OWResponse<T>> Post<T>(string apiEndpoint, OWCall call) where T : IOWResult, new()
         {
             const string defaultMediaType = "application/json";
+            var request = new OWRequest(call);
+            var requestBody = JsonConvert.SerializeObject(request);
+            var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
 
-            var request = new OWRequest(auth, call);
-            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
+            var accessKey = CreateMD5($"{secretKey}{requestBody}");
+            httpClient.DefaultRequestHeaders.Add("Saba-access-key", accessKey);
+
             var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
             OWResponse<T> finalResponse;
 
@@ -41,7 +46,7 @@ namespace L1.Features.OWCommunicators
             }
             else
             {
-                finalResponse = await CreateOWNetworkErrorResponse<T>(call, response);
+                finalResponse = await CreateOWNetworkErrorResponse<T>(call, response, accessKey);
             }
 
             finalResponse.Request = request;
@@ -54,7 +59,22 @@ namespace L1.Features.OWCommunicators
             return finalResponse;
         }
 
-        private static async Task<OWResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response) where T : IOWResult, new()
+        private static string CreateMD5(string input)
+        {
+            using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < hashBytes.Length; i++)
+            {
+                sb.Append(hashBytes[i].ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
+
+        private static async Task<OWResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response, string accessKey) where T : IOWResult, new()
             => new OWResponse<T>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
@@ -63,7 +83,8 @@ namespace L1.Features.OWCommunicators
                     ErrorCode = OWSpecialErrorCodes.NetworkError,
                     ErrorDescription = await GetErrorResponseContent(response),
                     Seq = call.Seq
-                }
+                },
+                AccessKey = accessKey
             };
 
         private static async Task<string> GetErrorResponseContent(HttpResponseMessage response)

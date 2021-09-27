@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using L1.WebApi.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace L1.WebApi.Controllers
+namespace L1.WebApi.Tests.Controllers
 {
     public class HomeControllerTests
     {

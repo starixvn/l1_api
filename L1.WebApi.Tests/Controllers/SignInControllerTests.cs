@@ -1,16 +1,15 @@
-﻿
-
-using AutoFixture;
+﻿using AutoFixture;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.Sites;
 using L1.Shared.Constants;
+using L1.WebApi.Controllers;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
 
-namespace L1.WebApi.Controllers
+namespace L1.WebApi.Tests.Controllers
 {
     public class SignInControllerTests
     {

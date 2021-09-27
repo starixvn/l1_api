@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace L1.WebApi.Controllers
+namespace L1.IdentityServerApi.Tests.Controllers
 {
     public class HomeControllerTests
     {

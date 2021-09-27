@@ -40,6 +40,7 @@ namespace L1.Shared.Middlewares
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("  ")]
+        [InlineData("en-US")]
         public async Task Invoke_HeaderContainLanguageKey_InvokeNext(string languageCode)
         {
             // Arrange

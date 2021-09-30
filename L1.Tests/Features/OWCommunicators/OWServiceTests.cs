@@ -6,6 +6,7 @@ using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
+using Sentry;
 using Xunit;
 
 namespace L1.Tests.Features.OWCommunicators
@@ -14,6 +15,7 @@ namespace L1.Tests.Features.OWCommunicators
     {
         private readonly IOWFailureHandler failureHandler;
         private readonly IAppSettings appSettings;
+        private readonly ISentryClient sentryClient;
 
         private readonly OWResponse<OWResult> defaultContent = new OWResponse<OWResult>
         {
@@ -25,6 +27,7 @@ namespace L1.Tests.Features.OWCommunicators
             failureHandler = Substitute.For<IOWFailureHandler>();
             appSettings = Substitute.For<IAppSettings>();
             appSettings.OWServiceSettings = new OWServiceSettings { SecretKey = "aaa" };
+            sentryClient = Substitute.For<ISentryClient>();
         }
 
         [Theory, AutoData]
@@ -32,7 +35,7 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent));
-            var service = new OWService(httpClient, failureHandler, appSettings);
+            var service = new OWService(httpClient, failureHandler, appSettings, sentryClient);
 
             // Act
             var result = await service.Post<OWResult>("/aaa", call);
@@ -46,7 +49,7 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty));
-            var service = new OWService(httpClient, failureHandler, appSettings);
+            var service = new OWService(httpClient, failureHandler, appSettings, sentryClient);
 
             // Act
             var response = await service.Post<OWResult>("/aaa", call);

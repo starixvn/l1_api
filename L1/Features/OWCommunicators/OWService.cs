@@ -18,11 +18,11 @@ namespace L1.Features.OWCommunicators
         private readonly IOWFailureHandler failureHandler;
         private readonly string secretKey;
 
-        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, IAppSettings appSettings)
+        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, OWServiceSettings owServiceSettings)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
-            secretKey = appSettings.OWServiceSettings.SecretKey;
+            secretKey = owServiceSettings.SecretKey;
         }
 
         public async Task<OWResponse<T>> Post<T>(string apiEndpoint, OWCall call) where T : IOWResult, new()

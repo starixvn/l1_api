@@ -14,8 +14,6 @@ namespace L1.Tests.Features.OWCommunicators
     public class OWServiceTests
     {
         private readonly IOWFailureHandler failureHandler;
-        private readonly IAppSettings appSettings;
-        private readonly ISentryClient sentryClient;
 
         private readonly OWResponse<OWResult> defaultContent = new OWResponse<OWResult>
         {
@@ -25,17 +23,14 @@ namespace L1.Tests.Features.OWCommunicators
         public OWServiceTests()
         {
             failureHandler = Substitute.For<IOWFailureHandler>();
-            appSettings = Substitute.For<IAppSettings>();
-            appSettings.OWServiceSettings = new OWServiceSettings { SecretKey = "aaa" };
-            sentryClient = Substitute.For<ISentryClient>();
         }
 
         [Theory, AutoData]
-        public async Task Post_Success_ReturnsOWResponse(OWCall call)
+        public async Task Post_Success_ReturnsOWResponse(OWCall call, OWServiceSettings oWServiceSettings)
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent));
-            var service = new OWService(httpClient, failureHandler, appSettings, sentryClient);
+            var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
             var result = await service.Post<OWResult>("/aaa", call);
@@ -45,11 +40,11 @@ namespace L1.Tests.Features.OWCommunicators
         }
 
         [Theory, AutoData]
-        public async Task Post_Failed_ReturnsOWResponse(OWCall call)
+        public async Task Post_Failed_ReturnsOWResponse(OWCall call, OWServiceSettings oWServiceSettings)
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty));
-            var service = new OWService(httpClient, failureHandler, appSettings, sentryClient);
+            var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
             var response = await service.Post<OWResult>("/aaa", call);

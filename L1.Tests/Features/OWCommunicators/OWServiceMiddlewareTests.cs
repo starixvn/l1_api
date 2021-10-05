@@ -46,7 +46,8 @@ namespace L1.Features.OWCommunicators
                 {
                     Endpoints = new AdminApiEndPoints()
                 },
-                BackendAuthConfigs = new BackendAuthConfigs()
+                BackendAuthConfigs = new BackendAuthConfigs(),
+                OWServiceSettings = owServiceSettings
             };
 
             services.AddBackendAuthService(appSettings.BackendAuthConfigs);

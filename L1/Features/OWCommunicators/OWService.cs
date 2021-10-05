@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
 using Newtonsoft.Json;
-using Sentry;
 
 namespace L1.Features.OWCommunicators
 {
@@ -18,14 +17,12 @@ namespace L1.Features.OWCommunicators
         private readonly HttpClient httpClient;
         private readonly IOWFailureHandler failureHandler;
         private readonly string secretKey;
-        private readonly ISentryClient sentryClient;
 
-        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, IAppSettings appSettings, ISentryClient sentryClient)
+        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, IAppSettings appSettings)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
             secretKey = appSettings.OWServiceSettings.SecretKey;
-            this.sentryClient = sentryClient;
         }
 
         public async Task<OWResponse<T>> Post<T>(string apiEndpoint, OWCall call) where T : IOWResult, new()
@@ -38,49 +35,25 @@ namespace L1.Features.OWCommunicators
             OWResponse<T> finalResponse;
             var accessKey = CreateMD5($"{secretKey}{requestBody}");
 
-            try
+            httpClient.DefaultRequestHeaders.Add("Saba-access-key", accessKey);
+            var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
+
+            if (response.IsSuccessStatusCode)
             {
-                httpClient.DefaultRequestHeaders.Add("Saba-access-key", accessKey);
-                var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
+                var responseContent = await response.Content.ReadAsStringAsync();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-
-                    finalResponse = JsonConvert.DeserializeObject<OWResponse<T>>(responseContent);
-                }
-                else
-                {
-                    finalResponse = await CreateOWNetworkErrorResponse<T>(call, response, accessKey);
-                }
-
-                finalResponse.Request = request;
-
-                if (finalResponse.Result.IsFailed())
-                {
-                    finalResponse.AccessKey = accessKey;
-                    await failureHandler.Handle<T>(finalResponse);
-                }
-
-                return finalResponse;
+                finalResponse = JsonConvert.DeserializeObject<OWResponse<T>>(responseContent);
             }
-            catch (TaskCanceledException ex)
+            else
             {
-                sentryClient.CaptureException(ex);
+                finalResponse = await CreateOWNetworkErrorResponse<T>(call, response, accessKey);
+            }
 
-                finalResponse = new OWResponse<T>
-                {
-                    TimeStamp = DateTimeOffset.UtcNow,
-                    Request = new OWRequest(call),
-                    AccessKey = accessKey,
-                    Result = new T
-                    {
-                        ErrorCode = OWSpecialErrorCodes.NetworkError,
-                        ErrorDescription = ex.Message,
-                        Seq = call.Seq
-                    },
-                };
+            finalResponse.Request = request;
 
+            if (finalResponse.Result.IsFailed())
+            {
+                finalResponse.AccessKey = accessKey;
                 await failureHandler.Handle<T>(finalResponse);
             }
 

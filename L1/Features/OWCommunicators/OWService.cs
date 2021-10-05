@@ -32,7 +32,7 @@ namespace L1.Features.OWCommunicators
         {
             const string defaultMediaType = "application/json";
             var request = new OWRequest(call);
-            var requestBody = JsonConvert.SerializeObject(request);
+            var requestBody = JsonConvert.SerializeObject(call);
             var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
 
             OWResponse<T> finalResponse;

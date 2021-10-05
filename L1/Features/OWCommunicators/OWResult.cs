@@ -10,6 +10,10 @@
 
         string ErrorDescription { get; set; }
 
+        string Key { get; set; }
+
+        string RequestBody { get; set; }
+
         bool IsSuccessful();
 
         bool IsFailed();
@@ -24,6 +28,10 @@
         public string ErrorMessage { get; set; }
 
         public string ErrorDescription { get; set; }
+
+        public string Key { get; set; }
+
+        public string RequestBody { get; set; }
 
         public bool IsSuccessful()
             => !IsFailed();

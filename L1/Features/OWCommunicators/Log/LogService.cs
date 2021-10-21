@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using L1.Shared.Constants;
 
 namespace L1.Features.OWCommunicators.Log
 {
@@ -28,8 +29,7 @@ namespace L1.Features.OWCommunicators.Log
 
         public async Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : IOWResult
         {
-            var log = ConvertToOWLog(response);
-            log.System = system;
+            var log = ConvertToOWLog(response, system);
 
             await logDataAccess.WriteBetAsync(log);
         }
@@ -61,7 +61,7 @@ namespace L1.Features.OWCommunicators.Log
         public Task LogRetrieveEndGameAsync(SBLog log)
             => logDataAccess.WriteRetrieveEndGameAsync(log);
 
-        private static OWLog ConvertToOWLog<T>(OWResponse<T> response) where T : IOWResult
-            => new OWLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result);
+        private static OWLog ConvertToOWLog<T>(OWResponse<T> response, byte system = AppTypes.SabaClub) where T : IOWResult
+            => new OWLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result, system, response.AccessKey);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using L1.Shared.Constants;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -7,7 +6,13 @@ namespace L1.Features.OWCommunicators.Log
 {
     public class OWLog
     {
-        public OWLog(DateTimeOffset requestTimeStamp, IOWCall call, DateTimeOffset responseTimeStamp, IOWResult result, byte system = AppTypes.SabaClub)
+        public OWLog(
+            DateTimeOffset requestTimeStamp,
+            IOWCall call,
+            DateTimeOffset responseTimeStamp,
+            IOWResult result,
+            byte system,
+            string accessKey = "")
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
             RequestTimeStamp = requestTimeStamp;
@@ -15,6 +20,7 @@ namespace L1.Features.OWCommunicators.Log
             ResponseTimeStamp = responseTimeStamp;
             Result = result;
             System = system;
+            AccessKey = accessKey;
         }
 
         [BsonRepresentation(BsonType.String)]
@@ -31,5 +37,7 @@ namespace L1.Features.OWCommunicators.Log
         public IOWResult Result { get; set; }
 
         public byte System { get; set; }
+
+        public string AccessKey { get; set; }
     }
 }

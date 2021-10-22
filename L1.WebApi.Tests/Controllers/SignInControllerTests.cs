@@ -3,7 +3,7 @@ using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.Sites;
 using L1.Shared.Constants;
-using L1.WebApi.Controllers;
+using L1.WebApi.Controllers.V1;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;

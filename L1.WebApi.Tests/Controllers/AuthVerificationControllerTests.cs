@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using L1.Features.MemberAuthentications;
-using L1.WebApi.Controllers;
+using L1.WebApi.Controllers.V1;
 using NSubstitute;
 using Xunit;
 

@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace L1.WebApi.Controllers
+namespace L1.WebApi.Controllers.V1
 {
-    [ApiController, Route("[controller]"), AllowAnonymous]
+    [ApiController, AllowAnonymous]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [Route("[controller]")]
     public class AuthVerificationController
     {
         private readonly IMemberAuthService memberAuthService;

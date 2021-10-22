@@ -10,9 +10,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SignInResult = L1.WebApi.Models.SignInResult;
 
-namespace L1.WebApi.Controllers
+namespace L1.WebApi.Controllers.V1
 {
-    [ApiController, Route("[controller]"), Authorize]
+    [ApiController, Authorize]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [Route("[controller]")]
     public class SignInController : ControllerBase
     {
         private readonly IMemberAuthService memberAuthService;

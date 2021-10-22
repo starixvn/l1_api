@@ -16,9 +16,12 @@ using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace L1.WebApi.Controllers
+namespace L1.WebApi.Controllers.V1
 {
-    [ApiController, Route("[controller]"), Authorize]
+    [ApiController, Authorize]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [Route("[controller]")]
     public class MemberController : ControllerBase
     {
         private readonly IOWCustomerService oWCustomerService;

@@ -9,8 +9,6 @@ namespace L1.Features.Partners
         Task<Partner> GetById(string id);
 
         Task<bool> Verify(string partnerId, string secretKey);
-
-        Task<bool> VerifyWithCurrency(string partnerId, string secretKey, string currency);
     }
 
     public class PartnerDataAccess : IPartnerDataAccess
@@ -29,10 +27,5 @@ namespace L1.Features.Partners
 
         public async Task<bool> Verify(string partnerId, string secretKey)
         => (await partnerCollection.CountDocumentsAsync(site => site.PartnerId == partnerId && site.SecretKey == secretKey)) > 0;
-
-        public Task<bool> VerifyWithCurrency(string partnerId, string secretKey, string currency)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

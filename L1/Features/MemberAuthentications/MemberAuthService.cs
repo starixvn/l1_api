@@ -118,7 +118,7 @@ namespace L1.Features.MemberAuthentications
                 return null;
             }
 
-            if(memberAuth.AppType == AppTypes.MiniSabaClub)
+            if (memberAuth.AppType == AppTypes.MiniSabaClub)
             {
                 return new Uri(site.MiniSabaGameClientUrl);
             }

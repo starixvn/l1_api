@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators.Log;
-using L1.Features.Sites;
+using L1.Features.Partners;
 using L1.Shared.Constants;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
@@ -14,7 +14,7 @@ namespace L1.WebApi.Tests.Controllers
     public class SignInControllerTests
     {
         private readonly IMemberAuthService memberAuthService;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerService partnerService;
         private readonly ILogService logService;
         private readonly SignInController controller;
         private readonly Fixture fixture = new Fixture();
@@ -22,19 +22,19 @@ namespace L1.WebApi.Tests.Controllers
         public SignInControllerTests()
         {
             memberAuthService = Substitute.For<IMemberAuthService>();
-            siteDataService = Substitute.For<ISiteDataService>();
+            partnerService = Substitute.For<IPartnerService>();
             logService = Substitute.For<ILogService>();
 
-            controller = new SignInController(memberAuthService, siteDataService, logService);
+            controller = new SignInController(memberAuthService, partnerService, logService);
         }
 
         [Fact]
         public async void Index_InvalidClient_ReturnUnauthorizedResult()
         {
-            // Arrange 
+            // Arrange
             var model = fixture.Create<SignIn>();
             model.Auth = null;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(false);
 
             // Act
             var actualValue = await controller.Index(model) as UnauthorizedResult;
@@ -46,10 +46,10 @@ namespace L1.WebApi.Tests.Controllers
         [Fact]
         public async void Index_ValidClientWithEmptyIP_ReturnOkResult()
         {
-            // Arrange 
+            // Arrange
             var model = fixture.Create<SignIn>();
             model.IP = string.Empty;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
@@ -64,11 +64,11 @@ namespace L1.WebApi.Tests.Controllers
         [Fact]
         public async void Index_ValidClientWithNullAuth_ReturnOkResult()
         {
-            // Arrange 
+            // Arrange
             var model = fixture.Create<SignIn>();
             model.IP = "IP";
             model.Auth = null;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
@@ -83,12 +83,12 @@ namespace L1.WebApi.Tests.Controllers
         [Fact]
         public async void Index_ValidClientWithInvalidAppType_ReturnOkResult()
         {
-            // Arrange 
+            // Arrange
             var model = fixture.Create<SignIn>();
             model.IP = "IP";
             model.Auth = new Auth();
             model.AppType = 0;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
@@ -103,12 +103,12 @@ namespace L1.WebApi.Tests.Controllers
         [Fact]
         public async void Index_ValidClientWithValidAppType_ReturnOkResult()
         {
-            // Arrange 
+            // Arrange
             var model = fixture.Create<SignIn>();
             model.IP = "IP";
             model.Auth = new Auth();
             model.AppType = AppTypes.SabaClub;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);

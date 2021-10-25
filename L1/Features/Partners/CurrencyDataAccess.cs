@@ -1,0 +1,29 @@
+﻿using System.Threading.Tasks;
+using L1.Shared.Constants;
+using MongoDB.Driver;
+
+namespace L1.Features.Partners
+{
+    public interface ICurrencyDataAccess
+    {
+        Task<bool> Verify(string partnerId, string currencyName);
+    }
+
+    public class CurrencyDataAccess : ICurrencyDataAccess
+    {
+        private const string collectionName = "currencies";
+        private readonly IMongoCollection<Currency> currencyCollection;
+
+        public CurrencyDataAccess(IMongoClient mongoClient)
+        {
+            var database = mongoClient.GetDatabase(MongoDatabases.Minigame);
+            currencyCollection = database.GetCollection<Currency>(collectionName);
+        }
+
+        public async Task<bool> Verify(string partnerId, string currencyName)
+        => (await currencyCollection.CountDocumentsAsync(
+                currency => currency.PartnerId == partnerId && 
+                            currency.Name == currencyName && 
+                            currency.Enabled)) > 0;
+    }
+}

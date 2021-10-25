@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators.Log;
-using L1.Features.Sites;
+using L1.Features.Partners;
 using L1.Shared.Constants;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -18,13 +18,13 @@ namespace L1.WebApi.Controllers
     public class SignInController : ControllerBase
     {
         private readonly IMemberAuthService memberAuthService;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerService partnerService;
         private readonly ILogService logService;
 
-        public SignInController(IMemberAuthService memberAuthService, ISiteDataService siteDataService, ILogService logService)
+        public SignInController(IMemberAuthService memberAuthService, IPartnerService partnerService, ILogService logService)
         {
             this.memberAuthService = memberAuthService;
-            this.siteDataService = siteDataService;
+            this.partnerService = partnerService;
             this.logService = logService;
         }
 

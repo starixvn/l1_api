@@ -14,7 +14,7 @@ namespace L1.WebApi.Tests.Controllers
     public class SignInControllerTests
     {
         private readonly IMemberAuthService memberAuthService;
-        private readonly IPartnerService partnerService;
+        private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
         private readonly SignInController controller;
         private readonly Fixture fixture = new Fixture();
@@ -22,7 +22,7 @@ namespace L1.WebApi.Tests.Controllers
         public SignInControllerTests()
         {
             memberAuthService = Substitute.For<IMemberAuthService>();
-            partnerService = Substitute.For<IPartnerService>();
+            partnerService = Substitute.For<IPartnerDataService>();
             logService = Substitute.For<ILogService>();
 
             controller = new SignInController(memberAuthService, partnerService, logService);

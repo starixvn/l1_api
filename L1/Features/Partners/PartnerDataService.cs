@@ -2,21 +2,28 @@
 
 namespace L1.Features.Partners
 {
-    public interface IPartnerService
+    public interface IPartnerDataService
     {
+        Task<Partner> GetById(string id);
+
+        Task<bool> Verify(string partnerId, string secretKey);
+
         Task<bool> Verify(string partnerId, string secretKey, string currency);
     }
 
-    public class PartnerService : IPartnerService
+    public class PartnerDataService : IPartnerDataService
     {
         private readonly IPartnerDataAccess partnerDataAccess;
         private readonly ICurrencyDataAccess currencyDataAccess;
 
-        public PartnerService(IPartnerDataAccess partnerDataAccess, ICurrencyDataAccess currencyDataAccess)
+        public PartnerDataService(IPartnerDataAccess partnerDataAccess, ICurrencyDataAccess currencyDataAccess)
         {
             this.partnerDataAccess = partnerDataAccess;
             this.currencyDataAccess = currencyDataAccess;
         }
+
+        public Task<Partner> GetById(string id)
+        => partnerDataAccess.GetById(id);
 
         public async Task<bool> Verify(string partnerId, string secretKey, string currency)
         {
@@ -24,5 +31,8 @@ namespace L1.Features.Partners
 
             return isValidPartner ? await currencyDataAccess.Verify(partnerId, currency) : false;
         }
+
+        public Task<bool> Verify(string partnerId, string secretKey)
+        => partnerDataAccess.Verify(partnerId, secretKey);
     }
 }

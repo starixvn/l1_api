@@ -1,5 +1,6 @@
 ﻿using System;
-using L1.Features.Sites;
+using System.Threading.Tasks;
+using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using L1.Shared.Resources;
@@ -11,7 +12,7 @@ namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthService
     {
-        SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId);
+        Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId);
 
         VerificationResult VerifyToken(VerificationParams verificationParams);
     }
@@ -19,25 +20,25 @@ namespace L1.Features.MemberAuthentications
     public class MemberAuthService : IMemberAuthService
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerDataService partnerDataService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
-            ISiteDataService siteDataService,
+            IPartnerDataService partnerDataService,
             IAppSettings appSettings,
             ISentryClient sentryClient)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
-            this.siteDataService = siteDataService;
+            this.partnerDataService = partnerDataService;
             this.appSettings = appSettings;
             this.sentryClient = sentryClient;
         }
 
-        public SingleSignOnResult SignIn(MemberAuth memberAuth, byte? gameTypeId)
+        public async Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId)
         {
-            var gameClientUrl = GetGameClientUrl(memberAuth);
+            var gameClientUrl = await GetRedirectedUrl(memberAuth);
 
             if (gameClientUrl == null)
             {
@@ -109,21 +110,22 @@ namespace L1.Features.MemberAuthentications
                 SentryLevel.Warning);
         }
 
-        private Uri GetGameClientUrl(MemberAuth memberAuth)
+        private async Task<Uri> GetRedirectedUrl(MemberAuth memberAuth)
         {
-            var site = siteDataService.GetByClientId(memberAuth.ClientId);
+            var partner = await partnerDataService.GetById(memberAuth.ClientId);
 
-            if (site == null)
+            if (partner == null)
             {
                 return null;
             }
 
-            if (memberAuth.AppType == AppTypes.MiniSabaClub)
+            return memberAuth.AppType switch
             {
-                return new Uri(site.MiniSabaGameClientUrl);
-            }
-
-            return new Uri(memberAuth.AppType == AppTypes.SabaMobi ? site.GameMobiClientUrl : site.GameClientUrl);
+                AppTypes.SabaClub => new Uri(partner.ClubVersionUrl),
+                AppTypes.MiniSabaClub => new Uri(partner.MiniVersionUrl),
+                AppTypes.SabaMobi => new Uri(partner.MobiVersionUrl),
+                _ => new Uri(partner.ClubVersionUrl),
+            };
         }
     }
 }

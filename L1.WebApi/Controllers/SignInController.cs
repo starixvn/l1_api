@@ -18,10 +18,10 @@ namespace L1.WebApi.Controllers
     public class SignInController : ControllerBase
     {
         private readonly IMemberAuthService memberAuthService;
-        private readonly IPartnerService partnerService;
+        private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
 
-        public SignInController(IMemberAuthService memberAuthService, IPartnerService partnerService, ILogService logService)
+        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService)
         {
             this.memberAuthService = memberAuthService;
             this.partnerService = partnerService;
@@ -39,7 +39,7 @@ namespace L1.WebApi.Controllers
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
-                var result = memberAuthService.SignIn(new MemberAuth
+                var result = await memberAuthService.SignIn(new MemberAuth
                 {
                     Domain = model.Domain,
                     BrowserUserAgent = model.BrowserUserAgent,

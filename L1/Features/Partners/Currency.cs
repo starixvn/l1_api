@@ -10,8 +10,7 @@ namespace L1.Features.Partners
         public string Id { get; set; }
 
         public string PartnerId { get; set; }
-
-        [BsonId]
+       
         [BsonRepresentation(BsonType.ObjectId)]
         public string GroupId { get; set; }
 

@@ -17,7 +17,7 @@ namespace L1.Features.Partners
 
         public string MobiVersionUrl { get; set; }
 
-        public string CasinoVersionUrl { get; set; }
+        public string ClubVersionUrl { get; set; }
 
         public string TestCurrencyUrl { get; set; }
     }

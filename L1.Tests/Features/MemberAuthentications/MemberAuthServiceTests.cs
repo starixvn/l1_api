@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
+using L1.Features.Partners;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
@@ -14,7 +16,7 @@ namespace L1.Tests.Features.MemberAuthentications
     public class MemberAuthServiceTests
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerDataService partnerDataService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
         private readonly Fixture fixture = new Fixture();
@@ -24,20 +26,20 @@ namespace L1.Tests.Features.MemberAuthentications
         public MemberAuthServiceTests()
         {
             memberAuthDataAccess = Substitute.For<IMemberAuthDataAccess>();
-            siteDataService = Substitute.For<ISiteDataService>();
+            partnerDataService = Substitute.For<IPartnerDataService>();
             appSettings = Substitute.For<IAppSettings>();
             sentryClient = Substitute.For<ISentryClient>();
 
-            memberAuthService = new MemberAuthService(memberAuthDataAccess, siteDataService, appSettings, sentryClient);
+            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, appSettings, sentryClient);
         }
 
         [Theory, AutoData]
-        public void SignIn_NotFoundClientUrl_ReturnsGameServerNotFoundCode(MemberAuth memberAuth)
+        public async Task SignIn_NotFoundClientUrl_ReturnsGameServerNotFoundCode(MemberAuth memberAuth)
         {
             // Arrange
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, null);
+            var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
@@ -48,40 +50,40 @@ namespace L1.Tests.Features.MemberAuthentications
         [InlineData(AppTypes.MiniSabaClub)]
         [InlineData(AppTypes.SabaMobi)]
         [InlineData(100)]
-        public void SignIn_Success_ReturnsSingleSignOnResult(byte appType)
+        public async Task SignIn_Success_ReturnsSingleSignOnResult(byte appType)
         {
             // Arrange
             var memberAuth = fixture.Create<MemberAuth>();
             memberAuth.AppType = appType;
 
-            siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
+            partnerDataService.GetById(memberAuth.ClientId).Returns(new Partner
             {
-                GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/",
-                MiniSabaGameClientUrl = "http://local/"
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
             });
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, null);
+            var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
         }
 
         [Theory, AutoData]
-        public void SignIn_WithGameId_ReturnsRedirectUrlContainsGameId(MemberAuth memberAuth)
+        public async Task SignIn_WithGameId_ReturnsRedirectUrlContainsGameId(MemberAuth memberAuth)
         {
             // Arrange
             byte? gameTypeId = 1;
-            siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
+            partnerDataService.GetById(memberAuth.ClientId).Returns(new Partner
             {
-                GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/",
-                MiniSabaGameClientUrl = "http://local/"
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
             });
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, gameTypeId);
+            var result = await memberAuthService.SignIn(memberAuth, gameTypeId);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
@@ -89,15 +91,15 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void SignIn_ExistingToken_ShouldBeReUse(MemberAuth memberAuth)
+        public async Task SignIn_ExistingToken_ShouldBeReUse(MemberAuth memberAuth)
         {
             // Arrange
             var token = "token";
-            siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
+            partnerDataService.GetById(memberAuth.ClientId).Returns(new Partner
             {
-                GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/",
-                MiniSabaGameClientUrl = "http://local/"
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
             });
             memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
             {
@@ -107,7 +109,7 @@ namespace L1.Tests.Features.MemberAuthentications
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, null);
+            var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);

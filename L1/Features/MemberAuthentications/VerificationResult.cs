@@ -25,7 +25,7 @@ namespace L1.Features.MemberAuthentications
             string language,
             string currency,
             string seq,
-            string clientId,
+            string partnerId,
             string domain,
             string siteName,
             byte appType
@@ -39,7 +39,7 @@ namespace L1.Features.MemberAuthentications
             Language = language;
             Currency = currency;
             Seq = seq;
-            ClientId = clientId;
+            PartnerId = partnerId;
             Domain = domain;
             SiteName = siteName;
             AppType = appType;
@@ -51,7 +51,7 @@ namespace L1.Features.MemberAuthentications
 
         public string SiteId { get; }
 
-        public string ClientId { get; }
+        public string PartnerId { get; }
 
         public string Domain { get; }
 
@@ -61,7 +61,7 @@ namespace L1.Features.MemberAuthentications
 
         public string Seq { get; }
 
-        public string MemberKey => $"{ClientId}_{MemberId}";
+        public string MemberKey => $"{PartnerId}_{MemberId}";
 
         public string SiteName { get; set; }
         
@@ -79,7 +79,7 @@ namespace L1.Features.MemberAuthentications
             string language,
             string currency,
             string seq,
-            string clientId,
+            string partnerId,
             string domain,
             string siteName,
             byte appType)
@@ -93,7 +93,7 @@ namespace L1.Features.MemberAuthentications
                 language,
                 currency,
                 seq,
-                clientId,
+                partnerId,
                 domain,
                 siteName,
                 appType);

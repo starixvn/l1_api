@@ -22,8 +22,7 @@ namespace L1.Features.Partners
             this.currencyDataAccess = currencyDataAccess;
         }
 
-        public Task<Partner> GetById(string id)
-        => partnerDataAccess.GetById(id);
+        public Task<Partner> GetById(string id) => partnerDataAccess.GetById(id);
 
         public async Task<bool> Verify(string partnerId, string secretKey, string currency)
         {
@@ -32,7 +31,6 @@ namespace L1.Features.Partners
             return isValidPartner ? await currencyDataAccess.Verify(partnerId, currency) : false;
         }
 
-        public Task<bool> Verify(string partnerId, string secretKey)
-        => partnerDataAccess.Verify(partnerId, secretKey);
+        public Task<bool> Verify(string partnerId, string secretKey) => partnerDataAccess.Verify(partnerId, secretKey);
     }
 }

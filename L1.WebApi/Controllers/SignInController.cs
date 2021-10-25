@@ -50,7 +50,7 @@ namespace L1.WebApi.Controllers
                     Seq = model.Seq,
                     Language = model.Language,
                     SiteId = model.SiteId,
-                    ClientId = model.Auth?.PartnerId,
+                    PartnerId = model.Auth?.PartnerId,
                     AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                     SiteName = model.SiteName
                 }, model.GameTypeId);

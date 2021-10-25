@@ -94,7 +94,7 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Language,
                     memberAuth.Currency,
                     memberAuth.Seq,
-                    memberAuth.ClientId,
+                    memberAuth.PartnerId,
                     memberAuth.Domain,
                     memberAuth.SiteName,
                     memberAuth.AppType);
@@ -112,7 +112,7 @@ namespace L1.Features.MemberAuthentications
 
         private async Task<Uri> GetRedirectedUrl(MemberAuth memberAuth)
         {
-            var partner = await partnerDataService.GetById(memberAuth.ClientId);
+            var partner = await partnerDataService.GetById(memberAuth.PartnerId);
 
             if (partner == null)
             {

@@ -56,7 +56,7 @@ namespace L1.Tests.Features.MemberAuthentications
             var memberAuth = fixture.Create<MemberAuth>();
             memberAuth.AppType = appType;
 
-            partnerDataService.GetById(memberAuth.ClientId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -75,7 +75,7 @@ namespace L1.Tests.Features.MemberAuthentications
         {
             // Arrange
             byte? gameTypeId = 1;
-            partnerDataService.GetById(memberAuth.ClientId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -95,7 +95,7 @@ namespace L1.Tests.Features.MemberAuthentications
         {
             // Arrange
             var token = "token";
-            partnerDataService.GetById(memberAuth.ClientId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",

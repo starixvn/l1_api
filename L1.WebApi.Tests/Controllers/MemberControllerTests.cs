@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Threading.Tasks;
+using AutoFixture;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
 using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
@@ -10,6 +11,7 @@ using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
+using L1.Features.Partners;
 using L1.Features.Sites;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
@@ -23,7 +25,7 @@ namespace L1.WebApi.Tests.Controllers
     {
         private readonly IOWCustomerService oWCustomerService;
         private readonly IAdminApiService adminApiService;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerDataService partnerDataService;
         private readonly ILogService logService;
 
         private readonly MemberController controller;
@@ -33,14 +35,14 @@ namespace L1.WebApi.Tests.Controllers
         {
             oWCustomerService = Substitute.For<IOWCustomerService>();
             adminApiService = Substitute.For<IAdminApiService>();
-            siteDataService = Substitute.For<ISiteDataService>();
+            partnerDataService = Substitute.For<IPartnerDataService>();
             logService = Substitute.For<ILogService>();
 
-            controller = new MemberController(oWCustomerService, adminApiService, siteDataService, logService);
+            controller = new MemberController(oWCustomerService, adminApiService, partnerDataService, logService);
         }
 
         [Fact]
-        public async void EnterPortal_Always_ReturnOkResult()
+        public async Task EnterPortal_Always_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<MemberEnterPortal>();
@@ -55,7 +57,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void Balance_Always_ReturnOkResult()
+        public async Task Balance_Always_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<GetBalance>();
@@ -70,7 +72,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void PlaceBet_Always_ReturnOkResult()
+        public async Task PlaceBet_Always_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<PlaceBet>();
@@ -85,7 +87,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void EndGame_Always_ReturnOkResult()
+        public async Task EndGame_Always_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<EndGame>();
@@ -100,7 +102,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void VoidGame_Always_ReturnOkResult()
+        public async Task VoidGame_Always_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<VoidGame>();
@@ -115,11 +117,11 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void RetrieveEndGameInfo_ValidClient_ReturnOkResult()
+        public async Task RetrieveEndGameInfo_ValidClient_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<EndGameInfoRequest>();
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
             var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
             adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
@@ -132,12 +134,12 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void RetrieveEndGameInfo_InvalidClient_ReturnUnauthorizedResult()
+        public async Task RetrieveEndGameInfo_InvalidClient_ReturnUnauthorizedResult()
         {
             // Arrange 
             var model = fixture.Create<EndGameInfoRequest>();
             model.Auth = null;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
 
             var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
             adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
@@ -150,12 +152,12 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void DailySummarize_InvalidClient_ReturnUnauthorizedResult()
+        public async Task DailySummarize_InvalidClient_ReturnUnauthorizedResult()
         {
             // Arrange 
             var model = fixture.Create<DailySummary>();
             model.Auth = null;
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
 
             var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
             adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
@@ -168,11 +170,11 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void DailySummarize_ValidClient_ReturnUnauthorizedResult()
+        public async Task DailySummarize_ValidClient_ReturnUnauthorizedResult()
         {
             // Arrange 
             var model = fixture.Create<DailySummary>();
-            siteDataService.VerifyClient(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
 
             var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
             adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
@@ -185,7 +187,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void GetBetLimit_Always_ReturnOkResult()
+        public async Task GetBetLimit_Always_ReturnOkResult()
         {
             // Arrange 
             var model = fixture.Create<GetBetLimit>();

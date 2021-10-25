@@ -11,7 +11,7 @@ using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
-using L1.Features.Sites;
+using L1.Features.Partners;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,18 +25,18 @@ namespace L1.WebApi.Controllers
     {
         private readonly IOWCustomerService oWCustomerService;
         private readonly IAdminApiService adminApiService;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerDataService partnerDataService;
         private readonly ILogService logService;
 
         public MemberController(
             IOWCustomerService oWCustomerService,
             IAdminApiService adminApiService,
-            ISiteDataService siteDataService,
+            IPartnerDataService partnerDataService,
             ILogService logService)
         {
             this.oWCustomerService = oWCustomerService;
             this.adminApiService = adminApiService;
-            this.siteDataService = siteDataService;
+            this.partnerDataService = partnerDataService;
             this.logService = logService;
         }
 

@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Threading.Tasks;
+using AutoFixture;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.Partners;
@@ -29,7 +30,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void Index_InvalidClient_ReturnUnauthorizedResult()
+        public async Task Index_InvalidClient_ReturnUnauthorizedResult()
         {
             // Arrange
             var model = fixture.Create<SignIn>();
@@ -44,7 +45,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void Index_ValidClientWithEmptyIP_ReturnOkResult()
+        public async Task Index_ValidClientWithEmptyIP_ReturnOkResult()
         {
             // Arrange
             var model = fixture.Create<SignIn>();
@@ -62,7 +63,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void Index_ValidClientWithNullAuth_ReturnOkResult()
+        public async Task Index_ValidClientWithNullAuth_ReturnOkResult()
         {
             // Arrange
             var model = fixture.Create<SignIn>();
@@ -81,7 +82,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void Index_ValidClientWithInvalidAppType_ReturnOkResult()
+        public async Task Index_ValidClientWithInvalidAppType_ReturnOkResult()
         {
             // Arrange
             var model = fixture.Create<SignIn>();
@@ -101,7 +102,7 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async void Index_ValidClientWithValidAppType_ReturnOkResult()
+        public async Task Index_ValidClientWithValidAppType_ReturnOkResult()
         {
             // Arrange
             var model = fixture.Create<SignIn>();

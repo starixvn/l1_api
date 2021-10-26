@@ -110,6 +110,15 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        public async Task<IActionResult> GetBetLimit([FromBody] GetBetLimit model)
+        {
+            var response = await oWCustomerService.GetBetLimit(new GetBetLimitCall(model.ObCustId, model.SiteId));
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("[action]")]
         [AllowAnonymous]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
@@ -121,7 +130,8 @@ namespace L1.WebApi.Controllers
                         model.GameRoundId,
                         model.GameTypeId,
                         model.ObCustId,
-                        model.SiteId));
+                        model.SiteId,
+                        model.Auth.PartnerId));
 
                 response.Result.Seq = model.Seq;
 
@@ -147,22 +157,13 @@ namespace L1.WebApi.Controllers
         {
             if (siteDataService.VerifyClient(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
             {
-                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.SummarizedDate));
+                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.PartnerId, model.SummarizedDate));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);
             }
 
             return Unauthorized();
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        public async Task<IActionResult> GetBetLimit([FromBody] GetBetLimit model)
-        {
-            var response = await oWCustomerService.GetBetLimit(new GetBetLimitCall(model.ObCustId, model.SiteId));
-
-            return Ok(response);
         }
     }
 }

@@ -2,12 +2,13 @@
 {
     public class RetrieveEndGameInfoRequest : AdminApiRequest
     {
-        public RetrieveEndGameInfoRequest(int gameRoundId, byte gameTypeId, int obCustId, string siteId)
+        public RetrieveEndGameInfoRequest(int gameRoundId, byte gameTypeId, int obCustId, string siteId, string partnerId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
             ObCustId = obCustId;
             SiteId = siteId;
+            PartnerId = partnerId;
         }
 
         public int GameRoundId { get; }
@@ -17,5 +18,7 @@
         public int ObCustId { get; }
 
         public string SiteId { get; }
+
+        public string PartnerId { get; }
     }
 }

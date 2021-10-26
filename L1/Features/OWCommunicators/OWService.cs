@@ -2,14 +2,14 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using L1.Shared.Configurations;
+using L1.Features.Partners;
 using Newtonsoft.Json;
 
 namespace L1.Features.OWCommunicators
 {
     public interface IOWService
     {
-        Task<OWResponse<T>> Post<T>(string apiEndpoint, OWCall call) where T : IOWResult, new();
+        Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : IPartnerResult, new();
     }
 
     public class OWService : IOWService
@@ -25,14 +25,14 @@ namespace L1.Features.OWCommunicators
             secretKey = owServiceSettings.SecretKey;
         }
 
-        public async Task<OWResponse<T>> Post<T>(string apiEndpoint, OWCall call) where T : IOWResult, new()
+        public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : IPartnerResult, new()
         {
             const string defaultMediaType = "application/json";
-            var request = new OWRequest(call);
+            var request = new PartnerRequest(call);
             var requestBody = JsonConvert.SerializeObject(call);
             var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
 
-            OWResponse<T> finalResponse;
+            PartnerResponse<T> finalResponse;
             var accessKey = CreateMD5($"{secretKey}{requestBody}");
 
             httpClient.DefaultRequestHeaders.Add("Saba-access-key", accessKey);
@@ -42,11 +42,11 @@ namespace L1.Features.OWCommunicators
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                finalResponse = JsonConvert.DeserializeObject<OWResponse<T>>(responseContent);
+                finalResponse = JsonConvert.DeserializeObject<PartnerResponse<T>>(responseContent);
             }
             else
             {
-                finalResponse = await CreateOWNetworkErrorResponse<T>(call, response, accessKey);
+                finalResponse = await CreateOWNetworkErrorResponse<T>(new OWCall(call.Seq, call.ObCustId, call.SiteId), response, accessKey);
             }
 
             finalResponse.Request = request;
@@ -54,7 +54,7 @@ namespace L1.Features.OWCommunicators
             if (finalResponse.Result.IsFailed())
             {
                 finalResponse.AccessKey = accessKey;
-                await failureHandler.Handle<T>(finalResponse);
+                //await failureHandler.Handle<T>(finalResponse);
             }
 
             return finalResponse;
@@ -75,8 +75,8 @@ namespace L1.Features.OWCommunicators
             return sb.ToString();
         }
 
-        private static async Task<OWResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response, string accessKey) where T : IOWResult, new()
-            => new OWResponse<T>
+        private static async Task<PartnerResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response, string accessKey) where T : IPartnerResult, new()
+            => new PartnerResponse<T>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = new T

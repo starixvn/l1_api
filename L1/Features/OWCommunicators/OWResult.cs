@@ -1,4 +1,6 @@
-﻿namespace L1.Features.OWCommunicators
+﻿using L1.Features.Partners;
+
+namespace L1.Features.OWCommunicators
 {
     public interface IOWResult
     {
@@ -15,7 +17,7 @@
         bool IsFailed();
     }
 
-    public class OWResult : IOWResult
+    public class OWResult : IPartnerResult
     {
         public string Seq { get; set; }
 

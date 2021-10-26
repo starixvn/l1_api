@@ -5,13 +5,13 @@ namespace L1.Features.OWCommunicators.Log
 {
     public interface ILogService
     {
-        Task LogFailedRequestAsync<T>(OWResponse<T> response) where T : IOWResult;
+        Task LogFailedRequestAsync<T>(OWResponse<T> response) where T : OWResult;
 
-        Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : IOWResult;
+        Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : OWResult;
 
-        Task LogEndGameAsync<T>(OWResponse<T> response) where T : IOWResult;
+        Task LogEndGameAsync<T>(OWResponse<T> response) where T : OWResult;
 
-        Task LogVoidGameAsync<T>(OWResponse<T> response) where T : IOWResult;
+        Task LogVoidGameAsync<T>(OWResponse<T> response) where T : OWResult;
 
         Task LogSignInAsync(SBLog log);
 
@@ -27,28 +27,28 @@ namespace L1.Features.OWCommunicators.Log
             this.logDataAccess = logDataAccess;
         }
 
-        public async Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : IOWResult
+        public async Task LogBetAsync<T>(OWResponse<T> response, byte system) where T : OWResult
         {
             var log = ConvertToOWLog(response, system);
 
             await logDataAccess.WriteBetAsync(log);
         }
 
-        public async Task LogEndGameAsync<T>(OWResponse<T> response) where T : IOWResult
+        public async Task LogEndGameAsync<T>(OWResponse<T> response) where T : OWResult
         {
             var log = ConvertToOWLog(response);
 
             await logDataAccess.WriteEndGameAsync(log);
         }
 
-        public async Task LogVoidGameAsync<T>(OWResponse<T> response) where T : IOWResult
+        public async Task LogVoidGameAsync<T>(OWResponse<T> response) where T : OWResult
         {
             var log = ConvertToOWLog(response);
 
             await logDataAccess.WriteVoidGameAsync(log);
         }
 
-        public async Task LogFailedRequestAsync<T>(OWResponse<T> response) where T : IOWResult
+        public async Task LogFailedRequestAsync<T>(OWResponse<T> response) where T : OWResult
         {
             var log = ConvertToOWLog(response);
 
@@ -61,7 +61,11 @@ namespace L1.Features.OWCommunicators.Log
         public Task LogRetrieveEndGameAsync(SBLog log)
             => logDataAccess.WriteRetrieveEndGameAsync(log);
 
-        private static OWLog ConvertToOWLog<T>(OWResponse<T> response, byte system = AppTypes.SabaClub) where T : IOWResult
-            => new OWLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result, system, response.AccessKey);
+        private static OWLog ConvertToOWLog<T>(OWResponse<T> response, byte system = AppTypes.SabaClub) where T : OWResult
+        {
+            var call = new OWCall(response.Request.Call.Seq, response.Request.Call.ObCustId, response.Request.Call.SiteId);
+
+            return new OWLog(response.Request.TimeStamp, call, response.TimeStamp, response.Result, system, response.AccessKey);
+        }
     }
 }

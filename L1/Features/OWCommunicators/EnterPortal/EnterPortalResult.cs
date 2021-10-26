@@ -1,9 +1,8 @@
-﻿namespace L1.Features.OWCommunicators.EnterPortal
-{
-    public class EnterPortalResult : OWResult
-    {
-        public decimal MinBet { get; set; }
+﻿using L1.Features.Partners.EnterPortal;
 
-        public decimal MaxBet { get; set; }
+namespace L1.Features.OWCommunicators.EnterPortal
+{
+    public class EnterPortalResult : PartnerEnterPortalResult
+    {
     }
 }

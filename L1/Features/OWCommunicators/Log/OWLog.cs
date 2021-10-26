@@ -8,9 +8,9 @@ namespace L1.Features.OWCommunicators.Log
     {
         public OWLog(
             DateTimeOffset requestTimeStamp,
-            IOWCall call,
+            OWCall call,
             DateTimeOffset responseTimeStamp,
-            IOWResult result,
+            OWResult result,
             byte system,
             string accessKey = "")
         {
@@ -29,12 +29,12 @@ namespace L1.Features.OWCommunicators.Log
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset RequestTimeStamp { get; set; }
 
-        public IOWCall Call { get; set; }
+        public OWCall Call { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset ResponseTimeStamp { get; set; }
 
-        public IOWResult Result { get; set; }
+        public OWResult Result { get; set; }
 
         public byte System { get; set; }
 

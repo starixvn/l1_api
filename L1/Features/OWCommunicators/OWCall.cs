@@ -1,4 +1,5 @@
 ﻿using System;
+using L1.Features.Partners;
 
 namespace L1.Features.OWCommunicators
 {
@@ -11,28 +12,18 @@ namespace L1.Features.OWCommunicators
         string SiteId { get; set; }
     }
 
-    public class OWCall : IOWCall
+    public class OWCall : PartnerCall
     {
         public OWCall(int obCustId, string siteId)
             : this(Guid.NewGuid().ToString(), obCustId, siteId)
         {
-            TimeStamp = DateTimeOffset.UtcNow;
         }
 
-        public OWCall(string seq, int obCustId, string siteId)
+        public OWCall(string seq, int obCustId, string siteId) : base(seq, obCustId, siteId)
         {
-            TimeStamp = DateTimeOffset.UtcNow;
             Seq = seq ?? throw new ArgumentNullException(nameof(seq));
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
             ObCustId = obCustId;
         }
-
-        public string Seq { get; set; }
-
-        public int ObCustId { get; set; }
-
-        public string SiteId { get; set; }
-
-        public DateTimeOffset TimeStamp { get; }
     }
 }

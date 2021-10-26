@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.Resources;
+using L1.Features.Partners;
 using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Sentry;
@@ -12,7 +13,7 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWFailureHandler
     {
-        Task Handle<T>(OWResponse<T> response) where T : IOWResult;
+        Task Handle<T>(OWResponse<T> response) where T : IPartnerResult;
     }
 
     public class OWFailureHandler : IOWFailureHandler
@@ -28,10 +29,10 @@ namespace L1.Features.OWCommunicators
             this.sentryClient = sentryClient;
         }
 
-        public async Task Handle<T>(OWResponse<T> response) where T : IOWResult
+        public async Task Handle<T>(OWResponse<T> response) where T : IPartnerResult
         {
             MapErrorMessage(response.Result);
-            await logService.LogFailedRequestAsync(response);
+            //await logService.LogFailedRequestAsync(response);
 
             sentryClient.CaptureMessage(
                 $"Request to OW failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
@@ -43,7 +44,7 @@ namespace L1.Features.OWCommunicators
             }
         }
 
-        private static void MapErrorMessage(IOWResult result)
+        private static void MapErrorMessage(IPartnerResult result)
             => result.ErrorMessage = OWErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? Errors.ResourceManager.GetString(ErrorCodes.InternalError);
     }
 }

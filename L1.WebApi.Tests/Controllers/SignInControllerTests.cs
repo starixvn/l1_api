@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.MemberAuthentications;
-using L1.Features.OWCommunicators.Log;
 using L1.Features.Partners;
+using L1.Features.Partners.Log;
 using L1.Shared.Constants;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;

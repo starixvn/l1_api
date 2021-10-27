@@ -9,6 +9,8 @@ namespace L1.Features.Partners
         Task<bool> Verify(string partnerId, string secretKey);
 
         Task<bool> Verify(string partnerId, string secretKey, string currency);
+
+        Task<Currency> GetCurrency(string partnerId, string currencyName);
     }
 
     public class PartnerDataService : IPartnerDataService
@@ -23,6 +25,9 @@ namespace L1.Features.Partners
         }
 
         public Task<Partner> GetById(string id) => partnerDataAccess.GetById(id);
+
+        public Task<Currency> GetCurrency(string partnerId, string currencyName)
+        => currencyDataAccess.Get(partnerId, currencyName);
 
         public async Task<bool> Verify(string partnerId, string secretKey, string currency)
         {

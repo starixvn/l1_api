@@ -14,7 +14,7 @@ namespace L1.Features.MemberAuthentications
     {
         Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId);
 
-        VerificationResult VerifyToken(VerificationParams verificationParams);
+        Task<VerificationResult> VerifyToken(VerificationParams verificationParams);
     }
 
     public class MemberAuthService : IMemberAuthService
@@ -69,7 +69,7 @@ namespace L1.Features.MemberAuthentications
             return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&lang={memberAuth.Language}");
         }
 
-        public VerificationResult VerifyToken(VerificationParams verificationParams)
+        public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
         {
             var memberAuth = memberAuthDataAccess.GetByToken(verificationParams.Token);
 
@@ -87,17 +87,28 @@ namespace L1.Features.MemberAuthentications
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
 
+                var currency = await partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName);
+
+                if (currency == null)
+                {
+                    return VerificationResult.CreateErrorResponse(VerificationResult.NotSupportedCurrency);
+                }
+
                 return VerificationResult.CreateSuccessResponse(
                     memberAuth.MemberId,
                     memberAuth.MemberName,
                     memberAuth.SiteId,
                     memberAuth.Language,
-                    memberAuth.Currency,
+                    memberAuth.CurrencyName,
                     memberAuth.Seq,
                     memberAuth.PartnerId,
                     memberAuth.Domain,
                     memberAuth.SiteName,
-                    memberAuth.AppType);
+                    memberAuth.AppType,
+                    currency.Code,
+                    currency.Multiplier,
+                    currency.GroupId
+                    );
             }
 
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);

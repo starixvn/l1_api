@@ -1,4 +1,5 @@
-﻿using L1.Features.MemberAuthentications;
+﻿using System.Threading.Tasks;
+using L1.Features.MemberAuthentications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +18,7 @@ namespace L1.WebApi.Controllers
         }
 
         [HttpPost, Route("verify")]
-        public VerificationResult Verify(VerificationParams verificationParams)
-        {
-            var result = memberAuthService.VerifyToken(verificationParams);
-
-            return result;
-        }
+        public Task<VerificationResult> Verify(VerificationParams verificationParams)
+        => memberAuthService.VerifyToken(verificationParams);
     }
 }

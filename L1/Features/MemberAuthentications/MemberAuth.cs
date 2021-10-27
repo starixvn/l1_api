@@ -29,7 +29,7 @@ namespace L1.Features.MemberAuthentications
 
         public string SiteId { get; set; }
 
-        public string Currency { get; set; }
+        public string CurrencyName { get; set; }
 
         public string Seq { get; set; }
 

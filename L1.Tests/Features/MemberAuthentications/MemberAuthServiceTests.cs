@@ -4,7 +4,6 @@ using AutoFixture;
 using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
 using L1.Features.Partners;
-using L1.Features.Sites;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using NSubstitute;
@@ -117,12 +116,12 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_NotFoundMemberAuth_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_NotFoundMemberAuth_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -130,7 +129,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_HasMemberAuthButDifferentBrowserUserAgent_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_HasMemberAuthButDifferentBrowserUserAgent_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
             var token = "token";
@@ -141,7 +140,7 @@ namespace L1.Tests.Features.MemberAuthentications
             });
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -149,7 +148,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_HasMemberAuthButDifferentBrowserUserAgent2_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_HasMemberAuthButDifferentBrowserUserAgent2_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
             var token = "token";
@@ -162,7 +161,7 @@ namespace L1.Tests.Features.MemberAuthentications
             });
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -170,7 +169,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_ExpiredToken_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_ExpiredToken_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
             var token = "token";
@@ -183,7 +182,7 @@ namespace L1.Tests.Features.MemberAuthentications
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -191,7 +190,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_Success_ReturnsResultWithMemberAuth(VerificationParams verificationParams)
+        public async Task VerifyToken_Success_ReturnsResultWithMemberAuth(VerificationParams verificationParams)
         {
             // Arrange
             var memberAuth = new MemberAuth
@@ -208,7 +207,7 @@ namespace L1.Tests.Features.MemberAuthentications
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);

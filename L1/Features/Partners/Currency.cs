@@ -18,7 +18,7 @@ namespace L1.Features.Partners
 
         public string Code { get; set; }
 
-        public float Multiplier { get; set; }
+        public int Multiplier { get; set; }
 
         public bool Enabled { get; set; }
 

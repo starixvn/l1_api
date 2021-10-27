@@ -43,7 +43,7 @@ namespace L1.WebApi.Controllers
                 {
                     Domain = model.Domain,
                     BrowserUserAgent = model.BrowserUserAgent,
-                    Currency = model.Currency,
+                    CurrencyName = model.Currency,
                     IP = ip,
                     MemberId = model.ObCustId,
                     MemberName = model.MemberName,

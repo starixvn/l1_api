@@ -7,6 +7,8 @@ namespace L1.Features.Partners
     public interface ICurrencyDataAccess
     {
         Task<bool> Verify(string partnerId, string currencyName);
+
+        Task<Currency> Get(string partnerId, string currencyName);
     }
 
     public class CurrencyDataAccess : ICurrencyDataAccess
@@ -25,5 +27,11 @@ namespace L1.Features.Partners
                 currency => currency.PartnerId == partnerId && 
                             currency.Name == currencyName && 
                             currency.Enabled)) > 0;
+
+        public async Task<Currency> Get(string partnerId, string currencyName)
+        => (await currencyCollection.FindAsync(
+                currency => currency.PartnerId == partnerId &&
+                            currency.Name == currencyName &&
+                            currency.Enabled)).FirstOrDefault();
     }
 }

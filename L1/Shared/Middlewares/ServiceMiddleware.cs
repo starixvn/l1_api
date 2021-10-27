@@ -18,6 +18,7 @@ namespace L1.Shared.Middlewares
             services.AddScoped<IPartnerDataAccess, PartnerDataAccess>();
             services.AddScoped<ICurrencyDataAccess, CurrencyDataAccess>();
             services.AddScoped<IPartnerDataService, PartnerDataService>();
+            services.AddScoped<IPartnerCustomerFactory, PartnerCustomerFactory>();
 
             services.AddTransient<ProtectedApiBearerTokenHandler>();
         }

@@ -13,9 +13,9 @@ namespace L1.Features.Partners.Log
 
         Task LogVoidGameAsync<T>(PartnerResponse<T> response) where T : PartnerResult;
 
-        //Task LogSignInAsync(SBLog log);
+        Task LogSignInAsync(SBLog log);
 
-        //Task LogRetrieveEndGameAsync(SBLog log);
+        Task LogRetrieveEndGameAsync(SBLog log);
     }
 
     public class LogService : ILogService
@@ -55,11 +55,11 @@ namespace L1.Features.Partners.Log
             await logDataAccess.WriteFailedRequestAsync(log);
         }
 
-        //public Task LogSignInAsync(SBLog log)
-        //    => logDataAccess.WriteSignInAsync(log);
+        public Task LogSignInAsync(SBLog log)
+            => logDataAccess.WriteSignInAsync(log);
 
-        //public Task LogRetrieveEndGameAsync(SBLog log)
-        //    => logDataAccess.WriteRetrieveEndGameAsync(log);
+        public Task LogRetrieveEndGameAsync(SBLog log)
+            => logDataAccess.WriteRetrieveEndGameAsync(log);
 
         private static PartnerLog ConvertToOWLog<T>(PartnerResponse<T> response, byte system = AppTypes.SabaClub) where T : PartnerResult
         => new PartnerLog(response.Request.TimeStamp, response.Request.Call, response.TimeStamp, response.Result, system, response.AccessKey);

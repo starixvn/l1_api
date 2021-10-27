@@ -14,9 +14,9 @@ namespace L1.Features.Partners.Log
 
         Task WriteVoidGameAsync(PartnerLog log);
 
-        //Task WriteSignInAsync(SBLog log);
+        Task WriteSignInAsync(SBLog log);
 
-        //Task WriteRetrieveEndGameAsync(SBLog log);
+        Task WriteRetrieveEndGameAsync(SBLog log);
     }
 
     public class LogDataAccess : ILogDataAccess
@@ -32,8 +32,8 @@ namespace L1.Features.Partners.Log
         private readonly IMongoCollection<PartnerLog> betsCollection;
         private readonly IMongoCollection<PartnerLog> endGamesCollection;
         private readonly IMongoCollection<PartnerLog> voidGamesCollection;
-        //private readonly IMongoCollection<SBLog> signInCollection;
-        //private readonly IMongoCollection<SBLog> retrieveCollection;
+        private readonly IMongoCollection<SBLog> signInCollection;
+        private readonly IMongoCollection<SBLog> retrieveCollection;
 
         public LogDataAccess(IMongoClient mongoClient)
         {
@@ -43,8 +43,8 @@ namespace L1.Features.Partners.Log
             betsCollection = database.GetCollection<PartnerLog>(BetsCollectionName);
             endGamesCollection = database.GetCollection<PartnerLog>(EndGamesCollectionName);
             voidGamesCollection = database.GetCollection<PartnerLog>(VoidGamesCollectionName);
-            //signInCollection = database.GetCollection<SBLog>(SignInCollectionName);
-            //retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
+            signInCollection = database.GetCollection<SBLog>(SignInCollectionName);
+            retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
         }
 
         public Task WriteFailedRequestAsync(PartnerLog log)
@@ -59,10 +59,10 @@ namespace L1.Features.Partners.Log
         public Task WriteVoidGameAsync(PartnerLog log)
             => voidGamesCollection.InsertOneAsync(log);
 
-        //public Task WriteSignInAsync(SBLog log)
-        //    => signInCollection.InsertOneAsync(log);
+        public Task WriteSignInAsync(SBLog log)
+            => signInCollection.InsertOneAsync(log);
 
-        //public Task WriteRetrieveEndGameAsync(SBLog log)
-        //    => retrieveCollection.InsertOneAsync(log);
+        public Task WriteRetrieveEndGameAsync(SBLog log)
+            => retrieveCollection.InsertOneAsync(log);
     }
 }

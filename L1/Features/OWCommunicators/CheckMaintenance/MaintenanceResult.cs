@@ -1,8 +1,9 @@
 ﻿using System;
+using L1.Features.Partners;
 
 namespace L1.Features.OWCommunicators.CheckMaintenance
 {
-    public class MaintenanceResult : OWResult
+    public class MaintenanceResult : PartnerResult
     {
         public DateTimeOffset? StartTime { get; set; }
 

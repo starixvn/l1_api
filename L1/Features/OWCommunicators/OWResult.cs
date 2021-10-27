@@ -2,21 +2,6 @@
 
 namespace L1.Features.OWCommunicators
 {
-    public interface IOWResult
-    {
-        string Seq { get; set; }
-
-        int ErrorCode { get; set; }
-
-        string ErrorMessage { get; set; }
-
-        string ErrorDescription { get; set; }
-
-        bool IsSuccessful();
-
-        bool IsFailed();
-    }
-
     public class OWResult : IPartnerResult
     {
         public string Seq { get; set; }

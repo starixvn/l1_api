@@ -103,13 +103,13 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
                 .HandleResult<MaintenanceResult>(maintenanceSchedule => maintenanceSchedule.IsUnderMaintenance())
                 .WaitAndRetryAsync(
                     numberOfRetries,
-                    (retryCount, maintenanceSchedule, context) =>
+                    (_, maintenanceSchedule, _) =>
                     {
                         var duration = maintenanceSchedule.Result.CalculateDuration();
 
                         return duration.Add(retryDelay);
                     },
-                    (maintenanceSchedule, sleepDuration, retryCount, context) =>
+                    (_, _, _, _) =>
                     {
                         return Task.CompletedTask;
                     });

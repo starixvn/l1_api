@@ -1,5 +1,6 @@
 ﻿using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.OWCommunicators.Log;
+using L1.Features.Partners;
+using L1.Features.Partners.Log;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.OWCommunicators
@@ -14,7 +15,9 @@ namespace L1.Features.OWCommunicators
             services.AddScoped<ILogDataAccess, LogDataAccess>();
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IOWFailureHandler, OWFailureHandler>();
-            services.AddScoped<IOWCustomerService, OWCustomerService>();
+
+            services.AddScoped<OWCustomerService>()
+                        .AddScoped<IPartnerCustomerServices, OWCustomerService>(s => s.GetService<OWCustomerService>());
 
             services.AddHttpClient<IMaintenanceService, MaintenanceService>();
             services.AddHttpClient<IOWService, OWService>(httpClient =>

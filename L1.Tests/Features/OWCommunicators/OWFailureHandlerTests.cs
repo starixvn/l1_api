@@ -2,7 +2,8 @@
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.OWCommunicators.Log;
+using L1.Features.Partners;
+using L1.Features.Partners.Log;
 using NSubstitute;
 using Sentry;
 using Xunit;
@@ -27,24 +28,25 @@ namespace L1.Tests.Features.OWCommunicators
         }
 
         [Theory, AutoData]
-        public async Task Handle_Always_LogFailedRequest(OWResult result)
+        public async Task Handle_Always_LogFailedRequest(PartnerResult result)
         {
             // Arrange
 
             // Act
-            await owFailureHandler.Handle(new OWResponse<OWResult> { Result = result });
+            await owFailureHandler.Handle(new PartnerResponse<PartnerResult> { Result = result });
 
             // Assert
-            await logService.Received(1).LogFailedRequestAsync(Arg.Any<OWResponse<OWResult>>());
+            await logService.Received(1).LogFailedRequestAsync(Arg.Any<PartnerResponse<PartnerResult>>());
         }
 
-        [Fact]
-        public async Task Handle_UM_ShouldObserveSchedule()
+        [Theory, AutoData]
+        public async Task Handle_UM_ShouldObserveSchedule(PartnerCall call)
         {
             // Arrange
-            var response = new OWResponse<OWResult>
+            var response = new PartnerResponse<PartnerResult>
             {
-                Result = new OWResult { ErrorCode = OWSpecialErrorCodes.UnderMaintenance }
+                Result = new PartnerResult { ErrorCode = OWSpecialErrorCodes.UnderMaintenance },
+                Request = new PartnerRequest(call)
             };
 
             // Act

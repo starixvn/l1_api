@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
+using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
@@ -15,9 +16,9 @@ namespace L1.Tests.Features.OWCommunicators
     {
         private readonly IOWFailureHandler failureHandler;
 
-        private readonly OWResponse<OWResult> defaultContent = new OWResponse<OWResult>
+        private readonly OWResponse<PartnerResult> defaultContent = new OWResponse<PartnerResult>
         {
-            Result = new OWResult()
+            Result = new PartnerResult()
         };
 
         public OWServiceTests()
@@ -33,10 +34,10 @@ namespace L1.Tests.Features.OWCommunicators
             var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
-            var result = await service.Post<OWResult>("/aaa", call);
+            var result = await service.Post<PartnerResult>("/aaa", call);
 
             // Assert
-            Assert.IsType<OWResponse<OWResult>>(result);
+            Assert.IsType<PartnerResponse<PartnerResult>>(result);
         }
 
         [Theory, AutoData]
@@ -47,10 +48,10 @@ namespace L1.Tests.Features.OWCommunicators
             var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
-            var response = await service.Post<OWResult>("/aaa", call);
+            var response = await service.Post<PartnerResult>("/aaa", call);
 
             // Assert
-            Assert.IsType<OWResponse<OWResult>>(response);
+            Assert.IsType<PartnerResponse<PartnerResult>>(response);
             Assert.Equal(response.Result.ErrorCode, OWSpecialErrorCodes.NetworkError);
             Assert.Contains(HttpStatusCode.BadGateway.ToString(), response.Result.ErrorDescription);
         }

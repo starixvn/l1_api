@@ -25,7 +25,7 @@ namespace L1.Features.Partners
         }
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)
-        => services.ContainsKey(partnerId)
+        => !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
             ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
             : default;
     }

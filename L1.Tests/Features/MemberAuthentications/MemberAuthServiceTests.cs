@@ -200,10 +200,13 @@ namespace L1.Tests.Features.MemberAuthentications
                 BrowserUserAgent = verificationParams.BrowserUserAgent,
                 MemberId = 1,
                 MemberName = "name",
-                SiteId = "3332"
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA"
             };
 
             memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(memberAuth);
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act

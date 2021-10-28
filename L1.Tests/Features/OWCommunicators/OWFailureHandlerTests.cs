@@ -4,6 +4,7 @@ using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.Partners;
 using L1.Features.Partners.Log;
+using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;
 using Xunit;
@@ -36,7 +37,7 @@ namespace L1.Tests.Features.OWCommunicators
             await owFailureHandler.Handle(new PartnerResponse<PartnerResult> { Result = result });
 
             // Assert
-            await logService.Received(1).LogFailedRequestAsync(Arg.Any<PartnerResponse<PartnerResult>>());
+            await logService.Received(1).LogFailedRequestAsync(PartnerIds.OW, Arg.Any<PartnerResponse<PartnerResult>>());
         }
 
         [Theory, AutoData]

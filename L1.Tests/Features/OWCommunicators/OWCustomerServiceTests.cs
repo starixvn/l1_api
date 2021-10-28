@@ -12,6 +12,7 @@ using L1.Features.Partners.Log;
 using L1.Features.Partners.PlaceBet;
 using L1.Features.Partners.VoidGame;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using NSubstitute;
 using Xunit;
 
@@ -78,7 +79,7 @@ namespace L1.Tests.Features.OWCommunicators
             await service.PlaceBet(call, 1);
 
             // Assert
-            await logService.Received(1).LogBetAsync(response, 1);
+            await logService.Received(1).LogBetAsync(PartnerIds.OW, response, 1);
         }
 
         [Theory, AutoData]
@@ -113,7 +114,7 @@ namespace L1.Tests.Features.OWCommunicators
 
             // Assert
             await owService.Received(1).Post<PartnerEndGameResult>(endpoints.EndGame, call);
-            await logService.Received(1).LogEndGameAsync(response);
+            await logService.Received(1).LogEndGameAsync(PartnerIds.OW, response);
         }
 
         [Theory, AutoData]
@@ -148,7 +149,7 @@ namespace L1.Tests.Features.OWCommunicators
 
             // Assert
             await owService.Received(1).Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
-            await logService.Received(1).LogVoidGameAsync(response);
+            await logService.Received(1).LogVoidGameAsync(PartnerIds.OW, response);
         }
 
         [Theory, AutoData]

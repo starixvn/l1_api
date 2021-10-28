@@ -21,6 +21,7 @@ namespace L1.Features.OWCommunicators
         private readonly ILogService logService;
         private readonly IMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
+        private readonly string PartnerId = PartnerIds.OW;
 
         public OWFailureHandler(ILogService logService, IMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
@@ -32,7 +33,7 @@ namespace L1.Features.OWCommunicators
         public async Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult
         {
             MapErrorMessage(response.Result);
-            await logService.LogFailedRequestAsync(response);
+            await logService.LogFailedRequestAsync(PartnerId, response);
 
             sentryClient.CaptureMessage(
                 $"Request to OW failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",

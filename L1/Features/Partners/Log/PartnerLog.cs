@@ -7,6 +7,7 @@ namespace L1.Features.Partners.Log
     public class PartnerLog
     {
         public PartnerLog(
+            string partnerId,
             DateTimeOffset requestTimeStamp,
             IPartnerCall call,
             DateTimeOffset responseTimeStamp,
@@ -15,6 +16,7 @@ namespace L1.Features.Partners.Log
             string accessKey = "")
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
+            PartnerId = partnerId;
             RequestTimeStamp = requestTimeStamp;
             Call = call;
             ResponseTimeStamp = responseTimeStamp;
@@ -22,6 +24,8 @@ namespace L1.Features.Partners.Log
             System = system;
             AccessKey = accessKey;
         }
+
+        public string PartnerId { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset LogTimeStamp { get; set; }

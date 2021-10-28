@@ -47,10 +47,10 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task WriteFailedRequestAsync_Always_InsertOneAsync(OWCall call, OWResult result)
+        public async Task WriteFailedRequestAsync_Always_InsertOneAsync(string partnerId, OWCall call, OWResult result)
         {
             // Arrange
-            var log = new PartnerLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
+            var log = new PartnerLog(partnerId, DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteFailedRequestAsync(log);
@@ -60,10 +60,10 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task WriteBetAsync_Always_InsertOneAsync(OWCall call, OWResult result)
+        public async Task WriteBetAsync_Always_InsertOneAsync(string partnerId, OWCall call, OWResult result)
         {
             // Arrange
-            var log = new PartnerLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
+            var log = new PartnerLog(partnerId, DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteBetAsync(log);
@@ -73,10 +73,10 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task WriteEndGameAsync_Always_InsertOneAsync(OWCall call, OWResult result)
+        public async Task WriteEndGameAsync_Always_InsertOneAsync(string partnerId, OWCall call, OWResult result)
         {
             // Arrange
-            var log = new PartnerLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
+            var log = new PartnerLog(partnerId, DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteEndGameAsync(log);
@@ -86,10 +86,10 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task WriteVoidGameAsync_Always_InsertOneAsync(OWCall call, OWResult result)
+        public async Task WriteVoidGameAsync_Always_InsertOneAsync(string partnerId, OWCall call, OWResult result)
         {
             // Arrange
-            var log = new PartnerLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
+            var log = new PartnerLog(partnerId, DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteVoidGameAsync(log);

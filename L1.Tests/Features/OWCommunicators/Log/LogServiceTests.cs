@@ -21,56 +21,56 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task LogBetAsync_Always_WriteBetAsync(PartnerResponse<PartnerResult> response, byte system, OWCall call)
+        public async Task LogBetAsync_Always_WriteBetAsync(string partnerId, PartnerResponse<PartnerResult> response, byte system, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
             response.Request = new PartnerRequest(call);
 
             // Act
-            await service.LogBetAsync(response, system);
+            await service.LogBetAsync(partnerId, response, system);
 
             // Assert
             await logDataAccess.Received().WriteBetAsync(Arg.Any<PartnerLog>());
         }
 
         [Theory, AutoData]
-        public async Task LogEndGameAsync_Always_WWriteEndGameAsync(PartnerResponse<PartnerResult> response, OWCall call)
+        public async Task LogEndGameAsync_Always_WWriteEndGameAsync(string partnerId, PartnerResponse<PartnerResult> response, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
             response.Request = new PartnerRequest(call);
 
             // Act
-            await service.LogEndGameAsync(response);
+            await service.LogEndGameAsync(partnerId, response);
 
             // Assert
             await logDataAccess.Received().WriteEndGameAsync(Arg.Any<PartnerLog>());
         }
 
         [Theory, AutoData]
-        public async Task LogVoidGameAsync_Always_WriteVoidGameAsync(PartnerResponse<PartnerResult> response, OWCall call)
+        public async Task LogVoidGameAsync_Always_WriteVoidGameAsync(string partnerId, PartnerResponse<PartnerResult> response, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
             response.Request = new PartnerRequest(call);
 
             // Act
-            await service.LogVoidGameAsync(response);
+            await service.LogVoidGameAsync(partnerId, response);
 
             // Assert
             await logDataAccess.Received().WriteVoidGameAsync(Arg.Any<PartnerLog>());
         }
 
         [Theory, AutoData]
-        public async Task LogFailedRequestAsync_Always_WriteFailedRequestAsync(PartnerResponse<PartnerResult> response, OWCall call)
+        public async Task LogFailedRequestAsync_Always_WriteFailedRequestAsync(string partnerId, PartnerResponse<PartnerResult> response, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
             response.Request = new PartnerRequest(call);
 
             // Act
-            await service.LogFailedRequestAsync(response);
+            await service.LogFailedRequestAsync(partnerId, response);
 
             // Assert
             await logDataAccess.Received().WriteFailedRequestAsync(Arg.Any<PartnerLog>());

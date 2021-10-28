@@ -21,6 +21,7 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
         private readonly OWEndPoints endpoints;
+        private readonly string PartnerId = PartnerIds.OW;
 
         public OWCustomerService(
             IOWService oWService,
@@ -51,7 +52,7 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(response, system);
+                await logService.LogBetAsync(PartnerId, response, system);
 
                 if (call.Amount >= appSettings.HighStake)
                 {
@@ -74,7 +75,7 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(response);
+                await logService.LogEndGameAsync(PartnerId, response);
             }
 
             return response;
@@ -86,7 +87,7 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogVoidGameAsync(response);
+                await logService.LogVoidGameAsync(PartnerId, response);
             }
 
             return response;

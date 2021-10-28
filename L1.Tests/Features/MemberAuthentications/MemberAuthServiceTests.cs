@@ -36,6 +36,7 @@ namespace L1.Tests.Features.MemberAuthentications
         public async Task SignIn_NotFoundClientUrl_ReturnsGameServerNotFoundCode(MemberAuth memberAuth)
         {
             // Arrange
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
 
             // Act
             var result = await memberAuthService.SignIn(memberAuth, null);
@@ -80,6 +81,7 @@ namespace L1.Tests.Features.MemberAuthentications
                 MobiVersionUrl = "http://mobi/",
                 MiniVersionUrl = "http://mini/"
             });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
 
             // Act
             var result = await memberAuthService.SignIn(memberAuth, gameTypeId);
@@ -105,6 +107,7 @@ namespace L1.Tests.Features.MemberAuthentications
                 Token = token,
                 Time = DateTime.Now
             });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act

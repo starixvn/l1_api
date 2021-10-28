@@ -38,5 +38,13 @@ namespace L1.Features.MemberAuthentications
         public byte AppType { get; set; }
 
         public string SiteName { get; set; }
+
+        public string CurrencyCode { get; set; }
+
+        public string CurrencyGroupId { get; set; }
+
+        public int Multiplier { get; set; }
+
+        public bool IsTestCurrency { get; set; }
     }
 }

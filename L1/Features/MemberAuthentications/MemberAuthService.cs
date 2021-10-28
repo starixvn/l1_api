@@ -38,6 +38,13 @@ namespace L1.Features.MemberAuthentications
 
         public async Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId)
         {
+            var currency = await partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName);
+
+            if (currency == null)
+            {
+                return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
+            }
+
             var gameClientUrl = await GetRedirectedUrl(memberAuth);
 
             if (gameClientUrl == null)
@@ -45,7 +52,7 @@ namespace L1.Features.MemberAuthentications
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
 
-            var latestSignIn = memberAuthDataAccess.GetLatest(memberAuth);
+            var latestSignIn = await memberAuthDataAccess.GetLatest(memberAuth);
 
             string token;
 
@@ -58,7 +65,12 @@ namespace L1.Features.MemberAuthentications
                 token = Guid.NewGuid().ToString();
                 memberAuth.Token = token;
                 memberAuth.Time = DateTime.Now;
-                memberAuthDataAccess.Create(memberAuth);
+                memberAuth.CurrencyCode = currency.Code;
+                memberAuth.CurrencyGroupId = currency.GroupId;
+                memberAuth.Multiplier = currency.Multiplier;
+                memberAuth.IsTestCurrency = currency.IsTest;
+
+                await memberAuthDataAccess.Create(memberAuth);
             }
 
             if (gameTypeId.HasValue)
@@ -71,7 +83,7 @@ namespace L1.Features.MemberAuthentications
 
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
         {
-            var memberAuth = memberAuthDataAccess.GetByToken(verificationParams.Token);
+            var memberAuth = await memberAuthDataAccess.GetByToken(verificationParams.Token);
 
             if (memberAuth != null)
             {
@@ -87,13 +99,6 @@ namespace L1.Features.MemberAuthentications
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
 
-                var currency = await partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName);
-
-                if (currency == null)
-                {
-                    return VerificationResult.CreateErrorResponse(VerificationResult.NotSupportedCurrency);
-                }
-
                 return VerificationResult.CreateSuccessResponse(
                     memberAuth.MemberId,
                     memberAuth.MemberName,
@@ -105,9 +110,9 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Domain,
                     memberAuth.SiteName,
                     memberAuth.AppType,
-                    currency.Code,
-                    currency.Multiplier,
-                    currency.GroupId
+                    memberAuth.CurrencyCode,
+                    memberAuth.Multiplier,
+                    memberAuth.CurrencyGroupId
                     );
             }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -6,17 +6,13 @@ namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthDataAccess
     {
-        IEnumerable<MemberAuth> GetAll();
+        Task<MemberAuth> Get(string id);
 
-        MemberAuth Get(string id);
+        Task<MemberAuth> GetByToken(string token);
 
-        MemberAuth GetByToken(string token);
+        Task<MemberAuth> Create(MemberAuth memberAuth);
 
-        MemberAuth Create(MemberAuth memberAuth);
-
-        void Update(string id, MemberAuth memberAuth);
-
-        MemberAuth GetLatest(MemberAuth memberAuth);
+        Task<MemberAuth> GetLatest(MemberAuth memberAuth);
     }
 
     public class MemberAuthDataAccess : IMemberAuthDataAccess
@@ -30,37 +26,36 @@ namespace L1.Features.MemberAuthentications
             memberAuthCollection = database.GetCollection<MemberAuth>(collectionName);
         }
 
-        public IEnumerable<MemberAuth> GetAll() =>
-            memberAuthCollection.Find(memberAuth => true).ToList();
+        public async Task<MemberAuth> Get(string id) =>
+            (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Id == id)).FirstOrDefault();
 
-        public MemberAuth Get(string id) =>
-            memberAuthCollection.Find(memberAuth => memberAuth.Id == id).FirstOrDefault();
-
-        public MemberAuth GetLatest(MemberAuth memberAuth) =>
-            memberAuthCollection
-                .Find(
-#pragma warning disable S1067 // Expressions should not be too complex
-                    x => x.IP == memberAuth.IP
-                    && x.MemberId == memberAuth.MemberId
-                    && x.SiteId.ToUpper() == memberAuth.SiteId.ToUpper()
-                    && x.BrowserUserAgent.ToUpper() == memberAuth.BrowserUserAgent.ToUpper()
-                    && x.AppType == memberAuth.AppType
-                    && x.Language.ToUpper() == memberAuth.Language.ToUpper())
-                .SortByDescending(x => x.Time)
-                .Limit(1)
-                .FirstOrDefault();
-
-        public MemberAuth GetByToken(string token) =>
-            memberAuthCollection.Find(memberAuth => memberAuth.Token == token).FirstOrDefault();
-
-        public MemberAuth Create(MemberAuth memberAuth)
+        public async Task<MemberAuth> GetLatest(MemberAuth memberAuth)
         {
-            memberAuthCollection.InsertOne(memberAuth);
+            var builder = Builders<MemberAuth>.Filter;
+            var filter = builder.Eq(x => x.IP, memberAuth.IP) &
+                builder.Eq(x => x.MemberId, memberAuth.MemberId) &
+                builder.Eq(x => x.SiteId.ToUpperInvariant(), memberAuth.SiteId.ToUpperInvariant()) &
+                builder.Eq(x => x.BrowserUserAgent.ToUpperInvariant(), memberAuth.BrowserUserAgent.ToUpperInvariant()) &
+                builder.Eq(x => x.AppType, memberAuth.AppType) &
+                builder.Eq(x => x.Language.ToUpperInvariant(), memberAuth.Language.ToUpperInvariant());
+
+            var options = new FindOptions<MemberAuth, MemberAuth>
+            {
+                Limit = 1,
+                Sort = Builders<MemberAuth>.Sort.Descending(x => x.Time)
+            };
+
+            return (await memberAuthCollection.FindAsync(filter, options)).FirstOrDefault();
+        }
+
+        public async Task<MemberAuth> GetByToken(string token) =>
+            (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Token == token)).FirstOrDefault();
+
+        public async Task<MemberAuth> Create(MemberAuth memberAuth)
+        {
+            await memberAuthCollection.InsertOneAsync(memberAuth);
 
             return memberAuth;
         }
-
-        public void Update(string id, MemberAuth memberAuth) =>
-            memberAuthCollection.ReplaceOne(memberAuth => memberAuth.Id == id, memberAuth);
     }
 }

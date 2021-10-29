@@ -37,15 +37,16 @@ namespace L1.Features.MemberAuthentications
             var builder = Builders<MemberAuth>.Filter;
             var filter = builder.Eq(x => x.IP, memberAuth.IP) &
                 builder.Eq(x => x.MemberId, memberAuth.MemberId) &
-                builder.Eq(x => x.SiteId.ToUpperInvariant(), memberAuth.SiteId.ToUpperInvariant()) &
-                builder.Eq(x => x.BrowserUserAgent.ToUpperInvariant(), memberAuth.BrowserUserAgent.ToUpperInvariant()) &
                 builder.Eq(x => x.AppType, memberAuth.AppType) &
-                builder.Eq(x => x.Language.ToUpperInvariant(), memberAuth.Language.ToUpperInvariant());
+                builder.Eq(x => x.SiteId, memberAuth.SiteId) &
+                builder.Eq(x => x.BrowserUserAgent, memberAuth.BrowserUserAgent) &
+                builder.Eq(x => x.Language, memberAuth.Language);
 
             var options = new FindOptions<MemberAuth, MemberAuth>
             {
                 Limit = 1,
-                Sort = Builders<MemberAuth>.Sort.Descending(x => x.Time)
+                Sort = Builders<MemberAuth>.Sort.Descending(x => x.Time),
+                Collation = new Collation("en", strength: CollationStrength.Secondary)
             };
 
             return (await memberAuthCollection.FindAsync(filter, options)).FirstOrDefault();

@@ -147,20 +147,20 @@ namespace L1.Features.MemberAuthentications
             };
         }
 
-        public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateMemberAuthParams)
+        public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams)
         {
-            var memberAuth = await memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token);
+            var memberAuth = await memberAuthDataAccess.GetByToken(updateParams.Token);
 
             if (memberAuth == null || !memberAuth.IsTestCurrency)
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
 
-            await memberAuthDataAccess.UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+            await memberAuthDataAccess.UpdateCurrencyGroup(updateParams.Token, updateParams.CurrencyGroupId);
 
             var gameClientUrl = (await GetRedirectedUrl(memberAuth, false)).ToString().TrimEnd('/');
 
-            return CreateSSOResult(updateMemberAuthParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl);
+            return CreateSSOResult(updateParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl);
         }
 
         private static SingleSignOnResult CreateSSOResult(byte? GameTypeId, string token, string language, string gameClientUrl)

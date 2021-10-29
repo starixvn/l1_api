@@ -53,13 +53,23 @@ namespace L1.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public async Task Create_Always_ReturnCorrectMemberAuth(MemberAuth memberAuth)
+        public async Task Create_Always_InjectInsertOneAsync(MemberAuth memberAuth)
         {
             // Act
             await dataAccess.Create(memberAuth);
 
             // Assert
             await memberAuthCollection.Received().InsertOneAsync(memberAuth);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateCurrencyGroup_Always_InjectUpdateOneAsync(string token, string currencyGroupId)
+        {
+            // Act
+            await dataAccess.UpdateCurrencyGroup(token, currencyGroupId);
+
+            // Assert
+            await memberAuthCollection.Received().UpdateOneAsync(Arg.Any<FilterDefinition<MemberAuth>>(), Arg.Any<UpdateDefinition<MemberAuth>>());
         }
     }
 }

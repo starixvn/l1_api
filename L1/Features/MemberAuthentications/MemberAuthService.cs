@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using L1.Features.Partners;
 using L1.Shared.Configurations;
@@ -15,6 +16,8 @@ namespace L1.Features.MemberAuthentications
         Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId);
 
         Task<VerificationResult> VerifyToken(VerificationParams verificationParams);
+
+        Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams);
     }
 
     public class MemberAuthService : IMemberAuthService
@@ -45,7 +48,7 @@ namespace L1.Features.MemberAuthentications
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
 
-            var gameClientUrl = await GetRedirectedUrl(memberAuth);
+            var gameClientUrl = await GetRedirectedUrl(memberAuth, currency.IsTest);
 
             if (gameClientUrl == null)
             {
@@ -73,12 +76,7 @@ namespace L1.Features.MemberAuthentications
                 await memberAuthDataAccess.Create(memberAuth);
             }
 
-            if (gameTypeId.HasValue)
-            {
-                return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&lang={memberAuth.Language}&gameId={gameTypeId.Value}");
-            }
-
-            return SingleSignOnResult.CreateSuccessResponse($"{gameClientUrl.ToString().TrimEnd('/')}/?token={token}&lang={memberAuth.Language}");
+            return CreateSSOResult(gameTypeId, token, memberAuth.Language, gameClientUrl.ToString().TrimEnd('/'));
         }
 
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
@@ -126,13 +124,18 @@ namespace L1.Features.MemberAuthentications
                 SentryLevel.Warning);
         }
 
-        private async Task<Uri> GetRedirectedUrl(MemberAuth memberAuth)
+        private async Task<Uri> GetRedirectedUrl(MemberAuth memberAuth, bool isTestCurrency)
         {
             var partner = await partnerDataService.GetById(memberAuth.PartnerId);
 
             if (partner == null)
             {
                 return null;
+            }
+
+            if (isTestCurrency)
+            {
+                return new Uri(partner.TestCurrencyUrl);
             }
 
             return memberAuth.AppType switch
@@ -142,6 +145,35 @@ namespace L1.Features.MemberAuthentications
                 AppTypes.SabaMobi => new Uri(partner.MobiVersionUrl),
                 _ => new Uri(partner.ClubVersionUrl),
             };
+        }
+
+        public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            var memberAuth = await memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token);
+
+            if (memberAuth == null || !memberAuth.IsTestCurrency)
+            {
+                return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
+            }
+
+            await memberAuthDataAccess.UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+
+            var gameClientUrl = (await GetRedirectedUrl(memberAuth, false)).ToString().TrimEnd('/');
+
+            return CreateSSOResult(updateMemberAuthParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl);
+        }
+
+        private static SingleSignOnResult CreateSSOResult(byte? GameTypeId, string token, string language, string gameClientUrl)
+        {
+            var clientRedirectUrl = new StringBuilder();
+            clientRedirectUrl.Append($"{gameClientUrl}/?token={token}&lang={language}");
+
+            if (GameTypeId.HasValue)
+            {
+                clientRedirectUrl.Append($"&gameId={GameTypeId}");
+            }
+
+            return SingleSignOnResult.CreateSuccessResponse(clientRedirectUrl.ToString());
         }
     }
 }

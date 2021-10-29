@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -13,6 +14,8 @@ namespace L1.Features.MemberAuthentications
         Task<MemberAuth> Create(MemberAuth memberAuth);
 
         Task<MemberAuth> GetLatest(MemberAuth memberAuth);
+
+        Task UpdateCurrencyGroup(string token, string currencyGroupId);
     }
 
     public class MemberAuthDataAccess : IMemberAuthDataAccess
@@ -56,6 +59,15 @@ namespace L1.Features.MemberAuthentications
             await memberAuthCollection.InsertOneAsync(memberAuth);
 
             return memberAuth;
+        }
+
+        public Task UpdateCurrencyGroup(string token, string currencyGroupId)
+        {
+            var updates = Builders<MemberAuth>.Update
+                .Set(x => x.CurrencyGroupId, currencyGroupId)
+                .Set(x => x.Time, DateTime.Now);
+
+            return memberAuthCollection.UpdateOneAsync(x => x.Token == token, updates);
         }
     }
 }

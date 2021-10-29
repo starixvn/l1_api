@@ -221,5 +221,120 @@ namespace L1.Tests.Features.MemberAuthentications
             Assert.Equal(memberAuth.MemberName, result.MemberName);
             Assert.Equal(memberAuth.SiteId, result.SiteId);
         }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_NotTestCurrency_ReturnsUnauthorize(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            var memberAuth = new MemberAuth
+            {
+                Token = "token",
+                Time = DateTime.Now,
+                MemberId = 1,
+                MemberName = "name",
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA"
+            };
+
+            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(memberAuth);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_NotExist_ReturnsUnauthorize(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(default(MemberAuth));
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_WithoutGameId_ReturnsRedirectUrlNotContainsGameId(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            updateMemberAuthParams.GameTypeId = null;
+            var memberAuth = new MemberAuth
+            {
+                Token = updateMemberAuthParams.Token,
+                Time = DateTime.Now,
+                MemberId = 1,
+                MemberName = "name",
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA",
+                IsTestCurrency = true,
+                Language = updateMemberAuthParams.Language
+            };
+
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
+            });
+
+            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(memberAuth);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            await memberAuthDataAccess.Received(1).UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains(updateMemberAuthParams.Token, result.RedirectUrl);
+            Assert.Contains(updateMemberAuthParams.Language, result.RedirectUrl);
+            Assert.DoesNotContain("gameId", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_WithGameId_ReturnsRedirectUrlContainsGameId(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            updateMemberAuthParams.GameTypeId = 1;
+            var memberAuth = new MemberAuth
+            {
+                Token = updateMemberAuthParams.Token,
+                Time = DateTime.Now,
+                MemberId = 1,
+                MemberName = "name",
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA",
+                IsTestCurrency = true,
+                Language = updateMemberAuthParams.Language
+            };
+
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
+            });
+
+            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(memberAuth);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            await memberAuthDataAccess.Received(1).UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains(updateMemberAuthParams.Token, result.RedirectUrl);
+            Assert.Contains(updateMemberAuthParams.Language, result.RedirectUrl);
+            Assert.Contains($"&gameId={updateMemberAuthParams.GameTypeId}", result.RedirectUrl);
+        }
     }
 }

@@ -33,5 +33,20 @@ namespace L1.WebApi.Tests.Controllers
             // Assert
             Assert.Equal(result, actualValue);
         }
+
+        [Fact]
+        public async Task UpdateMemberAuth_Always_ReturnResultFromMemberAuthService()
+        {
+            // Arrange
+            var updateParams = fixture.Create<UpdateMemberAuthParams>();
+            var result = fixture.Create<SingleSignOnResult>();
+            memberAuthService.UpdateMemberAuth(Arg.Any<UpdateMemberAuthParams>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.UpdateMemberAuth(updateParams);
+
+            // Assert
+            Assert.Equal(result, actualValue);
+        }
     }
 }

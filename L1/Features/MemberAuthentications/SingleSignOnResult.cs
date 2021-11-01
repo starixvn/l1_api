@@ -13,16 +13,16 @@ namespace L1.Features.MemberAuthentications
             RedirectUrl = RedirectUri == null ? string.Empty : RedirectUri.ToString();
         }
 
-        public static SingleSignOnResult ServerErrorResult => new SingleSignOnResult(ServerErrorCode, string.Empty);
+        public static SingleSignOnResult ServerErrorResult => new(ServerErrorCode, string.Empty);
 
         public Uri RedirectUri { get; }
 
         public string RedirectUrl { get; set; }
 
         public static SingleSignOnResult CreateSuccessResponse(string redirectUrl)
-            => new SingleSignOnResult(SuccessCode, string.Empty, new Uri(redirectUrl));
+            => new(SuccessCode, string.Empty, new Uri(redirectUrl));
 
         public static SingleSignOnResult CreateErrorResponse(int code)
-            => new SingleSignOnResult(code, string.Empty);
+            => new(code, string.Empty);
     }
 }

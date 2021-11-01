@@ -286,7 +286,7 @@ namespace L1.Tests.Features.MemberAuthentications
                 MiniVersionUrl = "http://mini/"
             });
 
-            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(memberAuth);
+            memberAuthDataAccess.GetForTestCurrency(updateMemberAuthParams.Token).Returns(memberAuth);
 
             // Act
             var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
@@ -324,7 +324,7 @@ namespace L1.Tests.Features.MemberAuthentications
                 MiniVersionUrl = "http://mini/"
             });
 
-            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(memberAuth);
+            memberAuthDataAccess.GetForTestCurrency(updateMemberAuthParams.Token).Returns(memberAuth);
 
             // Act
             var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);

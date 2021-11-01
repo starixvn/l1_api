@@ -16,6 +16,8 @@ namespace L1.Features.MemberAuthentications
         Task<MemberAuth> GetLatest(MemberAuth memberAuth);
 
         Task UpdateCurrencyGroup(string token, string currencyGroupId);
+
+        Task<MemberAuth> GetForTestCurrency(string token);
     }
 
     public class MemberAuthDataAccess : IMemberAuthDataAccess
@@ -70,5 +72,8 @@ namespace L1.Features.MemberAuthentications
 
             return memberAuthCollection.UpdateOneAsync(x => x.Token == token, updates);
         }
+
+        public async Task<MemberAuth> GetForTestCurrency(string token)
+        => (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Token == token && memberAuth.IsTestCurrency)).FirstOrDefault();
     }
 }

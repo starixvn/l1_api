@@ -149,9 +149,9 @@ namespace L1.Features.MemberAuthentications
 
         public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams)
         {
-            var memberAuth = await memberAuthDataAccess.GetByToken(updateParams.Token);
+            var memberAuth = await memberAuthDataAccess.GetForTestCurrency(updateParams.Token);
 
-            if (memberAuth == null || !memberAuth.IsTestCurrency)
+            if (memberAuth == null)
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }

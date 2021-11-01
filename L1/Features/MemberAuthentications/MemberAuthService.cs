@@ -166,7 +166,7 @@ namespace L1.Features.MemberAuthentications
         private static SingleSignOnResult CreateSSOResult(byte? GameTypeId, string token, string language, string gameClientUrl)
         {
             var clientRedirectUrl = new StringBuilder();
-            clientRedirectUrl.Append($"{gameClientUrl}/?token={token}&lang={language}");
+            clientRedirectUrl.Append($"{gameClientUrl}?token={token}&lang={language}");
 
             if (GameTypeId.HasValue)
             {

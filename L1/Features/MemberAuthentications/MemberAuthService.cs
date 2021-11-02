@@ -110,7 +110,8 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.AppType,
                     memberAuth.CurrencyCode,
                     memberAuth.Multiplier,
-                    memberAuth.CurrencyGroupId
+                    memberAuth.CurrencyGroupId,
+                    memberAuth.IsTestCurrency
                     );
             }
 

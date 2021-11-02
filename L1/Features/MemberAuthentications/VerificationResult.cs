@@ -32,7 +32,8 @@ namespace L1.Features.MemberAuthentications
             byte appType,
             string currencyCode,
             double multiplier,
-            string currencyGroupId
+            string currencyGroupId,
+            bool isTestCurrency
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
@@ -50,6 +51,7 @@ namespace L1.Features.MemberAuthentications
             CurrencyCode = currencyCode;
             Multiplier = multiplier;
             CurrencyGroupId = currencyGroupId;
+            IsTestCurrency = isTestCurrency;
         }
 
         public int MemberId { get; }
@@ -80,8 +82,10 @@ namespace L1.Features.MemberAuthentications
 
         public byte AppType { get; set; }
 
+        public bool IsTestCurrency { get; }
+
         public static VerificationResult CreateErrorResponse(int code)
-           => new VerificationResult(code, string.Empty);
+           => new(code, string.Empty);
 
 #pragma warning disable S107 // Methods should not have too many parameters
 
@@ -98,7 +102,8 @@ namespace L1.Features.MemberAuthentications
             byte appType,
             string currencyCode,
             double multiplier,
-            string currencyGroupId)
+            string currencyGroupId,
+            bool isTestCurrency)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
@@ -115,6 +120,7 @@ namespace L1.Features.MemberAuthentications
                 appType,
                 currencyCode,
                 multiplier,
-                currencyGroupId);
+                currencyGroupId,
+                isTestCurrency);
     }
 }

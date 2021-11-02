@@ -31,7 +31,7 @@ namespace L1.Features.MemberAuthentications
             string siteName,
             byte appType,
             string currencyCode,
-            int multiplier,
+            double multiplier,
             string currencyGroupId
             )
 #pragma warning restore S107 // Methods should not have too many parameters
@@ -70,7 +70,7 @@ namespace L1.Features.MemberAuthentications
 
         public string CurrencyGroupId { get; }
 
-        public int Multiplier { get; }
+        public double Multiplier { get; }
 
         public string Seq { get; }
 
@@ -97,7 +97,7 @@ namespace L1.Features.MemberAuthentications
             string siteName,
             byte appType,
             string currencyCode,
-            int multiplier,
+            double multiplier,
             string currencyGroupId)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(

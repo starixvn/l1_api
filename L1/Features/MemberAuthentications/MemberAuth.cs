@@ -43,7 +43,7 @@ namespace L1.Features.MemberAuthentications
 
         public string CurrencyGroupId { get; set; }
 
-        public int Multiplier { get; set; }
+        public double Multiplier { get; set; }
 
         public bool IsTestCurrency { get; set; }
     }

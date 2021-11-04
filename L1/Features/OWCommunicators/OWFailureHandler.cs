@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.OWCommunicators.Resources;
+﻿using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.Partners;
 using L1.Features.Partners.Log;
+using L1.Features.Partners.Resources;
 using L1.Shared.Constants;
-using L1.Shared.Resources;
 using Sentry;
 using Sentry.Protocol;
+using System;
+using System.Threading.Tasks;
 
 namespace L1.Features.OWCommunicators
 {
@@ -39,13 +38,13 @@ namespace L1.Features.OWCommunicators
                 $"Request to OW failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
                 SentryLevel.Warning);
 
-            if (response.Result.ErrorCode == OWSpecialErrorCodes.UnderMaintenance)
+            if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)
             {
                 await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(response.Request.Call));
             }
         }
 
         private static void MapErrorMessage(IPartnerResult result)
-            => result.ErrorMessage = OWErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? Errors.ResourceManager.GetString(ErrorCodes.InternalError);
+            => result.ErrorMessage = PartnerErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? PartnerErrors.ResourceManager.GetString(ErrorCodes.InternalError);
     }
 }

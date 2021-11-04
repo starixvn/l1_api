@@ -46,7 +46,7 @@ namespace L1.Tests.Features.OWCommunicators
             // Arrange
             var response = new PartnerResponse<PartnerResult>
             {
-                Result = new PartnerResult { ErrorCode = OWSpecialErrorCodes.UnderMaintenance },
+                Result = new PartnerResult { ErrorCode = PartnerSpecialErrorCodes.UnderMaintenance },
                 Request = new PartnerRequest(call)
             };
 

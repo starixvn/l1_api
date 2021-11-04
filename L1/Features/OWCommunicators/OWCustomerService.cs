@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
+﻿using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.Partners;
 using L1.Features.Partners.EndGame;
@@ -11,17 +10,19 @@ using L1.Features.Partners.PlaceBet;
 using L1.Features.Partners.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
+using System.Threading.Tasks;
 
 namespace L1.Features.OWCommunicators
 {
     public class OWCustomerService : IPartnerCustomerServices
     {
+        private readonly string PartnerId = PartnerIds.OW;
+
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
         private readonly OWEndPoints endpoints;
-        private readonly string PartnerId = PartnerIds.OW;
 
         public OWCustomerService(
             IOWService oWService,

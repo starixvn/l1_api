@@ -18,10 +18,10 @@
         <PackageReference Include="Sentry.AspNetCore" Version="2.1.1" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="Features\OWCommunicators\Resources\OWErrors.Designer.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>OWErrors.resx</DependentUpon>
+        <Compile Update="Features\Partners\Resources\PartnerErrors.Designer.cs">
+          <DependentUpon>PartnerErrors.resx</DependentUpon>
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
         </Compile>
         <Compile Update="Shared\Resources\Errors.Designer.cs">
             <DependentUpon>Errors.resx</DependentUpon>
@@ -35,9 +35,9 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Update="Features\OWCommunicators\Resources\OWErrors.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>OWErrors.Designer.cs</LastGenOutput>
+        <EmbeddedResource Update="Features\Partners\Resources\PartnerErrors.resx">
+          <LastGenOutput>PartnerErrors.Designer.cs</LastGenOutput>
+          <Generator>ResXFileCodeGenerator</Generator>
         </EmbeddedResource>
         <EmbeddedResource Update="Shared\Resources\VerifyTokenErrors.resx">
             <LastGenOutput>VerifyTokenErrors.Designer.cs</LastGenOutput>

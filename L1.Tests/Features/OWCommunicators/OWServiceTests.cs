@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
 using L1.Features.Partners;
-using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
-using Sentry;
 using Xunit;
 
 namespace L1.Tests.Features.OWCommunicators
@@ -52,7 +50,7 @@ namespace L1.Tests.Features.OWCommunicators
 
             // Assert
             Assert.IsType<PartnerResponse<PartnerResult>>(response);
-            Assert.Equal(response.Result.ErrorCode, OWSpecialErrorCodes.NetworkError);
+            Assert.Equal(response.Result.ErrorCode, PartnerSpecialErrorCodes.NetworkError);
             Assert.Contains(HttpStatusCode.BadGateway.ToString(), response.Result.ErrorDescription);
         }
     }

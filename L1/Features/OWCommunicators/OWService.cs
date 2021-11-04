@@ -81,7 +81,7 @@ namespace L1.Features.OWCommunicators
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = new T
                 {
-                    ErrorCode = OWSpecialErrorCodes.NetworkError,
+                    ErrorCode = PartnerSpecialErrorCodes.NetworkError,
                     ErrorDescription = await GetErrorResponseContent(response),
                     Seq = call.Seq
                 },

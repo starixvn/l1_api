@@ -3,15 +3,6 @@ using L1.Features.Partners;
 
 namespace L1.Features.OWCommunicators
 {
-    public interface IOWCall
-    {
-        string Seq { get; set; }
-
-        int ObCustId { get; set; }
-
-        string SiteId { get; set; }
-    }
-
     public class OWCall : PartnerCall
     {
         public OWCall(int obCustId, string siteId)

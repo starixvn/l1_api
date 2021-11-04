@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using L1.Features.OWCommunicators;
+using L1.Features.SboCommunicators;
 using L1.Shared.Constants;
 
 namespace L1.Features.Partners
@@ -15,6 +16,7 @@ namespace L1.Features.Partners
         private readonly Dictionary<string, Type> services = new Dictionary<string, Type>
         {
             { PartnerIds.OW, typeof(OWCustomerService) },
+            { PartnerIds.SBO, typeof(SboCustomerService) },
         };
 
         private readonly IServiceProvider serviceProvider;

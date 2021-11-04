@@ -20,10 +20,10 @@ namespace L1.Features.SboCommunicators
         private readonly string PartnerId = PartnerIds.SBO;
 
         private readonly ILogService logService;
-        private readonly IMaintenanceService maintenanceService;
+        private readonly ISboMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
 
-        public SboFailureHandler(ILogService logService, IMaintenanceService maintenanceService, ISentryClient sentryClient)
+        public SboFailureHandler(ILogService logService, ISboMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
             this.logService = logService;
             this.maintenanceService = maintenanceService;

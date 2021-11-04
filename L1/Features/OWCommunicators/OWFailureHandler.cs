@@ -18,11 +18,11 @@ namespace L1.Features.OWCommunicators
     public class OWFailureHandler : IOWFailureHandler
     {
         private readonly ILogService logService;
-        private readonly IMaintenanceService maintenanceService;
+        private readonly IOWMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
         private readonly string PartnerId = PartnerIds.OW;
 
-        public OWFailureHandler(ILogService logService, IMaintenanceService maintenanceService, ISentryClient sentryClient)
+        public OWFailureHandler(ILogService logService, IOWMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
             this.logService = logService;
             this.maintenanceService = maintenanceService;

@@ -15,7 +15,7 @@ namespace L1.Features.SboCommunicators
             services.AddScoped<SboCustomerService>()
                         .AddScoped<IPartnerCustomerServices, SboCustomerService>(s => s.GetService<SboCustomerService>());
 
-            services.AddHttpClient<IMaintenanceService, MaintenanceService>();
+            services.AddHttpClient<ISboMaintenanceService, SboMaintenanceService>();
             services.AddHttpClient<ISboService, SboService>(httpClient =>
             {
                 httpClient.BaseAddress = SboServiceSettings.BaseUrl;

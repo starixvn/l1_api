@@ -15,7 +15,7 @@ namespace L1.Features.OWCommunicators
             services.AddScoped<OWCustomerService>()
                         .AddScoped<IPartnerCustomerServices, OWCustomerService>(s => s.GetService<OWCustomerService>());
 
-            services.AddHttpClient<IMaintenanceService, MaintenanceService>();
+            services.AddHttpClient<IOWMaintenanceService, OWMaintenanceService>();
             services.AddHttpClient<IOWService, OWService>(httpClient =>
             {
                 httpClient.BaseAddress = owServiceSettings.BaseUrl;

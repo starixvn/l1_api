@@ -14,7 +14,7 @@ namespace L1.Tests.Features.OWCommunicators
     public class OWFailureHandlerTests
     {
         private readonly ILogService logService;
-        private readonly IMaintenanceService maintenanceService;
+        private readonly IOWMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
 
         private readonly OWFailureHandler owFailureHandler;
@@ -22,7 +22,7 @@ namespace L1.Tests.Features.OWCommunicators
         public OWFailureHandlerTests()
         {
             logService = Substitute.For<ILogService>();
-            maintenanceService = Substitute.For<IMaintenanceService>();
+            maintenanceService = Substitute.For<IOWMaintenanceService>();
             sentryClient = Substitute.For<ISentryClient>();
 
             owFailureHandler = new OWFailureHandler(logService, maintenanceService, sentryClient);

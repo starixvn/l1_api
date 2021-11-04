@@ -12,14 +12,14 @@ using AdminApi = L1.Features.AdminApiCommunicators.UnderMaintenance;
 
 namespace L1.Features.OWCommunicators.CheckMaintenance
 {
-    public interface IMaintenanceService
+    public interface IOWMaintenanceService
     {
         Task<bool> IsUnderMaintenance();
 
         Task ObserveMaintenanceSchedule(OWRequest request);
     }
 
-    public class MaintenanceService : IMaintenanceService
+    public class OWMaintenanceService : IOWMaintenanceService
     {
         private const string DefaultMediaType = "application/json";
 
@@ -30,7 +30,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
 
-        public MaintenanceService(
+        public OWMaintenanceService(
             HttpClient httpClient,
             OWServiceSettings owServiceSettings,
             IAdminApiService adminApiService,

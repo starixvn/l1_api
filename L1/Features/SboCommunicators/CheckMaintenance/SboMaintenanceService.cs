@@ -12,14 +12,14 @@ using AdminApi = L1.Features.AdminApiCommunicators.UnderMaintenance;
 
 namespace L1.Features.SboCommunicators.CheckMaintenance
 {
-    public interface IMaintenanceService
+    public interface ISboMaintenanceService
     {
         Task<bool> IsUnderMaintenance();
 
         Task ObserveMaintenanceSchedule(SboRequest request);
     }
 
-    public class MaintenanceService : IMaintenanceService
+    public class SboMaintenanceService : ISboMaintenanceService
     {
         private const string DefaultMediaType = "application/json";
 
@@ -30,7 +30,7 @@ namespace L1.Features.SboCommunicators.CheckMaintenance
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
 
-        public MaintenanceService(
+        public SboMaintenanceService(
             HttpClient httpClient,
             SboServiceSettings owServiceSettings,
             IAdminApiService adminApiService,

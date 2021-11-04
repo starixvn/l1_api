@@ -4,6 +4,7 @@ using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.Log;
+using L1.Shared.Constants;
 using L1.Shared.Models;
 using MongoDB.Driver;
 using NSubstitute;
@@ -18,6 +19,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         private readonly IMongoCollection<OWLog> endGamesCollection;
         private readonly IMongoCollection<OWLog> voidGamesCollection;
         private readonly IMongoCollection<SBLog> signInCollection;
+        private readonly IMongoCollection<SBLog> retrieveCollection;
 
         private readonly LogDataAccess logDataAccess;
 
@@ -28,6 +30,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
             endGamesCollection = Substitute.For<IMongoCollection<OWLog>>();
             voidGamesCollection = Substitute.For<IMongoCollection<OWLog>>();
             signInCollection = Substitute.For<IMongoCollection<SBLog>>();
+            retrieveCollection = Substitute.For<IMongoCollection<SBLog>>();
 
             var mongoClient = Substitute.For<IMongoClient>();
             var database = Substitute.For<IMongoDatabase>();
@@ -38,6 +41,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
             database.GetCollection<OWLog>("end_games").Returns(endGamesCollection);
             database.GetCollection<OWLog>("void_games").Returns(voidGamesCollection);
             database.GetCollection<SBLog>("signin_requests").Returns(signInCollection);
+            database.GetCollection<SBLog>("retrieve_requests").Returns(retrieveCollection);
 
             logDataAccess = new LogDataAccess(mongoClient);
         }
@@ -46,7 +50,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         public async Task WriteFailedRequestAsync_Always_InsertOneAsync(OWCall call, OWResult result)
         {
             // Arrange
-            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result);
+            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteFailedRequestAsync(log);
@@ -59,7 +63,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         public async Task WriteBetAsync_Always_InsertOneAsync(OWCall call, OWResult result)
         {
             // Arrange
-            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result);
+            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteBetAsync(log);
@@ -72,7 +76,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         public async Task WriteEndGameAsync_Always_InsertOneAsync(OWCall call, OWResult result)
         {
             // Arrange
-            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result);
+            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteEndGameAsync(log);
@@ -85,7 +89,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         public async Task WriteVoidGameAsync_Always_InsertOneAsync(OWCall call, OWResult result)
         {
             // Arrange
-            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result);
+            var log = new OWLog(DateTimeOffset.UtcNow, call, DateTimeOffset.UtcNow, result, AppTypes.SabaClub);
 
             // Act
             await logDataAccess.WriteVoidGameAsync(log);
@@ -105,6 +109,19 @@ namespace L1.Tests.Features.OWCommunicators.Log
 
             // Assert
             await signInCollection.Received().InsertOneAsync(Arg.Any<SBLog>());
+        }
+
+        [Theory, AutoData]
+        public async Task WriteRetrieveEndGameAsync_Always_InsertOneAsync(Request request, SingleSignOnResult result)
+        {
+            // Arrange
+            var log = new SBLog(request, result, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+
+            // Act
+            await logDataAccess.WriteRetrieveEndGameAsync(log);
+
+            // Assert
+            await retrieveCollection.Received().InsertOneAsync(Arg.Any<SBLog>());
         }
     }
 }

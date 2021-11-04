@@ -2,16 +2,17 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
+using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
+using Sentry;
 using Xunit;
 
 namespace L1.Tests.Features.OWCommunicators
 {
     public class OWServiceTests
     {
-        private readonly IOWAuth auth;
         private readonly IOWFailureHandler failureHandler;
 
         private readonly OWResponse<OWResult> defaultContent = new OWResponse<OWResult>
@@ -21,16 +22,15 @@ namespace L1.Tests.Features.OWCommunicators
 
         public OWServiceTests()
         {
-            auth = Substitute.For<IOWAuth>();
             failureHandler = Substitute.For<IOWFailureHandler>();
         }
 
         [Theory, AutoData]
-        public async Task Post_Success_ReturnsOWResponse(OWCall call)
+        public async Task Post_Success_ReturnsOWResponse(OWCall call, OWServiceSettings oWServiceSettings)
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent));
-            var service = new OWService(httpClient, auth, failureHandler);
+            var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
             var result = await service.Post<OWResult>("/aaa", call);
@@ -40,11 +40,11 @@ namespace L1.Tests.Features.OWCommunicators
         }
 
         [Theory, AutoData]
-        public async Task Post_Failed_ReturnsOWResponse(OWCall call)
+        public async Task Post_Failed_ReturnsOWResponse(OWCall call, OWServiceSettings oWServiceSettings)
         {
             // Arrange
             var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty));
-            var service = new OWService(httpClient, auth, failureHandler);
+            var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
             var response = await service.Post<OWResult>("/aaa", call);

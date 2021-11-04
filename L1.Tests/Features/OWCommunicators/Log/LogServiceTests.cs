@@ -20,11 +20,11 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task LogBetAsync_Always_WriteBetAsync(OWResponse<OWResult> response, byte system, OWAuth auth, OWCall call)
+        public async Task LogBetAsync_Always_WriteBetAsync(OWResponse<OWResult> response, byte system, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
-            response.Request = new OWRequest(auth, call);
+            response.Request = new OWRequest(call);
 
             // Act
             await service.LogBetAsync(response, system);
@@ -34,11 +34,11 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task LogEndGameAsync_Always_WWriteEndGameAsync(OWResponse<OWResult> response, OWAuth auth, OWCall call)
+        public async Task LogEndGameAsync_Always_WWriteEndGameAsync(OWResponse<OWResult> response, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
-            response.Request = new OWRequest(auth, call);
+            response.Request = new OWRequest(call);
 
             // Act
             await service.LogEndGameAsync(response);
@@ -48,11 +48,11 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task LogVoidGameAsync_Always_WriteVoidGameAsync(OWResponse<OWResult> response, OWAuth auth, OWCall call)
+        public async Task LogVoidGameAsync_Always_WriteVoidGameAsync(OWResponse<OWResult> response, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
-            response.Request = new OWRequest(auth, call);
+            response.Request = new OWRequest(call);
 
             // Act
             await service.LogVoidGameAsync(response);
@@ -62,11 +62,11 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task LogFailedRequestAsync_Always_WriteFailedRequestAsync(OWResponse<OWResult> response, OWAuth auth, OWCall call)
+        public async Task LogFailedRequestAsync_Always_WriteFailedRequestAsync(OWResponse<OWResult> response, OWCall call)
         {
             // Arrange
             var service = new LogService(logDataAccess);
-            response.Request = new OWRequest(auth, call);
+            response.Request = new OWRequest(call);
 
             // Act
             await service.LogFailedRequestAsync(response);
@@ -87,6 +87,20 @@ namespace L1.Tests.Features.OWCommunicators.Log
 
             // Assert
             await logDataAccess.Received().WriteSignInAsync(Arg.Any<SBLog>());
+        }
+
+        [Theory, AutoData]
+        public async Task LogRetrieveEndGameAsync_Always_WriteRetrieveEndGameAsync(Request request, VerificationResult result)
+        {
+            // Arrange
+            var service = new LogService(logDataAccess);
+            var log = new SBLog(request, result, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+
+            // Act
+            await service.LogRetrieveEndGameAsync(log);
+
+            // Assert
+            await logDataAccess.Received().WriteRetrieveEndGameAsync(Arg.Any<SBLog>());
         }
     }
 }

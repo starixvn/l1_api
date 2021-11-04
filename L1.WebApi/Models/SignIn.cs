@@ -15,7 +15,7 @@ namespace L1.WebApi.Models
 
         public string IP { get; set; }
 
-        public int MemberId { get; set; }
+        public int ObCustId { get; set; }
 
         public string MemberName { get; set; }     
 

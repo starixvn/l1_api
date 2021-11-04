@@ -33,7 +33,7 @@ namespace L1.WebApi.Controllers
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await siteDataService.VerifyClient(model.Auth?.ClientId, model.Auth?.ClientSecret, model.Currency))
+            if (await siteDataService.VerifyClient(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
@@ -43,12 +43,12 @@ namespace L1.WebApi.Controllers
                     BrowserUserAgent = model.BrowserUserAgent,
                     Currency = model.Currency,
                     IP = ip,
-                    MemberId = model.MemberId,
+                    MemberId = model.ObCustId,
                     MemberName = model.MemberName,
                     Seq = model.Seq,
                     Language = model.Language,
                     SiteId = model.SiteId,
-                    ClientId = model.Auth?.ClientId,
+                    ClientId = model.Auth?.PartnerId,
                     AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                     SiteName = model.SiteName
                 }, model.GameTypeId);

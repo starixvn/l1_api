@@ -7,16 +7,16 @@ namespace L1.Features.OWCommunicators.EndGame
     public class EndGameCall : OWCall
     {
 #pragma warning disable S107 // Methods should not have too many parameters
+
         public EndGameCall(
-            int obCustId, 
-            string siteId, 
-            int gameRoundId, 
-            byte gameTypeId, 
-            decimal totalAmount, 
+            int obCustId,
+            string siteId,
+            int gameRoundId,
+            byte gameTypeId,
+            decimal totalAmount,
             decimal totalWin,
-            decimal validBetAmount, 
-            DateTimeOffset endTime,
-            bool freeBet)
+            decimal validBetAmount,
+            DateTimeOffset endTime)
 #pragma warning restore S107 // Methods should not have too many parameters
             : base(obCustId, siteId)
         {
@@ -26,7 +26,6 @@ namespace L1.Features.OWCommunicators.EndGame
             TotalWin = totalWin;
             ValidBetAmount = validBetAmount;
             EndTime = endTime;
-            FreeBet = freeBet;
         }
 
         public int GameRoundId { get; set; }
@@ -41,7 +40,5 @@ namespace L1.Features.OWCommunicators.EndGame
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? EndTime { get; set; }
-
-        public bool FreeBet { get; set; }
     }
 }

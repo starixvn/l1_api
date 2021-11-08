@@ -1,5 +1,5 @@
 ﻿using System;
-using L1.Features.Partners;
+using L1.Features.PartnerCommunicators;
 
 namespace L1.Features.OWCommunicators
 {

@@ -1,5 +1,5 @@
-﻿using L1.Features.Partners;
-using System;
+﻿using System;
+using L1.Features.PartnerCommunicators;
 
 namespace L1.Features.SboCommunicators
 {

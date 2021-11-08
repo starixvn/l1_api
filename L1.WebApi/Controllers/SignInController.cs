@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
+using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
-using L1.Features.Partners.Log;
 using L1.Shared.Constants;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;

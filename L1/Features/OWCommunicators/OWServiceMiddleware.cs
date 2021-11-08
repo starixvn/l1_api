@@ -1,5 +1,5 @@
 ﻿using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.Partners;
+using L1.Features.PartnerCommunicators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.OWCommunicators

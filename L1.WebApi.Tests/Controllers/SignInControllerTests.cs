@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.MemberAuthentications;
+using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
-using L1.Features.Partners.Log;
 using L1.Shared.Constants;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
@@ -18,7 +18,7 @@ namespace L1.WebApi.Tests.Controllers
         private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
         private readonly SignInController controller;
-        private readonly Fixture fixture = new Fixture();
+        private readonly Fixture fixture = new();
 
         public SignInControllerTests()
         {

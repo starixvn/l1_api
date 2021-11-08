@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
-using L1.Features.Partners.Log;
+using L1.Features.PartnerCommunicators.Log;
 using L1.Shared.Constants;
 using L1.Shared.Models;
 using MongoDB.Driver;

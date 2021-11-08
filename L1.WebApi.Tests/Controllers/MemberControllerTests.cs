@@ -3,15 +3,15 @@ using AutoFixture;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
 using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
-using L1.Features.OWCommunicators;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.EndGame;
+using L1.Features.PartnerCommunicators.EnterPortal;
+using L1.Features.PartnerCommunicators.GetBalance;
+using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
-using L1.Features.Partners.EndGame;
-using L1.Features.Partners.EnterPortal;
-using L1.Features.Partners.GetBalance;
-using L1.Features.Partners.GetBetLimit;
-using L1.Features.Partners.Log;
-using L1.Features.Partners.PlaceBet;
-using L1.Features.Partners.VoidGame;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +29,7 @@ namespace L1.WebApi.Tests.Controllers
         private readonly IPartnerCustomerServices oWCustomerService;
 
         private readonly MemberController controller;
-        private readonly Fixture fixture = new Fixture();
+        private readonly Fixture fixture = new();
 
         public MemberControllerTests()
         {
@@ -63,7 +63,7 @@ namespace L1.WebApi.Tests.Controllers
         {
             // Arrange
             var model = fixture.Create<MemberEnterPortal>();
-            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(default(IPartnerCustomerServices));            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(default(IPartnerCustomerServices));
 
             // Act
             var actualValue = await controller.EnterPortal(model);
@@ -101,7 +101,6 @@ namespace L1.WebApi.Tests.Controllers
             // Assert
             Assert.IsType<BadRequestResult>(actualValue);
         }
-
 
         [Fact]
         public async Task PlaceBet_Always_ReturnOkResult()

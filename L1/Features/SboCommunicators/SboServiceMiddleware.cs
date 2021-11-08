@@ -1,4 +1,4 @@
-﻿using L1.Features.Partners;
+﻿using L1.Features.PartnerCommunicators;
 using L1.Features.SboCommunicators.CheckMaintenance;
 using Microsoft.Extensions.DependencyInjection;
 

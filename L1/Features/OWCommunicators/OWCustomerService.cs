@@ -1,16 +1,16 @@
-﻿using L1.Features.AdminApiCommunicators;
+﻿using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
-using L1.Features.Partners;
-using L1.Features.Partners.EndGame;
-using L1.Features.Partners.EnterPortal;
-using L1.Features.Partners.GetBalance;
-using L1.Features.Partners.GetBetLimit;
-using L1.Features.Partners.Log;
-using L1.Features.Partners.PlaceBet;
-using L1.Features.Partners.VoidGame;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.EndGame;
+using L1.Features.PartnerCommunicators.EnterPortal;
+using L1.Features.PartnerCommunicators.GetBalance;
+using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
-using System.Threading.Tasks;
 
 namespace L1.Features.OWCommunicators
 {

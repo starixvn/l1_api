@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using L1.Features.Partners;
+using L1.Features.PartnerCommunicators;
 using Newtonsoft.Json;
 
 namespace L1.Features.OWCommunicators

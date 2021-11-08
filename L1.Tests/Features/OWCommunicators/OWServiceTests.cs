@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
-using L1.Features.Partners;
+using L1.Features.PartnerCommunicators;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -14,7 +14,7 @@ namespace L1.Tests.Features.OWCommunicators
     {
         private readonly IOWFailureHandler failureHandler;
 
-        private readonly OWResponse<PartnerResult> defaultContent = new OWResponse<PartnerResult>
+        private readonly OWResponse<PartnerResult> defaultContent = new()
         {
             Result = new PartnerResult()
         };

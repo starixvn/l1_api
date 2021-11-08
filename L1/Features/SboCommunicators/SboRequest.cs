@@ -1,4 +1,4 @@
-﻿using L1.Features.Partners;
+﻿using L1.Features.PartnerCommunicators;
 using System;
 
 namespace L1.Features.SboCommunicators

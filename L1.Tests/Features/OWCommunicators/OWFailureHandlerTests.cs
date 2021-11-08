@@ -2,8 +2,8 @@
 using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.Partners;
-using L1.Features.Partners.Log;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Log;
 using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;

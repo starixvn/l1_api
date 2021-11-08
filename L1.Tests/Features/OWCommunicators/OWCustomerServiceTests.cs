@@ -3,14 +3,14 @@ using AutoFixture.Xunit2;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators;
-using L1.Features.Partners;
-using L1.Features.Partners.EndGame;
-using L1.Features.Partners.EnterPortal;
-using L1.Features.Partners.GetBalance;
-using L1.Features.Partners.GetBetLimit;
-using L1.Features.Partners.Log;
-using L1.Features.Partners.PlaceBet;
-using L1.Features.Partners.VoidGame;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.EndGame;
+using L1.Features.PartnerCommunicators.EnterPortal;
+using L1.Features.PartnerCommunicators.GetBalance;
+using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using NSubstitute;
@@ -29,7 +29,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithEnterPortalEndpoint(PartnerEnterPortalCall call)
         {
-            // Arrange          
+            // Arrange
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
@@ -42,7 +42,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithBalanceEndpoint(PartnerGetBalanceCall call)
         {
-            // Arrange            
+            // Arrange
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
@@ -55,7 +55,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task GetBetLimit_ShouldPostWithBetLimitEndpoint(PartnerGetBetLimitCall call)
         {
-            // Arrange          
+            // Arrange
             var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
@@ -85,7 +85,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task PlaceBet_HighStake_ShouldNotify(PartnerPlaceBetCall call)
         {
-            // Arrange         
+            // Arrange
             appSettings.HighStake.Returns(500);
             call.Amount = appSettings.HighStake;
             var response = new PartnerResponse<PartnerPlaceBetResult> { Result = new PartnerPlaceBetResult { Balance = 2000 } };
@@ -102,7 +102,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EndGame_SuccessfulResponse_LogEndGame(PartnerEndGameCall call)
         {
-            // Arrange          
+            // Arrange
             var response = new PartnerResponse<PartnerEndGameResult> { Result = new PartnerEndGameResult() };
             owService.Post<PartnerEndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
@@ -120,7 +120,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task EndGame_SuccessfulResponse_Returns(PartnerEndGameCall call)
         {
-            // Arrange        
+            // Arrange
             var response = new PartnerResponse<PartnerEndGameResult> { Result = new PartnerEndGameResult() };
             owService.Post<PartnerEndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
@@ -137,7 +137,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task VoidGame_SuccessfulResponse_LogVoidGame(PartnerVoidGameCall call)
         {
-            // Arrange         
+            // Arrange
             var response = new PartnerResponse<PartnerVoidGameResult> { Result = new PartnerVoidGameResult() };
             owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
@@ -155,7 +155,7 @@ namespace L1.Tests.Features.OWCommunicators
         [Theory, AutoData]
         public async Task VoidGame_SuccessfulResponse_Returns(PartnerVoidGameCall call)
         {
-            // Arrange          
+            // Arrange
             var response = new PartnerResponse<PartnerVoidGameResult> { Result = new PartnerVoidGameResult() };
             owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));

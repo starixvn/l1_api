@@ -1,12 +1,12 @@
-﻿using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.Partners;
-using L1.Features.Partners.Log;
-using L1.Features.Partners.Resources;
+﻿using System;
+using System.Threading.Tasks;
+using L1.Features.OWCommunicators.CheckMaintenance;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.PartnerCommunicators.Resources;
 using L1.Shared.Constants;
 using Sentry;
 using Sentry.Protocol;
-using System;
-using System.Threading.Tasks;
 
 namespace L1.Features.OWCommunicators
 {

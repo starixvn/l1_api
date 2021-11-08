@@ -1,6 +1,7 @@
 ﻿using L1.Features.BackendAuthentications;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
-using L1.Features.Partners.Log;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;

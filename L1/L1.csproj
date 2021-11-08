@@ -18,7 +18,7 @@
         <PackageReference Include="Sentry.AspNetCore" Version="2.1.1" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="Features\Partners\Resources\PartnerErrors.Designer.cs">
+        <Compile Update="Features\PartnerCommunicators\Resources\PartnerErrors.Designer.cs">
           <DependentUpon>PartnerErrors.resx</DependentUpon>
           <DesignTime>True</DesignTime>
           <AutoGen>True</AutoGen>
@@ -35,7 +35,7 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Update="Features\Partners\Resources\PartnerErrors.resx">
+        <EmbeddedResource Update="Features\PartnerCommunicators\Resources\PartnerErrors.resx">
           <LastGenOutput>PartnerErrors.Designer.cs</LastGenOutput>
           <Generator>ResXFileCodeGenerator</Generator>
         </EmbeddedResource>

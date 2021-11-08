@@ -24,18 +24,24 @@ namespace L1.Features.Partners
             this.currencyDataAccess = currencyDataAccess;
         }
 
-        public Task<Partner> GetById(string id) => partnerDataAccess.GetById(id);
+        public Task<Partner> GetById(string id)
+        => string.IsNullOrWhiteSpace(id) ? Task.FromResult<Partner>(default) : partnerDataAccess.GetById(id);
 
         public Task<Currency> GetCurrency(string partnerId, string currencyName)
-        => currencyDataAccess.Get(partnerId, currencyName);
+        => string.IsNullOrWhiteSpace(partnerId) || string.IsNullOrWhiteSpace(currencyName)
+            ? Task.FromResult<Currency>(default)
+            : currencyDataAccess.Get(partnerId, currencyName);
 
         public async Task<bool> Verify(string partnerId, string secretKey, string currency)
         {
-            var isValidPartner = await partnerDataAccess.Verify(partnerId, secretKey);
+            var isValidPartner = await Verify(partnerId, secretKey);
 
-            return isValidPartner ? await currencyDataAccess.Verify(partnerId, currency) : false;
+            return isValidPartner && await currencyDataAccess.Verify(partnerId, currency);
         }
 
-        public Task<bool> Verify(string partnerId, string secretKey) => partnerDataAccess.Verify(partnerId, secretKey);
+        public Task<bool> Verify(string partnerId, string secretKey)
+        => string.IsNullOrWhiteSpace(partnerId) || string.IsNullOrWhiteSpace(secretKey)
+            ? Task.FromResult(false)
+            : partnerDataAccess.Verify(partnerId, secretKey);
     }
 }

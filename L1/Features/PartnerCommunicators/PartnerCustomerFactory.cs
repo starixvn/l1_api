@@ -13,7 +13,7 @@ namespace L1.Features.PartnerCommunicators
 
     public class PartnerCustomerFactory : IPartnerCustomerFactory
     {
-        private readonly Dictionary<string, Type> services = new Dictionary<string, Type>
+        private readonly Dictionary<string, Type> services = new()
         {
             { PartnerIds.OW, typeof(OWCustomerService) },
             { PartnerIds.SBO, typeof(SboCustomerService) },

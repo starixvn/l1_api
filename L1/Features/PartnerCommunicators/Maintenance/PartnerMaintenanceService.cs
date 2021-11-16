@@ -90,9 +90,6 @@ namespace L1.Features.PartnerCommunicators.Maintenance
                 maintenanceSchedule.EndTime,
                 isUnderMaintenance,
                 partnerId));
-
-            sentryClient.CaptureMessage(
-               $"Sent to Admin UM: Partner {partnerId} - IsUM: {isUnderMaintenance} ({maintenanceSchedule.StartTime} - {maintenanceSchedule.EndTime})");
         }
 
         private static AsyncRetryPolicy<PartnerMaintenanceResult> CreateObservationPolicy()

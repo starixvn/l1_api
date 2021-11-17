@@ -165,7 +165,7 @@ namespace L1.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
-            if (siteDataService.VerifyClient(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
             {
                 var requestTime = DateTimeOffset.UtcNow;
                 var response = await adminApiService.RetrieveEndGameInfoAsync(
@@ -198,7 +198,7 @@ namespace L1.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
-            if (siteDataService.VerifyClient(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
             {
                 var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.PartnerId, model.SummarizedDate));
                 response.Result.Seq = model.Seq;

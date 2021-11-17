@@ -35,7 +35,7 @@ namespace L1.WebApi.Controllers
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await siteDataService.VerifyClient(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
+            if (await partnerService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 

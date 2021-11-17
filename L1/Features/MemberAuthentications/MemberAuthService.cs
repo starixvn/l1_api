@@ -134,18 +134,17 @@ namespace L1.Features.MemberAuthentications
                 return null;
             }
 
-            if (isTestCurrency)
-            {
-                return new Uri(partner.TestCurrencyUrl);
-            }
+            var redirectedUrl = isTestCurrency
+                ? partner.TestCurrencyUrl
+                : memberAuth.AppType switch
+                {
+                    AppTypes.SabaClub => partner.ClubVersionUrl,
+                    AppTypes.MiniSabaClub => partner.MiniVersionUrl,
+                    AppTypes.SabaMobi => partner.MobiVersionUrl,
+                    _ => partner.ClubVersionUrl,
+                };
 
-            return memberAuth.AppType switch
-            {
-                AppTypes.SabaClub => new Uri(partner.ClubVersionUrl),
-                AppTypes.MiniSabaClub => new Uri(partner.MiniVersionUrl),
-                AppTypes.SabaMobi => new Uri(partner.MobiVersionUrl),
-                _ => new Uri(partner.ClubVersionUrl),
-            };
+            return string.IsNullOrWhiteSpace(redirectedUrl) ? null : new Uri(redirectedUrl);
         }
 
         public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams)
@@ -157,9 +156,14 @@ namespace L1.Features.MemberAuthentications
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
 
-            await memberAuthDataAccess.UpdateCurrencyGroup(updateParams.Token, updateParams.CurrencyGroupId);
-
             var gameClientUrl = (await GetRedirectedUrl(memberAuth, false)).ToString().TrimEnd('/');
+
+            if (gameClientUrl == null)
+            {
+                return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
+            }
+
+            await memberAuthDataAccess.UpdateCurrencyGroup(updateParams.Token, updateParams.CurrencyGroupId);
 
             return CreateSSOResult(updateParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl);
         }

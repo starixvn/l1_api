@@ -21,12 +21,22 @@ namespace L1.Tests.Features.SboCommunicators
         }
 
         [Fact]
+        public void New_SeqNotNull_NotThrowsException()
+        {
+            // Act
+            var result = new SboCall("seq", 123, "siteId");
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
         public void New_SiteIdNull_ThrowsException()
         {
             // Act
             try
             {
-                _ = new SboCall("seq", 123, null);
+                _ = new SboCall(123, null);
             }
             catch (Exception ex)
             {

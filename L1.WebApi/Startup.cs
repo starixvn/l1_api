@@ -60,6 +60,8 @@ namespace L1.WebApi
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
             });
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +69,8 @@ namespace L1.WebApi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.ConfigureExceptionHandler();

@@ -8,6 +8,7 @@ namespace L1.WebApi.Controllers
     [ApiController, Authorize]
     [ApiVersion("1.0")]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AuthVerificationController
     {
         private readonly IMemberAuthService memberAuthService;

@@ -35,7 +35,7 @@ namespace L1.Features.OWCommunicators
             await logService.LogFailedRequestAsync(PartnerId, response);
 
             sentryClient.CaptureMessage(
-                $"Request to OW failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
+                $"Request to {PartnerId} failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
                 SentryLevel.Warning);
 
             if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)

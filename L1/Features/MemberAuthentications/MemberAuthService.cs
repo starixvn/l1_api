@@ -156,7 +156,7 @@ namespace L1.Features.MemberAuthentications
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
 
-            var gameClientUrl = (await GetRedirectedUrl(memberAuth, false)).ToString().TrimEnd('/');
+            var gameClientUrl = await GetRedirectedUrl(memberAuth, false);
 
             if (gameClientUrl == null)
             {
@@ -165,7 +165,7 @@ namespace L1.Features.MemberAuthentications
 
             await memberAuthDataAccess.UpdateCurrencyGroup(updateParams.Token, updateParams.CurrencyGroupId);
 
-            return CreateSSOResult(updateParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl);
+            return CreateSSOResult(updateParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl.ToString().TrimEnd('/'));
         }
 
         private static SingleSignOnResult CreateSSOResult(byte? GameTypeId, string token, string language, string gameClientUrl)

@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 namespace L1.WebApi
@@ -73,15 +72,12 @@ namespace L1.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseSwagger();
+            app.UseReDoc(c =>
             {
-                app.UseSwagger();
-                app.UseReDoc(c =>
-                {
-                    c.DocumentTitle = "SC API Documentation";
-                    c.SpecUrl = "/swagger/v1/swagger.json";
-                });
-            }
+                c.DocumentTitle = "SC API Documentation";
+                c.SpecUrl = "/swagger/v1/swagger.json";
+            });
 
             app.ConfigureExceptionHandler();
             app.ConfigureLocalization();

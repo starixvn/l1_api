@@ -15,6 +15,7 @@ using L1.Features.Partners;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace L1.WebApi.Controllers
 {
@@ -42,6 +43,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "EnterPortal")]
         public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
@@ -59,6 +61,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "GetBalance")]
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
@@ -76,6 +79,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "PlaceBet")]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
@@ -104,6 +108,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "EndGame")]
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
@@ -129,6 +134,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "VoidGame")]
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
@@ -146,6 +152,7 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "GetBetLimit")]
         public async Task<IActionResult> GetBetLimit([FromBody] GetBetLimit model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
@@ -163,6 +170,7 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
+        [SwaggerOperation(Summary = "RetrieveEndGame")]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
             if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
@@ -196,6 +204,7 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
+        [SwaggerOperation(Summary = "DailySummarize")]
         public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
             if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))

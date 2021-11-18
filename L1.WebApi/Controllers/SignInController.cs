@@ -8,6 +8,7 @@ using L1.Shared.Constants;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using SignInResult = L1.WebApi.Models.SignInResult;
 
 namespace L1.WebApi.Controllers
@@ -31,6 +32,7 @@ namespace L1.WebApi.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("index")]
+        [SwaggerOperation(Summary = "SignIn")]
         public async Task<IActionResult> Index(SignIn model)
         {
             var requestTime = DateTimeOffset.UtcNow;

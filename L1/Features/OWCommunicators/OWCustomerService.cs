@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
 using L1.Features.OWCommunicators.GetBalance;
@@ -8,9 +10,10 @@ using L1.Features.OWCommunicators.HitJackpot;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
+using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using Polly;
 using Sentry;
-using L1.Shared.Constants;
 using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
@@ -37,15 +40,21 @@ namespace L1.Features.OWCommunicators
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly OWEndPoints endpoints;
+        private readonly IAppSettings appSettings;
+        private readonly IAdminApiService adminApiSerivce;
 
         public OWCustomerService(
             IOWService oWService,
             ILogService logService,
+            IAppSettings appSettings,
+            IAdminApiService adminApiSerivce,
             OWEndPoints endpoints)
         {
             this.oWService = oWService;
             this.logService = logService;
             this.endpoints = endpoints;
+            this.appSettings = appSettings;
+            this.adminApiSerivce = adminApiSerivce;
         }
 
         public Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
@@ -61,6 +70,17 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(response, system);
+
+                if (call.Amount >= appSettings.HighStake)
+                {
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                        call.ObCustId,
+                        call.GameTypeId,
+                        call.Amount,
+                        call.Currency,
+                        call.ChoiceId,
+                        system));
+                }
             }
 
             return response;

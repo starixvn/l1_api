@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using L1.Features.AdminApiCommunicators;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.EndGame;
 using L1.Features.OWCommunicators.EnterPortal;
@@ -8,6 +9,7 @@ using L1.Features.OWCommunicators.GetBetLimit;
 using L1.Features.OWCommunicators.Log;
 using L1.Features.OWCommunicators.PlaceBet;
 using L1.Features.OWCommunicators.VoidGame;
+using L1.Shared.Configurations;
 using NSubstitute;
 using Xunit;
 
@@ -18,12 +20,20 @@ namespace L1.Tests.Features.OWCommunicators
         private readonly OWEndPoints endpoints = Substitute.For<OWEndPoints>();
         private readonly ILogService logService = Substitute.For<ILogService>();
         private readonly IOWService owService = Substitute.For<IOWService>();
+        private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
+        private readonly IAdminApiService adminApiSerivce = Substitute.For<IAdminApiService>();
+
+        private readonly OWCustomerService service;
+
+        public OWCustomerServiceTests()
+        {
+            service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
+        }
 
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithEnterPortalEndpoint(EnterPortalCall call)
         {
             // Arrange
-            var service = new OWCustomerService(owService, logService, endpoints);
 
             // Act
             await service.EnterPortal(call);
@@ -36,7 +46,6 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task EnterPortal_ShouldPostWithBalanceEndpoint(GetBalanceCall call)
         {
             // Arrange
-            var service = new OWCustomerService(owService, logService, endpoints);
 
             // Act
             await service.GetBalance(call);
@@ -49,7 +58,6 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task GetBetLimit_ShouldPostWithBetLimitEndpoint(GetBetLimitCall call)
         {
             // Arrange
-            var service = new OWCustomerService(owService, logService, endpoints);
 
             // Act
             await service.GetBetLimit(call);
@@ -66,8 +74,6 @@ namespace L1.Tests.Features.OWCommunicators
             owService.Post<PlaceBetResult>(endpoints.PlaceBet, call)
                 .Returns(x => Task.FromResult(response));
 
-            var service = new OWCustomerService(owService, logService, endpoints);
-
             // Act
             await service.PlaceBet(call, 1);
 
@@ -82,8 +88,6 @@ namespace L1.Tests.Features.OWCommunicators
             var response = new OWResponse<EndGameResult> { Result = new EndGameResult() };
             owService.Post<EndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
-
-            var service = new OWCustomerService(owService, logService, endpoints);
 
             // Act
             await service.EndGame(call);
@@ -101,8 +105,6 @@ namespace L1.Tests.Features.OWCommunicators
             owService.Post<EndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
 
-            var service = new OWCustomerService(owService, logService, endpoints);
-
             // Act
             var actualReponse = await service.EndGame(call);
 
@@ -117,8 +119,6 @@ namespace L1.Tests.Features.OWCommunicators
             var response = new OWResponse<VoidGameResult> { Result = new VoidGameResult() };
             owService.Post<VoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
-
-            var service = new OWCustomerService(owService, logService, endpoints);
 
             // Act
             await service.VoidGame(call);
@@ -135,8 +135,6 @@ namespace L1.Tests.Features.OWCommunicators
             var response = new OWResponse<VoidGameResult> { Result = new VoidGameResult() };
             owService.Post<VoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
-
-            var service = new OWCustomerService(owService, logService, endpoints);
 
             // Act
             var actualReponse = await service.VoidGame(call);

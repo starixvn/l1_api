@@ -42,7 +42,7 @@ namespace L1.Tests.Features.Partners
         public async Task Verify_ValidCurrency_ReturnApproriateValue(string partnerId, string currencyName)
         {
             // Arrange
-            currencyCollection.CountDocumentsAsync(Arg.Any<FilterDefinition<Currency>>()).Returns(1);
+            currencyCollection.CountDocumentsAsync(Arg.Any<FilterDefinition<Currency>>(), Arg.Any<CountOptions>()).Returns(1);
 
             // Act
             var actualValue = await dataAccess.Verify(partnerId, currencyName);

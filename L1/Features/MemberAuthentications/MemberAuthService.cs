@@ -165,17 +165,27 @@ namespace L1.Features.MemberAuthentications
 
             await memberAuthDataAccess.UpdateCurrencyGroup(updateParams.Token, updateParams.CurrencyGroupId);
 
-            return CreateSSOResult(updateParams.GameTypeId, memberAuth.Token, memberAuth.Language, gameClientUrl.ToString().TrimEnd('/'));
+            return CreateSSOResult(
+                updateParams.GameTypeId,
+                memberAuth.Token,
+                memberAuth.Language,
+                gameClientUrl.ToString().TrimEnd('/'),
+                memberAuth.IsTestCurrency ? memberAuth.PartnerId : string.Empty);
         }
 
-        private static SingleSignOnResult CreateSSOResult(byte? GameTypeId, string token, string language, string gameClientUrl)
+        private static SingleSignOnResult CreateSSOResult(byte? gameTypeId, string token, string language, string gameClientUrl, string partnerId = null)
         {
             var clientRedirectUrl = new StringBuilder();
             clientRedirectUrl.Append($"{gameClientUrl}?token={token}&lang={language}");
 
-            if (GameTypeId.HasValue)
+            if (gameTypeId.HasValue)
             {
-                clientRedirectUrl.Append($"&gameId={GameTypeId}");
+                clientRedirectUrl.Append($"&gameId={gameTypeId}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(partnerId))
+            {
+                clientRedirectUrl.Append($"&partnerId={partnerId}");
             }
 
             return SingleSignOnResult.CreateSuccessResponse(clientRedirectUrl.ToString());

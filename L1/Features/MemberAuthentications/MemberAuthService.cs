@@ -76,7 +76,12 @@ namespace L1.Features.MemberAuthentications
                 await memberAuthDataAccess.Create(memberAuth);
             }
 
-            return CreateSSOResult(gameTypeId, token, memberAuth.Language, gameClientUrl.ToString().TrimEnd('/'));
+            return CreateSSOResult(
+                gameTypeId, 
+                token, 
+                memberAuth.Language, 
+                gameClientUrl.ToString().TrimEnd('/'),
+                memberAuth.IsTestCurrency ? memberAuth.PartnerId : string.Empty);
         }
 
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
@@ -169,8 +174,7 @@ namespace L1.Features.MemberAuthentications
                 updateParams.GameTypeId,
                 memberAuth.Token,
                 memberAuth.Language,
-                gameClientUrl.ToString().TrimEnd('/'),
-                memberAuth.IsTestCurrency ? memberAuth.PartnerId : string.Empty);
+                gameClientUrl.ToString().TrimEnd('/'));
         }
 
         private static SingleSignOnResult CreateSSOResult(byte? gameTypeId, string token, string language, string gameClientUrl, string partnerId = null)

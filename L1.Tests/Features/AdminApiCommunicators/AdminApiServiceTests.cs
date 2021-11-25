@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.AdminApiCommunicators;
@@ -11,6 +12,7 @@ using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
 using Sentry;
+using Sentry.Protocol;
 using Xunit;
 
 namespace L1.Tests.Features.AdminApiCommunicators
@@ -97,6 +99,20 @@ namespace L1.Tests.Features.AdminApiCommunicators
 
             // Act
             await service.NotifyHighStake(request);
+        }
+
+        [Theory, AutoData]
+        public void PostAndForget_Error_ShouldNotThrowError(string apiEndpoint)
+        {
+            // Arrange
+            var httpClient = MockHttpClient.CreateErrorClient();
+            var service = new AdminApiService(httpClient, adminApiEndPoints, sentryClient);
+
+            // Act
+            var actualResult = Assert.ThrowsAsync<Exception>(async () => await service.PostAndForget(apiEndpoint, null));
+
+            // Assert
+            Assert.NotNull(actualResult.Exception);
         }
     }
 }

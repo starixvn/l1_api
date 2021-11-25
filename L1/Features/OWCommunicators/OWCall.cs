@@ -16,10 +16,12 @@ namespace L1.Features.OWCommunicators
         public OWCall(int obCustId, string siteId)
             : this(Guid.NewGuid().ToString(), obCustId, siteId)
         {
+            TimeStamp = DateTimeOffset.UtcNow;
         }
 
         public OWCall(string seq, int obCustId, string siteId)
         {
+            TimeStamp = DateTimeOffset.UtcNow;
             Seq = seq ?? throw new ArgumentNullException(nameof(seq));
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
             ObCustId = obCustId;
@@ -30,5 +32,7 @@ namespace L1.Features.OWCommunicators
         public int ObCustId { get; set; }
 
         public string SiteId { get; set; }
+
+        public DateTimeOffset TimeStamp { get; }
     }
 }

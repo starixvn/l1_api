@@ -1,8 +1,10 @@
 ﻿using System;
+using AutoFixture;
 using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;
 using Xunit;
@@ -15,6 +17,7 @@ namespace L1.Tests.Features.MemberAuthentications
         private readonly ISiteDataService siteDataService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
+        private readonly Fixture fixture = new Fixture();
 
         private readonly MemberAuthService memberAuthService;
 
@@ -41,14 +44,21 @@ namespace L1.Tests.Features.MemberAuthentications
             Assert.Equal(result.Code, SingleSignOnResult.GameServerNotFoundCode);
         }
 
-        [Theory, AutoData]
-        public void SignIn_Success_ReturnsSingleSignOnResult(MemberAuth memberAuth)
+        [Theory]
+        [InlineData(AppTypes.MiniSabaClub)]
+        [InlineData(AppTypes.SabaMobi)]
+        [InlineData(100)]
+        public void SignIn_Success_ReturnsSingleSignOnResult(byte appType)
         {
             // Arrange
+            var memberAuth = fixture.Create<MemberAuth>();
+            memberAuth.AppType = appType;
+
             siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
             {
                 GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/"
+                GameMobiClientUrl = "http://mobi/",
+                MiniSabaGameClientUrl = "http://local/"
             });
 
             // Act
@@ -66,7 +76,8 @@ namespace L1.Tests.Features.MemberAuthentications
             siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
             {
                 GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/"
+                GameMobiClientUrl = "http://mobi/",
+                MiniSabaGameClientUrl = "http://local/"
             });
 
             // Act
@@ -85,7 +96,8 @@ namespace L1.Tests.Features.MemberAuthentications
             siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
             {
                 GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/"
+                GameMobiClientUrl = "http://mobi/",
+                MiniSabaGameClientUrl = "http://local/"
             });
             memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
             {
@@ -124,6 +136,27 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = token,
                 Time = DateTime.Now
+            });
+
+            // Act
+            var result = memberAuthService.VerifyToken(verificationParams);
+
+            // Assert
+            Assert.IsType<VerificationResult>(result);
+            Assert.Equal(VerificationResult.InvalidUserAgentOrIPCode, result.Code);
+        }
+
+        [Theory, AutoData]
+        public void VerifyToken_HasMemberAuthButDifferentBrowserUserAgent2_ReturnsError(VerificationParams verificationParams)
+        {
+            // Arrange
+            var token = "token";
+            verificationParams.BrowserUserAgent = null;
+            memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(new MemberAuth
+            {
+                Token = token,
+                Time = DateTime.Now,
+                BrowserUserAgent = "BrowserUserAgent"
             });
 
             // Act

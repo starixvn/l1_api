@@ -35,7 +35,11 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
-            services.AddSboServices(appSettings.SboServiceSettings);
+
+            if (appSettings.SboServiceSettings != null)
+            {
+                services.AddSboServices(appSettings.SboServiceSettings);
+            }
 
             services.AddControllers();
 

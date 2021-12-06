@@ -152,10 +152,11 @@ namespace L1.Tests.Features.MemberAuthentications
                 MiniVersionUrl = "http://mini/",
                 TestCurrencyUrl = "http://test/"
             });
+
             memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
             {
                 Token = token,
-                Time = DateTime.Now,
+                Time = DateTime.Now.AddSeconds(-30),
                 PartnerId = partnerId,
                 IsTestCurrency = true
             });
@@ -169,6 +170,39 @@ namespace L1.Tests.Features.MemberAuthentications
             Assert.IsType<SingleSignOnResult>(result);
             Assert.Contains($"token={token}", result.RedirectUrl);
             Assert.Contains($"partnerId={partnerId}", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task SignIn_ExpiredToken_ShouldGenerateNew(MemberAuth memberAuth)
+        {
+            // Arrange
+            var token = "token";
+            var partnerId = "partnerId";
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/",
+                TestCurrencyUrl = "http://test/"
+            });
+
+            memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
+            {
+                Token = token,
+                Time = DateTime.Now.AddSeconds(-70),
+                PartnerId = partnerId,
+                IsTestCurrency = true
+            });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+            appSettings.TokenExpiredSeconds.Returns(60);
+
+            // Act
+            var result = await memberAuthService.SignIn(memberAuth, null);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains($"token={memberAuth.Token}", result.RedirectUrl);
+            Assert.Contains($"partnerId={memberAuth.PartnerId}", result.RedirectUrl);
         }
 
         [Theory, AutoData]

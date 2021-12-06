@@ -56,8 +56,9 @@ namespace L1.Features.MemberAuthentications
             }
 
             var latestSignIn = await memberAuthDataAccess.GetLatest(memberAuth);
+            var isGenerateNew = (latestSignIn == null || latestSignIn.Time.AddSeconds(appSettings.TokenExpiredSeconds) < DateTime.Now);
 
-            if (latestSignIn == null || latestSignIn.Time.AddSeconds(appSettings.TokenExpiredSeconds) < DateTime.Now)
+            if (isGenerateNew)
             {
                 memberAuth.Token = Guid.NewGuid().ToString();
                 memberAuth.Time = DateTime.Now;
@@ -69,7 +70,7 @@ namespace L1.Features.MemberAuthentications
                 await memberAuthDataAccess.Create(memberAuth);
             }
 
-            var (token, isTestCurrency, partnerId) = latestSignIn ?? memberAuth;
+            var (token, isTestCurrency, partnerId) = isGenerateNew ? memberAuth : latestSignIn;
 
             return CreateSSOResult(
                 gameTypeId,

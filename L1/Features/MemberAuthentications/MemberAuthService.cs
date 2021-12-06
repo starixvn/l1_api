@@ -57,16 +57,9 @@ namespace L1.Features.MemberAuthentications
 
             var latestSignIn = await memberAuthDataAccess.GetLatest(memberAuth);
 
-            string token;
-
-            if (latestSignIn != null && latestSignIn.Time.AddSeconds(appSettings.TokenExpiredSeconds) > DateTime.Now)
+            if (latestSignIn == null || latestSignIn.Time.AddSeconds(appSettings.TokenExpiredSeconds) < DateTime.Now)
             {
-                token = latestSignIn.Token;
-            }
-            else
-            {
-                token = Guid.NewGuid().ToString();
-                memberAuth.Token = token;
+                memberAuth.Token = Guid.NewGuid().ToString();
                 memberAuth.Time = DateTime.Now;
                 memberAuth.CurrencyCode = currency.Code;
                 memberAuth.CurrencyGroupId = currency.GroupId;
@@ -76,12 +69,14 @@ namespace L1.Features.MemberAuthentications
                 await memberAuthDataAccess.Create(memberAuth);
             }
 
+            var (token, isTestCurrency, partnerId) = latestSignIn ?? memberAuth;
+
             return CreateSSOResult(
-                gameTypeId, 
-                token, 
-                memberAuth.Language, 
+                gameTypeId,
+                token,
+                memberAuth.Language,
                 gameClientUrl.ToString().TrimEnd('/'),
-                memberAuth.IsTestCurrency ? memberAuth.PartnerId : string.Empty);
+                isTestCurrency ? partnerId : string.Empty);
         }
 
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)

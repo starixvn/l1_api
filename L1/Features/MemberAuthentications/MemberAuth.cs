@@ -46,5 +46,14 @@ namespace L1.Features.MemberAuthentications
         public double Multiplier { get; set; }
 
         public bool IsTestCurrency { get; set; }
+
+#pragma warning disable S3874 // "out" and "ref" parameters should not be used
+        public void Deconstruct(out string token, out bool isTestCurrency, out string partnerId)
+#pragma warning restore S3874 // "out" and "ref" parameters should not be used
+        {
+            token = Token;
+            isTestCurrency = IsTestCurrency;
+            partnerId = PartnerId;
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace L1.Features.MemberAuthentications
         public const int TokenNotFoundCode = 100;
         public const int TokenExpiredCode = 101;
         public const int InvalidUserAgentOrIPCode = 103;
+        public const int NotSupportedCurrency = 104;
 
         public VerificationResult(int code, string message)
         {
@@ -23,12 +24,16 @@ namespace L1.Features.MemberAuthentications
             string memberName,
             string siteId,
             string language,
-            string currency,
+            string currencyName,
             string seq,
-            string clientId,
+            string partnerId,
             string domain,
             string siteName,
-            byte appType
+            byte appType,
+            string currencyCode,
+            double multiplier,
+            string currencyGroupId,
+            bool isTestCurrency
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
@@ -37,12 +42,16 @@ namespace L1.Features.MemberAuthentications
             MemberName = memberName;
             SiteId = siteId;
             Language = language;
-            Currency = currency;
+            CurrencyName = currencyName;
             Seq = seq;
-            ClientId = clientId;
+            PartnerId = partnerId;
             Domain = domain;
             SiteName = siteName;
             AppType = appType;
+            CurrencyCode = currencyCode;
+            Multiplier = multiplier;
+            CurrencyGroupId = currencyGroupId;
+            IsTestCurrency = isTestCurrency;
         }
 
         public int MemberId { get; }
@@ -51,24 +60,32 @@ namespace L1.Features.MemberAuthentications
 
         public string SiteId { get; }
 
-        public string ClientId { get; }
+        public string PartnerId { get; }
 
         public string Domain { get; }
 
         public string Language { get; }
 
-        public string Currency { get; }
+        public string CurrencyName { get; }
+
+        public string CurrencyCode { get; }
+
+        public string CurrencyGroupId { get; }
+
+        public double Multiplier { get; }
 
         public string Seq { get; }
 
-        public string MemberKey => $"{ClientId}_{MemberId}";
+        public string MemberKey => $"{PartnerId}_{MemberId}";
 
         public string SiteName { get; set; }
-        
+
         public byte AppType { get; set; }
 
+        public bool IsTestCurrency { get; }
+
         public static VerificationResult CreateErrorResponse(int code)
-           => new VerificationResult(code, string.Empty);
+           => new(code, string.Empty);
 
 #pragma warning disable S107 // Methods should not have too many parameters
 
@@ -77,12 +94,16 @@ namespace L1.Features.MemberAuthentications
             string memberName,
             string siteId,
             string language,
-            string currency,
+            string currencyName,
             string seq,
-            string clientId,
+            string partnerId,
             string domain,
             string siteName,
-            byte appType)
+            byte appType,
+            string currencyCode,
+            double multiplier,
+            string currencyGroupId,
+            bool isTestCurrency)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
@@ -91,11 +112,15 @@ namespace L1.Features.MemberAuthentications
                 memberName,
                 siteId,
                 language,
-                currency,
+                currencyName,
                 seq,
-                clientId,
+                partnerId,
                 domain,
                 siteName,
-                appType);
+                appType,
+                currencyCode,
+                multiplier,
+                currencyGroupId,
+                isTestCurrency);
     }
 }

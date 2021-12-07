@@ -2,53 +2,57 @@
 using System.Linq;
 using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
-using L1.Features.OWCommunicators.Log;
-using L1.Features.Sites;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.Partners;
 using L1.Shared.Constants;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using SignInResult = L1.WebApi.Models.SignInResult;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Route("[controller]"), Authorize]
+    [ApiController, Authorize]
+    [ApiVersion("1.0")]
+    [Route("[controller]")]
     public class SignInController : ControllerBase
     {
         private readonly IMemberAuthService memberAuthService;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
 
-        public SignInController(IMemberAuthService memberAuthService, ISiteDataService siteDataService, ILogService logService)
+        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService)
         {
             this.memberAuthService = memberAuthService;
-            this.siteDataService = siteDataService;
+            this.partnerService = partnerService;
             this.logService = logService;
         }
 
         [AllowAnonymous]
         [HttpPost]
         [Route("index")]
+        [SwaggerOperation(Summary = "SignIn")]
         public async Task<IActionResult> Index(SignIn model)
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await siteDataService.VerifyClient(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
+            if (await partnerService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
-                var result = memberAuthService.SignIn(new MemberAuth
+                var result = await memberAuthService.SignIn(new MemberAuth
                 {
                     Domain = model.Domain,
                     BrowserUserAgent = model.BrowserUserAgent,
-                    Currency = model.Currency,
+                    CurrencyName = model.Currency,
                     IP = ip,
                     MemberId = model.ObCustId,
                     MemberName = model.MemberName,
                     Seq = model.Seq,
                     Language = model.Language,
                     SiteId = model.SiteId,
-                    ClientId = model.Auth?.PartnerId,
+                    PartnerId = model.Auth?.PartnerId,
                     AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                     SiteName = model.SiteName
                 }, model.GameTypeId);

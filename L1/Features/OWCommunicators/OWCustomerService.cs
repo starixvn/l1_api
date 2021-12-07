@@ -1,35 +1,23 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
-using L1.Features.OWCommunicators.EndGame;
-using L1.Features.OWCommunicators.EnterPortal;
-using L1.Features.OWCommunicators.GetBalance;
-using L1.Features.OWCommunicators.GetBetLimit;
-using L1.Features.OWCommunicators.Log;
-using L1.Features.OWCommunicators.PlaceBet;
-using L1.Features.OWCommunicators.VoidGame;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.EndGame;
+using L1.Features.PartnerCommunicators.EnterPortal;
+using L1.Features.PartnerCommunicators.GetBalance;
+using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 
 namespace L1.Features.OWCommunicators
 {
-    public interface IOWCustomerService
+    public class OWCustomerService : IPartnerCustomerServices
     {
-        Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call);
+        private readonly string PartnerId = PartnerIds.OW;
 
-        Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call);
-
-        Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = AppTypes.SabaClub);
-
-        Task<OWResponse<EndGameResult>> EndGame(EndGameCall call);
-
-        Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call);
-
-        Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call);
-    }
-
-    public class OWCustomerService : IOWCustomerService
-    {
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly IAppSettings appSettings;
@@ -50,19 +38,22 @@ namespace L1.Features.OWCommunicators
             this.endpoints = endpoints;
         }
 
-        public Task<OWResponse<EnterPortalResult>> EnterPortal(EnterPortalCall call)
-            => oWService.Post<EnterPortalResult>(endpoints.EnterPortal, call);
+        public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
+        => oWService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
 
-        public Task<OWResponse<GetBalanceResult>> GetBalance(GetBalanceCall call)
-            => oWService.Post<GetBalanceResult>(endpoints.GetBalance, call);
+        public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
+        => oWService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
 
-        public async Task<OWResponse<PlaceBetResult>> PlaceBet(PlaceBetCall call, byte system = AppTypes.SabaClub)
+        public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
+        => oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+
+        public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub)
         {
-            var response = await oWService.Post<PlaceBetResult>(endpoints.PlaceBet, call);
+            var response = await oWService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(response, system);
+                await logService.LogBetAsync(PartnerId, response, system);
 
                 if (call.Amount >= appSettings.HighStake)
                 {
@@ -79,31 +70,28 @@ namespace L1.Features.OWCommunicators
             return response;
         }
 
-        public async Task<OWResponse<EndGameResult>> EndGame(EndGameCall call)
+        public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
-            var response = await oWService.Post<EndGameResult>(endpoints.EndGame, call);
+            var response = await oWService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(response);
+                await logService.LogEndGameAsync(PartnerId, response);
             }
 
             return response;
         }
 
-        public async Task<OWResponse<VoidGameResult>> VoidGame(VoidGameCall call)
+        public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
         {
-            var response = await oWService.Post<VoidGameResult>(endpoints.VoidGame, call);
+            var response = await oWService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogVoidGameAsync(response);
+                await logService.LogVoidGameAsync(PartnerId, response);
             }
 
             return response;
         }
-
-        public Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
-        => oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
     }
 }

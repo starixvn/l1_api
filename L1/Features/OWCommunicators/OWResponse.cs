@@ -1,8 +1,9 @@
 ﻿using System;
+using L1.Features.PartnerCommunicators;
 
 namespace L1.Features.OWCommunicators
 {
-    public class OWResponse<T> where T : IOWResult
+    public class OWResponse<T> where T : PartnerResult
     {
         public DateTimeOffset TimeStamp { get; set; }
 

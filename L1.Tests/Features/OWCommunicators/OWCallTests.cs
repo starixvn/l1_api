@@ -12,7 +12,7 @@ namespace L1.Tests.Features.OWCommunicators
             // Act
             try
             {
-                new OWCall(null, 123, "siteId");
+                _ = new OWCall(null, 123, "siteId");
             }
             catch (Exception ex)
             {
@@ -26,7 +26,7 @@ namespace L1.Tests.Features.OWCommunicators
             // Act
             try
             {
-                new OWCall("seq", 123, null);
+                _ = new OWCall("seq", 123, null);
             }
             catch (Exception ex)
             {

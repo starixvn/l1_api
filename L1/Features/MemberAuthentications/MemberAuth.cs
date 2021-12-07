@@ -29,14 +29,31 @@ namespace L1.Features.MemberAuthentications
 
         public string SiteId { get; set; }
 
-        public string Currency { get; set; }
+        public string CurrencyName { get; set; }
 
         public string Seq { get; set; }
 
-        public string ClientId { get; set; }
+        public string PartnerId { get; set; }
 
         public byte AppType { get; set; }
 
         public string SiteName { get; set; }
+
+        public string CurrencyCode { get; set; }
+
+        public string CurrencyGroupId { get; set; }
+
+        public double Multiplier { get; set; }
+
+        public bool IsTestCurrency { get; set; }
+
+#pragma warning disable S3874 // "out" and "ref" parameters should not be used
+        public void Deconstruct(out string token, out bool isTestCurrency, out string partnerId)
+#pragma warning restore S3874 // "out" and "ref" parameters should not be used
+        {
+            token = Token;
+            isTestCurrency = IsTestCurrency;
+            partnerId = PartnerId;
+        }
     }
 }

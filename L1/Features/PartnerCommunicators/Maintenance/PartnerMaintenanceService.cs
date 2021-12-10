@@ -14,18 +14,18 @@ namespace L1.Features.PartnerCommunicators.Maintenance
 {
     public interface IPartnerMaintenanceService
     {
-        Task<bool> IsUnderMaintenance();
+        bool IsUnderMaintenance();
 
         Task ObserveMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri);
     }
 
     public class PartnerMaintenanceService : IPartnerMaintenanceService
     {
-        private const string DefaultMediaType = "application/json";
+        protected const string DefaultMediaType = "application/json";
 
-        private static int UnderMaintenanceCounter;
+        private int UnderMaintenanceCounter;
 
-        private readonly HttpClient httpClient;
+        protected readonly HttpClient httpClient;
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
 
@@ -39,8 +39,7 @@ namespace L1.Features.PartnerCommunicators.Maintenance
             this.sentryClient = sentryClient;
         }
 
-        public Task<bool> IsUnderMaintenance()
-            => Task.FromResult(UnderMaintenanceCounter == 0);
+        public bool IsUnderMaintenance() => UnderMaintenanceCounter == 0;
 
         public async Task ObserveMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
         {
@@ -52,7 +51,7 @@ namespace L1.Features.PartnerCommunicators.Maintenance
             }
         }
 
-        private async Task<PartnerMaintenanceResult> GetMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
+        protected virtual async Task<PartnerMaintenanceResult> GetMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
         {
             var checkingMaintenanceCall = new PartnerCall(request.Call.ObCustId, request.Call.SiteId);
             var owRequestBody = new PartnerRequest(checkingMaintenanceCall);
@@ -73,7 +72,7 @@ namespace L1.Features.PartnerCommunicators.Maintenance
             return new PartnerMaintenanceResult();
         }
 
-        private async Task HandleMaintenanceSchedule(string partnerId, PartnerMaintenanceResult maintenanceSchedule)
+        protected async Task HandleMaintenanceSchedule(string partnerId, PartnerMaintenanceResult maintenanceSchedule)
         {
             var isUnderMaintenance = maintenanceSchedule.IsUnderMaintenance();
 

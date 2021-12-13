@@ -8,6 +8,7 @@ using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
@@ -99,7 +100,10 @@ namespace L1.WebApi.Controllers
                 model.Currency,
                 model.RoundEndTime,
                 model.Ip,
-                model.FreeSpin);
+                model.FreeSpin,
+                model.ContributionAmount,
+                model.ContributionRate,
+                model.FreeBet);
 
             var response = await customerService.PlaceBet(placeBetCall, model.System);
 
@@ -127,7 +131,8 @@ namespace L1.WebApi.Controllers
                     model.TotalAmount,
                     model.TotalWin,
                     model.ValidBetAmount,
-                    model.EndTime));
+                    model.EndTime,
+                    model.FreeBet));
 
             return Ok(response);
         }
@@ -145,7 +150,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.VoidGame(
-                new PartnerVoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
+                new PartnerVoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
 
             return Ok(response);
         }
@@ -169,6 +174,28 @@ namespace L1.WebApi.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        [SwaggerOperation(Summary = "HitJackpot")]
+        public async Task<IActionResult> HitJackpot([FromBody] HitJackpot model)
+        {
+            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+
+            if (customerService == default)
+            {
+                return BadRequest();
+            }
+
+            var response = await customerService.HitJackpot(new HitJackpotCall(
+                model.ObCustId, 
+                model.SiteId,
+                model.GameRoundId,
+                model.GameTypeId,
+                model.WinningAmount));
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("[action]")]
         [AllowAnonymous]
         [SwaggerOperation(Summary = "RetrieveEndGame")]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
@@ -182,7 +209,8 @@ namespace L1.WebApi.Controllers
                         model.GameTypeId,
                         model.ObCustId,
                         model.SiteId,
-                        model.Auth.PartnerId));
+                        model.Auth.PartnerId,
+                        model.FreeBet));
 
                 response.Result.Seq = model.Seq;
 

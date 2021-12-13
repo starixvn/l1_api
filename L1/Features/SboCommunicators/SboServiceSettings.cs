@@ -26,5 +26,7 @@ namespace L1.Features.SboCommunicators
         public string CheckMaintenance { get; set; }
 
         public string GetBetLimit { get; set; }
+
+        public string HitJackpot { get; set; }
     }
 }

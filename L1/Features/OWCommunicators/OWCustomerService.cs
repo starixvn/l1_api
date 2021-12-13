@@ -7,7 +7,7 @@ using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
-using L1.Features.OWCommunicators.HitJackpot;
+using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
@@ -23,26 +23,27 @@ namespace L1.Features.OWCommunicators
     {
         private readonly string PartnerId = PartnerIds.OW;
 
-
-        Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly OWEndPoints endpoints;
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
+        private readonly ISentryClient sentryClient;
 
         public OWCustomerService(
             IOWService oWService,
             ILogService logService,
             IAppSettings appSettings,
             IAdminApiService adminApiSerivce,
-            OWEndPoints endpoints)
+            OWEndPoints endpoints,
+            ISentryClient sentryClient)
         {
             this.oWService = oWService;
             this.logService = logService;
             this.endpoints = endpoints;
             this.appSettings = appSettings;
             this.adminApiSerivce = adminApiSerivce;
+            this.sentryClient = sentryClient;
         }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
@@ -100,31 +101,25 @@ namespace L1.Features.OWCommunicators
 
             return response;
         }
-        public async Task<OWResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call)
+
+        public async Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call)
         {
             const double retryDelayInSeconds = 30;
             const int numberOfRetries = 6;
 
             var response = await Policy
-                .HandleResult<OWResponse<HitJackpotResult>>(response => response.Result.IsFailed())
+                .HandleResult<PartnerResponse<HitJackpotResult>>(response => response.Result.IsFailed())
                 .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
                 .ExecuteAsync(() => oWService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogHitJackpotAsync(response);
+                await logService.LogHitJackpotAsync(PartnerId, response);
             }
             else
             {
-                SentrySdk.CaptureMessage($"Call HitJackpot failed for CustId {call.ObCustId}", SentryLevel.Fatal);
+                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {PartnerId} - CustId {call.ObCustId}", SentryLevel.Fatal);
             }
-
-            return response;
-        }
-
-        public async Task<OWResponse<GetBetLimitResult>> GetBetLimit(GetBetLimitCall call)
-        {
-            var response = await oWService.Post<GetBetLimitResult>(endpoints.GetBetLimit, call);
 
             return response;
         }

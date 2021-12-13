@@ -3,6 +3,7 @@ using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Constants;
@@ -22,5 +23,7 @@ namespace L1.Features.PartnerCommunicators
         Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call);
 
         Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call);
+
+        Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
     }
 }

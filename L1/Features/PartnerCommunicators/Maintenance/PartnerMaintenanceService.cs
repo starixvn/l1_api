@@ -28,7 +28,6 @@ namespace L1.Features.PartnerCommunicators.Maintenance
         protected readonly HttpClient httpClient;
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
-        private readonly string secretKey;
 
         public PartnerMaintenanceService(
             HttpClient httpClient,
@@ -38,7 +37,6 @@ namespace L1.Features.PartnerCommunicators.Maintenance
             this.httpClient = httpClient;
             this.adminApiService = adminApiService;
             this.sentryClient = sentryClient;
-            secretKey = owServiceSettings.SecretKey;
         }
 
         public bool IsUnderMaintenance() => UnderMaintenanceCounter == 0;
@@ -56,13 +54,9 @@ namespace L1.Features.PartnerCommunicators.Maintenance
         protected virtual async Task<PartnerMaintenanceResult> GetMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
         {
             var checkingMaintenanceCall = new PartnerCall(request.Call.ObCustId, request.Call.SiteId);
-            var requestBody = JsonConvert.SerializeObject(checkingMaintenanceCall);
-            var content = new StringContent(requestBody, Encoding.UTF8, DefaultMediaType);
+            var owRequestBody = new PartnerRequest(checkingMaintenanceCall);
+            var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
             var response = await httpClient.PostAsync(maintenanceUri, content);
-
-            var accessKey = CreateMD5($"{secretKey}{requestBody}");
-
-            httpClient.DefaultRequestHeaders.Add("Saba-access-key", accessKey);
 
             if (response.IsSuccessStatusCode)
             {
@@ -76,21 +70,6 @@ namespace L1.Features.PartnerCommunicators.Maintenance
             }
 
             return new PartnerMaintenanceResult();
-        }
-
-        private static string CreateMD5(string input)
-        {
-            using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-            var sb = new StringBuilder();
-
-            for (int i = 0; i < hashBytes.Length; i++)
-            {
-                sb.Append(hashBytes[i].ToString("X2"));
-            }
-
-            return sb.ToString();
         }
 
         protected async Task HandleMaintenanceSchedule(string partnerId, PartnerMaintenanceResult maintenanceSchedule)

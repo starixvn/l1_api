@@ -1,6 +1,6 @@
-﻿namespace L1.Features.OWCommunicators.HitJackpot
+﻿namespace L1.Features.PartnerCommunicators.HitJackpot
 {
-    public class HitJackpotCall : OWCall
+    public class HitJackpotCall : PartnerCall
     {
         public HitJackpotCall(
             int obCustId,

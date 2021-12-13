@@ -18,7 +18,10 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             string currency,
             DateTimeOffset? roundEndTime,
             string ip,
-            bool freeSpin) : base(obCustId, siteId)
+            bool freeSpin,
+            decimal contributionAmount,
+            float contributionRate,
+            bool freeBet) : base(obCustId, siteId)
 #pragma warning restore S107 // Methods should not have too many parameters
         {
             GameRoundId = gameRoundId;
@@ -29,6 +32,9 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             RoundEndTime = roundEndTime;
             Ip = ip;
             FreeSpin = freeSpin;
+            ContributionAmount = contributionAmount;
+            ContributionRate = contributionRate;
+            FreeBet = freeBet;
         }
 
         public int GameRoundId { get; set; }
@@ -47,5 +53,11 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
         public string Ip { get; set; }
 
         public bool FreeSpin { get; set; }
+
+        public decimal ContributionAmount { get; set; }
+
+        public float ContributionRate { get; set; }
+
+        public bool FreeBet { get; set; }
     }
 }

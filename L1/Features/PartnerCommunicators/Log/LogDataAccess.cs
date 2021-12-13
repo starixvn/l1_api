@@ -13,7 +13,9 @@ namespace L1.Features.PartnerCommunicators.Log
         Task WriteEndGameAsync(PartnerLog log);
 
         Task WriteVoidGameAsync(PartnerLog log);
-        Task WriteHitJackpotAsync(OWLog log);
+
+        Task WriteHitJackpotAsync(PartnerLog log);
+
         Task WriteSignInAsync(SBLog log);
 
         Task WriteRetrieveEndGameAsync(SBLog log);
@@ -33,7 +35,7 @@ namespace L1.Features.PartnerCommunicators.Log
         private readonly IMongoCollection<PartnerLog> betsCollection;
         private readonly IMongoCollection<PartnerLog> endGamesCollection;
         private readonly IMongoCollection<PartnerLog> voidGamesCollection;
-        private readonly IMongoCollection<OWLog> hitJackpotsCollection;
+        private readonly IMongoCollection<PartnerLog> hitJackpotsCollection;
         private readonly IMongoCollection<SBLog> signInCollection;
         private readonly IMongoCollection<SBLog> retrieveCollection;
 
@@ -45,7 +47,7 @@ namespace L1.Features.PartnerCommunicators.Log
             betsCollection = database.GetCollection<PartnerLog>(BetsCollectionName);
             endGamesCollection = database.GetCollection<PartnerLog>(EndGamesCollectionName);
             voidGamesCollection = database.GetCollection<PartnerLog>(VoidGamesCollectionName);
-            hitJackpotsCollection = database.GetCollection<OWLog>(HitJackpotCollectionName);
+            hitJackpotsCollection = database.GetCollection<PartnerLog>(HitJackpotCollectionName);
             signInCollection = database.GetCollection<SBLog>(SignInCollectionName);
             retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
         }
@@ -62,7 +64,7 @@ namespace L1.Features.PartnerCommunicators.Log
         public Task WriteVoidGameAsync(PartnerLog log)
             => voidGamesCollection.InsertOneAsync(log);
 
-         public Task WriteHitJackpotAsync(OWLog log)
+         public Task WriteHitJackpotAsync(PartnerLog log)
             => hitJackpotsCollection.InsertOneAsync(log);
             
         public Task WriteSignInAsync(SBLog log)       

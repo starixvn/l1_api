@@ -40,6 +40,7 @@ namespace L1.Features.MemberAuthentications
         public string SiteName { get; set; }
 
         public bool IsCash { get; set; }
+
         public string CurrencyCode { get; set; }
 
         public string CurrencyGroupId { get; set; }

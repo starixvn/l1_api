@@ -21,5 +21,11 @@ namespace L1.WebApi.Models
         public bool FreeSpin { get; set; }
 
         public byte System { get; set; }
+
+        public bool FreeBet { get; set; }
+
+        public float ContributionRate { get; set; }
+
+        public decimal ContributionAmount { get; set; }
     }
 }

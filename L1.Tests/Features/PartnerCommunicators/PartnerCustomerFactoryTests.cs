@@ -42,7 +42,7 @@ namespace L1.Tests.Features.PartnerCommunicators
         public void GetService_DefinedPartner_ReturnService(string id)
         {
             // Arrange
-            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null));
+            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null));
 
             // Act
             var result = partnerCustomerFactory.GetCustomerService(id);

@@ -1,4 +1,5 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using MongoDB.Driver;
 using NSubstitute;
 using Xunit;
@@ -21,64 +22,54 @@ namespace L1.Features.MemberAuthentications
             dataAccess = new MemberAuthDataAccess(mongoClient);
         }
 
-        [Fact]
-        public void GetAll_Always_ReturnAllMemberAuthCollection()
-        {
-            // Act
-            var actualValue = dataAccess.GetAll();
-
-            // Assert
-            Assert.Empty(actualValue);
-        }
-
         [Theory, AutoData]
-        public void Get_Always_ReturnCorrectMemberAuth(string id)
+        public async Task Get_Always_ReturnCorrectMemberAuth(string id)
         {
             // Act
-            var actualValue = dataAccess.Get(id);
+            var actualValue = await dataAccess.Get(id);
 
             // Assert
             Assert.Null(actualValue);
         }
 
         [Theory, AutoData]
-        public void GetByToken_Always_ReturnCorrectMemberAuth(string token)
+        public async Task GetByToken_Always_ReturnCorrectMemberAuth(string token)
         {
             // Act
-            var actualValue = dataAccess.GetByToken(token);
+            var actualValue = await dataAccess.GetByToken(token);
 
             // Assert
             Assert.Null(actualValue);
         }
 
         [Theory, AutoData]
-        public void GetLatest_Always_ReturnCorrectMemberAuth(MemberAuth memberAuth)
+        public async Task GetLatest_Always_ReturnCorrectMemberAuth(MemberAuth memberAuth)
         {
             // Act
-            var actualValue = dataAccess.GetLatest(memberAuth);
+            var actualValue = await dataAccess.GetLatest(memberAuth);
 
             // Assert
             Assert.Null(actualValue);
         }
 
         [Theory, AutoData]
-        public void Create_Always_ReturnCorrectMemberAuth(MemberAuth memberAuth)
+        public async Task Create_Always_InjectInsertOneAsync(MemberAuth memberAuth)
         {
             // Act
-            dataAccess.Create(memberAuth);
+            await dataAccess.Create(memberAuth);
 
             // Assert
-            memberAuthCollection.Received().InsertOne(memberAuth);
+            await memberAuthCollection.Received().InsertOneAsync(memberAuth);
         }
 
         [Theory, AutoData]
-        public void Update_Always_ReturnCorrectMemberAuth(string id, MemberAuth memberAuth)
+        public async Task UpdateCurrencyGroup_Always_InjectUpdateOneAsync(string token, string currencyGroupId)
         {
             // Act
-            dataAccess.Update(id, memberAuth);
+            await dataAccess.UpdateCurrencyGroup(token, currencyGroupId);
 
             // Assert
-            memberAuthCollection.Received().ReplaceOne(Arg.Any<FilterDefinition<MemberAuth>>(), Arg.Any<MemberAuth>());
+            await memberAuthCollection.Received().UpdateOneAsync(Arg.Any<FilterDefinition<MemberAuth>>(), Arg.Any<UpdateDefinition<MemberAuth>>());
         }
     }
 }

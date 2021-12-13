@@ -35,6 +35,7 @@ namespace L1.WebApi.Tests
             AddMongoDBSettingsConfigsSection(configurationSection);
             AddOWServiceSettingsConfigsSection(configurationSection);
             AddAdminApiSettingsConfigsSection(configurationSection);
+            AddSboServiceSettingsConfigsSection(configurationSection);
 
             configuration.GetSection("AppSettings").Returns(configurationSection);
             startup = new Startup(configuration);
@@ -91,7 +92,7 @@ namespace L1.WebApi.Tests
             Assert.ThrowsAny<Exception>(() => startup.Configure(app, env));
         }
 
-        private void AddBackendAuthConfigsSection(IConfigurationSection configSection)
+        private static void AddBackendAuthConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var backendAuthConfigsSection = Substitute.For<IConfigurationSection>();
@@ -103,7 +104,7 @@ namespace L1.WebApi.Tests
             backendAuthConfigsSection.GetSection("Address").Returns(address);
         }
 
-        private void AddMongoDBSettingsConfigsSection(IConfigurationSection configSection)
+        private static void AddMongoDBSettingsConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var mongoDBSettingsConfigsSection = Substitute.For<IConfigurationSection>();
@@ -115,7 +116,7 @@ namespace L1.WebApi.Tests
             mongoDBSettingsConfigsSection.GetSection("ConnectionString").Returns(connectionString);
         }
 
-        private void AddOWServiceSettingsConfigsSection(IConfigurationSection configSection)
+        private static void AddOWServiceSettingsConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var owServiceSettingsConfigsSection = Substitute.For<IConfigurationSection>();
@@ -127,7 +128,19 @@ namespace L1.WebApi.Tests
             owServiceSettingsConfigsSection.GetSection("Endpoints").Returns(owEndPoints);
         }
 
-        private void AddAdminApiSettingsConfigsSection(IConfigurationSection configSection)
+        private static void AddSboServiceSettingsConfigsSection(IConfigurationSection configSection)
+        {
+            var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
+            var owServiceSettingsConfigsSection = Substitute.For<IConfigurationSection>();
+            owServiceSettingsConfigsSection.GetChildren().Returns(children);
+            configSection.GetSection("SboServiceSettings").Returns(owServiceSettingsConfigsSection);
+
+            var owEndPoints = Substitute.For<IConfigurationSection>();
+            owEndPoints.GetChildren().Returns(children);
+            owServiceSettingsConfigsSection.GetSection("Endpoints").Returns(owEndPoints);
+        }
+
+        private static void AddAdminApiSettingsConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var adminApiSettingsConfigsSection = Substitute.For<IConfigurationSection>();

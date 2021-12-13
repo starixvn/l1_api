@@ -1,10 +1,11 @@
 ﻿using System;
+using L1.Features.PartnerCommunicators;
 
 namespace L1.Features.OWCommunicators
 {
     public class OWRequest
     {
-        public OWRequest(IOWCall call)
+        public OWRequest(IPartnerCall call)
         {
             TimeStamp = DateTimeOffset.UtcNow;
             Call = call ?? throw new ArgumentNullException(nameof(call));
@@ -12,6 +13,6 @@ namespace L1.Features.OWCommunicators
 
         public DateTimeOffset TimeStamp { get; }
 
-        public IOWCall Call { get; }
+        public IPartnerCall Call { get; }
     }
 }

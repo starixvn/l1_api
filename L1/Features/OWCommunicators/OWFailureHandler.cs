@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.OWCommunicators.Log;
-using L1.Features.OWCommunicators.Resources;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.PartnerCommunicators.Resources;
 using L1.Shared.Constants;
-using L1.Shared.Resources;
 using Sentry;
 using Sentry.Protocol;
 
@@ -12,38 +12,39 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWFailureHandler
     {
-        Task Handle<T>(OWResponse<T> response) where T : IOWResult;
+        Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult;
     }
 
     public class OWFailureHandler : IOWFailureHandler
     {
         private readonly ILogService logService;
-        private readonly IMaintenanceService maintenanceService;
+        private readonly IOWMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
+        private readonly string PartnerId = PartnerIds.OW;
 
-        public OWFailureHandler(ILogService logService, IMaintenanceService maintenanceService, ISentryClient sentryClient)
+        public OWFailureHandler(ILogService logService, IOWMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
             this.logService = logService;
             this.maintenanceService = maintenanceService;
             this.sentryClient = sentryClient;
         }
 
-        public async Task Handle<T>(OWResponse<T> response) where T : IOWResult
+        public async Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult
         {
             MapErrorMessage(response.Result);
-            await logService.LogFailedRequestAsync(response);
+            await logService.LogFailedRequestAsync(PartnerId, response);
 
             sentryClient.CaptureMessage(
-                $"Request to OW failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
+                $"Request to {PartnerId} failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
                 SentryLevel.Warning);
 
-            if (response.Result.ErrorCode == OWSpecialErrorCodes.UnderMaintenance)
+            if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)
             {
-                await maintenanceService.ObserveMaintenanceSchedule(response.Request);
+                await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(response.Request.Call));
             }
         }
 
-        private static void MapErrorMessage(IOWResult result)
-            => result.ErrorMessage = OWErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? Errors.ResourceManager.GetString(ErrorCodes.InternalError);
+        private static void MapErrorMessage(IPartnerResult result)
+            => result.ErrorMessage = PartnerErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? PartnerErrors.ResourceManager.GetString(ErrorCodes.InternalError);
     }
 }

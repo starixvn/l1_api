@@ -1,4 +1,7 @@
 ﻿using L1.Features.BackendAuthentications;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Log;
+using L1.Features.Partners;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +16,14 @@ namespace L1.Shared.Middlewares
         {
             services.AddScoped<ISiteDataAccess, SiteDataAccess>();
             services.AddScoped<ISiteDataService, SiteDataService>();
+
+            services.AddScoped<IPartnerDataAccess, PartnerDataAccess>();
+            services.AddScoped<ICurrencyDataAccess, CurrencyDataAccess>();
+            services.AddScoped<IPartnerDataService, PartnerDataService>();
+            services.AddScoped<IPartnerCustomerFactory, PartnerCustomerFactory>();
+
+            services.AddScoped<ILogDataAccess, LogDataAccess>();
+            services.AddScoped<ILogService, LogService>();
 
             services.AddTransient<ProtectedApiBearerTokenHandler>();
         }

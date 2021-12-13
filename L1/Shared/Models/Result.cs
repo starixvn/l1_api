@@ -10,7 +10,7 @@
     public class BaseResult : IResult
     {
         public const int SuccessCode = 0;
-        public const int ClientIdqDoesNotExistCode = 1;
+        public const int ClientIdDoesNotExistCode = 1;
         public const int WrongClientSecretCode = 2;
         public const int ApiServerNotExistCode = 3;
         public const int IdentityServerNotExistCode = 4;

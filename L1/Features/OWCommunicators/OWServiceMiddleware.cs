@@ -1,5 +1,5 @@
 ﻿using L1.Features.OWCommunicators.CheckMaintenance;
-using L1.Features.OWCommunicators.Log;
+using L1.Features.PartnerCommunicators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.OWCommunicators
@@ -10,13 +10,12 @@ namespace L1.Features.OWCommunicators
         {
             services.AddSingleton(owServiceSettings);
             services.AddSingleton(owServiceSettings.Endpoints);
-
-            services.AddScoped<ILogDataAccess, LogDataAccess>();
-            services.AddScoped<ILogService, LogService>();
             services.AddScoped<IOWFailureHandler, OWFailureHandler>();
-            services.AddScoped<IOWCustomerService, OWCustomerService>();
 
-            services.AddHttpClient<IMaintenanceService, MaintenanceService>();
+            services.AddScoped<OWCustomerService>()
+                        .AddScoped<IPartnerCustomerServices, OWCustomerService>(s => s.GetService<OWCustomerService>());
+
+            services.AddHttpClient<IOWMaintenanceService, OWMaintenanceService>();
             services.AddHttpClient<IOWService, OWService>(httpClient =>
             {
                 httpClient.BaseAddress = owServiceSettings.BaseUrl;

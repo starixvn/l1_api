@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
-using L1.Features.Sites;
+using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using NSubstitute;
@@ -14,7 +15,7 @@ namespace L1.Tests.Features.MemberAuthentications
     public class MemberAuthServiceTests
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
-        private readonly ISiteDataService siteDataService;
+        private readonly IPartnerDataService partnerDataService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
         private readonly Fixture fixture = new Fixture();
@@ -24,20 +25,21 @@ namespace L1.Tests.Features.MemberAuthentications
         public MemberAuthServiceTests()
         {
             memberAuthDataAccess = Substitute.For<IMemberAuthDataAccess>();
-            siteDataService = Substitute.For<ISiteDataService>();
+            partnerDataService = Substitute.For<IPartnerDataService>();
             appSettings = Substitute.For<IAppSettings>();
             sentryClient = Substitute.For<ISentryClient>();
 
-            memberAuthService = new MemberAuthService(memberAuthDataAccess, siteDataService, appSettings, sentryClient);
+            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, appSettings, sentryClient);
         }
 
         [Theory, AutoData]
-        public void SignIn_NotFoundClientUrl_ReturnsGameServerNotFoundCode(MemberAuth memberAuth)
+        public async Task SignIn_NotFoundClientUrl_ReturnsGameServerNotFoundCode(MemberAuth memberAuth)
         {
             // Arrange
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, null);
+            var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
@@ -48,40 +50,41 @@ namespace L1.Tests.Features.MemberAuthentications
         [InlineData(AppTypes.MiniSabaClub)]
         [InlineData(AppTypes.SabaMobi)]
         [InlineData(100)]
-        public void SignIn_Success_ReturnsSingleSignOnResult(byte appType)
+        public async Task SignIn_Success_ReturnsSingleSignOnResult(byte appType)
         {
             // Arrange
             var memberAuth = fixture.Create<MemberAuth>();
             memberAuth.AppType = appType;
 
-            siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
             {
-                GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/",
-                MiniSabaGameClientUrl = "http://local/"
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
             });
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, null);
+            var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
         }
 
         [Theory, AutoData]
-        public void SignIn_WithGameId_ReturnsRedirectUrlContainsGameId(MemberAuth memberAuth)
+        public async Task SignIn_WithGameId_ReturnsRedirectUrlContainsGameId(MemberAuth memberAuth)
         {
             // Arrange
             byte? gameTypeId = 1;
-            siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
             {
-                GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/",
-                MiniSabaGameClientUrl = "http://local/"
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
             });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, gameTypeId);
+            var result = await memberAuthService.SignIn(memberAuth, gameTypeId);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
@@ -89,25 +92,47 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void SignIn_ExistingToken_ShouldBeReUse(MemberAuth memberAuth)
+        public async Task SignIn_TestCurrency_ReturnsRedirectUrlContainsPartnerId(MemberAuth memberAuth)
+        {
+            // Arrange
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/",
+                TestCurrencyUrl = "http://test/"
+            });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+
+            // Act
+            var result = await memberAuthService.SignIn(memberAuth, null);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains($"partnerId={memberAuth.PartnerId}", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task SignIn_ExistingToken_ShouldBeReUse(MemberAuth memberAuth)
         {
             // Arrange
             var token = "token";
-            siteDataService.GetByClientId(memberAuth.ClientId).Returns(new Site
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
             {
-                GameClientUrl = "http://local/",
-                GameMobiClientUrl = "http://mobi/",
-                MiniSabaGameClientUrl = "http://local/"
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
             });
             memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
             {
                 Token = token,
                 Time = DateTime.Now
             });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
-            var result = memberAuthService.SignIn(memberAuth, null);
+            var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
@@ -115,12 +140,78 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_NotFoundMemberAuth_ReturnsError(VerificationParams verificationParams)
+        public async Task SignIn_ExistingToken_ShouldContainsPartnerIdIfTestCurrency(MemberAuth memberAuth)
+        {
+            // Arrange
+            var token = "token";
+            var partnerId = "partnerId";
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/",
+                TestCurrencyUrl = "http://test/"
+            });
+
+            memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
+            {
+                Token = token,
+                Time = DateTime.Now.AddSeconds(-30),
+                PartnerId = partnerId,
+                IsTestCurrency = true
+            });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+            appSettings.TokenExpiredSeconds.Returns(60);
+
+            // Act
+            var result = await memberAuthService.SignIn(memberAuth, null);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains($"token={token}", result.RedirectUrl);
+            Assert.Contains($"partnerId={partnerId}", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task SignIn_ExpiredToken_ShouldGenerateNew(MemberAuth memberAuth)
+        {
+            // Arrange
+            var token = "token";
+            var partnerId = "partnerId";
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/",
+                TestCurrencyUrl = "http://test/"
+            });
+
+            memberAuthDataAccess.GetLatest(memberAuth).Returns(new MemberAuth
+            {
+                Token = token,
+                Time = DateTime.Now.AddSeconds(-70),
+                PartnerId = partnerId,
+                IsTestCurrency = true
+            });
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+            appSettings.TokenExpiredSeconds.Returns(60);
+
+            // Act
+            var result = await memberAuthService.SignIn(memberAuth, null);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains($"token={memberAuth.Token}", result.RedirectUrl);
+            Assert.Contains($"partnerId={memberAuth.PartnerId}", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task VerifyToken_NotFoundMemberAuth_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -128,7 +219,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_HasMemberAuthButDifferentBrowserUserAgent_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_HasMemberAuthButDifferentBrowserUserAgent_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
             var token = "token";
@@ -139,7 +230,7 @@ namespace L1.Tests.Features.MemberAuthentications
             });
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -147,7 +238,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_HasMemberAuthButDifferentBrowserUserAgent2_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_HasMemberAuthButDifferentBrowserUserAgent2_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
             var token = "token";
@@ -160,7 +251,7 @@ namespace L1.Tests.Features.MemberAuthentications
             });
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -168,7 +259,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_ExpiredToken_ReturnsError(VerificationParams verificationParams)
+        public async Task VerifyToken_ExpiredToken_ReturnsError(VerificationParams verificationParams)
         {
             // Arrange
             var token = "token";
@@ -181,7 +272,7 @@ namespace L1.Tests.Features.MemberAuthentications
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
@@ -189,7 +280,7 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
-        public void VerifyToken_Success_ReturnsResultWithMemberAuth(VerificationParams verificationParams)
+        public async Task VerifyToken_Success_ReturnsResultWithMemberAuth(VerificationParams verificationParams)
         {
             // Arrange
             var memberAuth = new MemberAuth
@@ -199,20 +290,138 @@ namespace L1.Tests.Features.MemberAuthentications
                 BrowserUserAgent = verificationParams.BrowserUserAgent,
                 MemberId = 1,
                 MemberName = "name",
-                SiteId = "3332"
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA"
             };
 
             memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(memberAuth);
+            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
-            var result = memberAuthService.VerifyToken(verificationParams);
+            var result = await memberAuthService.VerifyToken(verificationParams);
 
             // Assert
             Assert.IsType<VerificationResult>(result);
             Assert.Equal(memberAuth.MemberId, result.MemberId);
             Assert.Equal(memberAuth.MemberName, result.MemberName);
             Assert.Equal(memberAuth.SiteId, result.SiteId);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_NotTestCurrency_ReturnsUnauthorize(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            var memberAuth = new MemberAuth
+            {
+                Token = "token",
+                Time = DateTime.Now,
+                MemberId = 1,
+                MemberName = "name",
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA"
+            };
+
+            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(memberAuth);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_NotExist_ReturnsUnauthorize(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            memberAuthDataAccess.GetByToken(updateMemberAuthParams.Token).Returns(default(MemberAuth));
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_WithoutGameId_ReturnsRedirectUrlNotContainsGameId(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            updateMemberAuthParams.GameTypeId = null;
+            var memberAuth = new MemberAuth
+            {
+                Token = updateMemberAuthParams.Token,
+                Time = DateTime.Now,
+                MemberId = 1,
+                MemberName = "name",
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA",
+                IsTestCurrency = true,
+                Language = updateMemberAuthParams.Language
+            };
+
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
+            });
+
+            memberAuthDataAccess.GetForTestCurrency(updateMemberAuthParams.Token).Returns(memberAuth);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            await memberAuthDataAccess.Received(1).UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains(updateMemberAuthParams.Token, result.RedirectUrl);
+            Assert.Contains(updateMemberAuthParams.Language, result.RedirectUrl);
+            Assert.DoesNotContain("gameId", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateMemberAuth_WithGameId_ReturnsRedirectUrlContainsGameId(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            updateMemberAuthParams.GameTypeId = 1;
+            var memberAuth = new MemberAuth
+            {
+                Token = updateMemberAuthParams.Token,
+                Time = DateTime.Now,
+                MemberId = 1,
+                MemberName = "name",
+                SiteId = "3332",
+                PartnerId = "partner",
+                CurrencyName = "ISA",
+                IsTestCurrency = true,
+                Language = updateMemberAuthParams.Language
+            };
+
+            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local/",
+                MobiVersionUrl = "http://mobi/",
+                MiniVersionUrl = "http://mini/"
+            });
+
+            memberAuthDataAccess.GetForTestCurrency(updateMemberAuthParams.Token).Returns(memberAuth);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            await memberAuthDataAccess.Received(1).UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains(updateMemberAuthParams.Token, result.RedirectUrl);
+            Assert.Contains(updateMemberAuthParams.Language, result.RedirectUrl);
+            Assert.Contains($"&gameId={updateMemberAuthParams.GameTypeId}", result.RedirectUrl);
         }
     }
 }

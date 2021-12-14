@@ -1,7 +1,7 @@
 using System.IO;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace L1.WebApi
 {
@@ -12,17 +12,20 @@ namespace L1.WebApi
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var configuration = new ConfigurationBuilder()
                   .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                   .Build();
 
-            return WebHost.CreateDefaultBuilder(args)
-                .UseSentry()
-                .UseStartup<Startup>()
-                .UseUrls($"http://0.0.0.0:{configuration["AppSettings:HostingPort"]}");
+            return Host.CreateDefaultBuilder(args)
+               .ConfigureWebHostDefaults(webBuilder =>
+               {
+                   webBuilder.UseStartup<Startup>();
+                   webBuilder.UseUrls($"http://0.0.0.0:{configuration["AppSettings:HostingPort"]}");
+                   webBuilder.UseSentry();
+               });
         }
     }
 }

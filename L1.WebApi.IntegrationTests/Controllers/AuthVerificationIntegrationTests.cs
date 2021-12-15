@@ -11,19 +11,16 @@ namespace L1.WebApi.IntegrationTests.Controllers
     public class AuthVerificationIntegrationTests : IClassFixture<AppTestFixture>
     {
         private const string defaultMediaType = "application/json";
-        private readonly AppTestFixture fixture;
         private readonly HttpClient client;
 
         public AuthVerificationIntegrationTests(AppTestFixture fixture)
         {
-            this.fixture = fixture;
-
             client = fixture.CreateClient();
         }
 
         [Theory]
         [InlineData("/AuthVerification/verify")]
-        public async Task Verify_InvalidToken_ReturnTokenNotFoundCode(string url)
+        public async Task Verify_Unauthorize_ReturnUnauthorize(string url)
         {
             // Arrange
             var verificationParams = new VerificationParams();
@@ -34,9 +31,7 @@ namespace L1.WebApi.IntegrationTests.Controllers
             var response = await client.PostAsync(url, content);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("application/json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
 }

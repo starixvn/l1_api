@@ -18,7 +18,7 @@ namespace L1.WebApi.Controllers
             this.memberAuthService = memberAuthService;
         }
 
-        [HttpPost, Route("verify"), AllowAnonymous]
+        [HttpPost, Route("verify")]
         public Task<VerificationResult> Verify(VerificationParams verificationParams)
         => memberAuthService.VerifyToken(verificationParams);
 

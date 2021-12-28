@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Threading.Tasks;
+using AutoFixture;
 using L1.Features.MemberAuthentications;
 using L1.WebApi.Controllers;
 using NSubstitute;
@@ -19,15 +20,30 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public void Verify_Always_ReturnResultFromMemberAuthService()
+        public async Task Verify_Always_ReturnResultFromMemberAuthService()
         {
-            // Arrange 
+            // Arrange
             var verificationParams = fixture.Create<VerificationParams>();
             var result = fixture.Create<VerificationResult>();
             memberAuthService.VerifyToken(Arg.Any<VerificationParams>()).Returns(result);
 
             // Act
-            var actualValue = controller.Verify(verificationParams);
+            var actualValue = await controller.Verify(verificationParams);
+
+            // Assert
+            Assert.Equal(result, actualValue);
+        }
+
+        [Fact]
+        public async Task UpdateMemberAuth_Always_ReturnResultFromMemberAuthService()
+        {
+            // Arrange
+            var updateParams = fixture.Create<UpdateMemberAuthParams>();
+            var result = fixture.Create<SingleSignOnResult>();
+            memberAuthService.UpdateMemberAuth(Arg.Any<UpdateMemberAuthParams>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.UpdateMemberAuth(updateParams);
 
             // Assert
             Assert.Equal(result, actualValue);

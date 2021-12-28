@@ -4,8 +4,9 @@
     {
         protected MemberRequest()
         {
-
         }
+
+        public string PartnerId { get; set; }
 
         public int ObCustId { get; set; }
 

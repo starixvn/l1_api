@@ -17,8 +17,8 @@ namespace L1.WebApi.Models
 
         public string Seq { get; set; }
 
-        public Auth Auth { get; set; }
-
         public bool FreeBet { get; set; }
+
+        public Auth Auth { get; set; }
     }
 }

@@ -1,10 +1,14 @@
-﻿using L1.Features.MemberAuthentications;
+﻿using System.Threading.Tasks;
+using L1.Features.MemberAuthentications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Route("[controller]"), AllowAnonymous]
+    [ApiController, Authorize]
+    [ApiVersion("1.0")]
+    [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AuthVerificationController
     {
         private readonly IMemberAuthService memberAuthService;
@@ -15,11 +19,11 @@ namespace L1.WebApi.Controllers
         }
 
         [HttpPost, Route("verify")]
-        public VerificationResult Verify(VerificationParams verificationParams)
-        {
-            var result = memberAuthService.VerifyToken(verificationParams);
+        public Task<VerificationResult> Verify(VerificationParams verificationParams)
+        => memberAuthService.VerifyToken(verificationParams);
 
-            return result;
-        }
+        [HttpPost, Route("[action]")]
+        public Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams)
+        => memberAuthService.UpdateMemberAuth(updateParams);
     }
 }

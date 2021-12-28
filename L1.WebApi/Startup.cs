@@ -2,13 +2,17 @@ using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
+using L1.Features.SboCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace L1.WebApi
 {
@@ -33,6 +37,11 @@ namespace L1.WebApi
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
 
+            if (appSettings.SboServiceSettings != null)
+            {
+                services.AddSboServices(appSettings.SboServiceSettings);
+            }
+
             services.AddControllers();
 
             services
@@ -50,6 +59,19 @@ namespace L1.WebApi
                 });
 
             services.AddMvc();
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +79,12 @@ namespace L1.WebApi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseReDoc(c =>
+                {
+                    c.DocumentTitle = "SC API Documentation";
+                    c.SpecUrl = "/swagger/v1/swagger.json";
+                });
             }
 
             app.ConfigureExceptionHandler();

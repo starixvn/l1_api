@@ -2,7 +2,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using AutoFixture;
-using AutoFixture.Xunit2;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
@@ -37,7 +36,7 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
         }
 
         [Fact]
-        public async Task IsUnderMaintenance_CounterIsZero_ReturnTrue()
+        public void IsUnderMaintenance_CounterIsZero_ReturnTrue()
         {
             // Arrange
             var maintenanceResult = new MaintenanceResult
@@ -47,13 +46,12 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new OWResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new MaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
 
             // Act
-            var actualValue = await maintenanceService.IsUnderMaintenance();
+            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
 
             // Assert
-            Assert.True(actualValue);
+            Assert.True(maintenanceService.IsUnderMaintenance());
         }
 
         [Fact]
@@ -67,15 +65,14 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.NotFound, JsonConvert.SerializeObject(new OWResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new MaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
+            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
             var call = fixture.Create<OWCall>();
-            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call));
 
             // Act
-            var actualValue = await maintenanceService.IsUnderMaintenance();
+            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call));
 
             // Assert
-            Assert.False(actualValue);
+            Assert.False(maintenanceService.IsUnderMaintenance());
         }
 
         [Fact]
@@ -89,15 +86,14 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new OWResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new MaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
+            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
             var call = fixture.Create<OWCall>();
-            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call));
 
             // Act
-            var actualValue = await maintenanceService.IsUnderMaintenance();
+            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call));
 
             // Assert
-            Assert.True(actualValue);
+            Assert.True(maintenanceService.IsUnderMaintenance());
         }
     }
 }

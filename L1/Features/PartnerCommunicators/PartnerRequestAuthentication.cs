@@ -3,7 +3,6 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using L1.Features.Partners;
 using Microsoft.AspNetCore.Http;
 
 namespace L1.Features.PartnerCommunicators

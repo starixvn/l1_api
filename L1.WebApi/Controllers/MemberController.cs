@@ -12,6 +12,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
+using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace L1.WebApi.Controllers
     [ApiController, Authorize]
     [ApiVersion("1.0")]
     [Route("[controller]")]
+    [SwaggerIgnore]
     public class MemberController : ControllerBase
     {
         private readonly IAdminApiService adminApiService;
@@ -185,7 +187,7 @@ namespace L1.WebApi.Controllers
                         model.GameTypeId,
                         model.ObCustId,
                         model.SiteId,
-                        model.Auth.PartnerId));
+                        model.Auth.OperatorId));
 
                 response.Result.Seq = model.Seq;
 
@@ -212,7 +214,7 @@ namespace L1.WebApi.Controllers
         {
             if (await VerifyRequest(model.Auth))
             {
-                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.PartnerId, model.SummarizedDate));
+                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.OperatorId, model.SummarizedDate));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);
@@ -223,9 +225,9 @@ namespace L1.WebApi.Controllers
 
         private async Task<bool> VerifyRequest(Auth auth)
         {
-            if (await partnerDataService.Verify(auth?.PartnerId, auth?.PartnerSecret))
+            if (await partnerDataService.Verify(auth?.OperatorId, auth?.OperatorSecret))
             {
-                return await partnerRequestAuthentication.Verify(auth?.PartnerSecret, Request);
+                return await partnerRequestAuthentication.Verify(auth?.OperatorSecret, Request);
             }
 
             return false;

@@ -2,8 +2,8 @@
 {
     public class Auth
     {
-        public string PartnerId { get; set; }
+        public string OperatorId { get; set; }
 
-        public string PartnerSecret { get; set; }
+        public string OperatorSecret { get; set; }
     }
 }

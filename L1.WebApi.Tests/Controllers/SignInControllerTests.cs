@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.MemberAuthentications;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Shared.Constants;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
@@ -17,6 +19,7 @@ namespace L1.WebApi.Tests.Controllers
         private readonly IMemberAuthService memberAuthService;
         private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
         private readonly SignInController controller;
         private readonly Fixture fixture = new();
 
@@ -25,8 +28,9 @@ namespace L1.WebApi.Tests.Controllers
             memberAuthService = Substitute.For<IMemberAuthService>();
             partnerService = Substitute.For<IPartnerDataService>();
             logService = Substitute.For<ILogService>();
+            partnerRequestAuthentication = Substitute.For<IPartnerRequestAuthentication>();
 
-            controller = new SignInController(memberAuthService, partnerService, logService);
+            controller = new SignInController(memberAuthService, partnerService, logService, partnerRequestAuthentication);
         }
 
         [Fact]
@@ -51,6 +55,7 @@ namespace L1.WebApi.Tests.Controllers
             var model = fixture.Create<SignIn>();
             model.IP = string.Empty;
             partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
@@ -70,6 +75,7 @@ namespace L1.WebApi.Tests.Controllers
             model.IP = "IP";
             model.Auth = null;
             partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
@@ -90,6 +96,7 @@ namespace L1.WebApi.Tests.Controllers
             model.Auth = new Auth();
             model.AppType = 0;
             partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
@@ -110,6 +117,7 @@ namespace L1.WebApi.Tests.Controllers
             model.Auth = new Auth();
             model.AppType = AppTypes.SabaClub;
             partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
             memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);

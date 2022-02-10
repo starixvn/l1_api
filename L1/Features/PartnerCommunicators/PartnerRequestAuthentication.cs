@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,38 +8,28 @@ using Microsoft.AspNetCore.Http;
 
 namespace L1.Features.PartnerCommunicators
 {
-    public class PartnerRequestAuthentication
+    public interface IPartnerRequestAuthentication
     {
-        private readonly string secretKey;
-        private readonly IPartnerDataService partnerDataService;
+        Task<bool> Verify(string secretKey, HttpRequest request);
+    }
 
-        protected PartnerRequestAuthentication(IPartnerDataService partnerDataService, string secretKey)
+    public class PartnerRequestAuthentication : IPartnerRequestAuthentication
+    {
+        public async Task<bool> Verify(string secretKey, HttpRequest request)
         {
-            this.partnerDataService = partnerDataService;
-            this.secretKey = secretKey;
-        }
+            var accessKey = request.Headers["Access-Key"];
 
-        public async Task<bool> Verify(string partnerId, string partnerSecret, HttpRequest request, string data)
-        {
-            var accessKey = request.Headers["access-key"];
-            return VerifyAccessKey(accessKey, data) && await VerifyPartner(partnerId, partnerSecret);
-        }
-
-        private async Task<bool> VerifyPartner(string partnerId, string partnerSecret)
-        {
-            return await partnerDataService.Verify(partnerId, partnerSecret);
-        }
-
-        private bool VerifyAccessKey(string accessKey, string data)
-        {
-            if (string.IsNullOrWhiteSpace(accessKey))
+            if (string.IsNullOrWhiteSpace(accessKey) || string.IsNullOrWhiteSpace(secretKey))
             {
                 return false;
             }
 
-            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(secretKey));
+            request.Body.Seek(0, SeekOrigin.Begin);
+            var streamData = new byte[request.Body.Length];
+            await request.Body.ReadAsync(streamData.AsMemory(0, streamData.Length));
 
-            var hashResult = hmac.ComputeHash(Encoding.ASCII.GetBytes(data));
+            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(secretKey));
+            var hashResult = hmac.ComputeHash(streamData);
 
             return accessKey == Convert.ToBase64String(hashResult);
         }

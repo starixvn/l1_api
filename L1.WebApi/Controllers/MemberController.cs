@@ -28,17 +28,20 @@ namespace L1.WebApi.Controllers
         private readonly IPartnerDataService partnerDataService;
         private readonly ILogService logService;
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
         public MemberController(
             IAdminApiService adminApiService,
             IPartnerDataService partnerDataService,
             ILogService logService,
-            IPartnerCustomerFactory partnerCustomerFactory)
+            IPartnerCustomerFactory partnerCustomerFactory,
+            IPartnerRequestAuthentication partnerRequestAuthentication)
         {
             this.adminApiService = adminApiService;
             this.partnerDataService = partnerDataService;
             this.logService = logService;
             this.partnerCustomerFactory = partnerCustomerFactory;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
         }
 
         [HttpPost]
@@ -173,7 +176,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "RetrieveEndGame")]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
-            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await VerifyRequest(model.Auth))
             {
                 var requestTime = DateTimeOffset.UtcNow;
                 var response = await adminApiService.RetrieveEndGameInfoAsync(
@@ -207,7 +210,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "DailySummarize")]
         public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
-            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await VerifyRequest(model.Auth))
             {
                 var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.PartnerId, model.SummarizedDate));
                 response.Result.Seq = model.Seq;
@@ -216,6 +219,16 @@ namespace L1.WebApi.Controllers
             }
 
             return Unauthorized();
+        }
+
+        private async Task<bool> VerifyRequest(Auth auth)
+        {
+            if (await partnerDataService.Verify(auth?.PartnerId, auth?.PartnerSecret))
+            {
+                return await partnerRequestAuthentication.Verify(auth?.PartnerSecret, Request);
+            }
+
+            return false;
         }
     }
 }

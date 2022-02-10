@@ -20,8 +20,6 @@ namespace L1.Features.SboCommunicators
             {
                 httpClient.BaseAddress = SboServiceSettings.BaseUrl;
             });
-
-            services.AddScoped<SboRequestAuthentication>();
         }
     }
 }

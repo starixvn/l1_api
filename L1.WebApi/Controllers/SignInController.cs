@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Shared.Constants;
@@ -21,12 +22,14 @@ namespace L1.WebApi.Controllers
         private readonly IMemberAuthService memberAuthService;
         private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService)
+        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService, IPartnerRequestAuthentication partnerRequestAuthentication)
         {
             this.memberAuthService = memberAuthService;
             this.partnerService = partnerService;
             this.logService = logService;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
         }
 
         [AllowAnonymous]
@@ -37,7 +40,8 @@ namespace L1.WebApi.Controllers
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await partnerService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
+            if (await partnerService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency)
+                && await partnerRequestAuthentication.Verify(model.Auth?.PartnerSecret, Request))
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 

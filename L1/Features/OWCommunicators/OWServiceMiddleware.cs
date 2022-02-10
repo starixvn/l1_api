@@ -20,8 +20,6 @@ namespace L1.Features.OWCommunicators
             {
                 httpClient.BaseAddress = owServiceSettings.BaseUrl;
             });
-
-            services.AddScoped<OWRequestAuthentication>();
         }
     }
 }

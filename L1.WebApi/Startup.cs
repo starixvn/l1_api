@@ -90,6 +90,7 @@ namespace L1.WebApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "SC APIs v1");
+                c.DefaultModelsExpandDepth(-1);
             });
 
             if (env.IsDevelopment())

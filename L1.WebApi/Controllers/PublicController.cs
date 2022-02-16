@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace L1.WebApi.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
     [Route("[controller]")]
     public class PublicController : ControllerBase
     {
         [HttpPost]
         [Route("[action]")]
-        public IActionResult Hash(string secretKey, string data)
+        public IActionResult HashCheck([FromBody] HashCheck model)
         {
-            if (string.IsNullOrWhiteSpace(secretKey) || string.IsNullOrWhiteSpace(data))
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(secretKey));
-            var hashResult = hmac.ComputeHash(Encoding.ASCII.GetBytes(data));
+            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(model.SecretKey));
+            var hashResult = hmac.ComputeHash(Encoding.ASCII.GetBytes(model.Data));
 
             return Ok(Convert.ToBase64String(hashResult));
         }

@@ -6,7 +6,7 @@ namespace L1.Features.PartnerCommunicators
     {
         string Seq { get; set; }
 
-        int ObCustId { get; set; }
+        int PlayerId { get; set; }
 
         string SiteId { get; set; }
     }
@@ -24,12 +24,12 @@ namespace L1.Features.PartnerCommunicators
             TimeStamp = DateTimeOffset.UtcNow;
             Seq = seq ?? throw new ArgumentNullException(nameof(seq));
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
-            ObCustId = obCustId;
+            PlayerId = obCustId;
         }
 
         public string Seq { get; set; }
 
-        public int ObCustId { get; set; }
+        public int PlayerId { get; set; }
 
         public string SiteId { get; set; }
 

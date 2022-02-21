@@ -14,6 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace L1.WebApi
 {
@@ -74,6 +78,18 @@ namespace L1.WebApi
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC API", Version = "v1" });
             });
+
+            services.AddOpenTelemetryTracing((builder) => builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddMongoDBInstrumentation()
+                        .AddJaegerExporter());
+
+            services.Configure<JaegerExporterOptions>(this.Configuration.GetSection("Jaeger"));
+
+            //// Customize the HttpClient that will be used when JaegerExporter is configured for HTTP transport.
+            services.AddHttpClient("JaegerExporter", configureClient: (client) => client.DefaultRequestHeaders.Add("X-MyCustomHeader", "value"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

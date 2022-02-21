@@ -7,6 +7,7 @@ using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
 namespace L1.Shared.Middlewares
 {
@@ -37,7 +38,11 @@ namespace L1.Shared.Middlewares
             };
 
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
-            services.AddSingleton<IMongoClient>(new MongoClient(appSettings.MongoDBSettings.ConnectionString));
+
+            var clientSettings = MongoClientSettings.FromUrl(new MongoUrl(appSettings.MongoDBSettings.ConnectionString));
+
+            clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
+            services.AddSingleton<IMongoClient>(new MongoClient(clientSettings));
         }
     }
 }

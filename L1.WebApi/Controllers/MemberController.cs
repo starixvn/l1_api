@@ -214,7 +214,7 @@ namespace L1.WebApi.Controllers
                         model.GameTypeId,
                         model.ObCustId,
                         model.SiteId,
-                        model.Auth.OperatorId));
+                        model.Auth.OperatorId,
                         model.FreeBet));
 
                 response.Result.Seq = model.Seq;

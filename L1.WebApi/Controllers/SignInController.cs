@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Shared.Constants;
+using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +18,20 @@ namespace L1.WebApi.Controllers
     [ApiController, Authorize]
     [ApiVersion("1.0")]
     [Route("[controller]")]
+    [SwaggerIgnore]
     public class SignInController : ControllerBase
     {
         private readonly IMemberAuthService memberAuthService;
         private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService)
+        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService, IPartnerRequestAuthentication partnerRequestAuthentication)
         {
             this.memberAuthService = memberAuthService;
             this.partnerService = partnerService;
             this.logService = logService;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
         }
 
         [AllowAnonymous]
@@ -37,7 +42,8 @@ namespace L1.WebApi.Controllers
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await partnerService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
+            if (await partnerService.Verify(model.Auth?.OperatorId, model.Auth?.OperatorSecret, model.Currency)
+                && await partnerRequestAuthentication.Verify(model.Auth?.OperatorSecret, Request))
             {
                 var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
@@ -52,7 +58,7 @@ namespace L1.WebApi.Controllers
                     Seq = model.Seq,
                     Language = model.Language,
                     SiteId = model.SiteId,
-                    PartnerId = model.Auth?.PartnerId,
+                    PartnerId = model.Auth?.OperatorId,
                     AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                     SiteName = model.SiteName,
                     IsCash = model.IsCash

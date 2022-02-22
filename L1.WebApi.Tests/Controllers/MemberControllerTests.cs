@@ -14,6 +14,7 @@ using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
@@ -27,6 +28,7 @@ namespace L1.WebApi.Tests.Controllers
         private readonly IPartnerDataService partnerDataService;
         private readonly ILogService logService;
         private readonly IPartnerCustomerServices oWCustomerService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
         private readonly MemberController controller;
         private readonly Fixture fixture = new();
@@ -38,8 +40,9 @@ namespace L1.WebApi.Tests.Controllers
             adminApiService = Substitute.For<IAdminApiService>();
             partnerDataService = Substitute.For<IPartnerDataService>();
             logService = Substitute.For<ILogService>();
+            partnerRequestAuthentication = Substitute.For<IPartnerRequestAuthentication>();
 
-            controller = new MemberController(adminApiService, partnerDataService, logService, partnerCustomerFactory);
+            controller = new MemberController(adminApiService, partnerDataService, logService, partnerCustomerFactory, partnerRequestAuthentication);
         }
 
         [Fact]
@@ -198,6 +201,7 @@ namespace L1.WebApi.Tests.Controllers
             // Arrange
             var model = fixture.Create<EndGameInfoRequest>();
             partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
             adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
@@ -251,6 +255,7 @@ namespace L1.WebApi.Tests.Controllers
             // Arrange
             var model = fixture.Create<DailySummary>();
             partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
             adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);

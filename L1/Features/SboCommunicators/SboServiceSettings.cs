@@ -8,8 +8,6 @@ namespace L1.Features.SboCommunicators
 
         public string SecretKey { get; set; }
 
-        public string HMACKey { get; set; }
-
         public SboEndPoints Endpoints { get; set; }
     }
 

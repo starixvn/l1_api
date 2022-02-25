@@ -190,7 +190,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.HitJackpot(new HitJackpotCall(
-                model.ObCustId, 
+                model.ObCustId,
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -251,14 +251,8 @@ namespace L1.WebApi.Controllers
             return Unauthorized();
         }
 
-        private async Task<bool> VerifyRequest(Auth auth)
-        {
-            if (await partnerDataService.Verify(auth?.OperatorId, auth?.OperatorSecret))
-            {
-                return await partnerRequestAuthentication.Verify(auth?.OperatorSecret, Request);
-            }
-
-            return false;
+        private Task<bool> VerifyRequest(Auth auth)
+        => partnerDataService.Verify(auth?.OperatorId, auth?.OperatorSecret))
         }
-    }
+}
 }

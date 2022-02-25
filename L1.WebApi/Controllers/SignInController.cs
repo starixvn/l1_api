@@ -42,31 +42,35 @@ namespace L1.WebApi.Controllers
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await partnerService.Verify(model.Auth?.OperatorId, model.Auth?.OperatorSecret, model.Currency)
-                && await partnerRequestAuthentication.Verify(model.Auth?.OperatorSecret, Request))
+            if (await partnerService.VerifyWithCurrency(model.Auth?.OperatorId, model.Currency))
             {
-                var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
+                var partner = await partnerService.GetById(model.Auth?.OperatorId);
 
-                var result = await memberAuthService.SignIn(new MemberAuth
+                if (await partnerRequestAuthentication.Verify(partner?.SecretKey, Request))
                 {
-                    Domain = model.Domain,
-                    BrowserUserAgent = model.BrowserUserAgent,
-                    CurrencyName = model.Currency,
-                    IP = ip,
-                    MemberId = model.ObCustId,
-                    MemberName = model.MemberName,
-                    Seq = model.Seq,
-                    Language = model.Language,
-                    SiteId = model.SiteId,
-                    PartnerId = model.Auth?.OperatorId,
-                    AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
-                    SiteName = model.SiteName,
-                    IsCash = model.IsCash
-                }, model.GameTypeId);
+                    var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
-                await WriteSignInLog(requestTime, model, result);
+                    var result = await memberAuthService.SignIn(new MemberAuth
+                    {
+                        Domain = model.Domain,
+                        BrowserUserAgent = model.BrowserUserAgent,
+                        CurrencyName = model.Currency,
+                        IP = ip,
+                        MemberId = model.ObCustId,
+                        MemberName = model.MemberName,
+                        Seq = model.Seq,
+                        Language = model.Language,
+                        SiteId = model.SiteId,
+                        PartnerId = model.Auth?.OperatorId,
+                        AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
+                        SiteName = model.SiteName,
+                        IsCash = model.IsCash
+                    }, model.GameTypeId);
 
-                return Ok(new SignInResult { RedirectUrl = result.RedirectUrl });
+                    await WriteSignInLog(requestTime, model, result);
+
+                    return Ok(new SignInResult { RedirectUrl = result.RedirectUrl });
+                }
             }
 
             await WriteSignInLog(requestTime, model, SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize));

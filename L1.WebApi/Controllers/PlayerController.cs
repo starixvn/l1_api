@@ -253,9 +253,9 @@ namespace L1.WebApi.Controllers
 
         private async Task<bool> VerifyRequest(Auth auth)
         {
-            var partner = await partnerDataService.GetById(auth?.OperatorId);
+            var @operator = await partnerDataService.GetById(auth?.OperatorId);
 
-            return await partnerRequestAuthentication.Verify(partner?.SecretKey, Request);
+            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
         }
     }
 }

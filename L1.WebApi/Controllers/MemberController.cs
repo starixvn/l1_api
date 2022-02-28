@@ -251,7 +251,11 @@ namespace L1.WebApi.Controllers
             return Unauthorized();
         }
 
-        private Task<bool> VerifyRequest(Auth auth)
-        => partnerDataService.Verify(auth?.OperatorId, auth?.OperatorSecret);
+        private async Task<bool> VerifyRequest(Auth auth)
+        {
+            var @operator = await partnerDataService.GetById(auth?.OperatorId);
+
+            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
+        }
     }
 }

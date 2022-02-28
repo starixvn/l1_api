@@ -52,7 +52,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "EnterPortal")]
         public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -60,7 +60,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.EnterPortal(
-                new PartnerEnterPortalCall(model.Seq, model.ObCustId, model.SiteId, model.CharacterName, model.FirstLogin));
+                new PartnerEnterPortalCall(model.Seq, model.PlayerId, model.SiteId, model.CharacterName, model.FirstLogin));
 
             return Ok(response);
         }
@@ -70,7 +70,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "GetBalance")]
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -78,7 +78,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.GetBalance(
-                new PartnerGetBalanceCall(model.ObCustId, model.SiteId));
+                new PartnerGetBalanceCall(model.PlayerId, model.SiteId));
 
             return Ok(response);
         }
@@ -88,7 +88,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "PlaceBet")]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -96,7 +96,7 @@ namespace L1.WebApi.Controllers
             }
 
             var placeBetCall = new PartnerPlaceBetCall(
-                model.ObCustId,
+                model.PlayerId,
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -120,7 +120,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "EndGame")]
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -129,7 +129,7 @@ namespace L1.WebApi.Controllers
 
             var response = await customerService.EndGame(
                 new PartnerEndGameCall(
-                    model.ObCustId,
+                    model.PlayerId,
                     model.SiteId,
                     model.GameRoundId,
                     model.GameTypeId,
@@ -147,7 +147,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "VoidGame")]
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -155,7 +155,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.VoidGame(
-                new PartnerVoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
+                new PartnerVoidGameCall(model.PlayerId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
 
             return Ok(response);
         }
@@ -165,14 +165,14 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "GetBetLimit")]
         public async Task<IActionResult> GetBetLimit([FromBody] GetBetLimit model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
                 return BadRequest();
             }
 
-            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.ObCustId, model.SiteId));
+            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.PlayerId, model.SiteId));
 
             return Ok(response);
         }
@@ -182,7 +182,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "HitJackpot")]
         public async Task<IActionResult> HitJackpot([FromBody] HitJackpot model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -190,7 +190,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.HitJackpot(new HitJackpotCall(
-                model.ObCustId,
+                model.PlayerId,
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -212,7 +212,7 @@ namespace L1.WebApi.Controllers
                     new RetrieveEndGameInfoRequest(
                         model.GameRoundId,
                         model.GameTypeId,
-                        model.ObCustId,
+                        model.PlayerId,
                         model.SiteId,
                         model.Auth.OperatorId,
                         model.FreeBet));

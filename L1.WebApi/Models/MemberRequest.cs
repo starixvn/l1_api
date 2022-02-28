@@ -6,9 +6,9 @@
         {
         }
 
-        public string PartnerId { get; set; }
+        public string OperatorId { get; set; }
 
-        public int ObCustId { get; set; }
+        public int PlayerId { get; set; }
 
         public string SiteId { get; set; }
     }

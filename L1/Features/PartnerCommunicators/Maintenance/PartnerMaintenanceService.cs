@@ -53,7 +53,7 @@ namespace L1.Features.PartnerCommunicators.Maintenance
 
         protected virtual async Task<PartnerMaintenanceResult> GetMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
         {
-            var checkingMaintenanceCall = new PartnerCall(request.Call.ObCustId, request.Call.SiteId);
+            var checkingMaintenanceCall = new PartnerCall(request.Call.PlayerId, request.Call.SiteId);
             var owRequestBody = new PartnerRequest(checkingMaintenanceCall);
             var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
             var response = await httpClient.PostAsync(maintenanceUri, content);

@@ -47,7 +47,7 @@ namespace L1.Features.SboCommunicators
             }
             else
             {
-                finalResponse = await CreateNetworkErrorResponse<T>(new SboCall(call.Seq, call.ObCustId, call.SiteId), response, accessKey);
+                finalResponse = await CreateNetworkErrorResponse<T>(new SboCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
             }
 
             finalResponse.Request = request;

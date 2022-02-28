@@ -252,7 +252,6 @@ namespace L1.WebApi.Controllers
         }
 
         private Task<bool> VerifyRequest(Auth auth)
-        => partnerDataService.Verify(auth?.OperatorId, auth?.OperatorSecret))
-        }
-}
+        => partnerDataService.Verify(auth?.OperatorId, auth?.OperatorSecret);
+    }
 }

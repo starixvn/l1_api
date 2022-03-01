@@ -39,7 +39,7 @@ namespace L1.WebApi.Tests.Controllers
             // Arrange
             var model = fixture.Create<SignIn>();
             model.Auth = null;
-            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
 
             // Act
             var actualValue = await controller.Index(model) as UnauthorizedResult;
@@ -54,7 +54,7 @@ namespace L1.WebApi.Tests.Controllers
             // Arrange
             var model = fixture.Create<SignIn>();
             model.IP = string.Empty;
-            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
             partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
@@ -74,7 +74,8 @@ namespace L1.WebApi.Tests.Controllers
             var model = fixture.Create<SignIn>();
             model.IP = "IP";
             model.Auth = null;
-            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+
+            partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
             partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
@@ -95,7 +96,7 @@ namespace L1.WebApi.Tests.Controllers
             model.IP = "IP";
             model.Auth = new Auth();
             model.AppType = 0;
-            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
             partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();
@@ -116,7 +117,7 @@ namespace L1.WebApi.Tests.Controllers
             model.IP = "IP";
             model.Auth = new Auth();
             model.AppType = AppTypes.SabaClub;
-            partnerService.Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
             partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
 
             var result = fixture.Create<SingleSignOnResult>();

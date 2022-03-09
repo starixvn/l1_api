@@ -20,7 +20,6 @@ services:
     ports:
       - "14269:14269"
       - "14268:14268"
-      - "14267:14267"
       - "14250:14250"
       - "9411:9411"
     networks:
@@ -41,11 +40,11 @@ services:
     image: jaegertracing/jaeger-agent
     hostname: jaeger-agent
     command: ["--reporter.grpc.host-port=jaeger-collector:14250"]
-    ports:
-      - "5775:5775/udp"
+    ports:      
       - "6831:6831/udp"
       - "6832:6832/udp"
       - "5778:5778"
+      - "14271:14271"
     networks:
       - elastic-jaeger-local
     restart: on-failure

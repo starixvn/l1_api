@@ -44,7 +44,7 @@ namespace L1.WebApi.Controllers
 
             if (await partnerService.VerifyWithCurrency(model.Auth?.OperatorId, model.Currency))
             {
-                var partner = await partnerService.GetById(model.Auth?.OperatorId);
+                var partner = await partnerService.GetById(model.Auth.OperatorId);
 
                 if (await partnerRequestAuthentication.Verify(partner?.SecretKey, Request))
                 {
@@ -61,7 +61,7 @@ namespace L1.WebApi.Controllers
                         Seq = model.Seq,
                         Language = model.Language,
                         SiteId = model.SiteId,
-                        PartnerId = model.Auth?.OperatorId,
+                        PartnerId = model.Auth.OperatorId,
                         AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                         SiteName = model.SiteName,
                         IsCash = model.IsCash

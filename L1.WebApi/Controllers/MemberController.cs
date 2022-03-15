@@ -13,6 +13,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
+using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,23 +24,27 @@ namespace L1.WebApi.Controllers
     [ApiController, Authorize]
     [ApiVersion("1.0")]
     [Route("[controller]")]
+    [SwaggerIgnore]
     public class MemberController : ControllerBase
     {
         private readonly IAdminApiService adminApiService;
         private readonly IPartnerDataService partnerDataService;
         private readonly ILogService logService;
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
         public MemberController(
             IAdminApiService adminApiService,
             IPartnerDataService partnerDataService,
             ILogService logService,
-            IPartnerCustomerFactory partnerCustomerFactory)
+            IPartnerCustomerFactory partnerCustomerFactory,
+            IPartnerRequestAuthentication partnerRequestAuthentication)
         {
             this.adminApiService = adminApiService;
             this.partnerDataService = partnerDataService;
             this.logService = logService;
             this.partnerCustomerFactory = partnerCustomerFactory;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
         }
 
         [HttpPost]
@@ -185,7 +190,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.HitJackpot(new HitJackpotCall(
-                model.ObCustId, 
+                model.ObCustId,
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -200,7 +205,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "RetrieveEndGame")]
         public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
         {
-            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await VerifyRequest(model.Auth))
             {
                 var requestTime = DateTimeOffset.UtcNow;
                 var response = await adminApiService.RetrieveEndGameInfoAsync(
@@ -209,7 +214,7 @@ namespace L1.WebApi.Controllers
                         model.GameTypeId,
                         model.ObCustId,
                         model.SiteId,
-                        model.Auth.PartnerId,
+                        model.Auth.OperatorId,
                         model.FreeBet));
 
                 response.Result.Seq = model.Seq;
@@ -235,15 +240,22 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "DailySummarize")]
         public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
-            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await VerifyRequest(model.Auth))
             {
-                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.PartnerId, model.SummarizedDate));
+                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.OperatorId, model.SummarizedDate));
                 response.Result.Seq = model.Seq;
 
                 return Ok(response);
             }
 
             return Unauthorized();
+        }
+
+        private async Task<bool> VerifyRequest(Auth auth)
+        {
+            var @operator = await partnerDataService.GetById(auth?.OperatorId);
+
+            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
         }
     }
 }

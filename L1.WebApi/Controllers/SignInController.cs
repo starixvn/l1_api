@@ -64,7 +64,8 @@ namespace L1.WebApi.Controllers
                         PartnerId = model.Auth.OperatorId,
                         AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                         SiteName = model.SiteName,
-                        IsCash = model.IsCash
+                        IsCash = model.IsCash,
+                        DisableJackpotGames = model.DisableJackpotGames
                     }, model.GameTypeId);
 
                     await WriteSignInLog(requestTime, model, result);

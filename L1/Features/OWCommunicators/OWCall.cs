@@ -5,12 +5,12 @@ namespace L1.Features.OWCommunicators
 {
     public class OWCall : PartnerCall
     {
-        public OWCall(int obCustId, string siteId)
-            : this(Guid.NewGuid().ToString(), obCustId, siteId)
+        public OWCall(int playerId, string siteId)
+            : this(Guid.NewGuid().ToString(), playerId, siteId)
         {
         }
 
-        public OWCall(string seq, int obCustId, string siteId) : base(seq, obCustId, siteId)
+        public OWCall(string seq, int playerId, string siteId) : base(seq, playerId, siteId)
         {
         }
     }

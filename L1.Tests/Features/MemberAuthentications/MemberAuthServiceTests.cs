@@ -288,8 +288,8 @@ namespace L1.Tests.Features.MemberAuthentications
                 Token = "token",
                 Time = DateTime.Now,
                 BrowserUserAgent = verificationParams.BrowserUserAgent,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
                 PartnerId = "partner",
                 CurrencyName = "ISA"
@@ -304,8 +304,8 @@ namespace L1.Tests.Features.MemberAuthentications
 
             // Assert
             Assert.IsType<VerificationResult>(result);
-            Assert.Equal(memberAuth.MemberId, result.MemberId);
-            Assert.Equal(memberAuth.MemberName, result.MemberName);
+            Assert.Equal(memberAuth.PlayerId, result.PlayerId);
+            Assert.Equal(memberAuth.PlayerName, result.PlayerName);
             Assert.Equal(memberAuth.SiteId, result.SiteId);
         }
 
@@ -317,8 +317,8 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = "token",
                 Time = DateTime.Now,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
                 PartnerId = "partner",
                 CurrencyName = "ISA"
@@ -357,8 +357,8 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = updateMemberAuthParams.Token,
                 Time = DateTime.Now,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
                 PartnerId = "partner",
                 CurrencyName = "ISA",
@@ -395,8 +395,8 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = updateMemberAuthParams.Token,
                 Time = DateTime.Now,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
                 PartnerId = "partner",
                 CurrencyName = "ISA",

@@ -20,8 +20,8 @@ namespace L1.Features.MemberAuthentications
         public VerificationResult(
             int code,
             string message,
-            int memberId,
-            string memberName,
+            int playerId,
+            string playerName,
             string siteId,
             string language,
             string currencyName,
@@ -39,8 +39,8 @@ namespace L1.Features.MemberAuthentications
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
         {
-            MemberId = memberId;
-            MemberName = memberName;
+            PlayerId = playerId;
+            PlayerName = playerName;
             SiteId = siteId;
             Language = language;
             CurrencyName = currencyName;
@@ -56,9 +56,9 @@ namespace L1.Features.MemberAuthentications
             DisableJackpotGames = disableJackpotGames;
         }
 
-        public int MemberId { get; }
+        public int PlayerId { get; }
 
-        public string MemberName { get; }
+        public string PlayerName { get; }
 
         public string SiteId { get; }
 
@@ -78,7 +78,7 @@ namespace L1.Features.MemberAuthentications
 
         public string Seq { get; }
 
-        public string MemberKey => $"{PartnerId}_{MemberId}";
+        public string MemberKey => $"{PartnerId}_{PlayerId}";
 
         public string SiteName { get; set; }
 
@@ -95,8 +95,8 @@ namespace L1.Features.MemberAuthentications
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public static VerificationResult CreateSuccessResponse(
-            int memberId,
-            string memberName,
+            int playerId,
+            string playerName,
             string siteId,
             string language,
             string currencyName,
@@ -114,8 +114,8 @@ namespace L1.Features.MemberAuthentications
             => new VerificationResult(
                 SuccessCode,
                 string.Empty,
-                memberId,
-                memberName,
+                playerId,
+                playerName,
                 siteId,
                 language,
                 currencyName,

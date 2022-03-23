@@ -2,7 +2,7 @@
 {
     public class PartnerVoidGameCall : PartnerCall
     {
-        public PartnerVoidGameCall(int obCustId, string siteId, int gameRoundId, byte gameTypeId, string reason, bool freeBet) : base(obCustId, siteId)
+        public PartnerVoidGameCall(int playerId, string siteId, int gameRoundId, byte gameTypeId, string reason, bool freeBet) : base(playerId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;

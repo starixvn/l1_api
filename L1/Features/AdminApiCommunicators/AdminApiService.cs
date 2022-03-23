@@ -2,9 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators.DailySummary;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
-using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using L1.Shared.Constants;
 using Newtonsoft.Json;
@@ -16,10 +14,6 @@ namespace L1.Features.AdminApiCommunicators
     public interface IAdminApiService
     {
         Task UnderMaintenance(MaintenanceRequest request);
-
-        Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request);
-
-        Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request);
 
         Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
 
@@ -41,12 +35,6 @@ namespace L1.Features.AdminApiCommunicators
 
         public Task UnderMaintenance(MaintenanceRequest request)
             => PostAndForget(adminApiEndPoints.UnderMaintenance, request);
-
-        public Task<AdminApiResponse<DailySummaryResult>> DailySummary(DailySummaryRequest request)
-            => Post<DailySummaryResult>(adminApiEndPoints.DailySummary, request);
-
-        public Task<AdminApiResponse<RetrieveEndGameInfoResult>> RetrieveEndGameInfoAsync(RetrieveEndGameInfoRequest request)
-            => Post<RetrieveEndGameInfoResult>(adminApiEndPoints.RetrieveEndGameInfo, request);
 
         public Task NotifyHighStake(NotifyHighStakeRequest request)
             => PostAndForget(adminApiEndPoints.NotifyHighStake, request);

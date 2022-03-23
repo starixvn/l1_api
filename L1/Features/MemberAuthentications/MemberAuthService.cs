@@ -99,8 +99,8 @@ namespace L1.Features.MemberAuthentications
                 }
 
                 return VerificationResult.CreateSuccessResponse(
-                    memberAuth.MemberId,
-                    memberAuth.MemberName,
+                    memberAuth.PlayerId,
+                    memberAuth.PlayerName,
                     memberAuth.SiteId,
                     memberAuth.Language,
                     memberAuth.CurrencyName,

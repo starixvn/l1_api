@@ -2,7 +2,7 @@
 {
     public class PartnerGetBetLimitCall : PartnerCall
     {
-        public PartnerGetBetLimitCall(int obCustId, string siteId) : base(obCustId, siteId)
+        public PartnerGetBetLimitCall(int playerId, string siteId) : base(playerId, siteId)
         {
         }
     }

@@ -23,9 +23,9 @@ namespace L1.Features.MemberAuthentications
 
         public string Language { get; set; }
 
-        public int MemberId { get; set; }
+        public int PlayerId { get; set; }
 
-        public string MemberName { get; set; }
+        public string PlayerName { get; set; }
 
         public string SiteId { get; set; }
 

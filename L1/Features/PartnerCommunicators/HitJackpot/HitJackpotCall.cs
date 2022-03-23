@@ -3,11 +3,11 @@
     public class HitJackpotCall : PartnerCall
     {
         public HitJackpotCall(
-            int obCustId,
+            int playerId,
             string siteId,
             int gameRoundId,
             byte gameTypeId,
-            decimal winningAmount) : base(obCustId, siteId)
+            decimal winningAmount) : base(playerId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;

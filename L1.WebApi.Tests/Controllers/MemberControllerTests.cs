@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.DailySummary;
-using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
@@ -14,7 +12,6 @@ using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
@@ -30,19 +27,13 @@ namespace L1.WebApi.Tests.Controllers
         private readonly IPartnerCustomerServices oWCustomerService;
         private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        private readonly MemberController controller;
+        private readonly PlayerController controller;
         private readonly Fixture fixture = new();
 
         public MemberControllerTests()
         {
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
-            oWCustomerService = Substitute.For<IPartnerCustomerServices>();
-            adminApiService = Substitute.For<IAdminApiService>();
-            partnerDataService = Substitute.For<IPartnerDataService>();
-            logService = Substitute.For<ILogService>();
-            partnerRequestAuthentication = Substitute.For<IPartnerRequestAuthentication>();
-
-            controller = new MemberController(adminApiService, partnerDataService, logService, partnerCustomerFactory, partnerRequestAuthentication);
+            controller = new PlayerController(partnerCustomerFactory);
         }
 
         [Fact]
@@ -193,78 +184,6 @@ namespace L1.WebApi.Tests.Controllers
 
             // Assert
             Assert.IsType<BadRequestResult>(actualValue);
-        }
-
-        [Fact]
-        public async Task RetrieveEndGameInfo_ValidClient_ReturnOkResult()
-        {
-            // Arrange
-            var model = fixture.Create<EndGameInfoRequest>();
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
-            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
-
-            var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
-            adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.RetrieveEndGameInfo(model) as OkObjectResult;
-
-            // Assert
-            Assert.Equal(result, actualValue.Value);
-        }
-
-        [Fact]
-        public async Task RetrieveEndGameInfo_InvalidClient_ReturnUnauthorizedResult()
-        {
-            // Arrange
-            var model = fixture.Create<EndGameInfoRequest>();
-            model.Auth = null;
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
-
-            var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
-            adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.RetrieveEndGameInfo(model) as UnauthorizedResult;
-
-            // Assert
-            Assert.NotNull(actualValue);
-        }
-
-        [Fact]
-        public async Task DailySummarize_InvalidClient_ReturnUnauthorizedResult()
-        {
-            // Arrange
-            var model = fixture.Create<DailySummary>();
-            model.Auth = null;
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
-
-            var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
-            adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.DailySummarize(model) as UnauthorizedResult;
-
-            // Assert
-            Assert.NotNull(actualValue);
-        }
-
-        [Fact]
-        public async Task DailySummarize_ValidClient_ReturnUnauthorizedResult()
-        {
-            // Arrange
-            var model = fixture.Create<DailySummary>();
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
-            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
-
-            var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
-            adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.DailySummarize(model) as OkObjectResult;
-
-            // Assert
-            Assert.Equal(result, actualValue.Value);
         }
 
         [Fact]

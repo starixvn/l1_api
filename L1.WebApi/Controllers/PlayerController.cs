@@ -1,18 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.DailySummary;
-using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
+﻿using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.HitJackpot;
-using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
-using L1.Features.Partners;
 using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -27,24 +21,11 @@ namespace L1.WebApi.Controllers
     [SwaggerIgnore]
     public class PlayerController : ControllerBase
     {
-        private readonly IAdminApiService adminApiService;
-        private readonly IPartnerDataService partnerDataService;
-        private readonly ILogService logService;
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
-        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public PlayerController(
-            IAdminApiService adminApiService,
-            IPartnerDataService partnerDataService,
-            ILogService logService,
-            IPartnerCustomerFactory partnerCustomerFactory,
-            IPartnerRequestAuthentication partnerRequestAuthentication)
+        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory)
         {
-            this.adminApiService = adminApiService;
-            this.partnerDataService = partnerDataService;
-            this.logService = logService;
             this.partnerCustomerFactory = partnerCustomerFactory;
-            this.partnerRequestAuthentication = partnerRequestAuthentication;
         }
 
         [HttpPost]
@@ -197,65 +178,6 @@ namespace L1.WebApi.Controllers
                 model.WinningAmount));
 
             return Ok(response);
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        [AllowAnonymous]
-        [SwaggerOperation(Summary = "RetrieveEndGame")]
-        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
-        {
-            if (await VerifyRequest(model.Auth))
-            {
-                var requestTime = DateTimeOffset.UtcNow;
-                var response = await adminApiService.RetrieveEndGameInfoAsync(
-                    new RetrieveEndGameInfoRequest(
-                        model.GameRoundId,
-                        model.GameTypeId,
-                        model.PlayerId,
-                        model.SiteId,
-                        model.Auth.OperatorId,
-                        model.FreeBet));
-
-                response.Result.Seq = model.Seq;
-
-                await WriteRetrieveEndGameLog(requestTime, model, response.Result);
-
-                return Ok(response);
-            }
-
-            return Unauthorized();
-        }
-
-        private Task WriteRetrieveEndGameLog(DateTimeOffset requestTime, EndGameInfoRequest request, RetrieveEndGameInfoResult result)
-        {
-            var log = new SBLog(request, result, requestTime, DateTimeOffset.UtcNow);
-
-            return logService.LogRetrieveEndGameAsync(log);
-        }
-
-        [HttpPost]
-        [Route("/Integrity/[action]")]
-        [AllowAnonymous]
-        [SwaggerOperation(Summary = "DailySummarize")]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
-        {
-            if (await VerifyRequest(model.Auth))
-            {
-                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.OperatorId, model.SummarizedDate));
-                response.Result.Seq = model.Seq;
-
-                return Ok(response);
-            }
-
-            return Unauthorized();
-        }
-
-        private async Task<bool> VerifyRequest(Auth auth)
-        {
-            var @operator = await partnerDataService.GetById(auth?.OperatorId);
-
-            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
         }
     }
 }

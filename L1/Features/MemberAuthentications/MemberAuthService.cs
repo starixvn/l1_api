@@ -41,7 +41,7 @@ namespace L1.Features.MemberAuthentications
 
         public async Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId)
         {
-            var currency = await partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName);
+            var currency = await partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName);
 
             if (currency == null)
             {
@@ -105,7 +105,7 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Language,
                     memberAuth.CurrencyName,
                     memberAuth.Seq,
-                    memberAuth.PartnerId,
+                    memberAuth.OperatorId,
                     memberAuth.Domain,
                     memberAuth.SiteName,
                     memberAuth.AppType,
@@ -129,7 +129,7 @@ namespace L1.Features.MemberAuthentications
 
         private async Task<Uri> GetRedirectedUrl(MemberAuth memberAuth, bool isTestCurrency)
         {
-            var partner = await partnerDataService.GetById(memberAuth.PartnerId);
+            var partner = await partnerDataService.GetById(memberAuth.OperatorId);
 
             if (partner == null)
             {

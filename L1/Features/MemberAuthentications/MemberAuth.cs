@@ -33,7 +33,7 @@ namespace L1.Features.MemberAuthentications
 
         public string Seq { get; set; }
 
-        public string PartnerId { get; set; }
+        public string OperatorId { get; set; }
 
         public byte AppType { get; set; }
 
@@ -57,7 +57,7 @@ namespace L1.Features.MemberAuthentications
         {
             token = Token;
             isTestCurrency = IsTestCurrency;
-            partnerId = PartnerId;
+            partnerId = OperatorId;
         }
     }
 }

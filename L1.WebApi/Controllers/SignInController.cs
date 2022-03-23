@@ -61,7 +61,7 @@ namespace L1.WebApi.Controllers
                         Seq = model.Seq,
                         Language = model.Language,
                         SiteId = model.SiteId,
-                        PartnerId = model.Auth.OperatorId,
+                        OperatorId = model.Auth.OperatorId,
                         AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                         SiteName = model.SiteName,
                         IsCash = model.IsCash,

@@ -26,7 +26,7 @@ namespace L1.Features.MemberAuthentications
             string language,
             string currencyName,
             string seq,
-            string partnerId,
+            string operatorId,
             string domain,
             string siteName,
             byte appType,
@@ -45,7 +45,7 @@ namespace L1.Features.MemberAuthentications
             Language = language;
             CurrencyName = currencyName;
             Seq = seq;
-            PartnerId = partnerId;
+            OperatorId = operatorId;
             Domain = domain;
             SiteName = siteName;
             AppType = appType;
@@ -62,7 +62,7 @@ namespace L1.Features.MemberAuthentications
 
         public string SiteId { get; }
 
-        public string PartnerId { get; }
+        public string OperatorId { get; }
 
         public string Domain { get; }
 
@@ -78,7 +78,7 @@ namespace L1.Features.MemberAuthentications
 
         public string Seq { get; }
 
-        public string MemberKey => $"{PartnerId}_{PlayerId}";
+        public string MemberKey => $"{OperatorId}_{PlayerId}";
 
         public string SiteName { get; set; }
 
@@ -101,7 +101,7 @@ namespace L1.Features.MemberAuthentications
             string language,
             string currencyName,
             string seq,
-            string partnerId,
+            string operatorId,
             string domain,
             string siteName,
             byte appType,
@@ -120,7 +120,7 @@ namespace L1.Features.MemberAuthentications
                 language,
                 currencyName,
                 seq,
-                partnerId,
+                operatorId,
                 domain,
                 siteName,
                 appType,

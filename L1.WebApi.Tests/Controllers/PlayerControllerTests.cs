@@ -18,21 +18,18 @@ using Xunit;
 
 namespace L1.WebApi.Tests.Controllers
 {
-    public class MemberControllerTests
+    public class PlayerControllerTests
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
-        private readonly IAdminApiService adminApiService;
-        private readonly IPartnerDataService partnerDataService;
-        private readonly ILogService logService;
         private readonly IPartnerCustomerServices oWCustomerService;
-        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
         private readonly PlayerController controller;
         private readonly Fixture fixture = new();
 
-        public MemberControllerTests()
+        public PlayerControllerTests()
         {
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
+            oWCustomerService = Substitute.For<IPartnerCustomerServices>();
             controller = new PlayerController(partnerCustomerFactory);
         }
 

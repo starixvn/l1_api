@@ -68,27 +68,6 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async Task Index_ValidClientWithNullAuth_ReturnOkResult()
-        {
-            // Arrange
-            var model = fixture.Create<SignIn>();
-            model.IP = "IP";
-            model.Auth = null;
-
-            partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
-            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
-
-            var result = fixture.Create<SingleSignOnResult>();
-            memberAuthService.SignIn(Arg.Any<MemberAuth>(), Arg.Any<byte>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.Index(model) as OkObjectResult;
-
-            // Assert
-            Assert.NotNull(actualValue);
-        }
-
-        [Fact]
         public async Task Index_ValidClientWithInvalidAppType_ReturnOkResult()
         {
             // Arrange

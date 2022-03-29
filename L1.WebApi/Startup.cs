@@ -3,6 +3,7 @@ using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.SboCommunicators;
+using L1.Features.SGApiCommunicators;
 using L1.Shared.Middlewares;
 using L1.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,7 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddSGApiServices(appSettings.SGApiSettings);
 
             if (appSettings.SboServiceSettings != null)
             {

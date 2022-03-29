@@ -7,6 +7,8 @@ using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Features.Partners;
+using L1.Features.SGApiCommunicators;
 using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,10 +24,19 @@ namespace L1.WebApi.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly ISGApiService sgApiService;
+        private readonly IPartnerDataService partnerDataService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory)
+        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory, 
+            ISGApiService sgApiService,
+            IPartnerDataService partnerDataService,
+            IPartnerRequestAuthentication partnerRequestAuthentication)
         {
             this.partnerCustomerFactory = partnerCustomerFactory;
+            this.sgApiService = sgApiService;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
+            this.partnerDataService = partnerDataService;
         }
 
         [HttpPost]
@@ -178,6 +189,44 @@ namespace L1.WebApi.Controllers
                 model.WinningAmount));
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("/Integrity/[action]")]
+        [AllowAnonymous]
+        [SwaggerOperation(Summary = "DailySummarize")]
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummaryRequest model)
+        {
+            if (await VerifyRequest(model.Auth?.OperatorId))
+            {
+                var response = await sgApiService.DailySummary(model);
+
+                return Ok(response);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        [AllowAnonymous]
+        [SwaggerOperation(Summary = "RetrieveEndRoundInfo")]
+        public async Task<IActionResult> RetrieveEndRoundInfo([FromBody] RetrieveEndRoundInfoRequest model)
+        {
+            if (await VerifyRequest(model.Auth?.OperatorId))
+            {
+                var response = await sgApiService.RetrieveEndRoundInfoAsync(model);
+                return Ok(response);
+            }
+
+            return Unauthorized();
+        }
+
+        private async Task<bool> VerifyRequest(string operatorId)
+        {
+            var @operator = await partnerDataService.GetById(operatorId);
+
+            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
         }
     }
 }

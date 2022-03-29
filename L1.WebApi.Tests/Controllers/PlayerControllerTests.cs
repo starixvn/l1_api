@@ -10,6 +10,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
+using L1.Features.SGApiCommunicators;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,9 @@ namespace L1.WebApi.Tests.Controllers
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
         private readonly IPartnerCustomerServices oWCustomerService;
+        private readonly IPartnerDataService partnerDataService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
+        private readonly ISGApiService sgApiService;
 
         private readonly PlayerController controller;
         private readonly Fixture fixture = new();
@@ -30,7 +34,7 @@ namespace L1.WebApi.Tests.Controllers
         {
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
             oWCustomerService = Substitute.For<IPartnerCustomerServices>();
-            controller = new PlayerController(partnerCustomerFactory);
+            controller = new PlayerController(partnerCustomerFactory, sgApiService, partnerDataService, partnerRequestAuthentication);
         }
 
         [Fact]

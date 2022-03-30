@@ -30,5 +30,7 @@ namespace L1.WebApi.Models
         public Auth Auth { get; set; }
 
         public bool DisableJackpotGames { get; set; }
+
+        public string OperatorToken { get; set; }
     }
 }

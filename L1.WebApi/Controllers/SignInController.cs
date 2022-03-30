@@ -65,7 +65,8 @@ namespace L1.WebApi.Controllers
                         AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                         SiteName = model.SiteName,
                         IsCash = model.IsCash,
-                        DisableJackpotGames = model.DisableJackpotGames
+                        DisableJackpotGames = model.DisableJackpotGames,
+                        OperatorToken = model.OperatorToken
                     }, model.GameTypeId);
 
                     await WriteSignInLog(requestTime, model, result);

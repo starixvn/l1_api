@@ -101,7 +101,7 @@ namespace L1.WebApi.Controllers
                 model.Ip,
                 model.FreeSpin);
 
-            var response = await customerService.PlaceBet(placeBetCall, model.System);
+            var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
 
             return Ok(response);
         }

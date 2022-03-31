@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
@@ -47,13 +48,13 @@ namespace L1.Features.OWCommunicators
         public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
         => oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
 
-        public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub)
+        public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
             var response = await oWService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(PartnerId, response, system);
+                await logService.LogBetAsync(PartnerId, response, system, metadata);
 
                 if (call.Amount >= appSettings.HighStake)
                 {

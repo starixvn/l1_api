@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace L1.WebApi.Models
 {
@@ -21,5 +22,7 @@ namespace L1.WebApi.Models
         public bool FreeSpin { get; set; }
 
         public byte System { get; set; }
+
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

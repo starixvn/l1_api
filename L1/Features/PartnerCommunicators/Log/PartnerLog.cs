@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -13,7 +14,8 @@ namespace L1.Features.PartnerCommunicators.Log
             DateTimeOffset responseTimeStamp,
             IPartnerResult result,
             byte system,
-            string accessKey = "")
+            string accessKey = "",
+            Dictionary<string, string> metadata = null)
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
             PartnerId = partnerId;
@@ -23,6 +25,7 @@ namespace L1.Features.PartnerCommunicators.Log
             Result = result;
             System = system;
             AccessKey = accessKey;
+            Metadata = metadata;
         }
 
         public string PartnerId { get; set; }
@@ -43,5 +46,7 @@ namespace L1.Features.PartnerCommunicators.Log
         public byte System { get; set; }
 
         public string AccessKey { get; set; }
+
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

@@ -64,7 +64,8 @@ namespace L1.Features.OWCommunicators
                         call.Amount,
                         call.Currency,
                         call.ChoiceId,
-                        system));
+                        system,
+                        metadata));
                 }
             }
 

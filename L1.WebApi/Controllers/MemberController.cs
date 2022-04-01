@@ -19,7 +19,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("[controller]")]
     public class MemberController : ControllerBase

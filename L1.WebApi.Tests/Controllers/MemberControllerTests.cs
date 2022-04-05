@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.DailySummary;
@@ -109,7 +110,7 @@ namespace L1.WebApi.Tests.Controllers
             var model = fixture.Create<PlaceBet>();
             var result = fixture.Create<PartnerResponse<PartnerPlaceBetResult>>();
             partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
-            oWCustomerService.PlaceBet(Arg.Any<PartnerPlaceBetCall>(), Arg.Any<byte>()).Returns(result);
+            oWCustomerService.PlaceBet(Arg.Any<PartnerPlaceBetCall>(), Arg.Any<byte>(), Arg.Any<Dictionary<string,string>>()).Returns(result);
 
             // Act
             var actualValue = await controller.PlaceBet(model) as OkObjectResult;

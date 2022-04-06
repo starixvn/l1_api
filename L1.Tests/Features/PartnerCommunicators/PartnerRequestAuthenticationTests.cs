@@ -37,9 +37,9 @@ namespace L1.Tests.Features.PartnerCommunicators
         [InlineData(null, "")]
         [InlineData("", "access-key")]
         [InlineData("secret", "access-key")]
-        public async Task Verify_InvalidSecretKeyOrAccessKey_ReturnFalse(string secretKey, StringValues accessKey)
+        public async Task Verify_InvalidSecretKeyOrAccessKey_ReturnFalse(string secretKey, string accessKey)
         {
-            httpRequest.Headers["Access-Key"].Returns(accessKey);
+            httpRequest.Headers["Access-Key"].Returns(new StringValues(accessKey));
             // Act
             var result = await service.Verify(secretKey, httpRequest);
 

@@ -28,5 +28,7 @@ namespace L1.WebApi.Models
         public bool IsCash { get; set; }
 
         public Auth Auth { get; set; }
+
+        public bool DisableJackpotGames { get; set; }
     }
 }

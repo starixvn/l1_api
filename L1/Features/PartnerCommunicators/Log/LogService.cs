@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using L1.Shared.Constants;
 
 namespace L1.Features.PartnerCommunicators.Log
@@ -7,7 +8,7 @@ namespace L1.Features.PartnerCommunicators.Log
     {
         Task LogFailedRequestAsync<T>(string partnerId, PartnerResponse<T> response) where T : PartnerResult;
 
-        Task LogBetAsync<T>(string partnerId, PartnerResponse<T> response, byte system) where T : PartnerResult;
+        Task LogBetAsync<T>(string partnerId, PartnerResponse<T> response, byte system, Dictionary<string, string> metadata = null) where T : PartnerResult;
 
         Task LogEndGameAsync<T>(string partnerId, PartnerResponse<T> response) where T : PartnerResult;
 
@@ -27,9 +28,9 @@ namespace L1.Features.PartnerCommunicators.Log
             this.logDataAccess = logDataAccess;
         }
 
-        public async Task LogBetAsync<T>(string partnerId, PartnerResponse<T> response, byte system) where T : PartnerResult
+        public async Task LogBetAsync<T>(string partnerId, PartnerResponse<T> response, byte system, Dictionary<string, string> metadata = null) where T : PartnerResult
         {
-            var log = ConvertLog(partnerId, response, system);
+            var log = ConvertLog(partnerId, response, system, metadata);
 
             await logDataAccess.WriteBetAsync(log);
         }
@@ -61,15 +62,16 @@ namespace L1.Features.PartnerCommunicators.Log
         public Task LogRetrieveEndGameAsync(SBLog log)
             => logDataAccess.WriteRetrieveEndGameAsync(log);
 
-        private static PartnerLog ConvertLog<T>(string partnerId, PartnerResponse<T> response, byte system = AppTypes.SabaClub) where T : PartnerResult
+        private static PartnerLog ConvertLog<T>(string partnerId, PartnerResponse<T> response, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null) where T : PartnerResult
         => new PartnerLog(
-            partnerId, 
-            response.Request.TimeStamp, 
-            response.Request.Call, 
-            response.TimeStamp, 
-            response.Result, 
-            system, 
-            response.AccessKey
+            partnerId,
+            response.Request.TimeStamp,
+            response.Request.Call,
+            response.TimeStamp,
+            response.Result,
+            system,
+            response.AccessKey,
+            metadata
             );
     }
 }

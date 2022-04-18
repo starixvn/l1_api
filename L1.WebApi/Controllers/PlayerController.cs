@@ -196,11 +196,16 @@ namespace L1.WebApi.Controllers
         [Route("/Integrity/[action]")]
         [AllowAnonymous]
         [SwaggerOperation(Summary = "DailySummarize")]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummaryRequest model)
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
             if (await VerifyRequest(model.Auth?.OperatorId))
             {
-                var response = await sgApiService.DailySummary(model);
+                var response = await sgApiService.DailySummary(new DailySummaryRequest 
+                {
+                    Auth = new () { OperatorId = model.Auth.OperatorId },
+                    Seq = model.Seq,
+                    SummarizedDate = model.SummarizedDate
+                });
 
                 return Ok(response);
             }
@@ -212,11 +217,20 @@ namespace L1.WebApi.Controllers
         [Route("[action]")]
         [AllowAnonymous]
         [SwaggerOperation(Summary = "RetrieveEndRoundInfo")]
-        public async Task<IActionResult> RetrieveEndRoundInfo([FromBody] RetrieveEndRoundInfoRequest model)
+        public async Task<IActionResult> RetrieveEndRoundInfo([FromBody] RetrieveEndRoundInfo model)
         {
             if (await VerifyRequest(model.Auth?.OperatorId))
             {
-                var response = await sgApiService.RetrieveEndRoundInfoAsync(model);
+                var response = await sgApiService.RetrieveEndRoundInfoAsync(new RetrieveEndRoundInfoRequest 
+                {
+                    Auth = new () { OperatorId = model.Auth.OperatorId },
+                    Seq = model.Seq,
+                    FreeBet = model.FreeBet,
+                    GameRoundId = model.GameRoundId,
+                    GameTypeId = model.GameTypeId,
+                    PlayerId = model.PlayerId,
+                    SiteId = model.SiteId
+                });
                 return Ok(response);
             }
 

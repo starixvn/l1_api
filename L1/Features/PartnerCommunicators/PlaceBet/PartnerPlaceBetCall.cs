@@ -21,7 +21,8 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             bool freeSpin,
             decimal contributionAmount,
             float contributionRate,
-            bool freeBet) : base(playerId, siteId)
+            bool freeBet,
+            string operatorToken) : base(playerId, siteId)
 #pragma warning restore S107 // Methods should not have too many parameters
         {
             GameRoundId = gameRoundId;
@@ -35,6 +36,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             ContributionAmount = contributionAmount;
             ContributionRate = contributionRate;
             FreeBet = freeBet;
+            OperatorToken = operatorToken;
         }
 
         public int GameRoundId { get; set; }
@@ -59,5 +61,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
         public float ContributionRate { get; set; }
 
         public bool FreeBet { get; set; }
+
+        public string OperatorToken { get; set; }
     }
 }

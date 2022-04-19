@@ -71,7 +71,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.GetBalance(
-                new PartnerGetBalanceCall(model.PlayerId, model.SiteId));
+                new PartnerGetBalanceCall(model.PlayerId, model.SiteId, model.OperatorToken));
 
             return Ok(response);
         }
@@ -101,7 +101,8 @@ namespace L1.WebApi.Controllers
                 model.FreeSpin,
                 model.ContributionAmount,
                 model.ContributionRate,
-                model.FreeBet);
+                model.FreeBet,
+                model.OperatorToken);
 
             var response = await customerService.PlaceBet(placeBetCall, model.System);
 
@@ -165,7 +166,7 @@ namespace L1.WebApi.Controllers
                 return BadRequest();
             }
 
-            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.PlayerId, model.SiteId));
+            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.PlayerId, model.SiteId, model.OperatorToken));
 
             return Ok(response);
         }

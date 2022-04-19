@@ -27,5 +27,7 @@ namespace L1.WebApi.Models
         public float ContributionRate { get; set; }
 
         public decimal ContributionAmount { get; set; }
+
+        public string OperatorToken { get; set; }
     }
 }

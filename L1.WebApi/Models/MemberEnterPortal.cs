@@ -7,5 +7,7 @@
         public string Seq { get; set; }
 
         public bool FirstLogin { get; set; }
+
+        public string OperatorToken { get; set; }
     }
 }

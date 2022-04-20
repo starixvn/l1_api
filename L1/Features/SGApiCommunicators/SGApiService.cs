@@ -50,11 +50,8 @@ namespace L1.Features.SGApiCommunicators
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                return new SGResponse<T>
-                {
-                    TimeStamp = DateTimeOffset.UtcNow,
-                    Result = JsonConvert.DeserializeObject<T>(responseContent)
-                };
+                return JsonConvert.DeserializeObject<SGResponse<T>>(responseContent);
+
             }
 
             var failureResponse = await CreateErrorResponse<T>(response);

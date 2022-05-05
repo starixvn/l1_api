@@ -11,8 +11,6 @@ namespace L1.Features.SGApiCommunicators
 
     public class SGApiEndPoints
     {
-        public string UnderMaintenance { get; set; }
-
         public string DailySummary { get; set; }
 
         public string RetrieveEndRoundInfo { get; set; }

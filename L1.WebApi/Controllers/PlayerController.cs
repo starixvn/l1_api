@@ -9,7 +9,6 @@ using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
 using L1.Features.SGApiCommunicators;
-using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +20,6 @@ namespace L1.WebApi.Controllers
     [ApiVersion("1.0")]
     [Route("[controller]")]
     [Route("member")]
-    [SwaggerIgnore]
     public class PlayerController : ControllerBase
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;

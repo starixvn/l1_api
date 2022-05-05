@@ -14,13 +14,11 @@ namespace L1.WebApi.Tests
     public class StartupTests
     {
         private readonly IConfiguration configuration;
-        private readonly IWebHostEnvironment environment;
         private readonly Startup startup;
 
         public StartupTests()
         {
             configuration = Substitute.For<IConfiguration>();
-            environment = Substitute.For<IWebHostEnvironment>();
             var configurationSection = Substitute.For<IConfigurationSection>();
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             configurationSection.GetChildren().Returns(children);
@@ -41,7 +39,7 @@ namespace L1.WebApi.Tests
             AddSGApiSettingsConfigsSection(configurationSection);
 
             configuration.GetSection("AppSettings").Returns(configurationSection);
-            startup = new Startup(configuration, environment);
+            startup = new Startup(configuration);
         }
 
         [Fact]

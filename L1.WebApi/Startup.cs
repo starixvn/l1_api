@@ -5,7 +5,6 @@ using L1.Features.OWCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Features.SGApiCommunicators;
 using L1.Shared.Middlewares;
-using L1.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -20,12 +19,9 @@ namespace L1.WebApi
 {
     public class Startup
     {
-        private readonly IWebHostEnvironment environment;
-
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            this.environment = environment;
         }
 
         public IConfiguration Configuration { get; }
@@ -77,26 +73,15 @@ namespace L1.WebApi
             {
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC API", Version = "v1" });
-
-                if (environment.IsProduction())
-                {
-                    c.DocumentFilter<SwaggerDocumentFilter>();
-                }
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "SC APIs v1");
-                c.DefaultModelsExpandDepth(-1);
-            });
-
             if (env.IsDevelopment())
             {
+                app.UseSwagger();
                 app.UseReDoc(c =>
                 {
                     c.DocumentTitle = "SC API Documentation";

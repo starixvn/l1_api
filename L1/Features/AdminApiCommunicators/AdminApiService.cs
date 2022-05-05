@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
-using L1.Shared.Constants;
 using Newtonsoft.Json;
 using Sentry;
 using Sentry.Protocol;
@@ -14,8 +13,6 @@ namespace L1.Features.AdminApiCommunicators
     public interface IAdminApiService
     {
         Task UnderMaintenance(MaintenanceRequest request);
-
-        Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new();
 
         Task NotifyHighStake(NotifyHighStakeRequest request);
     }
@@ -39,30 +36,6 @@ namespace L1.Features.AdminApiCommunicators
         public Task NotifyHighStake(NotifyHighStakeRequest request)
             => PostAndForget(adminApiEndPoints.NotifyHighStake, request);
 
-        public async Task<AdminApiResponse<T>> Post<T>(string apiEndpoint, AdminApiRequest request) where T : AdminApiResult, new()
-        {
-            var response = await Post(apiEndpoint, request);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                return new AdminApiResponse<T>
-                {
-                    TimeStamp = DateTimeOffset.UtcNow,
-                    Result = JsonConvert.DeserializeObject<T>(responseContent)
-                };
-            }
-
-            var failureResponse = await CreateErrorResponse<T>(response);
-
-            sentryClient.CaptureMessage(
-                $"Request to Saba Admin API's {apiEndpoint} failed at {DateTimeOffset.UtcNow} - {failureResponse.Result.ErrorDescription}",
-                SentryLevel.Warning);
-
-            return failureResponse;
-        }
-
         public async Task PostAndForget(string apiEndpoint, AdminApiRequest request)
         {
             try
@@ -83,16 +56,5 @@ namespace L1.Features.AdminApiCommunicators
 
             return httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
         }
-
-        private static async Task<AdminApiResponse<T>> CreateErrorResponse<T>(HttpResponseMessage response) where T : AdminApiResult, new()
-          => new AdminApiResponse<T>
-          {
-              TimeStamp = DateTimeOffset.UtcNow,
-              Result = new T
-              {
-                  ErrorCode = ErrorCodes.InternalError,
-                  ErrorDescription = $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}"
-              }
-          };
     }
 }

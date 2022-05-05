@@ -13,6 +13,7 @@ using L1.Features.Partners;
 using L1.Features.SGApiCommunicators;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
@@ -34,6 +35,9 @@ namespace L1.WebApi.Tests.Controllers
         {
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
             oWCustomerService = Substitute.For<IPartnerCustomerServices>();
+            partnerDataService = Substitute.For<IPartnerDataService>();
+            partnerRequestAuthentication = Substitute.For<IPartnerRequestAuthentication>();
+            sgApiService = Substitute.For<ISGApiService>();
             controller = new PlayerController(partnerCustomerFactory, sgApiService, partnerDataService, partnerRequestAuthentication);
         }
 
@@ -216,5 +220,70 @@ namespace L1.WebApi.Tests.Controllers
             // Assert
             Assert.IsType<BadRequestResult>(actualValue);
         }
+
+        [Fact]
+        public async Task RetrieveEndGameInfo_ValidClient_ReturnOkResult()
+        {
+            // Arrange
+            var model = fixture.Create<RetrieveEndRoundInfo>();
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
+
+            var result = fixture.Create<SGResponse<RetrieveEndRoundInfoResult>>();
+            sgApiService.RetrieveEndRoundInfoAsync(Arg.Any<RetrieveEndRoundInfoRequest>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.RetrieveEndRoundInfo(model) as OkObjectResult;
+
+            // Assert
+            Assert.Equal(result, actualValue.Value);
+        }
+
+        [Fact]
+        public async Task RetrieveEndGameInfo_InvalidClient_ReturnUnauthorizedResult()
+        {
+            // Arrange
+            var model = fixture.Create<RetrieveEndRoundInfo>();
+            model.Auth = null;
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(false);
+
+            // Act
+            var actualValue = await controller.RetrieveEndRoundInfo(model);
+
+            // Assert
+            Assert.IsType<UnauthorizedResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task DailySummarize_InvalidClient_ReturnUnauthorizedResult()
+        {
+            // Arrange
+            var model = fixture.Create<DailySummary>();
+            model.Auth = null;
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(false);
+
+            // Act
+            var actualValue = await controller.DailySummarize(model);
+
+            // Assert
+            Assert.IsType<UnauthorizedResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task DailySummarize_ValidClient_ReturnResult()
+        {
+            // Arrange
+            var model = fixture.Create<DailySummary>();
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
+
+            var result = fixture.Create<SGResponse<DailySummaryResult>>();
+            sgApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.DailySummarize(model) as OkObjectResult;
+
+            // Assert
+            Assert.Equal(result, actualValue.Value);
+        }
+
     }
 }

@@ -83,7 +83,7 @@ namespace L1.Features.SGApiCommunicators
               }
           };
 
-        private string CreateAccessKey(string secretKey, string data)
+        private static string CreateAccessKey(string secretKey, string data)
         {
             var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(secretKey));
             var hashResult = hmac.ComputeHash(Encoding.ASCII.GetBytes(data));

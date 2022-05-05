@@ -67,6 +67,7 @@ namespace L1.WebApi.Tests.Controllers
             Assert.NotNull(actualValue);
         }
 
+        [Fact]
         public async Task Index_ValidClientWithInvalidAppType_ReturnOkResult()
         {
             // Arrange

@@ -25,7 +25,7 @@ namespace L1.Features.PartnerCommunicators
 
             request.Body.Seek(0, SeekOrigin.Begin);
             var streamData = new byte[request.Body.Length];
-            await request.Body.ReadAsync(streamData.AsMemory(0, streamData.Length));
+            _ = await request.Body.ReadAsync(streamData.AsMemory(0, streamData.Length));
 
             var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(secretKey));
             var hashResult = hmac.ComputeHash(streamData);

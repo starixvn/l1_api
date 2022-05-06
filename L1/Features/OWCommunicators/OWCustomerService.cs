@@ -66,7 +66,7 @@ namespace L1.Features.OWCommunicators
                 if (call.Amount >= appSettings.HighStake)
                 {
                     await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
-                        call.ObCustId,
+                        call.PlayerId,
                         call.GameTypeId,
                         call.Amount,
                         call.Currency,
@@ -118,7 +118,7 @@ namespace L1.Features.OWCommunicators
             }
             else
             {
-                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {PartnerId} - CustId {call.ObCustId}", SentryLevel.Fatal);
+                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {PartnerId} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

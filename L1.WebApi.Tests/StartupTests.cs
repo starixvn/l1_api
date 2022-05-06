@@ -14,13 +14,11 @@ namespace L1.WebApi.Tests
     public class StartupTests
     {
         private readonly IConfiguration configuration;
-        private readonly IWebHostEnvironment environment;
         private readonly Startup startup;
 
         public StartupTests()
         {
             configuration = Substitute.For<IConfiguration>();
-            environment = Substitute.For<IWebHostEnvironment>();
             var configurationSection = Substitute.For<IConfigurationSection>();
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             configurationSection.GetChildren().Returns(children);
@@ -38,9 +36,10 @@ namespace L1.WebApi.Tests
             AddOWServiceSettingsConfigsSection(configurationSection);
             AddAdminApiSettingsConfigsSection(configurationSection);
             AddSboServiceSettingsConfigsSection(configurationSection);
+            AddSGApiSettingsConfigsSection(configurationSection);
 
             configuration.GetSection("AppSettings").Returns(configurationSection);
-            startup = new Startup(configuration, environment);
+            startup = new Startup(configuration);
         }
 
         [Fact]
@@ -152,6 +151,18 @@ namespace L1.WebApi.Tests
             var owEndPoints = Substitute.For<IConfigurationSection>();
             owEndPoints.GetChildren().Returns(children);
             adminApiSettingsConfigsSection.GetSection("Endpoints").Returns(owEndPoints);
+        }
+
+        private static void AddSGApiSettingsConfigsSection(IConfigurationSection configSection)
+        {
+            var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
+            var sgApiSettingsConfigsSection = Substitute.For<IConfigurationSection>();
+            sgApiSettingsConfigsSection.GetChildren().Returns(children);
+            configSection.GetSection("SGApiSettings").Returns(sgApiSettingsConfigsSection);
+
+            var sgEndPoints = Substitute.For<IConfigurationSection>();
+            sgEndPoints.GetChildren().Returns(children);
+            sgApiSettingsConfigsSection.GetSection("Endpoints").Returns(sgEndPoints);
         }
     }
 }

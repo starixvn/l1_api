@@ -1,17 +1,14 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
-using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.DailySummary;
-using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
-using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
+using L1.Features.SGApiCommunicators;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Http;
@@ -21,28 +18,25 @@ using Xunit;
 
 namespace L1.WebApi.Tests.Controllers
 {
-    public class MemberControllerTests
+    public class PlayerControllerTests
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
-        private readonly IAdminApiService adminApiService;
-        private readonly IPartnerDataService partnerDataService;
-        private readonly ILogService logService;
         private readonly IPartnerCustomerServices oWCustomerService;
+        private readonly IPartnerDataService partnerDataService;
         private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
+        private readonly ISGApiService sgApiService;
 
-        private readonly MemberController controller;
+        private readonly PlayerController controller;
         private readonly Fixture fixture = new();
 
-        public MemberControllerTests()
+        public PlayerControllerTests()
         {
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
             oWCustomerService = Substitute.For<IPartnerCustomerServices>();
-            adminApiService = Substitute.For<IAdminApiService>();
             partnerDataService = Substitute.For<IPartnerDataService>();
-            logService = Substitute.For<ILogService>();
             partnerRequestAuthentication = Substitute.For<IPartnerRequestAuthentication>();
-
-            controller = new MemberController(adminApiService, partnerDataService, logService, partnerCustomerFactory, partnerRequestAuthentication);
+            sgApiService = Substitute.For<ISGApiService>();
+            controller = new PlayerController(partnerCustomerFactory, sgApiService, partnerDataService, partnerRequestAuthentication);
         }
 
         [Fact]
@@ -196,78 +190,6 @@ namespace L1.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async Task RetrieveEndGameInfo_ValidClient_ReturnOkResult()
-        {
-            // Arrange
-            var model = fixture.Create<EndGameInfoRequest>();
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
-            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
-
-            var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
-            adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.RetrieveEndGameInfo(model) as OkObjectResult;
-
-            // Assert
-            Assert.Equal(result, actualValue.Value);
-        }
-
-        [Fact]
-        public async Task RetrieveEndGameInfo_InvalidClient_ReturnUnauthorizedResult()
-        {
-            // Arrange
-            var model = fixture.Create<EndGameInfoRequest>();
-            model.Auth = null;
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
-
-            var result = fixture.Create<AdminApiResponse<RetrieveEndGameInfoResult>>();
-            adminApiService.RetrieveEndGameInfoAsync(Arg.Any<RetrieveEndGameInfoRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.RetrieveEndGameInfo(model) as UnauthorizedResult;
-
-            // Assert
-            Assert.NotNull(actualValue);
-        }
-
-        [Fact]
-        public async Task DailySummarize_InvalidClient_ReturnUnauthorizedResult()
-        {
-            // Arrange
-            var model = fixture.Create<DailySummary>();
-            model.Auth = null;
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
-
-            var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
-            adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.DailySummarize(model) as UnauthorizedResult;
-
-            // Assert
-            Assert.NotNull(actualValue);
-        }
-
-        [Fact]
-        public async Task DailySummarize_ValidClient_ReturnUnauthorizedResult()
-        {
-            // Arrange
-            var model = fixture.Create<DailySummary>();
-            partnerDataService.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
-            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
-
-            var result = fixture.Create<AdminApiResponse<DailySummaryResult>>();
-            adminApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
-
-            // Act
-            var actualValue = await controller.DailySummarize(model) as OkObjectResult;
-
-            // Assert
-            Assert.Equal(result, actualValue.Value);
-        }
-
-        [Fact]
         public async Task GetBetLimit_Always_ReturnOkResult()
         {
             // Arrange
@@ -295,6 +217,70 @@ namespace L1.WebApi.Tests.Controllers
 
             // Assert
             Assert.IsType<BadRequestResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task RetrieveEndGameInfo_ValidClient_ReturnOkResult()
+        {
+            // Arrange
+            var model = fixture.Create<RetrieveEndRoundInfo>();
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
+
+            var result = fixture.Create<SGResponse<RetrieveEndRoundInfoResult>>();
+            sgApiService.RetrieveEndRoundInfoAsync(Arg.Any<RetrieveEndRoundInfoRequest>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.RetrieveEndRoundInfo(model) as OkObjectResult;
+
+            // Assert
+            Assert.Equal(result, actualValue.Value);
+        }
+
+        [Fact]
+        public async Task RetrieveEndGameInfo_InvalidClient_ReturnUnauthorizedResult()
+        {
+            // Arrange
+            var model = fixture.Create<RetrieveEndRoundInfo>();
+            model.Auth = null;
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(false);
+
+            // Act
+            var actualValue = await controller.RetrieveEndRoundInfo(model);
+
+            // Assert
+            Assert.IsType<UnauthorizedResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task DailySummarize_InvalidClient_ReturnUnauthorizedResult()
+        {
+            // Arrange
+            var model = fixture.Create<DailySummary>();
+            model.Auth = null;
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(false);
+
+            // Act
+            var actualValue = await controller.DailySummarize(model);
+
+            // Assert
+            Assert.IsType<UnauthorizedResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task DailySummarize_ValidClient_ReturnResult()
+        {
+            // Arrange
+            var model = fixture.Create<DailySummary>();
+            partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);
+
+            var result = fixture.Create<SGResponse<DailySummaryResult>>();
+            sgApiService.DailySummary(Arg.Any<DailySummaryRequest>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.DailySummarize(model) as OkObjectResult;
+
+            // Assert
+            Assert.Equal(result, actualValue.Value);
         }
     }
 }

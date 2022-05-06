@@ -2,5 +2,6 @@
 {
     public class GetBalance : MemberRequest
     {
+        public string OperatorToken { get; set; }
     }
 }

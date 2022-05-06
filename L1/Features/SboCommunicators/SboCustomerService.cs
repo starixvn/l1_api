@@ -98,7 +98,7 @@ namespace L1.Features.SboCommunicators
             }
             else
             {
-                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {PartnerId} - CustId {call.ObCustId}", SentryLevel.Fatal);
+                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {PartnerId} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

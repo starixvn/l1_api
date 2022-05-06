@@ -6,7 +6,6 @@ using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Shared.Constants;
-using L1.WebApi.Extensions;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,6 @@ namespace L1.WebApi.Controllers
     [ApiController, Authorize]
     [ApiVersion("1.0")]
     [Route("[controller]")]
-    [SwaggerIgnore]
     public class SignInController : ControllerBase
     {
         private readonly IMemberAuthService memberAuthService;
@@ -56,16 +54,17 @@ namespace L1.WebApi.Controllers
                         BrowserUserAgent = model.BrowserUserAgent,
                         CurrencyName = model.Currency,
                         IP = ip,
-                        MemberId = model.ObCustId,
-                        MemberName = model.MemberName,
+                        PlayerId = model.PlayerId,
+                        PlayerName = model.PlayerName,
                         Seq = model.Seq,
                         Language = model.Language,
                         SiteId = model.SiteId,
-                        PartnerId = model.Auth.OperatorId,
+                        OperatorId = model.Auth.OperatorId,
                         AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                         SiteName = model.SiteName,
                         IsCash = model.IsCash,
-                        DisableJackpotGames = model.DisableJackpotGames
+                        DisableJackpotGames = model.DisableJackpotGames,
+                        OperatorToken = model.OperatorToken
                     }, model.GameTypeId);
 
                     await WriteSignInLog(requestTime, model, result);

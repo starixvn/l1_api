@@ -73,7 +73,7 @@ namespace L1.WebApi.Tests.Controllers
             // Arrange
             var model = fixture.Create<SignIn>();
             model.IP = "IP";
-            model.Auth = new Auth();
+            model.Auth = new Auth { OperatorId = "VG" };
             model.AppType = 0;
             partnerService.VerifyWithCurrency(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
             partnerRequestAuthentication.Verify(Arg.Any<string>(), Arg.Any<HttpRequest>()).Returns(true);

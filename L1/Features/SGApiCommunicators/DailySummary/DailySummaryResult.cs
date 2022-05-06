@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace L1.Features.AdminApiCommunicators.DailySummary
+namespace L1.Features.SGApiCommunicators
 {
-    public class DailySummaryResult : AdminApiResult
+    public class DailySummaryResult : SGResult
     {
-        public string Seq { get; set; }
-
         public IEnumerable<SummaryItem> Summary { get; set; }
     }
 

@@ -6,7 +6,5 @@ namespace L1.WebApi.Models
     {
         [Required]
         public string OperatorId { get; set; }
-
-        public string OperatorSecret { get; set; }
     }
 }

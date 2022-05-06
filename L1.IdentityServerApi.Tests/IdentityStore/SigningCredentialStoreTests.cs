@@ -48,7 +48,7 @@ namespace L1.IdentityServerApi.IdentityStore
             Assert.Single(actualValue);
         }
 
-        private SigningCredentialKey GetValidKey()
+        private static SigningCredentialKey GetValidKey()
             => new SigningCredentialKey
             {
                 Id = "api",

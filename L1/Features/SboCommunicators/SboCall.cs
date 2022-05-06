@@ -5,12 +5,12 @@ namespace L1.Features.SboCommunicators
 {
     public class SboCall : PartnerCall
     {
-        public SboCall(int obCustId, string siteId)
-            : this(Guid.NewGuid().ToString(), obCustId, siteId)
+        public SboCall(int playerId, string siteId)
+            : this(Guid.NewGuid().ToString(), playerId, siteId)
         {
         }
 
-        public SboCall(string seq, int obCustId, string siteId) : base(seq, obCustId, siteId)
+        public SboCall(string seq, int playerId, string siteId) : base(seq, playerId, siteId)
         {
         }
     }

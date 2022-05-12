@@ -79,17 +79,20 @@ namespace L1.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC API", Version = "v1" });
             });
 
-            services.AddOpenTelemetryTracing((builder) => builder
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
-                        .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddMongoDBInstrumentation()
-                        .AddJaegerExporter());
+            if (this.Configuration.GetSection("Jaeger") != null)
+            {
+                services.AddOpenTelemetryTracing((builder) => builder
+                            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
+                            .AddAspNetCoreInstrumentation()
+                            .AddHttpClientInstrumentation()
+                            .AddMongoDBInstrumentation()
+                            .AddJaegerExporter());
 
-            services.Configure<JaegerExporterOptions>(this.Configuration.GetSection("Jaeger"));
+                services.Configure<JaegerExporterOptions>(this.Configuration.GetSection("Jaeger"));
 
-            //// Customize the HttpClient that will be used when JaegerExporter is configured for HTTP transport.
-            services.AddHttpClient("JaegerExporter", configureClient: (client) => client.DefaultRequestHeaders.Add("X-MyCustomHeader", "value"));
+                //// Customize the HttpClient that will be used when JaegerExporter is configured for HTTP transport.
+                services.AddHttpClient("JaegerExporter", configureClient: (client) => client.DefaultRequestHeaders.Add("X-MyCustomHeader", "value"));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

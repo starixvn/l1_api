@@ -13,7 +13,5 @@
         public int PlayerId { get; set; }
 
         public string SiteId { get; set; }
-
-        public bool FreeBet { get; set; }
     }
 }

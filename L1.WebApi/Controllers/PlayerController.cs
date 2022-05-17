@@ -200,7 +200,6 @@ namespace L1.WebApi.Controllers
                 {
                     Auth = new () { OperatorId = model.Auth.OperatorId },
                     Seq = model.Seq,
-                    FreeBet = model.FreeBet,
                     GameRoundId = model.GameRoundId,
                     GameTypeId = model.GameTypeId,
                     PlayerId = model.PlayerId,

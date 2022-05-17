@@ -20,31 +20,33 @@ namespace L1.Features.MemberAuthentications
         public VerificationResult(
             int code,
             string message,
-            int memberId,
-            string memberName,
+            int playerId,
+            string playerName,
             string siteId,
             string language,
             string currencyName,
             string seq,
-            string partnerId,
+            string operatorId,
             string domain,
             string siteName,
             byte appType,
             string currencyCode,
             double multiplier,
             string currencyGroupId,
-            bool isTestCurrency
+            bool isTestCurrency,
+            bool disableJackpotGames,
+            string operatorToken
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
         {
-            MemberId = memberId;
-            MemberName = memberName;
+            PlayerId = playerId;
+            PlayerName = playerName;
             SiteId = siteId;
             Language = language;
             CurrencyName = currencyName;
             Seq = seq;
-            PartnerId = partnerId;
+            OperatorId = operatorId;
             Domain = domain;
             SiteName = siteName;
             AppType = appType;
@@ -52,15 +54,17 @@ namespace L1.Features.MemberAuthentications
             Multiplier = multiplier;
             CurrencyGroupId = currencyGroupId;
             IsTestCurrency = isTestCurrency;
+            DisableJackpotGames = disableJackpotGames;
+            OperatorToken = operatorToken;
         }
 
-        public int MemberId { get; }
+        public int PlayerId { get; }
 
-        public string MemberName { get; }
+        public string PlayerName { get; }
 
         public string SiteId { get; }
 
-        public string PartnerId { get; }
+        public string OperatorId { get; }
 
         public string Domain { get; }
 
@@ -76,7 +80,7 @@ namespace L1.Features.MemberAuthentications
 
         public string Seq { get; }
 
-        public string MemberKey => $"{PartnerId}_{MemberId}";
+        public string MemberKey => $"{OperatorId}_{PlayerId}";
 
         public string SiteName { get; set; }
 
@@ -84,43 +88,51 @@ namespace L1.Features.MemberAuthentications
 
         public bool IsTestCurrency { get; }
 
+        public bool DisableJackpotGames { get; }
+
+        public string OperatorToken { get; }
+
         public static VerificationResult CreateErrorResponse(int code)
            => new(code, string.Empty);
 
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public static VerificationResult CreateSuccessResponse(
-            int memberId,
-            string memberName,
+            int playerId,
+            string playerName,
             string siteId,
             string language,
             string currencyName,
             string seq,
-            string partnerId,
+            string operatorId,
             string domain,
             string siteName,
             byte appType,
             string currencyCode,
             double multiplier,
             string currencyGroupId,
-            bool isTestCurrency)
+            bool isTestCurrency,
+            bool disableJackpotGames,
+            string operatorToken)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
                 string.Empty,
-                memberId,
-                memberName,
+                playerId,
+                playerName,
                 siteId,
                 language,
                 currencyName,
                 seq,
-                partnerId,
+                operatorId,
                 domain,
                 siteName,
                 appType,
                 currencyCode,
                 multiplier,
                 currencyGroupId,
-                isTestCurrency);
+                isTestCurrency,
+                disableJackpotGames,
+                operatorToken);
     }
 }

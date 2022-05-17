@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using L1.Features.BackendAuthentications;
 using L1.Features.Sites;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -92,7 +91,7 @@ namespace L1.IdentityServerApi.Tests
             Assert.ThrowsAny<Exception>(() => startup.Configure(app, env));
         }
 
-        private void AddBackendAuthConfigsSection(IConfigurationSection configSection)
+        private static void AddBackendAuthConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var backendAuthConfigsSection = Substitute.For<IConfigurationSection>();
@@ -104,7 +103,7 @@ namespace L1.IdentityServerApi.Tests
             backendAuthConfigsSection.GetSection("Address").Returns(address);
         }
 
-        private void AddMongoDBSettingsConfigsSection(IConfigurationSection configSection)
+        private static void AddMongoDBSettingsConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var mongoDBSettingsConfigsSection = Substitute.For<IConfigurationSection>();
@@ -116,7 +115,7 @@ namespace L1.IdentityServerApi.Tests
             mongoDBSettingsConfigsSection.GetSection("ConnectionString").Returns(connectionString);
         }
 
-        private void AddOWServiceSettingsConfigsSection(IConfigurationSection configSection)
+        private static void AddOWServiceSettingsConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var owServiceSettingsConfigsSection = Substitute.For<IConfigurationSection>();
@@ -128,7 +127,7 @@ namespace L1.IdentityServerApi.Tests
             owServiceSettingsConfigsSection.GetSection("Endpoints").Returns(owEndPoints);
         }
 
-        private void AddAdminApiSettingsConfigsSection(IConfigurationSection configSection)
+        private static void AddAdminApiSettingsConfigsSection(IConfigurationSection configSection)
         {
             var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
             var adminApiSettingsConfigsSection = Substitute.For<IConfigurationSection>();

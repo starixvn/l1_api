@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Shared.Constants;
@@ -21,12 +22,14 @@ namespace L1.WebApi.Controllers
         private readonly IMemberAuthService memberAuthService;
         private readonly IPartnerDataService partnerService;
         private readonly ILogService logService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService)
+        public SignInController(IMemberAuthService memberAuthService, IPartnerDataService partnerService, ILogService logService, IPartnerRequestAuthentication partnerRequestAuthentication)
         {
             this.memberAuthService = memberAuthService;
             this.partnerService = partnerService;
             this.logService = logService;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
         }
 
         [AllowAnonymous]
@@ -37,29 +40,37 @@ namespace L1.WebApi.Controllers
         {
             var requestTime = DateTimeOffset.UtcNow;
 
-            if (await partnerService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret, model.Currency))
+            if (await partnerService.VerifyWithCurrency(model.Auth?.OperatorId, model.Currency))
             {
-                var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
+                var partner = await partnerService.GetById(model.Auth.OperatorId);
 
-                var result = await memberAuthService.SignIn(new MemberAuth
+                if (await partnerRequestAuthentication.Verify(partner?.SecretKey, Request))
                 {
-                    Domain = model.Domain,
-                    BrowserUserAgent = model.BrowserUserAgent,
-                    CurrencyName = model.Currency,
-                    IP = ip,
-                    MemberId = model.ObCustId,
-                    MemberName = model.MemberName,
-                    Seq = model.Seq,
-                    Language = model.Language,
-                    SiteId = model.SiteId,
-                    PartnerId = model.Auth?.PartnerId,
-                    AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
-                    SiteName = model.SiteName
-                }, model.GameTypeId);
+                    var ip = model.IP.Split(',').FirstOrDefault()?.Trim();
 
-                await WriteSignInLog(requestTime, model, result);
+                    var result = await memberAuthService.SignIn(new MemberAuth
+                    {
+                        Domain = model.Domain,
+                        BrowserUserAgent = model.BrowserUserAgent,
+                        CurrencyName = model.Currency,
+                        IP = ip,
+                        PlayerId = model.PlayerId,
+                        PlayerName = model.PlayerName,
+                        Seq = model.Seq,
+                        Language = model.Language,
+                        SiteId = model.SiteId,
+                        OperatorId = model.Auth.OperatorId,
+                        AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
+                        SiteName = model.SiteName,
+                        IsCash = model.IsCash,
+                        DisableJackpotGames = model.DisableJackpotGames,
+                        OperatorToken = model.OperatorToken
+                    }, model.GameTypeId);
 
-                return Ok(new SignInResult { RedirectUrl = result.RedirectUrl });
+                    await WriteSignInLog(requestTime, model, result);
+
+                    return Ok(new SignInResult { RedirectUrl = result.RedirectUrl });
+                }
             }
 
             await WriteSignInLog(requestTime, model, SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize));

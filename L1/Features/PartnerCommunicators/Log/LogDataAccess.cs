@@ -14,6 +14,8 @@ namespace L1.Features.PartnerCommunicators.Log
 
         Task WriteVoidGameAsync(PartnerLog log);
 
+        Task WriteHitJackpotAsync(PartnerLog log);
+
         Task WriteSignInAsync(SBLog log);
 
         Task WriteRetrieveEndGameAsync(SBLog log);
@@ -25,6 +27,7 @@ namespace L1.Features.PartnerCommunicators.Log
         private const string BetsCollectionName = "bets";
         private const string EndGamesCollectionName = "end_games";
         private const string VoidGamesCollectionName = "void_games";
+        private const string HitJackpotCollectionName = "hit_jackpots";
         private const string SignInCollectionName = "signin_requests";
         private const string RetrieveEndGameCollectionName = "retrieve_requests";
 
@@ -32,6 +35,7 @@ namespace L1.Features.PartnerCommunicators.Log
         private readonly IMongoCollection<PartnerLog> betsCollection;
         private readonly IMongoCollection<PartnerLog> endGamesCollection;
         private readonly IMongoCollection<PartnerLog> voidGamesCollection;
+        private readonly IMongoCollection<PartnerLog> hitJackpotsCollection;
         private readonly IMongoCollection<SBLog> signInCollection;
         private readonly IMongoCollection<SBLog> retrieveCollection;
 
@@ -43,6 +47,7 @@ namespace L1.Features.PartnerCommunicators.Log
             betsCollection = database.GetCollection<PartnerLog>(BetsCollectionName);
             endGamesCollection = database.GetCollection<PartnerLog>(EndGamesCollectionName);
             voidGamesCollection = database.GetCollection<PartnerLog>(VoidGamesCollectionName);
+            hitJackpotsCollection = database.GetCollection<PartnerLog>(HitJackpotCollectionName);
             signInCollection = database.GetCollection<SBLog>(SignInCollectionName);
             retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
         }
@@ -59,7 +64,10 @@ namespace L1.Features.PartnerCommunicators.Log
         public Task WriteVoidGameAsync(PartnerLog log)
             => voidGamesCollection.InsertOneAsync(log);
 
-        public Task WriteSignInAsync(SBLog log)
+         public Task WriteHitJackpotAsync(PartnerLog log)
+            => hitJackpotsCollection.InsertOneAsync(log);
+            
+        public Task WriteSignInAsync(SBLog log)       
             => signInCollection.InsertOneAsync(log);
 
         public Task WriteRetrieveEndGameAsync(SBLog log)

@@ -12,6 +12,7 @@ using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
+using Sentry;
 
 namespace L1.Features.OWCommunicators
 {
@@ -21,22 +22,25 @@ namespace L1.Features.OWCommunicators
 
         private readonly IOWService oWService;
         private readonly ILogService logService;
+        private readonly OWEndPoints endpoints;
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
-        private readonly OWEndPoints endpoints;
+        private readonly ISentryClient sentryClient;
 
         public OWCustomerService(
             IOWService oWService,
             ILogService logService,
             IAppSettings appSettings,
             IAdminApiService adminApiSerivce,
-            OWEndPoints endpoints)
+            OWEndPoints endpoints,
+            ISentryClient sentryClient)
         {
             this.oWService = oWService;
             this.logService = logService;
+            this.endpoints = endpoints;
             this.appSettings = appSettings;
             this.adminApiSerivce = adminApiSerivce;
-            this.endpoints = endpoints;
+            this.sentryClient = sentryClient;
         }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
@@ -59,7 +63,7 @@ namespace L1.Features.OWCommunicators
                 if (call.Amount >= appSettings.HighStake)
                 {
                     await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
-                        call.ObCustId,
+                        call.PlayerId,
                         call.GameTypeId,
                         call.Amount,
                         call.Currency,

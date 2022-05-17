@@ -11,6 +11,7 @@ using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.SboCommunicators;
 using L1.Shared.Constants;
 using NSubstitute;
+using Sentry;
 using Xunit;
 
 namespace L1.Tests.Features.SboCommunicators
@@ -20,12 +21,13 @@ namespace L1.Tests.Features.SboCommunicators
         private readonly SboEndPoints endpoints = Substitute.For<SboEndPoints>();
         private readonly ILogService logService = Substitute.For<ILogService>();
         private readonly ISboService sboService = Substitute.For<ISboService>();
+        private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
 
         private readonly SboCustomerService service;
 
         public SboCustomerServiceTests()
         {
-            service = new SboCustomerService(sboService, logService, endpoints);
+            service = new SboCustomerService(sboService, logService, endpoints, sentryClient);
         }
 
         [Theory, AutoData]

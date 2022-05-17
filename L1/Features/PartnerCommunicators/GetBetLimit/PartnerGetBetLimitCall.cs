@@ -2,8 +2,11 @@
 {
     public class PartnerGetBetLimitCall : PartnerCall
     {
-        public PartnerGetBetLimitCall(int obCustId, string siteId) : base(obCustId, siteId)
+        public PartnerGetBetLimitCall(int playerId, string siteId, string operatorToken) : base(playerId, siteId)
         {
+            OperatorToken = operatorToken;
         }
+
+        public string OperatorToken { get; set; }
     }
 }

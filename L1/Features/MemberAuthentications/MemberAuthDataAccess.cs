@@ -38,7 +38,7 @@ namespace L1.Features.MemberAuthentications
         {
             var builder = Builders<MemberAuth>.Filter;
             var filter = builder.Eq(x => x.IP, memberAuth.IP) &
-                builder.Eq(x => x.MemberId, memberAuth.MemberId) &
+                builder.Eq(x => x.PlayerId, memberAuth.PlayerId) &
                 builder.Eq(x => x.AppType, memberAuth.AppType) &
                 builder.Eq(x => x.SiteId, memberAuth.SiteId) &
                 builder.Eq(x => x.BrowserUserAgent, memberAuth.BrowserUserAgent) &

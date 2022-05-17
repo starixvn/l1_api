@@ -24,5 +24,11 @@ namespace L1.WebApi.Models
         public byte System { get; set; }
 
         public Dictionary<string, string> Metadata { get; set; }
+
+        public float ContributionRate { get; set; }
+
+        public decimal ContributionAmount { get; set; }
+
+        public string OperatorToken { get; set; }
     }
 }

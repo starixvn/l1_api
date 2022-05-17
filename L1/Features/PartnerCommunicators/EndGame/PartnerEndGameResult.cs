@@ -2,6 +2,6 @@
 {
     public class PartnerEndGameResult : PartnerResult
     {
-        public int? ObCustId { get; set; }
+        public int? PlayerId { get; set; }
     }
 }

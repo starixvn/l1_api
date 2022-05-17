@@ -11,6 +11,8 @@ namespace L1.Features.Partners
         Task<bool> Verify(string partnerId, string secretKey, string currency);
 
         Task<Currency> GetCurrency(string partnerId, string currencyName);
+
+        Task<bool> VerifyWithCurrency(string partnerId, string currency);
     }
 
     public class PartnerDataService : IPartnerDataService
@@ -43,5 +45,8 @@ namespace L1.Features.Partners
         => string.IsNullOrWhiteSpace(partnerId) || string.IsNullOrWhiteSpace(secretKey)
             ? Task.FromResult(false)
             : partnerDataAccess.Verify(partnerId, secretKey);
+
+        public Task<bool> VerifyWithCurrency(string partnerId, string currency)
+            => currencyDataAccess.Verify(partnerId, currency);
     }
 }

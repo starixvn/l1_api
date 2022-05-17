@@ -23,9 +23,9 @@ namespace L1.Features.MemberAuthentications
 
         public string Language { get; set; }
 
-        public int MemberId { get; set; }
+        public int PlayerId { get; set; }
 
-        public string MemberName { get; set; }
+        public string PlayerName { get; set; }
 
         public string SiteId { get; set; }
 
@@ -33,11 +33,13 @@ namespace L1.Features.MemberAuthentications
 
         public string Seq { get; set; }
 
-        public string PartnerId { get; set; }
+        public string OperatorId { get; set; }
 
         public byte AppType { get; set; }
 
         public string SiteName { get; set; }
+
+        public bool IsCash { get; set; }
 
         public string CurrencyCode { get; set; }
 
@@ -47,13 +49,17 @@ namespace L1.Features.MemberAuthentications
 
         public bool IsTestCurrency { get; set; }
 
+        public bool DisableJackpotGames { get; set; }
+
+        public string OperatorToken { get; set; }
+
 #pragma warning disable S3874 // "out" and "ref" parameters should not be used
         public void Deconstruct(out string token, out bool isTestCurrency, out string partnerId)
 #pragma warning restore S3874 // "out" and "ref" parameters should not be used
         {
             token = Token;
             isTestCurrency = IsTestCurrency;
-            partnerId = PartnerId;
+            partnerId = OperatorId;
         }
     }
 }

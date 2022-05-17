@@ -62,8 +62,6 @@ namespace L1.WebApi.Controllers
                         OperatorId = model.Auth.OperatorId,
                         AppType = AppTypes.IsValid(model.AppType) ? model.AppType : AppTypes.SabaClub,
                         SiteName = model.SiteName,
-                        IsCash = model.IsCash,
-                        DisableJackpotGames = model.DisableJackpotGames,
                         OperatorToken = model.OperatorToken
                     }, model.GameTypeId);
 

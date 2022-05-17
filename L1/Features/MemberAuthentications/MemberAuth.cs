@@ -39,8 +39,6 @@ namespace L1.Features.MemberAuthentications
 
         public string SiteName { get; set; }
 
-        public bool IsCash { get; set; }
-
         public string CurrencyCode { get; set; }
 
         public string CurrencyGroupId { get; set; }
@@ -48,8 +46,6 @@ namespace L1.Features.MemberAuthentications
         public double Multiplier { get; set; }
 
         public bool IsTestCurrency { get; set; }
-
-        public bool DisableJackpotGames { get; set; }
 
         public string OperatorToken { get; set; }
 

@@ -113,7 +113,6 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.Multiplier,
                     memberAuth.CurrencyGroupId,
                     memberAuth.IsTestCurrency,
-                    memberAuth.DisableJackpotGames,
                     memberAuth.OperatorToken
                     );
             }

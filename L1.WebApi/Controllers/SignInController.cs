@@ -56,7 +56,6 @@ namespace L1.WebApi.Controllers
                         IP = ip,
                         PlayerId = model.PlayerId,
                         PlayerName = model.PlayerName,
-                        Seq = model.Seq,
                         Language = model.Language,
                         SiteId = model.SiteId,
                         OperatorId = model.Auth.OperatorId,

@@ -22,7 +22,7 @@ namespace L1.Features.PartnerCommunicators
         public PartnerCall(string seq, int playerId, string siteId)
         {
             TimeStamp = DateTimeOffset.UtcNow;
-            Seq = seq ?? throw new ArgumentNullException(nameof(seq));
+            Seq = seq;
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
             PlayerId = playerId;
         }

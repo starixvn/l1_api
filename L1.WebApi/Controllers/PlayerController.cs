@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
@@ -84,6 +85,8 @@ namespace L1.WebApi.Controllers
             {
                 return BadRequest();
             }
+
+            Activity.Current?.AddTag("PlayerId", model.PlayerId);
 
             var placeBetCall = new PartnerPlaceBetCall(
                 model.PlayerId,

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using L1.Features.PartnerCommunicators;
+using L1.Shared.Helpers;
+using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using L1.Features.PartnerCommunicators;
-using L1.Shared.Helpers;
-using Newtonsoft.Json;
 
 namespace L1.Features.OWCommunicators
 {
@@ -39,6 +40,9 @@ namespace L1.Features.OWCommunicators
 
             httpClient.DefaultRequestHeaders.Add(HeaderAccessKey, accessKey);
             var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
+
+            Activity.Current?.AddTag("operator.player.id", call.PlayerId);
+            Activity.Current?.AddTag("operator.site.id", call.SiteId);
 
             if (response.IsSuccessStatusCode)
             {

@@ -86,8 +86,6 @@ namespace L1.WebApi.Controllers
                 return BadRequest();
             }
 
-            Activity.Current?.AddTag("PlayerId", model.PlayerId);
-
             var placeBetCall = new PartnerPlaceBetCall(
                 model.PlayerId,
                 model.SiteId,

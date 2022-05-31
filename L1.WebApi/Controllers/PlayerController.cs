@@ -50,7 +50,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.EnterPortal(
-                new PartnerEnterPortalCall(model.Seq, model.PlayerId, model.SiteId, model.CharacterName, model.FirstLogin, model.OperatorToken));
+                new PartnerEnterPortalCall(model.PlayerId, model.SiteId, model.CharacterName, model.FirstLogin, model.OperatorToken));
 
             return Ok(response);
         }

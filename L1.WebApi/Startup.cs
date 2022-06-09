@@ -44,20 +44,6 @@ namespace L1.WebApi
 
             services.AddControllers();
 
-            services
-                .AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.Authority = appSettings.BackendAuthConfigs.Address;
-                    options.RequireHttpsMetadata = false;
-
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidAudiences = appSettings.IdentityAudiences
-                    };
-                });
-
             services.AddMvc();
             services.AddApiVersioning(options =>
             {
@@ -96,9 +82,6 @@ namespace L1.WebApi
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

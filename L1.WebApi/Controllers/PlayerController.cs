@@ -7,13 +7,12 @@ using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.WebApi.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("[controller]")]
     [Route("member")]

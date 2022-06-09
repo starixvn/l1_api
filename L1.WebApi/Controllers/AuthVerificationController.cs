@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.MemberAuthentications;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("[controller]")]
     [ApiExplorerSettings(IgnoreApi = true)]

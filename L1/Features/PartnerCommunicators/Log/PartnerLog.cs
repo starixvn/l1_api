@@ -7,6 +7,7 @@ namespace L1.Features.PartnerCommunicators.Log
 {
     public class PartnerLog
     {
+       #pragma warning disable S107
         public PartnerLog(
             string operatorId,
             DateTimeOffset requestTimeStamp,
@@ -16,6 +17,7 @@ namespace L1.Features.PartnerCommunicators.Log
             byte system,
             string accessKey = "",
             Dictionary<string, string> metadata = null)
+       #pragma warning restore S107
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
             OperatorId = operatorId;

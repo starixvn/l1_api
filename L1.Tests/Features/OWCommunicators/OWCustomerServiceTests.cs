@@ -14,6 +14,7 @@ using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using NSubstitute;
+using Sentry;
 using Xunit;
 
 namespace L1.Tests.Features.OWCommunicators
@@ -25,12 +26,19 @@ namespace L1.Tests.Features.OWCommunicators
         private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
         private readonly IAdminApiService adminApiSerivce = Substitute.For<IAdminApiService>();
         private readonly IOWService owService = Substitute.For<IOWService>();
+        private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
+
+        private readonly OWCustomerService service;
+
+        public OWCustomerServiceTests()
+        {
+            service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints, sentryClient);
+        }
 
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithEnterPortalEndpoint(PartnerEnterPortalCall call)
         {
             // Arrange
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             await service.EnterPortal(call);
@@ -43,7 +51,6 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task EnterPortal_ShouldPostWithBalanceEndpoint(PartnerGetBalanceCall call)
         {
             // Arrange
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             await service.GetBalance(call);
@@ -56,7 +63,6 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task GetBetLimit_ShouldPostWithBetLimitEndpoint(PartnerGetBetLimitCall call)
         {
             // Arrange
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             await service.GetBetLimit(call);
@@ -73,8 +79,6 @@ namespace L1.Tests.Features.OWCommunicators
             owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call)
                 .Returns(x => Task.FromResult(response));
 
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
-
             // Act
             await service.PlaceBet(call, 1);
 
@@ -90,7 +94,6 @@ namespace L1.Tests.Features.OWCommunicators
             call.Amount = appSettings.HighStake;
             var response = new PartnerResponse<PartnerPlaceBetResult> { Result = new PartnerPlaceBetResult { Balance = 2000 } };
             owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call).Returns(x => Task.FromResult(response));
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             await service.PlaceBet(call, 1);
@@ -106,8 +109,6 @@ namespace L1.Tests.Features.OWCommunicators
             var response = new PartnerResponse<PartnerEndGameResult> { Result = new PartnerEndGameResult() };
             owService.Post<PartnerEndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
-
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             await service.EndGame(call);
@@ -125,8 +126,6 @@ namespace L1.Tests.Features.OWCommunicators
             owService.Post<PartnerEndGameResult>(endpoints.EndGame, call)
                 .Returns(x => Task.FromResult(response));
 
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
-
             // Act
             var actualReponse = await service.EndGame(call);
 
@@ -141,8 +140,6 @@ namespace L1.Tests.Features.OWCommunicators
             var response = new PartnerResponse<PartnerVoidGameResult> { Result = new PartnerVoidGameResult() };
             owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
-
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             await service.VoidGame(call);
@@ -159,8 +156,6 @@ namespace L1.Tests.Features.OWCommunicators
             var response = new PartnerResponse<PartnerVoidGameResult> { Result = new PartnerVoidGameResult() };
             owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call)
                 .Returns(x => Task.FromResult(response));
-
-            var service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints);
 
             // Act
             var actualReponse = await service.VoidGame(call);

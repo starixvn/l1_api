@@ -1,16 +1,14 @@
 ﻿using System;
 
-namespace L1.Features.AdminApiCommunicators.RetrieveEndGameInfo
+namespace L1.Features.SGApiCommunicators
 {
-    public class RetrieveEndGameInfoResult : AdminApiResult
+    public class RetrieveEndRoundInfoResult : SGResult
     {
         public decimal TotalAmount { get; set; }
 
         public decimal TotalWin { get; set; }
 
         public decimal ValidBetAmount { get; set; }
-
-        public string Seq { get; set; }
 
         public DateTimeOffset? EndTime { get; set; }
     }

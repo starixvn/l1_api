@@ -2,15 +2,18 @@
 {
     public class PartnerEnterPortalCall : PartnerCall
     {
-        public PartnerEnterPortalCall(string seq, int obCustId, string siteId, string characcterName, bool firstLogin)
-          : base(seq, obCustId, siteId)
+        public PartnerEnterPortalCall(int playerId, string siteId, string characcterName, bool firstLogin, string operatorToken)
+          : base(playerId, siteId)
         {
             CharacterName = characcterName;
             FirstLogin = firstLogin;
+            OperatorToken = operatorToken;
         }
 
         public string CharacterName { get; set; }
 
         public bool FirstLogin { get; set; }
+
+        public string OperatorToken { get; set; }
     }
 }

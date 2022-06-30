@@ -36,7 +36,7 @@ namespace L1.Tests.Features.MemberAuthentications
         public async Task SignIn_NotFoundClientUrl_ReturnsGameServerNotFoundCode(MemberAuth memberAuth)
         {
             // Arrange
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency());
 
             // Act
             var result = await memberAuthService.SignIn(memberAuth, null);
@@ -56,7 +56,7 @@ namespace L1.Tests.Features.MemberAuthentications
             var memberAuth = fixture.Create<MemberAuth>();
             memberAuth.AppType = appType;
 
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -75,13 +75,13 @@ namespace L1.Tests.Features.MemberAuthentications
         {
             // Arrange
             byte? gameTypeId = 1;
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
                 MiniVersionUrl = "http://mini/"
             });
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency());
 
             // Act
             var result = await memberAuthService.SignIn(memberAuth, gameTypeId);
@@ -95,21 +95,21 @@ namespace L1.Tests.Features.MemberAuthentications
         public async Task SignIn_TestCurrency_ReturnsRedirectUrlContainsPartnerId(MemberAuth memberAuth)
         {
             // Arrange
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
                 MiniVersionUrl = "http://mini/",
                 TestCurrencyUrl = "http://test/"
             });
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
 
             // Act
             var result = await memberAuthService.SignIn(memberAuth, null);
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
-            Assert.Contains($"partnerId={memberAuth.PartnerId}", result.RedirectUrl);
+            Assert.Contains($"partnerId={memberAuth.OperatorId}", result.RedirectUrl);
         }
 
         [Theory, AutoData]
@@ -117,7 +117,7 @@ namespace L1.Tests.Features.MemberAuthentications
         {
             // Arrange
             var token = "token";
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -128,7 +128,7 @@ namespace L1.Tests.Features.MemberAuthentications
                 Token = token,
                 Time = DateTime.Now
             });
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency());
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
@@ -145,7 +145,7 @@ namespace L1.Tests.Features.MemberAuthentications
             // Arrange
             var token = "token";
             var partnerId = "partnerId";
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -157,10 +157,10 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = token,
                 Time = DateTime.Now.AddSeconds(-30),
-                PartnerId = partnerId,
+                OperatorId = partnerId,
                 IsTestCurrency = true
             });
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
@@ -178,7 +178,7 @@ namespace L1.Tests.Features.MemberAuthentications
             // Arrange
             var token = "token";
             var partnerId = "partnerId";
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -190,10 +190,10 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = token,
                 Time = DateTime.Now.AddSeconds(-70),
-                PartnerId = partnerId,
+                OperatorId = partnerId,
                 IsTestCurrency = true
             });
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency { IsTest = true });
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
@@ -202,7 +202,7 @@ namespace L1.Tests.Features.MemberAuthentications
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
             Assert.Contains($"token={memberAuth.Token}", result.RedirectUrl);
-            Assert.Contains($"partnerId={memberAuth.PartnerId}", result.RedirectUrl);
+            Assert.Contains($"partnerId={memberAuth.OperatorId}", result.RedirectUrl);
         }
 
         [Theory, AutoData]
@@ -288,15 +288,15 @@ namespace L1.Tests.Features.MemberAuthentications
                 Token = "token",
                 Time = DateTime.Now,
                 BrowserUserAgent = verificationParams.BrowserUserAgent,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
-                PartnerId = "partner",
+                OperatorId = "partner",
                 CurrencyName = "ISA"
             };
 
             memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(memberAuth);
-            partnerDataService.GetCurrency(memberAuth.PartnerId, memberAuth.CurrencyName).Returns(new Currency());
+            partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName).Returns(new Currency());
             appSettings.TokenExpiredSeconds.Returns(60);
 
             // Act
@@ -304,8 +304,8 @@ namespace L1.Tests.Features.MemberAuthentications
 
             // Assert
             Assert.IsType<VerificationResult>(result);
-            Assert.Equal(memberAuth.MemberId, result.MemberId);
-            Assert.Equal(memberAuth.MemberName, result.MemberName);
+            Assert.Equal(memberAuth.PlayerId, result.PlayerId);
+            Assert.Equal(memberAuth.PlayerName, result.PlayerName);
             Assert.Equal(memberAuth.SiteId, result.SiteId);
         }
 
@@ -317,10 +317,10 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = "token",
                 Time = DateTime.Now,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
-                PartnerId = "partner",
+                OperatorId = "partner",
                 CurrencyName = "ISA"
             };
 
@@ -357,16 +357,16 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = updateMemberAuthParams.Token,
                 Time = DateTime.Now,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
-                PartnerId = "partner",
+                OperatorId = "partner",
                 CurrencyName = "ISA",
                 IsTestCurrency = true,
                 Language = updateMemberAuthParams.Language
             };
 
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",
@@ -395,16 +395,16 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = updateMemberAuthParams.Token,
                 Time = DateTime.Now,
-                MemberId = 1,
-                MemberName = "name",
+                PlayerId = 1,
+                PlayerName = "name",
                 SiteId = "3332",
-                PartnerId = "partner",
+                OperatorId = "partner",
                 CurrencyName = "ISA",
                 IsTestCurrency = true,
                 Language = updateMemberAuthParams.Language
             };
 
-            partnerDataService.GetById(memberAuth.PartnerId).Returns(new Partner
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
             {
                 ClubVersionUrl = "http://local/",
                 MobiVersionUrl = "http://mobi/",

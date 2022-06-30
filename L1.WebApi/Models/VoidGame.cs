@@ -7,5 +7,7 @@
         public byte GameTypeId { get; set; }
 
         public string Reason { get; set; }
+
+        public bool FreeBet { get; set; }
     }
 }

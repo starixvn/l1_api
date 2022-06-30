@@ -6,30 +6,30 @@ namespace L1.Features.PartnerCommunicators
     {
         string Seq { get; set; }
 
-        int ObCustId { get; set; }
+        int PlayerId { get; set; }
 
         string SiteId { get; set; }
     }
 
     public class PartnerCall : IPartnerCall
     {
-        public PartnerCall(int obCustId, string siteId)
-            : this(Guid.NewGuid().ToString(), obCustId, siteId)
+        public PartnerCall(int playerId, string siteId)
+            : this(Guid.NewGuid().ToString(), playerId, siteId)
         {
             TimeStamp = DateTimeOffset.UtcNow;
         }
 
-        public PartnerCall(string seq, int obCustId, string siteId)
+        public PartnerCall(string seq, int playerId, string siteId)
         {
             TimeStamp = DateTimeOffset.UtcNow;
-            Seq = seq ?? throw new ArgumentNullException(nameof(seq));
+            Seq = seq;
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
-            ObCustId = obCustId;
+            PlayerId = playerId;
         }
 
         public string Seq { get; set; }
 
-        public int ObCustId { get; set; }
+        public int PlayerId { get; set; }
 
         public string SiteId { get; set; }
 

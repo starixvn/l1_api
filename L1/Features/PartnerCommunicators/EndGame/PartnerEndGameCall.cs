@@ -9,16 +9,17 @@ namespace L1.Features.PartnerCommunicators.EndGame
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public PartnerEndGameCall(
-            int obCustId,
+            int playerId,
             string siteId,
             int gameRoundId,
             byte gameTypeId,
             decimal totalAmount,
             decimal totalWin,
             decimal validBetAmount,
-            DateTimeOffset endTime)
+            DateTimeOffset endTime,
+            bool freeBet)
 #pragma warning restore S107 // Methods should not have too many parameters
-            : base(obCustId, siteId)
+            : base(playerId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
@@ -26,6 +27,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
             TotalWin = totalWin;
             ValidBetAmount = validBetAmount;
             EndTime = endTime;
+            FreeBet = freeBet;
         }
 
         public int GameRoundId { get; set; }
@@ -40,5 +42,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? EndTime { get; set; }
+
+        public bool FreeBet { get; set; }
     }
 }

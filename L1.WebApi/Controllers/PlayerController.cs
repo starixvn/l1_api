@@ -1,17 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.DailySummary;
-using L1.Features.AdminApiCommunicators.RetrieveEndGameInfo;
+﻿using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
-using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.Partners;
+using L1.Features.SGApiCommunicators;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,23 +18,23 @@ namespace L1.WebApi.Controllers
     [ApiController, Authorize]
     [ApiVersion("1.0")]
     [Route("[controller]")]
-    public class MemberController : ControllerBase
+    [Route("member")]
+    public class PlayerController : ControllerBase
     {
-        private readonly IAdminApiService adminApiService;
-        private readonly IPartnerDataService partnerDataService;
-        private readonly ILogService logService;
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly ISGApiService sgApiService;
+        private readonly IPartnerDataService partnerDataService;
+        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public MemberController(
-            IAdminApiService adminApiService,
+        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory, 
+            ISGApiService sgApiService,
             IPartnerDataService partnerDataService,
-            ILogService logService,
-            IPartnerCustomerFactory partnerCustomerFactory)
+            IPartnerRequestAuthentication partnerRequestAuthentication)
         {
-            this.adminApiService = adminApiService;
-            this.partnerDataService = partnerDataService;
-            this.logService = logService;
             this.partnerCustomerFactory = partnerCustomerFactory;
+            this.sgApiService = sgApiService;
+            this.partnerRequestAuthentication = partnerRequestAuthentication;
+            this.partnerDataService = partnerDataService;
         }
 
         [HttpPost]
@@ -46,7 +42,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "EnterPortal")]
         public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -54,7 +50,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.EnterPortal(
-                new PartnerEnterPortalCall(model.Seq, model.ObCustId, model.SiteId, model.CharacterName, model.FirstLogin));
+                new PartnerEnterPortalCall(model.PlayerId, model.SiteId, model.CharacterName, model.FirstLogin, model.OperatorToken));
 
             return Ok(response);
         }
@@ -64,7 +60,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "GetBalance")]
         public async Task<IActionResult> Balance([FromBody] GetBalance model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -72,7 +68,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.GetBalance(
-                new PartnerGetBalanceCall(model.ObCustId, model.SiteId));
+                new PartnerGetBalanceCall(model.PlayerId, model.SiteId, model.OperatorToken));
 
             return Ok(response);
         }
@@ -82,7 +78,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "PlaceBet")]
         public async Task<IActionResult> PlaceBet([FromBody] PlaceBet model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -90,7 +86,7 @@ namespace L1.WebApi.Controllers
             }
 
             var placeBetCall = new PartnerPlaceBetCall(
-                model.ObCustId,
+                model.PlayerId,
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -99,7 +95,10 @@ namespace L1.WebApi.Controllers
                 model.Currency,
                 model.RoundEndTime,
                 model.Ip,
-                model.FreeSpin);
+                model.FreeSpin,
+                model.ContributionAmount,
+                model.ContributionRate,
+                model.OperatorToken);
 
             var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
 
@@ -111,7 +110,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "EndGame")]
         public async Task<IActionResult> EndGame([FromBody] EndGame model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -120,14 +119,15 @@ namespace L1.WebApi.Controllers
 
             var response = await customerService.EndGame(
                 new PartnerEndGameCall(
-                    model.ObCustId,
+                    model.PlayerId,
                     model.SiteId,
                     model.GameRoundId,
                     model.GameTypeId,
                     model.TotalAmount,
                     model.TotalWin,
                     model.ValidBetAmount,
-                    model.EndTime));
+                    model.EndTime,
+                    model.FreeBet));
 
             return Ok(response);
         }
@@ -137,7 +137,7 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "VoidGame")]
         public async Task<IActionResult> VoidGame([FromBody] VoidGame model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
@@ -145,7 +145,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.VoidGame(
-                new PartnerVoidGameCall(model.ObCustId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason));
+                new PartnerVoidGameCall(model.PlayerId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
 
             return Ok(response);
         }
@@ -155,67 +155,67 @@ namespace L1.WebApi.Controllers
         [SwaggerOperation(Summary = "GetBetLimit")]
         public async Task<IActionResult> GetBetLimit([FromBody] GetBetLimit model)
         {
-            var customerService = partnerCustomerFactory.GetCustomerService(model.PartnerId);
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
                 return BadRequest();
             }
 
-            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.ObCustId, model.SiteId));
+            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.PlayerId, model.SiteId, model.OperatorToken));
 
             return Ok(response);
         }
 
         [HttpPost]
-        [Route("[action]")]
+        [Route("/Integrity/[action]")]
         [AllowAnonymous]
-        [SwaggerOperation(Summary = "RetrieveEndGame")]
-        public async Task<IActionResult> RetrieveEndGameInfo([FromBody] EndGameInfoRequest model)
+        [SwaggerOperation(Summary = "DailySummarize")]
+        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
         {
-            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await VerifyRequest(model.Auth?.OperatorId))
             {
-                var requestTime = DateTimeOffset.UtcNow;
-                var response = await adminApiService.RetrieveEndGameInfoAsync(
-                    new RetrieveEndGameInfoRequest(
-                        model.GameRoundId,
-                        model.GameTypeId,
-                        model.ObCustId,
-                        model.SiteId,
-                        model.Auth.PartnerId));
-
-                response.Result.Seq = model.Seq;
-
-                await WriteRetrieveEndGameLog(requestTime, model, response.Result);
+                var response = await sgApiService.DailySummary(new DailySummaryRequest 
+                {
+                    Auth = new () { OperatorId = model.Auth.OperatorId },
+                    Seq = model.Seq,
+                    SummarizedDate = model.SummarizedDate
+                });
 
                 return Ok(response);
             }
 
             return Unauthorized();
-        }
-
-        private Task WriteRetrieveEndGameLog(DateTimeOffset requestTime, EndGameInfoRequest request, RetrieveEndGameInfoResult result)
-        {
-            var log = new SBLog(request, result, requestTime, DateTimeOffset.UtcNow);
-
-            return logService.LogRetrieveEndGameAsync(log);
         }
 
         [HttpPost]
         [Route("[action]")]
         [AllowAnonymous]
-        [SwaggerOperation(Summary = "DailySummarize")]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
+        [SwaggerOperation(Summary = "RetrieveEndRoundInfo")]
+        public async Task<IActionResult> RetrieveEndRoundInfo([FromBody] RetrieveEndRoundInfo model)
         {
-            if (await partnerDataService.Verify(model.Auth?.PartnerId, model.Auth?.PartnerSecret))
+            if (await VerifyRequest(model.Auth?.OperatorId))
             {
-                var response = await adminApiService.DailySummary(new DailySummaryRequest(model.Auth.PartnerId, model.SummarizedDate));
-                response.Result.Seq = model.Seq;
-
+                var response = await sgApiService.RetrieveEndRoundInfoAsync(new RetrieveEndRoundInfoRequest 
+                {
+                    Auth = new () { OperatorId = model.Auth.OperatorId },
+                    Seq = model.Seq,
+                    GameRoundId = model.GameRoundId,
+                    GameTypeId = model.GameTypeId,
+                    PlayerId = model.PlayerId,
+                    SiteId = model.SiteId
+                });
                 return Ok(response);
             }
 
             return Unauthorized();
+        }
+
+        private async Task<bool> VerifyRequest(string operatorId)
+        {
+            var @operator = await partnerDataService.GetById(operatorId);
+
+            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
         }
     }
 }

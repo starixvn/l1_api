@@ -36,6 +36,7 @@ namespace L1.WebApi.Tests
             AddOWServiceSettingsConfigsSection(configurationSection);
             AddAdminApiSettingsConfigsSection(configurationSection);
             AddSboServiceSettingsConfigsSection(configurationSection);
+            AddSGApiSettingsConfigsSection(configurationSection);
 
             configuration.GetSection("AppSettings").Returns(configurationSection);
             startup = new Startup(configuration);
@@ -150,6 +151,18 @@ namespace L1.WebApi.Tests
             var owEndPoints = Substitute.For<IConfigurationSection>();
             owEndPoints.GetChildren().Returns(children);
             adminApiSettingsConfigsSection.GetSection("Endpoints").Returns(owEndPoints);
+        }
+
+        private static void AddSGApiSettingsConfigsSection(IConfigurationSection configSection)
+        {
+            var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
+            var sgApiSettingsConfigsSection = Substitute.For<IConfigurationSection>();
+            sgApiSettingsConfigsSection.GetChildren().Returns(children);
+            configSection.GetSection("SGApiSettings").Returns(sgApiSettingsConfigsSection);
+
+            var sgEndPoints = Substitute.For<IConfigurationSection>();
+            sgEndPoints.GetChildren().Returns(children);
+            sgApiSettingsConfigsSection.GetSection("Endpoints").Returns(sgEndPoints);
         }
     }
 }

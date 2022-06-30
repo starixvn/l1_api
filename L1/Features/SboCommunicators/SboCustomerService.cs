@@ -9,6 +9,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Constants;
+using Sentry;
 
 namespace L1.Features.SboCommunicators
 {
@@ -16,32 +17,35 @@ namespace L1.Features.SboCommunicators
     {
         private readonly string PartnerId = PartnerIds.SBO;
 
-        private readonly ISboService SboService;
+        private readonly ISboService sboService;
         private readonly ILogService logService;
         private readonly SboEndPoints endpoints;
+        private readonly ISentryClient sentryClient;
 
         public SboCustomerService(
             ISboService SboService,
             ILogService logService,
-            SboEndPoints endpoints)
+            SboEndPoints endpoints,
+            ISentryClient sentryClient)
         {
-            this.SboService = SboService;
+            this.sboService = SboService;
             this.logService = logService;
             this.endpoints = endpoints;
+            this.sentryClient = sentryClient;
         }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
-        => SboService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+        => sboService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
 
         public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
-        => SboService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
+        => sboService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
 
         public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
-        => SboService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+        => sboService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
-            var response = await SboService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
+            var response = await sboService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
 
             if (response.Result.IsSuccessful())
             {
@@ -53,7 +57,7 @@ namespace L1.Features.SboCommunicators
 
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
-            var response = await SboService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var response = await sboService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
 
             if (response.Result.IsSuccessful())
             {
@@ -65,7 +69,7 @@ namespace L1.Features.SboCommunicators
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
         {
-            var response = await SboService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
+            var response = await sboService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
 
             if (response.Result.IsSuccessful())
             {

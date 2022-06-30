@@ -7,8 +7,9 @@ namespace L1.Features.PartnerCommunicators.Log
 {
     public class PartnerLog
     {
+       #pragma warning disable S107
         public PartnerLog(
-            string partnerId,
+            string operatorId,
             DateTimeOffset requestTimeStamp,
             IPartnerCall call,
             DateTimeOffset responseTimeStamp,
@@ -16,9 +17,10 @@ namespace L1.Features.PartnerCommunicators.Log
             byte system,
             string accessKey = "",
             Dictionary<string, string> metadata = null)
+       #pragma warning restore S107
         {
             LogTimeStamp = DateTimeOffset.UtcNow;
-            PartnerId = partnerId;
+            OperatorId = operatorId;
             RequestTimeStamp = requestTimeStamp;
             Call = call;
             ResponseTimeStamp = responseTimeStamp;
@@ -28,7 +30,7 @@ namespace L1.Features.PartnerCommunicators.Log
             Metadata = metadata;
         }
 
-        public string PartnerId { get; set; }
+        public string OperatorId { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset LogTimeStamp { get; set; }

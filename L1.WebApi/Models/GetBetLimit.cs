@@ -2,5 +2,6 @@
 {
     public class GetBetLimit : MemberRequest
     {
+        public string OperatorToken { get; set; }
     }
 }

@@ -9,8 +9,6 @@ namespace L1.Features.MemberAuthentications
         {
             services.AddScoped<IMemberAuthDataAccess, MemberAuthDataAccess>();
             services.AddScoped<IMemberAuthService, MemberAuthService>();
-
-            services.AddScoped<IPartnerRequestAuthentication, PartnerRequestAuthentication>();
         }
     }
 }

@@ -6,35 +6,23 @@ using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
-using L1.Features.Partners;
-using L1.Features.SGApiCommunicators;
 using L1.WebApi.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace L1.WebApi.Controllers
 {
-    [ApiController, Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("[controller]")]
     [Route("member")]
     public class PlayerController : ControllerBase
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
-        private readonly ISGApiService sgApiService;
-        private readonly IPartnerDataService partnerDataService;
-        private readonly IPartnerRequestAuthentication partnerRequestAuthentication;
 
-        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory, 
-            ISGApiService sgApiService,
-            IPartnerDataService partnerDataService,
-            IPartnerRequestAuthentication partnerRequestAuthentication)
+        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory)
         {
             this.partnerCustomerFactory = partnerCustomerFactory;
-            this.sgApiService = sgApiService;
-            this.partnerRequestAuthentication = partnerRequestAuthentication;
-            this.partnerDataService = partnerDataService;
         }
 
         [HttpPost]
@@ -165,57 +153,6 @@ namespace L1.WebApi.Controllers
             var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.PlayerId, model.SiteId, model.OperatorToken));
 
             return Ok(response);
-        }
-
-        [HttpPost]
-        [Route("/Integrity/[action]")]
-        [AllowAnonymous]
-        [SwaggerOperation(Summary = "DailySummarize")]
-        public async Task<IActionResult> DailySummarize([FromBody] DailySummary model)
-        {
-            if (await VerifyRequest(model.Auth?.OperatorId))
-            {
-                var response = await sgApiService.DailySummary(new DailySummaryRequest 
-                {
-                    Auth = new () { OperatorId = model.Auth.OperatorId },
-                    Seq = model.Seq,
-                    SummarizedDate = model.SummarizedDate
-                });
-
-                return Ok(response);
-            }
-
-            return Unauthorized();
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        [AllowAnonymous]
-        [SwaggerOperation(Summary = "RetrieveEndRoundInfo")]
-        public async Task<IActionResult> RetrieveEndRoundInfo([FromBody] RetrieveEndRoundInfo model)
-        {
-            if (await VerifyRequest(model.Auth?.OperatorId))
-            {
-                var response = await sgApiService.RetrieveEndRoundInfoAsync(new RetrieveEndRoundInfoRequest 
-                {
-                    Auth = new () { OperatorId = model.Auth.OperatorId },
-                    Seq = model.Seq,
-                    GameRoundId = model.GameRoundId,
-                    GameTypeId = model.GameTypeId,
-                    PlayerId = model.PlayerId,
-                    SiteId = model.SiteId
-                });
-                return Ok(response);
-            }
-
-            return Unauthorized();
-        }
-
-        private async Task<bool> VerifyRequest(string operatorId)
-        {
-            var @operator = await partnerDataService.GetById(operatorId);
-
-            return await partnerRequestAuthentication.Verify(@operator?.SecretKey, Request);
         }
     }
 }

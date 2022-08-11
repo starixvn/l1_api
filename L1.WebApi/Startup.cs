@@ -3,7 +3,6 @@ using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.SboCommunicators;
-using L1.Features.SGApiCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,7 +36,6 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
-            services.AddSGApiServices(appSettings.SGApiSettings);
 
             if (appSettings.SboServiceSettings != null)
             {
@@ -45,20 +43,6 @@ namespace L1.WebApi
             }
 
             services.AddControllers();
-
-            services
-                .AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.Authority = appSettings.BackendAuthConfigs.Address;
-                    options.RequireHttpsMetadata = false;
-
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidAudiences = appSettings.IdentityAudiences
-                    };
-                });
 
             services.AddMvc();
             services.AddApiVersioning(options =>
@@ -98,9 +82,6 @@ namespace L1.WebApi
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

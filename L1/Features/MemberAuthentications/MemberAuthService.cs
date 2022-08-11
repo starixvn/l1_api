@@ -13,8 +13,6 @@ namespace L1.Features.MemberAuthentications
 {
     public interface IMemberAuthService
     {
-        Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId);
-
         Task<VerificationResult> VerifyToken(VerificationParams verificationParams);
 
         Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams);
@@ -39,47 +37,7 @@ namespace L1.Features.MemberAuthentications
             this.sentryClient = sentryClient;
         }
 
-        public async Task<SingleSignOnResult> SignIn(MemberAuth memberAuth, byte? gameTypeId)
-        {
-            var currency = await partnerDataService.GetCurrency(memberAuth.OperatorId, memberAuth.CurrencyName);
-
-            if (currency == null)
-            {
-                return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
-            }
-
-            var gameClientUrl = await GetRedirectedUrl(memberAuth, currency.IsTest);
-
-            if (gameClientUrl == null)
-            {
-                return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
-            }
-
-            var latestSignIn = await memberAuthDataAccess.GetLatest(memberAuth);
-            var isGenerateNew = (latestSignIn == null || latestSignIn.Time.AddSeconds(appSettings.TokenExpiredSeconds) < DateTime.Now);
-
-            if (isGenerateNew)
-            {
-                memberAuth.Token = Guid.NewGuid().ToString();
-                memberAuth.Time = DateTime.Now;
-                memberAuth.CurrencyCode = currency.Code;
-                memberAuth.CurrencyGroupId = currency.GroupId;
-                memberAuth.Multiplier = currency.Multiplier;
-                memberAuth.IsTestCurrency = currency.IsTest;
-
-                await memberAuthDataAccess.Create(memberAuth);
-            }
-
-            var (token, isTestCurrency, partnerId) = isGenerateNew ? memberAuth : latestSignIn;
-
-            return CreateSSOResult(
-                gameTypeId,
-                token,
-                memberAuth.Language,
-                gameClientUrl.ToString().TrimEnd('/'),
-                isTestCurrency ? partnerId : string.Empty);
-        }
-
+      
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
         {
             var memberAuth = await memberAuthDataAccess.GetByToken(verificationParams.Token);

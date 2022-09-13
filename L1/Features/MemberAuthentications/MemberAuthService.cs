@@ -37,7 +37,7 @@ namespace L1.Features.MemberAuthentications
             this.sentryClient = sentryClient;
         }
 
-      
+
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
         {
             var memberAuth = await memberAuthDataAccess.GetByToken(verificationParams.Token);
@@ -101,6 +101,7 @@ namespace L1.Features.MemberAuthentications
                     AppTypes.SabaClub => partner.ClubVersionUrl,
                     AppTypes.MiniSabaClub => partner.MiniVersionUrl,
                     AppTypes.SabaMobi => partner.MobiVersionUrl,
+                    AppTypes.MegaKeno => partner.MegaKenoUrl,
                     _ => partner.ClubVersionUrl,
                 };
 

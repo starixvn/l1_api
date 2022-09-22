@@ -1,37 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Shared.Configurations;
 using L1.Shared.Constants;
+using Polly;
 using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.SboCommunicators
 {
     public class SboCustomerService : IPartnerCustomerServices
     {
-        private readonly string PartnerId = PartnerIds.SBO;
-
         private readonly ISboService sboService;
         private readonly ILogService logService;
         private readonly SboEndPoints endpoints;
         private readonly ISentryClient sentryClient;
+        private readonly IAppSettings appSettings;
 
         public SboCustomerService(
             ISboService SboService,
             ILogService logService,
             SboEndPoints endpoints,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            IAppSettings appSettings)
         {
             this.sboService = SboService;
             this.logService = logService;
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
+            this.appSettings = appSettings;
         }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
@@ -49,7 +55,7 @@ namespace L1.Features.SboCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(PartnerId, response, system);
+                await logService.LogBetAsync(appSettings.PartnerIds.SBO, response, system);
             }
 
             return response;
@@ -61,7 +67,7 @@ namespace L1.Features.SboCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(PartnerId, response);
+                await logService.LogEndGameAsync(appSettings.PartnerIds.SBO, response);
             }
 
             return response;
@@ -73,7 +79,29 @@ namespace L1.Features.SboCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogVoidGameAsync(PartnerId, response);
+                await logService.LogVoidGameAsync(appSettings.PartnerIds.SBO, response);
+            }
+
+            return response;
+        }
+
+        public async Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call)
+        {
+            const double retryDelayInSeconds = 30;
+            const int numberOfRetries = 6;
+
+            var response = await Policy
+                .HandleResult<PartnerResponse<HitJackpotResult>>(response => response.Result.IsFailed())
+                .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
+                .ExecuteAsync(() => sboService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogHitJackpotAsync(appSettings.PartnerIds.SBO, response);
+            }
+            else
+            {
+                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {appSettings.PartnerIds.SBO} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

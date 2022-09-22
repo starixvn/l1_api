@@ -1,8 +1,8 @@
-﻿using System;
-using L1.Features.OWCommunicators;
+﻿using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
-using L1.Shared.Constants;
+using L1.Shared.Configurations;
 using NSubstitute;
+using System;
 using Xunit;
 
 namespace L1.Tests.Features.PartnerCommunicators
@@ -12,12 +12,19 @@ namespace L1.Tests.Features.PartnerCommunicators
         private readonly IServiceProvider serviceProvider;
 
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly IAppSettings appSettings;
 
         public PartnerCustomerFactoryTests()
         {
             serviceProvider = Substitute.For<IServiceProvider>();
+            appSettings = Substitute.For<IAppSettings>();
+            appSettings.PartnerIds = new PartnerIds
+            {
+                OW = "OW",
+                SBO = "SBO"
+            };
 
-            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider);
+            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings);
         }
 
         [InlineData("")]
@@ -36,16 +43,28 @@ namespace L1.Tests.Features.PartnerCommunicators
             Assert.Null(result);
         }
 
-        [InlineData(PartnerIds.OW)]
-        [InlineData(PartnerIds.SBO)]
-        [Theory]
-        public void GetService_DefinedPartner_ReturnService(string id)
+        [Fact]
+        public void GetService_OWPartner_ReturnService()
         {
             // Arrange
             serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null));
 
             // Act
-            var result = partnerCustomerFactory.GetCustomerService(id);
+            var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.OW);
+
+            // Assert
+            Assert.IsAssignableFrom<IPartnerCustomerServices>(result);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void GetService_SBOPartner_ReturnService()
+        {
+            // Arrange
+            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null));
+
+            // Act
+            var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.SBO);
 
             // Assert
             Assert.IsAssignableFrom<IPartnerCustomerServices>(result);

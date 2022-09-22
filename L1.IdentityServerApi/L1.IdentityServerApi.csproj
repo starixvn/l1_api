@@ -22,35 +22,30 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <None Include="appsettings.SIT.json">
-            <IsTransformFile>true</IsTransformFile>
-            <DependentUpon>appsettings.json</DependentUpon>
-        </None>
-        <None Include="appsettings.LOCAL.json">
-            <IsTransformFile>true</IsTransformFile>
-            <DependentUpon>appsettings.json</DependentUpon>
-        </None>
-        <None Include="appsettings.UAT.json">
-            <IsTransformFile>true</IsTransformFile>
-            <DependentUpon>appsettings.json</DependentUpon>
-        </None>
-        <None Include="appsettings.PROD.json">
-            <IsTransformFile>true</IsTransformFile>
-            <DependentUpon>appsettings.json</DependentUpon>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
-        <Content Remove="appsettings.PROD.json" />
-        <Content Remove="appsettings.UAT.json" />
-        <Content Remove="appsettings.LOCAL.json" />
-        <Content Remove="appsettings.SIT.json" />
-    </ItemGroup>
-    <ItemGroup>
       <AdditionalFiles Include="..\.sonarlint\l1-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
     </ItemGroup>
     <ItemGroup>
         <Content Update="appsettings.json">
             <TransformOnBuild>true</TransformOnBuild>
+        </Content>
+        <Content Update="_Configs\sc1\appsettings.json">
+          <TransformOnBuild>true</TransformOnBuild>
+        </Content>
+        <Content Update="_Configs\sc1\appsettings.LOCAL.json">
+          <DependentUpon>appsettings.json</DependentUpon>
+          <IsTransformFile>true</IsTransformFile>
+        </Content>
+        <Content Update="_Configs\sc1\appsettings.PROD.json">
+          <DependentUpon>appsettings.json</DependentUpon>
+          <IsTransformFile>true</IsTransformFile>
+        </Content>
+        <Content Update="_Configs\sc1\appsettings.SIT.json">
+          <DependentUpon>appsettings.json</DependentUpon>
+          <IsTransformFile>true</IsTransformFile>
+        </Content>
+        <Content Update="_Configs\sc1\appsettings.UAT.json">
+          <DependentUpon>appsettings.json</DependentUpon>
+          <IsTransformFile>true</IsTransformFile>
         </Content>
     </ItemGroup>
 </Project>

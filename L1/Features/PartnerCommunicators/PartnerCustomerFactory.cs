@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using L1.Features.OWCommunicators;
+﻿using L1.Features.OWCommunicators;
 using L1.Features.SboCommunicators;
-using L1.Shared.Constants;
+using L1.Shared.Configurations;
+using System;
+using System.Collections.Generic;
 
 namespace L1.Features.PartnerCommunicators
 {
@@ -13,17 +13,17 @@ namespace L1.Features.PartnerCommunicators
 
     public class PartnerCustomerFactory : IPartnerCustomerFactory
     {
-        private readonly Dictionary<string, Type> services = new()
-        {
-            { PartnerIds.OW, typeof(OWCustomerService) },
-            { PartnerIds.SBO, typeof(SboCustomerService) },
-        };
-
+        private readonly Dictionary<string, Type> services;
         private readonly IServiceProvider serviceProvider;
 
-        public PartnerCustomerFactory(IServiceProvider serviceProvider)
+        public PartnerCustomerFactory(IServiceProvider serviceProvider, IAppSettings appSettings)
         {
             this.serviceProvider = serviceProvider;
+            services = new()
+            {
+                { appSettings.PartnerIds.OW, typeof(OWCustomerService) },
+                { appSettings.PartnerIds.SBO, typeof(SboCustomerService) },
+            };
         }
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)

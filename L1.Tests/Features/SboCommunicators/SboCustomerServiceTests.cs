@@ -9,6 +9,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Features.SboCommunicators;
+using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;
@@ -22,12 +23,19 @@ namespace L1.Tests.Features.SboCommunicators
         private readonly ILogService logService = Substitute.For<ILogService>();
         private readonly ISboService sboService = Substitute.For<ISboService>();
         private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
+        private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
+
 
         private readonly SboCustomerService service;
 
         public SboCustomerServiceTests()
         {
-            service = new SboCustomerService(sboService, logService, endpoints, sentryClient);
+            appSettings.PartnerIds = new PartnerIds
+            {
+                OW = "OW",
+                SBO = "SBO"
+            };
+            service = new SboCustomerService(sboService, logService, endpoints, sentryClient, appSettings);
         }
 
         [Theory, AutoData]
@@ -78,7 +86,7 @@ namespace L1.Tests.Features.SboCommunicators
             await service.PlaceBet(call, 1);
 
             // Assert
-            await logService.Received(1).LogBetAsync(PartnerIds.SBO, response, 1);
+            await logService.Received(1).LogBetAsync(appSettings.PartnerIds.SBO, response, 1);
         }
 
         [Theory, AutoData]
@@ -94,7 +102,7 @@ namespace L1.Tests.Features.SboCommunicators
 
             // Assert
             await sboService.Received(1).Post<PartnerEndGameResult>(endpoints.EndGame, call);
-            await logService.Received(1).LogEndGameAsync(PartnerIds.SBO, response);
+            await logService.Received(1).LogEndGameAsync(appSettings.PartnerIds.SBO, response);
         }
 
         [Theory, AutoData]
@@ -125,7 +133,7 @@ namespace L1.Tests.Features.SboCommunicators
 
             // Assert
             await sboService.Received(1).Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
-            await logService.Received(1).LogVoidGameAsync(PartnerIds.SBO, response);
+            await logService.Received(1).LogVoidGameAsync(appSettings.PartnerIds.SBO, response);
         }
 
         [Theory, AutoData]

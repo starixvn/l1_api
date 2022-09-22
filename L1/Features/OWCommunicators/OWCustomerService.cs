@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
@@ -7,19 +8,20 @@ using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
+using Polly;
 using Sentry;
+using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
 {
     public class OWCustomerService : IPartnerCustomerServices
     {
-        private readonly string PartnerId = PartnerIds.OW;
-
         private readonly IOWService oWService;
         private readonly ILogService logService;
         private readonly OWEndPoints endpoints;
@@ -58,7 +60,7 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(PartnerId, response, system, metadata);
+                await logService.LogBetAsync(appSettings.PartnerIds.OW, response, system, metadata);
 
                 if (call.Amount >= appSettings.HighStake)
                 {
@@ -82,7 +84,7 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(PartnerId, response);
+                await logService.LogEndGameAsync(appSettings.PartnerIds.OW, response);
             }
 
             return response;
@@ -94,7 +96,29 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogVoidGameAsync(PartnerId, response);
+                await logService.LogVoidGameAsync(appSettings.PartnerIds.OW, response);
+            }
+
+            return response;
+        }
+
+        public async Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call)
+        {
+            const double retryDelayInSeconds = 30;
+            const int numberOfRetries = 6;
+
+            var response = await Policy
+                .HandleResult<PartnerResponse<HitJackpotResult>>(response => response.Result.IsFailed())
+                .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
+                .ExecuteAsync(() => oWService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogHitJackpotAsync(appSettings.PartnerIds.OW, response);
+            }
+            else
+            {
+                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {appSettings.PartnerIds.OW} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

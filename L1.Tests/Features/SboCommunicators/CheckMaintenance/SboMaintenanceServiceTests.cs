@@ -6,6 +6,7 @@ using L1.Features.AdminApiCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.SboCommunicators;
 using L1.Features.SboCommunicators.CheckMaintenance;
+using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -20,11 +21,18 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
         private readonly ISentryClient sentryClient;
         private readonly SboServiceSettings sboServiceSettings;
         private readonly Fixture fixture = new();
+        private readonly IAppSettings appSettings;
 
         public SboMaintenanceServiceTests()
         {
             adminApiService = Substitute.For<IAdminApiService>();
             sentryClient = Substitute.For<ISentryClient>();
+            appSettings = Substitute.For<IAppSettings>();
+            appSettings.PartnerIds = new PartnerIds
+            {
+                OW = "OW",
+                SBO = "SBO"
+            };
 
             sboServiceSettings = new SboServiceSettings
             {
@@ -49,7 +57,7 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new SboResponse<MaintenanceResult> { Result = maintenanceResult }));
 
             // Act
-            var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient);
+            var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient, appSettings);
 
             // Assert
             Assert.True(maintenanceService.IsUnderMaintenance());
@@ -66,7 +74,7 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.NotFound, JsonConvert.SerializeObject(new SboResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient);
+            var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient, appSettings);
             var call = fixture.Create<SboCall>();
 
             // Act
@@ -87,7 +95,7 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new SboResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient);
+            var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient, appSettings);
             var call = fixture.Create<SboCall>();
             await maintenanceService.ObserveMaintenanceSchedule(new SboRequest(call));
 

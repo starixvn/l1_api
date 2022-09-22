@@ -33,6 +33,11 @@ namespace L1.Tests.Features.OWCommunicators
         public OWCustomerServiceTests()
         {
             service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints, sentryClient);
+            appSettings.PartnerIds = new PartnerIds
+            {
+                OW = "OW",
+                SBO = "SBO"
+            };
         }
 
         [Theory, AutoData]
@@ -83,7 +88,7 @@ namespace L1.Tests.Features.OWCommunicators
             await service.PlaceBet(call, 1);
 
             // Assert
-            await logService.Received(1).LogBetAsync(PartnerIds.OW, response, 1);
+            await logService.Received(1).LogBetAsync(appSettings.PartnerIds.OW, response, 1);
         }
 
         [Theory, AutoData]
@@ -115,7 +120,7 @@ namespace L1.Tests.Features.OWCommunicators
 
             // Assert
             await owService.Received(1).Post<PartnerEndGameResult>(endpoints.EndGame, call);
-            await logService.Received(1).LogEndGameAsync(PartnerIds.OW, response);
+            await logService.Received(1).LogEndGameAsync(appSettings.PartnerIds.OW, response);
         }
 
         [Theory, AutoData]
@@ -146,7 +151,7 @@ namespace L1.Tests.Features.OWCommunicators
 
             // Assert
             await owService.Received(1).Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
-            await logService.Received(1).LogVoidGameAsync(PartnerIds.OW, response);
+            await logService.Received(1).LogVoidGameAsync(appSettings.PartnerIds.OW, response);
         }
 
         [Theory, AutoData]

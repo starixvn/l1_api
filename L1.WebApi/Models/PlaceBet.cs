@@ -23,6 +23,8 @@ namespace L1.WebApi.Models
 
         public byte System { get; set; }
 
+        public bool FreeBet { get; set; }
+
         public Dictionary<string, string> Metadata { get; set; }
 
         public float ContributionRate { get; set; }

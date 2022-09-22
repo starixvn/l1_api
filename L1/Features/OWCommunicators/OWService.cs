@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
+using L1.Shared.Constants;
 using L1.Shared.Helpers;
 using Newtonsoft.Json;
 
@@ -57,6 +58,11 @@ namespace L1.Features.OWCommunicators
             {
                 finalResponse.AccessKey = accessKey;
                 await failureHandler.Handle<T>(finalResponse);
+
+                if (finalResponse.Result.ErrorCode == ErrorCodes.NewInsufficientFunds)
+                {
+                    finalResponse.Result.ErrorCode = ErrorCodes.InsufficientFunds;
+                }
             }
 
             return finalResponse;

@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
-using L1.Shared.Constants;
+using L1.Shared.Configurations;
 using NSubstitute;
 using Sentry;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace L1.Tests.Features.OWCommunicators
@@ -16,6 +16,7 @@ namespace L1.Tests.Features.OWCommunicators
         private readonly ILogService logService;
         private readonly IOWMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
+        private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
 
         private readonly OWFailureHandler owFailureHandler;
 
@@ -24,8 +25,13 @@ namespace L1.Tests.Features.OWCommunicators
             logService = Substitute.For<ILogService>();
             maintenanceService = Substitute.For<IOWMaintenanceService>();
             sentryClient = Substitute.For<ISentryClient>();
+            appSettings.PartnerIds = new PartnerIds
+            {
+                OW = "OW",
+                SBO = "SBO"
+            };
 
-            owFailureHandler = new OWFailureHandler(logService, maintenanceService, sentryClient);
+            owFailureHandler = new OWFailureHandler(logService, maintenanceService, sentryClient, appSettings);
         }
 
         [Theory, AutoData]
@@ -37,7 +43,7 @@ namespace L1.Tests.Features.OWCommunicators
             await owFailureHandler.Handle(new PartnerResponse<PartnerResult> { Result = result });
 
             // Assert
-            await logService.Received(1).LogFailedRequestAsync(PartnerIds.OW, Arg.Any<PartnerResponse<PartnerResult>>());
+            await logService.Received(1).LogFailedRequestAsync(appSettings.PartnerIds.OW, Arg.Any<PartnerResponse<PartnerResult>>());
         }
 
         [Theory, AutoData]

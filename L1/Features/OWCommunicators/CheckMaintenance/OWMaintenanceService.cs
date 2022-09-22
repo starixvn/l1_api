@@ -1,14 +1,14 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
+﻿using L1.Features.AdminApiCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Maintenance;
-using L1.Shared.Constants;
+using L1.Shared.Configurations;
 using L1.Shared.Helpers;
 using Newtonsoft.Json;
 using Sentry;
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace L1.Features.OWCommunicators.CheckMaintenance
 {
@@ -22,21 +22,24 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private const string HeaderAccessKey = "Saba-access-key";
         private readonly OWServiceSettings owServiceSettings;
         private readonly string secretKey;
+        private readonly IAppSettings appSettings;
 
         public OWMaintenanceService(
             HttpClient httpClient,
             OWServiceSettings owServiceSettings,
             IAdminApiService adminApiService,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            IAppSettings appSettings)
             : base(httpClient, adminApiService, sentryClient)
         {
             this.owServiceSettings = owServiceSettings;
             secretKey = owServiceSettings.SecretKey;
+            this.appSettings = appSettings;
         }
 
         public Task ObserveMaintenanceSchedule(OWRequest request)
         => ObserveMaintenanceSchedule(
-                PartnerIds.OW,
+                appSettings.PartnerIds.OW,
                 new PartnerRequest(request.Call),
                 new Uri(owServiceSettings.BaseUrl, owServiceSettings.Endpoints.CheckMaintenance));
 

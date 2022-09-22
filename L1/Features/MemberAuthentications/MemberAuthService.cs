@@ -72,7 +72,8 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.CurrencyGroupId,
                     memberAuth.IsTestCurrency,
                     memberAuth.DisableJackpotGames,
-                    memberAuth.OperatorToken
+                    memberAuth.OperatorToken,
+                    memberAuth.IsCash
                     );
             }
 

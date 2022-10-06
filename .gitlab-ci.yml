@@ -1,9 +1,9 @@
 include:
   - project: "ci/repos-ci/pentagon_l1_game_api"
-    ref: master
+    ref: updateCIMergeRepo
     file: "gitlab-ci.yml"
   - project: "ci/repos-ci/pentagon_l1_auth_api"
-    ref: master
+    ref: updateCIMergeRepo
     file: "gitlab-ci-mixing.yml"
   - project: "ci/repos-ci/pentagon_l2_game_api"
     ref: master

@@ -19,6 +19,8 @@ namespace L1.Features.Partners
 
         public string ClubVersionUrl { get; set; }
 
+        public string MegaKenoUrl { get; set; }
+
         public string TestCurrencyUrl { get; set; }
     }
 }

@@ -6,8 +6,8 @@ include:
     ref: updateCIMergeRepo
     file: "gitlab-ci-mixing.yml"
   - project: "ci/repos-ci/pentagon_l2_game_api"
-    ref: updateCIMergeRepo
+    ref: master
     file: "gitlab-ci-mixing.yml"
   - project: "ci/repos-ci/pentagon_l2_auth_api"
-    ref: updateCIMergeRepo
+    ref: master
     file: "gitlab-ci-mixing.yml"

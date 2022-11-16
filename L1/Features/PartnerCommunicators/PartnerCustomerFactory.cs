@@ -24,11 +24,25 @@ namespace L1.Features.PartnerCommunicators
                 { appSettings.PartnerIds.OW, typeof(OWCustomerService) },
                 { appSettings.PartnerIds.SBO, typeof(SboCustomerService) },
             };
+
+            if (appSettings.PartnerIds.OW_VG != null)
+            {
+                services.Add(appSettings.PartnerIds.OW_VG, typeof(OWCustomerService));
+            }
         }
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)
-        => !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
-            ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
-            : default;
+        {
+            var service = !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
+                ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
+                : default;
+
+            if (service != default)
+            {
+                service.OperatorId = partnerId;
+            }
+
+            return service;
+        }
     }
 }

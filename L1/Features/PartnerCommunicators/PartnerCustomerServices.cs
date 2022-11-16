@@ -26,5 +26,7 @@ namespace L1.Features.PartnerCommunicators
         Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call);
 
         Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
+
+        string OperatorId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWService
     {
-        Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new();
+        Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new();
     }
 
     public class OWService : IOWService
@@ -28,7 +28,7 @@ namespace L1.Features.OWCommunicators
             secretKey = owServiceSettings.SecretKey;
         }
 
-        public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new()
+        public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new()
         {
             const string defaultMediaType = "application/json";
             var request = new PartnerRequest(call);
@@ -57,7 +57,7 @@ namespace L1.Features.OWCommunicators
             if (finalResponse.Result.IsFailed())
             {
                 finalResponse.AccessKey = accessKey;
-                await failureHandler.Handle<T>(finalResponse);
+                await failureHandler.Handle<T>(finalResponse, operatorId);
 
                 if (finalResponse.Result.ErrorCode == ErrorCodes.NewInsufficientFunds)
                 {

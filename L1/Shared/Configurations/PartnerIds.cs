@@ -4,5 +4,7 @@
     {
         public string OW { get; set; }
         public string SBO { get; set; }
+
+        public string OW_VG { get; set; }
     }
 }

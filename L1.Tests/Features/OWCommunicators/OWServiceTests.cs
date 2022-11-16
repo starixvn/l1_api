@@ -32,7 +32,7 @@ namespace L1.Tests.Features.OWCommunicators
             var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
-            var result = await service.Post<PartnerResult>("/aaa", call);
+            var result = await service.Post<PartnerResult>("/aaa", call, "OW");
 
             // Assert
             Assert.IsType<PartnerResponse<PartnerResult>>(result);
@@ -46,7 +46,7 @@ namespace L1.Tests.Features.OWCommunicators
             var service = new OWService(httpClient, failureHandler, oWServiceSettings);
 
             // Act
-            var response = await service.Post<PartnerResult>("/aaa", call);
+            var response = await service.Post<PartnerResult>("/aaa", call, "OW");
 
             // Assert
             Assert.IsType<PartnerResponse<PartnerResult>>(response);

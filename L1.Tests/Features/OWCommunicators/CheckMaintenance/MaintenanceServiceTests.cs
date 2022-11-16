@@ -77,7 +77,7 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             var call = fixture.Create<OWCall>();
 
             // Act
-            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call));
+            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call), "OW");
 
             // Assert
             Assert.False(maintenanceService.IsUnderMaintenance());
@@ -98,7 +98,7 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             var call = fixture.Create<OWCall>();
 
             // Act
-            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call));
+            await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(call), "OW");
 
             // Assert
             Assert.True(maintenanceService.IsUnderMaintenance());

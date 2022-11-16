@@ -39,6 +39,7 @@ namespace L1.Features.SboCommunicators
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
         }
+        public string OperatorId { get; set; }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
         => sboService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);

@@ -45,22 +45,24 @@ namespace L1.Features.OWCommunicators
             this.sentryClient = sentryClient;
         }
 
+        public string OperatorId { get; set; }
+
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
-        => oWService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+        => oWService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, OperatorId);
 
         public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
-        => oWService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
+        => oWService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call, OperatorId);
 
         public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
-        => oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+        => oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, OperatorId);
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
-            var response = await oWService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
+            var response = await oWService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogBetAsync(appSettings.PartnerIds.OW, response, system, metadata);
+                await logService.LogBetAsync(OperatorId, response, system, metadata);
 
                 if (call.Amount >= appSettings.HighStake)
                 {
@@ -80,11 +82,11 @@ namespace L1.Features.OWCommunicators
 
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
-            var response = await oWService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var response = await oWService.Post<PartnerEndGameResult>(endpoints.EndGame, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(appSettings.PartnerIds.OW, response);
+                await logService.LogEndGameAsync(OperatorId, response);
             }
 
             return response;
@@ -92,11 +94,11 @@ namespace L1.Features.OWCommunicators
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
         {
-            var response = await oWService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
+            var response = await oWService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogVoidGameAsync(appSettings.PartnerIds.OW, response);
+                await logService.LogVoidGameAsync(OperatorId, response);
             }
 
             return response;
@@ -110,15 +112,15 @@ namespace L1.Features.OWCommunicators
             var response = await Policy
                 .HandleResult<PartnerResponse<HitJackpotResult>>(response => response.Result.IsFailed())
                 .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
-                .ExecuteAsync(() => oWService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
+                .ExecuteAsync(() => oWService.Post<HitJackpotResult>(endpoints.HitJackpot, call, OperatorId));
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogHitJackpotAsync(appSettings.PartnerIds.OW, response);
+                await logService.LogHitJackpotAsync(OperatorId, response);
             }
             else
             {
-                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {appSettings.PartnerIds.OW} - CustId {call.PlayerId}", SentryLevel.Fatal);
+                sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {OperatorId} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

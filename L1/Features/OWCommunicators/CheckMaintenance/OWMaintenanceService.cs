@@ -14,7 +14,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
 {
     public interface IOWMaintenanceService
     {
-        Task ObserveMaintenanceSchedule(OWRequest request);
+        Task ObserveMaintenanceSchedule(OWRequest request, string operatorId);
     }
 
     public class OWMaintenanceService : PartnerMaintenanceService, IOWMaintenanceService
@@ -37,9 +37,9 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
             this.appSettings = appSettings;
         }
 
-        public Task ObserveMaintenanceSchedule(OWRequest request)
+        public Task ObserveMaintenanceSchedule(OWRequest request, string operatorId)
         => ObserveMaintenanceSchedule(
-                appSettings.PartnerIds.OW,
+                operatorId,
                 new PartnerRequest(request.Call),
                 new Uri(owServiceSettings.BaseUrl, owServiceSettings.Endpoints.CheckMaintenance));
 

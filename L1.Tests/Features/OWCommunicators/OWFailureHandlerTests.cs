@@ -40,7 +40,7 @@ namespace L1.Tests.Features.OWCommunicators
             // Arrange
 
             // Act
-            await owFailureHandler.Handle(new PartnerResponse<PartnerResult> { Result = result });
+            await owFailureHandler.Handle(new PartnerResponse<PartnerResult> { Result = result }, "OW");
 
             // Assert
             await logService.Received(1).LogFailedRequestAsync(appSettings.PartnerIds.OW, Arg.Any<PartnerResponse<PartnerResult>>());
@@ -57,10 +57,10 @@ namespace L1.Tests.Features.OWCommunicators
             };
 
             // Act
-            await owFailureHandler.Handle(response);
+            await owFailureHandler.Handle(response, "OW");
 
             // Assert
-            await maintenanceService.Received(1).ObserveMaintenanceSchedule(Arg.Any<OWRequest>());
+            await maintenanceService.Received(1).ObserveMaintenanceSchedule(Arg.Any<OWRequest>(), "OW");
         }
     }
 }

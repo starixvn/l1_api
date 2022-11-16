@@ -44,44 +44,48 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task EnterPortal_ShouldPostWithEnterPortalEndpoint(PartnerEnterPortalCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
 
             // Act
             await service.EnterPortal(call);
 
             // Assert
-            await owService.Received().Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+            await owService.Received().Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, "OW");
         }
 
         [Theory, AutoData]
         public async Task EnterPortal_ShouldPostWithBalanceEndpoint(PartnerGetBalanceCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
 
             // Act
             await service.GetBalance(call);
 
             // Assert
-            await owService.Received().Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
+            await owService.Received().Post<PartnerGetBalanceResult>(endpoints.GetBalance, call, "OW");
         }
 
         [Theory, AutoData]
         public async Task GetBetLimit_ShouldPostWithBetLimitEndpoint(PartnerGetBetLimitCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
 
             // Act
             await service.GetBetLimit(call);
 
             // Assert
-            await owService.Received().Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+            await owService.Received().Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, "OW");
         }
 
         [Theory, AutoData]
         public async Task PlaceBet_SuccessfulResponse_LogBet(PartnerPlaceBetCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
             var response = new PartnerResponse<PartnerPlaceBetResult> { Result = new PartnerPlaceBetResult { Balance = 2000 } };
-            owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call)
+            owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, "OW")
                 .Returns(x => Task.FromResult(response));
 
             // Act
@@ -95,10 +99,12 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task PlaceBet_HighStake_ShouldNotify(PartnerPlaceBetCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
             appSettings.HighStake.Returns(500);
             call.Amount = appSettings.HighStake;
             var response = new PartnerResponse<PartnerPlaceBetResult> { Result = new PartnerPlaceBetResult { Balance = 2000 } };
-            owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call).Returns(x => Task.FromResult(response));
+            owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, "OW").Returns(x => Task.FromResult(response));
+
 
             // Act
             await service.PlaceBet(call, 1);
@@ -112,14 +118,15 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             var response = new PartnerResponse<PartnerEndGameResult> { Result = new PartnerEndGameResult() };
-            owService.Post<PartnerEndGameResult>(endpoints.EndGame, call)
+            owService.Post<PartnerEndGameResult>(endpoints.EndGame, call, "OW")
                 .Returns(x => Task.FromResult(response));
+            service.OperatorId = "OW";
 
             // Act
             await service.EndGame(call);
 
             // Assert
-            await owService.Received(1).Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            await owService.Received(1).Post<PartnerEndGameResult>(endpoints.EndGame, call, "OW");
             await logService.Received(1).LogEndGameAsync(appSettings.PartnerIds.OW, response);
         }
 
@@ -128,8 +135,9 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             var response = new PartnerResponse<PartnerEndGameResult> { Result = new PartnerEndGameResult() };
-            owService.Post<PartnerEndGameResult>(endpoints.EndGame, call)
+            owService.Post<PartnerEndGameResult>(endpoints.EndGame, call, "OW")
                 .Returns(x => Task.FromResult(response));
+            service.OperatorId = "OW";
 
             // Act
             var actualReponse = await service.EndGame(call);
@@ -142,15 +150,16 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task VoidGame_SuccessfulResponse_LogVoidGame(PartnerVoidGameCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
             var response = new PartnerResponse<PartnerVoidGameResult> { Result = new PartnerVoidGameResult() };
-            owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call)
+            owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call, "OW")
                 .Returns(x => Task.FromResult(response));
 
             // Act
             await service.VoidGame(call);
 
             // Assert
-            await owService.Received(1).Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
+            await owService.Received(1).Post<PartnerVoidGameResult>(endpoints.VoidGame, call, "OW");
             await logService.Received(1).LogVoidGameAsync(appSettings.PartnerIds.OW, response);
         }
 
@@ -158,8 +167,9 @@ namespace L1.Tests.Features.OWCommunicators
         public async Task VoidGame_SuccessfulResponse_Returns(PartnerVoidGameCall call)
         {
             // Arrange
+            service.OperatorId = "OW";
             var response = new PartnerResponse<PartnerVoidGameResult> { Result = new PartnerVoidGameResult() };
-            owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call)
+            owService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call, "OW")
                 .Returns(x => Task.FromResult(response));
 
             // Act

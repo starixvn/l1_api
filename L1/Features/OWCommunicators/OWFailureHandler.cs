@@ -13,7 +13,7 @@ namespace L1.Features.OWCommunicators
 {
     public interface IOWFailureHandler
     {
-        Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult;
+        Task Handle<T>(PartnerResponse<T> response, string operatorId) where T : PartnerResult;
     }
 
     public class OWFailureHandler : IOWFailureHandler
@@ -31,18 +31,18 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
         }
 
-        public async Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult
+        public async Task Handle<T>(PartnerResponse<T> response, string operatorId) where T : PartnerResult
         {
             MapErrorMessage(response.Result);
-            await logService.LogFailedRequestAsync(appSettings.PartnerIds.OW, response);
+            await logService.LogFailedRequestAsync(operatorId, response);
 
             sentryClient.CaptureMessage(
-                $"Request to {appSettings.PartnerIds.OW} failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
+                $"Request to {operatorId} failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
                 SentryLevel.Warning);
 
             if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)
             {
-                await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(response.Request.Call));
+                await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(response.Request.Call), operatorId);
             }
         }
 

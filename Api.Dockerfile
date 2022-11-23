@@ -14,6 +14,9 @@ RUN dotnet publish -r linux-x64 --self-contained false -o /app
 FROM registry.nexdev.net:5050/docker/dotnet/core/aspnet:5.0-buster-slim AS base
 
 WORKDIR /app
+ENV APP_USER app_user
+RUN useradd -r $APP_USER
+USER $APP_USER
 COPY --from=builder /app .
 
 ENTRYPOINT ["dotnet", "L1.WebApi.dll"]

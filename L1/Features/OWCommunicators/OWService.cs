@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,10 @@ namespace L1.Features.OWCommunicators
 
             httpClient.DefaultRequestHeaders.Add(HeaderAccessKey, accessKey);
             var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
+
+            Activity.Current?.AddTag("operator", "OW");
+            Activity.Current?.AddTag("operator.player.id", call.PlayerId);
+            Activity.Current?.AddTag("operator.site.id", call.SiteId);
 
             if (response.IsSuccessStatusCode)
             {

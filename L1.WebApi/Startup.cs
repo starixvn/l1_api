@@ -16,7 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -78,19 +77,16 @@ namespace L1.WebApi
 
             if (Configuration.GetSection("Jaeger") != null)
             {
-                services.AddOpenTelemetry()
-                    .WithTracing((builder) =>
-                        builder
-                            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(Configuration.GetValue<string>("Jaeger:ServiceName")))
+                services.AddOpenTelemetryTracing((builder) => builder
+                            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
                             .AddAspNetCoreInstrumentation((options) => options.Filter = httpContext =>
                             {
                                 // only collect telemetry about HTTP POST requests
-                                return httpContext.Request.Method.Equals("POST");
+                                return httpContext.Request.Method.Equals("GET");
                             })
                             .AddHttpClientInstrumentation()
                             .AddMongoDBInstrumentation()
-                            .AddJaegerExporter())
-                    .StartWithHost();
+                            .AddJaegerExporter());
 
                 services.Configure<JaegerExporterOptions>(Configuration.GetSection("Jaeger"));
 

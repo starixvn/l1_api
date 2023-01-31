@@ -82,7 +82,7 @@ namespace L1.WebApi
                             .AddAspNetCoreInstrumentation((options) => options.Filter = httpContext =>
                             {
                                 // only collect telemetry about HTTP POST requests
-                                return httpContext.Request.Method.Equals("GET");
+                                return httpContext.Request.Method.Equals("POST");
                             })
                             .AddHttpClientInstrumentation()
                             .AddMongoDBInstrumentation()

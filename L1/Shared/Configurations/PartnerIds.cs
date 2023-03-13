@@ -6,5 +6,6 @@
         public string SBO { get; set; }
 
         public string OW_VG { get; set; }
+        public string PFF { get; set; }
     }
 }

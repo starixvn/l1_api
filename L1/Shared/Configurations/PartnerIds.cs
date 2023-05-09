@@ -7,5 +7,7 @@
 
         public string OW_VG { get; set; }
         public string PFF { get; set; }
+
+        public string ONEworksSeal888 {get; set; }
     }
 }

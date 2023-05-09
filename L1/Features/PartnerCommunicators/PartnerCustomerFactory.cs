@@ -35,6 +35,11 @@ namespace L1.Features.PartnerCommunicators
             {
                 services.Add(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
             }
+
+            if (appSettings.PartnerIds.ONEworksSeal888 != null)
+            {
+                services.Add(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
+            }
         }
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)

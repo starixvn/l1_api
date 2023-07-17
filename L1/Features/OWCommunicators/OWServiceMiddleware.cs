@@ -1,4 +1,7 @@
-﻿using L1.Features.OWCommunicators.CheckMaintenance;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,10 +19,22 @@ namespace L1.Features.OWCommunicators
                         .AddScoped<IPartnerCustomerServices, OWCustomerService>(s => s.GetService<OWCustomerService>());
 
             services.AddHttpClient<IOWMaintenanceService, OWMaintenanceService>();
-            services.AddHttpClient<IOWService, OWService>(httpClient =>
+            var owHttpClient = services.AddHttpClient<IOWService, OWService>(httpClient =>
             {
                 httpClient.BaseAddress = owServiceSettings.BaseUrl;
             });
+
+            if (!string.IsNullOrEmpty(owServiceSettings.Proxy))
+            {
+                owHttpClient.ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    return new HttpClientHandler
+                    {
+                        Proxy = new WebProxy(owServiceSettings.Proxy),
+                        UseProxy = true,
+                    };
+                });
+            }
         }
     }
 }

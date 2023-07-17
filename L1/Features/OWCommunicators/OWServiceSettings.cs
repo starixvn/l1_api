@@ -8,6 +8,8 @@ namespace L1.Features.OWCommunicators
 
         public string SecretKey { get; set; }
 
+        public string Proxy { get; set; }
+
         public OWEndPoints Endpoints { get; set; }
     }
 

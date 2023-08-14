@@ -77,16 +77,16 @@ namespace L1.WebApi
 
             if (Configuration.GetSection("Jaeger") != null)
             {
-                services.AddOpenTelemetryTracing((builder) => builder
-                            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
-                            .AddAspNetCoreInstrumentation((options) => options.Filter = httpContext =>
-                            {
-                                // only collect telemetry about HTTP POST requests
-                                return httpContext.Request.Method.Equals("POST");
-                            })
-                            .AddHttpClientInstrumentation()
-                            .AddMongoDBInstrumentation()
-                            .AddJaegerExporter());
+                services.AddOpenTelemetry()
+                    .WithTracing((builder) => builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
+                    .AddAspNetCoreInstrumentation((options) => options.Filter = httpContext =>
+                    {
+                        // only collect telemetry about HTTP POST requests
+                        return httpContext.Request.Method.Equals("POST");
+                    })
+                    .AddHttpClientInstrumentation()
+                    .AddMongoDBInstrumentation()
+                    .AddJaegerExporter());
 
                 services.Configure<JaegerExporterOptions>(Configuration.GetSection("Jaeger"));
 

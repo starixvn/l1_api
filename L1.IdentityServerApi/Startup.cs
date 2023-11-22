@@ -3,6 +3,7 @@ using L1.IdentityServerApi.Extensions;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,7 +38,7 @@ namespace L1.IdentityServerApi
             .AddIdentityApiResources()
             .AddInMemoryCaching()
             .AddIdentityClients()
-            .AddSigningCredentialStore();
+            .AddSigningCredentialStore();            
 
             IdentityModelEventSource.ShowPII = true;
 
@@ -50,6 +51,19 @@ namespace L1.IdentityServerApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
+            var forwardOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                // Needed because of mixing http and https.
+                RequireHeaderSymmetry = false,
+            };
+
+            // Accept X-Forwarded-* headers from all sources.
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(forwardOptions);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

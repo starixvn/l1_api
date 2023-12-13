@@ -73,7 +73,9 @@ namespace L1.Features.OWCommunicators
                         call.Currency,
                         call.ChoiceId,
                         system,
-                        metadata));
+                        metadata,
+                        call.OperatorId,
+                        call.UserId));
                 }
             }
 

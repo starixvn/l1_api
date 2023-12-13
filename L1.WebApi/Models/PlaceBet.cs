@@ -32,5 +32,7 @@ namespace L1.WebApi.Models
         public decimal ContributionAmount { get; set; }
 
         public string OperatorToken { get; set; }
+
+        public string UserId { get; set; }
     }
 }

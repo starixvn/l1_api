@@ -88,7 +88,9 @@ namespace L1.WebApi.Controllers
                 model.ContributionAmount,
                 model.ContributionRate,
                 model.FreeBet,
-                model.OperatorToken);
+                model.OperatorToken,
+                model.OperatorId,
+                model.UserId);
 
             var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
 

@@ -112,7 +112,7 @@ namespace L1.Tests.Features.MemberAuthentications
                 Token = "token",
                 Time = DateTime.Now,
                 BrowserUserAgent = verificationParams.BrowserUserAgent,
-                PlayerId = 1,
+                PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
                 OperatorId = "partner",
@@ -141,7 +141,7 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = "token",
                 Time = DateTime.Now,
-                PlayerId = 1,
+                PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
                 OperatorId = "partner",
@@ -181,7 +181,7 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = updateMemberAuthParams.Token,
                 Time = DateTime.Now,
-                PlayerId = 1,
+                PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
                 OperatorId = "partner",
@@ -219,7 +219,7 @@ namespace L1.Tests.Features.MemberAuthentications
             {
                 Token = updateMemberAuthParams.Token,
                 Time = DateTime.Now,
-                PlayerId = 1,
+                PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
                 OperatorId = "partner",

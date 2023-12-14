@@ -9,7 +9,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public PartnerEndGameCall(
-            int playerId,
+            string playerId,
             string siteId,
             int gameRoundId,
             byte gameTypeId,

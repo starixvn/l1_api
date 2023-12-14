@@ -3,7 +3,7 @@
     public class HitJackpotCall : PartnerCall
     {
         public HitJackpotCall(
-            int playerId,
+            string playerId,
             string siteId,
             int gameRoundId,
             byte gameTypeId,

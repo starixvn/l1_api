@@ -20,7 +20,7 @@ namespace L1.Features.MemberAuthentications
         public VerificationResult(
             int code,
             string message,
-            int playerId,
+            string playerId,
             string playerName,
             string siteId,
             string language,
@@ -60,7 +60,7 @@ namespace L1.Features.MemberAuthentications
             IsCash = isCash;
         }
 
-        public int PlayerId { get; }
+        public string PlayerId { get; }
 
         public string PlayerName { get; }
 
@@ -102,7 +102,7 @@ namespace L1.Features.MemberAuthentications
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public static VerificationResult CreateSuccessResponse(
-            int playerId,
+            string playerId,
             string playerName,
             string siteId,
             string language,

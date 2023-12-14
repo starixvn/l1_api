@@ -2,7 +2,7 @@
 {
     public class PartnerEnterPortalCall : PartnerCall
     {
-        public PartnerEnterPortalCall(int playerId, string siteId, string characcterName, bool firstLogin, string operatorToken)
+        public PartnerEnterPortalCall(string playerId, string siteId, string characcterName, bool firstLogin, string operatorToken)
           : base(playerId, siteId)
         {
             CharacterName = characcterName;

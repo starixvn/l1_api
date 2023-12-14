@@ -12,7 +12,7 @@ namespace L1.Tests.Features.PFFCommunicators
             // Act
             try
             {
-                _ = new PFFCall(null, 123, "siteId");
+                _ = new PFFCall(null, "123", "siteId");
             }
             catch (Exception ex)
             {
@@ -24,7 +24,7 @@ namespace L1.Tests.Features.PFFCommunicators
         public void New_SeqNotNull_NotThrowsException()
         {
             // Act
-            var result = new PFFCall("seq", 123, "siteId");
+            var result = new PFFCall("seq", "123", "siteId");
 
             // Assert
             Assert.NotNull(result);
@@ -36,7 +36,7 @@ namespace L1.Tests.Features.PFFCommunicators
             // Act
             try
             {
-                _ = new PFFCall(123, null);
+                _ = new PFFCall("123", null);
             }
             catch (Exception ex)
             {

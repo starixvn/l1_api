@@ -2,7 +2,7 @@
 {
     public class PartnerGetBalanceCall : PartnerCall
     {
-        public PartnerGetBalanceCall(int playerId, string siteId, string operatorToken) : base(playerId, siteId)
+        public PartnerGetBalanceCall(string playerId, string siteId, string operatorToken) : base(playerId, siteId)
         {
             OperatorToken = operatorToken;
         }

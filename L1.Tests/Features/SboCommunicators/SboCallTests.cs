@@ -12,7 +12,7 @@ namespace L1.Tests.Features.SboCommunicators
             // Act
             try
             {
-                _ = new SboCall(null, 123, "siteId");
+                _ = new SboCall(null, "123", "siteId");
             }
             catch (Exception ex)
             {
@@ -24,7 +24,7 @@ namespace L1.Tests.Features.SboCommunicators
         public void New_SeqNotNull_NotThrowsException()
         {
             // Act
-            var result = new SboCall("seq", 123, "siteId");
+            var result = new SboCall("seq", "123", "siteId");
 
             // Assert
             Assert.NotNull(result);
@@ -36,7 +36,7 @@ namespace L1.Tests.Features.SboCommunicators
             // Act
             try
             {
-                _ = new SboCall(123, null);
+                _ = new SboCall("123", null);
             }
             catch (Exception ex)
             {

@@ -5,12 +5,12 @@ namespace L1.Features.PFFCommunicators
 {
     public class PFFCall : PartnerCall
     {
-        public PFFCall(int playerId, string siteId)
+        public PFFCall(string playerId, string siteId)
             : this(Guid.NewGuid().ToString(), playerId, siteId)
         {
         }
 
-        public PFFCall(string seq, int playerId, string siteId) : base(seq, playerId, siteId)
+        public PFFCall(string seq, string playerId, string siteId) : base(seq, playerId, siteId)
         {
         }
     }

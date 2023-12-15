@@ -36,7 +36,7 @@ namespace L1.Features.PartnerCommunicators
 
         public DateTimeOffset TimeStamp { get; }
 
-        private string ExtractOperatorPlayerId(string playerId)
+        private static string ExtractOperatorPlayerId(string playerId)
         {
             return playerId.Split("~").LastOrDefault();
         }

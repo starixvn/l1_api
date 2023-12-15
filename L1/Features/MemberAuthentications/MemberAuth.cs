@@ -61,5 +61,7 @@ namespace L1.Features.MemberAuthentications
             isTestCurrency = IsTestCurrency;
             partnerId = OperatorId;
         }
+
+        public string OperatorPlayerId { get; set; }
     }
 }

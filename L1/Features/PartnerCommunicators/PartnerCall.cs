@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace L1.Features.PartnerCommunicators
 {
@@ -24,7 +25,7 @@ namespace L1.Features.PartnerCommunicators
             TimeStamp = DateTimeOffset.UtcNow;
             Seq = seq;
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
-            PlayerId = playerId;
+            PlayerId = ExtractOperatorPlayerId(playerId);
         }
 
         public string Seq { get; set; }
@@ -34,5 +35,10 @@ namespace L1.Features.PartnerCommunicators
         public string SiteId { get; set; }
 
         public DateTimeOffset TimeStamp { get; }
+
+        private string ExtractOperatorPlayerId(string playerId)
+        {
+            return playerId.Split("~").LastOrDefault();
+        }
     }
 }

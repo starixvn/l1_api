@@ -1,3 +1,4 @@
+using System;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
@@ -93,6 +94,8 @@ namespace L1.WebApi
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            Sentry.SentrySdk.CaptureMessage($"Game API Started at {DateTime.Now}");
         }
     }
 }

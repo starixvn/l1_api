@@ -4,6 +4,7 @@ using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
+using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -47,6 +48,11 @@ namespace L1.WebApi
             if (appSettings.PFFServiceSettings != null)
             {
                 services.AddPFFServices(appSettings.PFFServiceSettings);
+            }
+
+            if (appSettings.SabaPlayServiceSettings != null)
+            {
+                services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings);
             }
 
             services.AddControllers();

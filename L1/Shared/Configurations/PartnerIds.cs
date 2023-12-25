@@ -9,5 +9,7 @@
         public string PFF { get; set; }
 
         public string ONEworksSeal888 {get; set; }
+
+        public string SabaPlay { get; set; }
     }
 }

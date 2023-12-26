@@ -98,7 +98,7 @@ namespace L1.Features.MemberAuthentications
 
         public bool IsCash { get; set; }
 
-        string OperatorPlayerId { get; set; }
+        public string OperatorPlayerId { get; set; }
 
         public static VerificationResult CreateErrorResponse(int code)
            => new(code, string.Empty);

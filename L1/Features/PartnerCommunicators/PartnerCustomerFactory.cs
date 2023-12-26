@@ -1,5 +1,6 @@
 ﻿using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
+using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Shared.Configurations;
 using System;
@@ -23,7 +24,7 @@ namespace L1.Features.PartnerCommunicators
             services = new()
             {
                 { appSettings.PartnerIds.OW, typeof(OWCustomerService) },
-                { appSettings.PartnerIds.SBO, typeof(SboCustomerService) }
+                { appSettings.PartnerIds.SBO, typeof(SboCustomerService) },
             };
 
             if (appSettings.PartnerIds.OW_VG != null)
@@ -39,6 +40,11 @@ namespace L1.Features.PartnerCommunicators
             if (appSettings.PartnerIds.ONEworksSeal888 != null)
             {
                 services.Add(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
+            }
+
+            if (appSettings.PartnerIds.SabaPlay != null)
+            {
+                services.Add(appSettings.PartnerIds.SabaPlay, typeof(OWCustomerService));
             }
         }
 

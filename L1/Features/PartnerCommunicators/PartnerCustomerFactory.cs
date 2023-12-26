@@ -44,7 +44,7 @@ namespace L1.Features.PartnerCommunicators
 
             if (appSettings.PartnerIds.SabaPlay != null)
             {
-                services.Add(appSettings.PartnerIds.SabaPlay, typeof(OWCustomerService));
+                services.Add(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
             }
         }
 

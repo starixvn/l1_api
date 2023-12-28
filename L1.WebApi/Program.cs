@@ -19,10 +19,12 @@ namespace L1.WebApi
                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                   .Build();
 
-            return WebHost.CreateDefaultBuilder(args)
+            var builder = WebHost.CreateDefaultBuilder(args)
                 .UseSentry(opt => opt.Environment = configuration["Env"])
                 .UseStartup<Startup>()
                 .UseUrls($"http://0.0.0.0:{configuration["AppSettings:HostingPort"]}");
+
+            return builder;
         }
     }
 }

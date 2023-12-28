@@ -11,7 +11,9 @@ COPY ./L1.WebApi .
 
 RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
-FROM hub.lumigame.com/base/dotnet/core/aspnet:5.0-alpine AS base
+FROM hub.lumigame.com/base/dotnet/core/aspnet:5.0.15-buster-slim AS base
+
+RUN apt-get update && apt-get install wget curl telnet -y
 
 WORKDIR /app
 RUN adduser app_user --disabled-password

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IdentityModel;
+using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
@@ -20,44 +23,59 @@ namespace L1.Features.SabaPlayCommunicators
 {
     public class SabaPlayCustomerService : IPartnerCustomerServices
     {
-        private readonly ISabaPlayService SabaPlayService;
+        private readonly ISabaPlayService sabaPlayService;
         private readonly ILogService logService;
         private readonly SabaPlayEndPoints endpoints;
         private readonly ISentryClient sentryClient;
         private readonly IAppSettings appSettings;
+        private readonly IAdminApiService adminApiSerivce;
 
         public SabaPlayCustomerService(
             ISabaPlayService SabaPlayService,
             ILogService logService,
+            IAdminApiService adminApiSerivce,
             SabaPlayEndPoints endpoints,
             ISentryClient sentryClient,
             IAppSettings appSettings)
         {
-            this.SabaPlayService = SabaPlayService;
+            this.sabaPlayService = SabaPlayService;
             this.logService = logService;
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
+            this.adminApiSerivce = adminApiSerivce;
         }
 
         public string OperatorId { get; set; }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
-        => SabaPlayService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+        => sabaPlayService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
 
         public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
-        => SabaPlayService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
+        => sabaPlayService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
 
         public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
-        => SabaPlayService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+        => sabaPlayService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
-            var response = await SabaPlayService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
+            var response = await sabaPlayService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
 
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(appSettings.PartnerIds.SabaPlay, response, system);
+
+                if (call.Amount >= appSettings.HighStake)
+                {
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                        SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId),
+                        call.GameTypeId,
+                        call.Amount,
+                        call.Currency,
+                        call.ChoiceId,
+                        system,
+                        metadata));
+                }
             }
 
             return response;
@@ -65,7 +83,7 @@ namespace L1.Features.SabaPlayCommunicators
 
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
-            var response = await SabaPlayService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var response = await sabaPlayService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
 
             if (response.Result.IsSuccessful())
             {
@@ -77,7 +95,7 @@ namespace L1.Features.SabaPlayCommunicators
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
         {
-            var response = await SabaPlayService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
+            var response = await sabaPlayService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
 
             if (response.Result.IsSuccessful())
             {
@@ -95,7 +113,7 @@ namespace L1.Features.SabaPlayCommunicators
             var response = await Policy
                 .HandleResult<PartnerResponse<HitJackpotResult>>(response => response.Result.IsFailed())
                 .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
-                .ExecuteAsync(() => SabaPlayService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
+                .ExecuteAsync(() => sabaPlayService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
 
             if (response.Result.IsSuccessful())
             {

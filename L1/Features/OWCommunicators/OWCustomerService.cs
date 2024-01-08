@@ -64,8 +64,6 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogBetAsync(OperatorId, response, system, metadata);
 
-                sentryClient.CaptureMessage($"Game api NotifyHighStake with call.Amount: {call.Amount} - appSettings.HighStake: { appSettings.HighStake}", SentryLevel.Info);
-
                 if (call.Amount >= appSettings.HighStake)
                 {
                     await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(

@@ -74,7 +74,9 @@ namespace L1.Features.SabaPlayCommunicators
                         call.Currency,
                         call.ChoiceId,
                         system,
-                        metadata));
+                        metadata,
+                        call.OperatorId,
+                        call.UserId));
                 }
             }
 

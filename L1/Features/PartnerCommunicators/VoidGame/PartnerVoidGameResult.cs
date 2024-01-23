@@ -2,6 +2,6 @@
 {
     public class PartnerVoidGameResult : PartnerResult
     {
-        public string PlayerId { get; set; }
+        public int PlayerId { get; set; }
     }
 }

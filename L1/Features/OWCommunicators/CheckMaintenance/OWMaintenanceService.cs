@@ -45,7 +45,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
 
         protected override async Task<PartnerMaintenanceResult> GetMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
         {
-            var checkingMaintenanceCall = new PartnerCall(request.Call.PlayerId, request.Call.SiteId);
+            var checkingMaintenanceCall = new PartnerCall(request.Call.PlayerId.ToString(), request.Call.SiteId);
             var owRequestBody = JsonConvert.SerializeObject(checkingMaintenanceCall);
 
             var content = new StringContent(owRequestBody, Encoding.UTF8, DefaultMediaType);

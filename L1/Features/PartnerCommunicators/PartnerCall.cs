@@ -25,7 +25,11 @@ namespace L1.Features.PartnerCommunicators
             TimeStamp = DateTimeOffset.UtcNow;
             Seq = seq;
             SiteId = siteId ?? throw new ArgumentNullException(nameof(siteId));
-            PlayerId = int.Parse(ExtractOperatorPlayerId(playerId));
+
+            if(int.TryParse(ExtractOperatorPlayerId(playerId), out int parsedPlayerId))
+            {
+                PlayerId = parsedPlayerId;
+            }
         }
 
         public string Seq { get; set; }

@@ -12,7 +12,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             string playerId,
             string siteId,
             int gameRoundId,
-            byte gameTypeId,
+            int gameTypeId,
             int choiceId,
             decimal amount,
             string currency,
@@ -45,7 +45,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
 
         public int GameRoundId { get; set; }
 
-        public byte GameTypeId { get; set; }
+        public int GameTypeId { get; set; }
 
         public int ChoiceId { get; set; }
 

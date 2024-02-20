@@ -6,7 +6,7 @@ namespace L1.WebApi.Models
     {
         public int GameRoundId { get; set; }
 
-        public byte GameTypeId { get; set; }
+        public int GameTypeId { get; set; }
 
         public decimal TotalAmount { get; set; }
 

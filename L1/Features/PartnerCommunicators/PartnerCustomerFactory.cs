@@ -54,6 +54,8 @@ namespace L1.Features.PartnerCommunicators
                 ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
                 : default;
 
+            Console.WriteLine(string.Join(' ', services.Keys));
+
             if (service != default)
             {
                 service.OperatorId = partnerId;

@@ -6,7 +6,7 @@
 
         public string Language { get; set; }
 
-        public byte? GameTypeId { get; set; }
+        public int? GameTypeId { get; set; }
 
         public string CurrencyGroupId { get; set; }
     }

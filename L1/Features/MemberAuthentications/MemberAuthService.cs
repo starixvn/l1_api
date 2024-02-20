@@ -37,7 +37,6 @@ namespace L1.Features.MemberAuthentications
             this.sentryClient = sentryClient;
         }
 
-
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
         {
             var memberAuth = await memberAuthDataAccess.GetByToken(verificationParams.Token);
@@ -136,7 +135,7 @@ namespace L1.Features.MemberAuthentications
                 gameClientUrl.ToString().TrimEnd('/'));
         }
 
-        private static SingleSignOnResult CreateSSOResult(byte? gameTypeId, string token, string language, string gameClientUrl, string partnerId = null)
+        private static SingleSignOnResult CreateSSOResult(int? gameTypeId, string token, string language, string gameClientUrl, string partnerId = null)
         {
             var clientRedirectUrl = new StringBuilder();
             clientRedirectUrl.Append($"{gameClientUrl}?token={token}&lang={language}");

@@ -17,13 +17,13 @@ namespace L1.WebApi.Models
 
         public string PlayerId { get; set; }
 
-        public string PlayerName { get; set; }     
+        public string PlayerName { get; set; }
 
-        public byte? GameTypeId { get; set; }
+        public int? GameTypeId { get; set; }
 
         public byte AppType { get; set; } = AppTypes.SabaClub;
 
-        public string SiteName { get; set; } 
+        public string SiteName { get; set; }
 
         public Auth Auth { get; set; }
 

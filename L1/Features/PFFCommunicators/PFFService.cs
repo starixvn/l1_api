@@ -47,7 +47,7 @@ namespace L1.Features.PFFCommunicators
             }
             else
             {
-                finalResponse = await CreateNetworkErrorResponse<T>(new PFFCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);
+                finalResponse = await CreateNetworkErrorResponse<T>(new PFFCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
             }
 
             finalResponse.Request = request;

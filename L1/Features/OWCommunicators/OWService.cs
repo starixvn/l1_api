@@ -49,7 +49,7 @@ namespace L1.Features.OWCommunicators
             }
             else
             {
-                finalResponse = await CreateOWNetworkErrorResponse<T>(new OWCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);
+                finalResponse = await CreateOWNetworkErrorResponse<T>(new OWCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
             }
 
             finalResponse.Request = request;

@@ -67,7 +67,7 @@ namespace L1.Features.OWCommunicators
                 if (call.Amount >= appSettings.HighStake)
                 {
                     await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
-                        call.PlayerId.ToString(),
+                        call.PlayerId,
                         call.GameTypeId,
                         call.Amount,
                         call.Currency,

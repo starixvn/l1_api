@@ -9,6 +9,8 @@ namespace L1.Features.SabaPlayCommunicators
         public string SecretKey { get; set; }
 
         public SabaPlayEndPoints Endpoints { get; set; }
+
+        public string Proxy { get; set; }
     }
 
     public class SabaPlayEndPoints

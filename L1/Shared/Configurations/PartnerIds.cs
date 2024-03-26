@@ -11,5 +11,9 @@
         public string ONEworksSeal888 {get; set; }
 
         public string SabaPlay { get; set; }
+
+        public string ONEworksCash { get; set; }
+
+        public string ONEworksCredit { get; set; }
     }
 }

@@ -27,7 +27,9 @@ namespace L1.Features.PartnerCommunicators
             this.serviceProvider = serviceProvider;
             services = new() { };
 
+            AddService(appSettings.PartnerIds.ONEworksCash, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.OW, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.ONEworksCredit, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.SBO, typeof(SboCustomerService));
             AddService(appSettings.PartnerIds.OW_VG, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));

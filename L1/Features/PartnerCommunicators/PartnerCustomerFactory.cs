@@ -25,37 +25,27 @@ namespace L1.Features.PartnerCommunicators
         {
             this.sentryClient = sentryClient;
             this.serviceProvider = serviceProvider;
-            services = new()
-            {
-                { appSettings.PartnerIds.OW, typeof(OWCustomerService) },
-                { appSettings.PartnerIds.SBO, typeof(SboCustomerService) },
-            };
+            services = new() { };
 
-            if (appSettings.PartnerIds.OW_VG != null)
-            {
-                services.Add(appSettings.PartnerIds.OW_VG, typeof(OWCustomerService));
-            }
+            AddService(appSettings.PartnerIds.OW, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.SBO, typeof(SboCustomerService));
+            AddService(appSettings.PartnerIds.OW_VG, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
+            AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
+        }
 
-            if (appSettings.PartnerIds.PFF != null)
+        private void AddService(string key, Type serviceType)
+        {
+            if(key != null)
             {
-                services.Add(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
-            }
-
-            if (appSettings.PartnerIds.ONEworksSeal888 != null)
-            {
-                services.Add(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
-            }
-
-            if (appSettings.PartnerIds.SabaPlay != null)
-            {
-                services.Add(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
+                services.Add(key, serviceType);
             }
         }
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)
         {
-            sentryClient.CaptureMessage($"GetCustomerService 1 {partnerId}", SentryLevel.Error);
-            sentryClient.CaptureMessage($"GetCustomerService 2 {partnerId} {services.ContainsKey(partnerId)}", SentryLevel.Error);
+            sentryClient.CaptureMessage($"GetCustomerService {partnerId} {services.ContainsKey(partnerId)}", SentryLevel.Error);
             var service = !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
                 ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
                 : default;

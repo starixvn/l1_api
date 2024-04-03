@@ -3,6 +3,8 @@ using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Shared.Configurations;
+using Sentry;
+using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 
@@ -17,9 +19,11 @@ namespace L1.Features.PartnerCommunicators
     {
         private readonly Dictionary<string, Type> services;
         private readonly IServiceProvider serviceProvider;
+        private readonly ISentryClient sentryClient;
 
-        public PartnerCustomerFactory(IServiceProvider serviceProvider, IAppSettings appSettings)
+        public PartnerCustomerFactory(IServiceProvider serviceProvider, IAppSettings appSettings, ISentryClient sentryClient)
         {
+            this.sentryClient = sentryClient;
             this.serviceProvider = serviceProvider;
             services = new()
             {
@@ -50,6 +54,8 @@ namespace L1.Features.PartnerCommunicators
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)
         {
+            sentryClient.CaptureMessage($"GetCustomerService 1 {partnerId}", SentryLevel.Error);
+            sentryClient.CaptureMessage($"GetCustomerService 2 {partnerId} {services.ContainsKey(partnerId)}", SentryLevel.Error);
             var service = !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
                 ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
                 : default;

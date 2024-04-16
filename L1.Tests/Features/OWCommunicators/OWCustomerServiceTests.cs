@@ -12,7 +12,6 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
-using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;
 using Xunit;
@@ -45,7 +44,9 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             service.OperatorId = "OW";
-
+            var response = new PartnerResponse<PartnerEnterPortalResult> { Result = new PartnerEnterPortalResult() };
+            owService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, "OW")
+             .Returns(x => Task.FromResult(response));
             // Act
             await service.EnterPortal(call);
 
@@ -71,7 +72,9 @@ namespace L1.Tests.Features.OWCommunicators
         {
             // Arrange
             service.OperatorId = "OW";
-
+            var response = new PartnerResponse<PartnerGetBetLimitResult> { Result = new PartnerGetBetLimitResult() };
+            owService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, "OW")
+             .Returns(x => Task.FromResult(response));
             // Act
             await service.GetBetLimit(call);
 
@@ -104,7 +107,6 @@ namespace L1.Tests.Features.OWCommunicators
             call.Amount = appSettings.HighStake;
             var response = new PartnerResponse<PartnerPlaceBetResult> { Result = new PartnerPlaceBetResult { Balance = 2000 } };
             owService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, "OW").Returns(x => Task.FromResult(response));
-
 
             // Act
             await service.PlaceBet(call, 1);

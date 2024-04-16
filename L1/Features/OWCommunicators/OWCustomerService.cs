@@ -47,14 +47,32 @@ namespace L1.Features.OWCommunicators
 
         public string OperatorId { get; set; }
 
-        public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
-        => oWService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, OperatorId);
+        public async Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
+        {
+            var response = await oWService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, OperatorId);
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogEnterPortalAsync(OperatorId, response);
+            }
+
+            return response;
+        }
 
         public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
         => oWService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call, OperatorId);
 
-        public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
-        => oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, OperatorId);
+        public async Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
+        {
+            var response = await oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, OperatorId);
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogGetBetLimitAsync(OperatorId, response);
+            }
+
+            return response;
+        }
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {

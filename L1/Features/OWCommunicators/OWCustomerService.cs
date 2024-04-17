@@ -51,7 +51,7 @@ namespace L1.Features.OWCommunicators
         {
             var response = await oWService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, OperatorId);
 
-            if (response.Result.IsSuccessful())
+            if (response.Result.IsSuccessful() && appSettings.LogEnabling.EnterPortal)
             {
                 await logService.LogEnterPortalAsync(OperatorId, response);
             }
@@ -66,7 +66,7 @@ namespace L1.Features.OWCommunicators
         {
             var response = await oWService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, OperatorId);
 
-            if (response.Result.IsSuccessful())
+            if (response.Result.IsSuccessful() && appSettings.LogEnabling.GetBetLimit)
             {
                 await logService.LogGetBetLimitAsync(OperatorId, response);
             }

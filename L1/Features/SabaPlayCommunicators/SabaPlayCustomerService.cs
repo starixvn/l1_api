@@ -13,6 +13,8 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Features.PFFCommunicators;
+using L1.Features.SboCommunicators;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
@@ -48,14 +50,31 @@ namespace L1.Features.SabaPlayCommunicators
 
         public string OperatorId { get; set; }
 
-        public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
-        => sabaPlayService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+        public async Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
+        {
+            var response = await sabaPlayService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+            if (response.Result.IsSuccessful() && appSettings.LogEnabling.EnterPortal)
+            {
+                await logService.LogEnterPortalAsync(OperatorId, response);
+            }
+
+            return response;
+        }
 
         public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
         => sabaPlayService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
 
-        public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
-        => sabaPlayService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+        public async Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
+        {
+            var response = await sabaPlayService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+
+            if (response.Result.IsSuccessful() && appSettings.LogEnabling.GetBetLimit)
+            {
+                await logService.LogGetBetLimitAsync(OperatorId, response);
+            }
+
+            return response;
+        }
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {

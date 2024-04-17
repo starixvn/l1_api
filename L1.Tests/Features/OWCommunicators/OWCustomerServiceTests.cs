@@ -37,6 +37,7 @@ namespace L1.Tests.Features.OWCommunicators
                 OW = "OW",
                 SBO = "SBO"
             };
+            appSettings.LogEnabling.Returns(new LogEnabling { EnterPortal = true, GetBetLimit = true });
         }
 
         [Theory, AutoData]

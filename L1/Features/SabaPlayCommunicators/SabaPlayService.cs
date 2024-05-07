@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
+using L1.Shared.Constants;
 using L1.Shared.Helpers;
 using Newtonsoft.Json;
 
@@ -56,6 +57,8 @@ namespace L1.Features.SabaPlayCommunicators
             {
                 finalResponse.AccessKey = accessKey;
                 await failureHandler.Handle<T>(finalResponse);
+
+                finalResponse.Result.ErrorCode = ErrorCodes.CovertErrorCode(finalResponse.Result.ErrorCode);
             }
 
             return finalResponse;

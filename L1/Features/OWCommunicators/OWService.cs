@@ -59,10 +59,7 @@ namespace L1.Features.OWCommunicators
                 finalResponse.AccessKey = accessKey;
                 await failureHandler.Handle<T>(finalResponse, operatorId);
 
-                if (finalResponse.Result.ErrorCode == ErrorCodes.NewInsufficientFunds)
-                {
-                    finalResponse.Result.ErrorCode = ErrorCodes.InsufficientFunds;
-                }
+                finalResponse.Result.ErrorCode = ErrorCodes.CovertErrorCode(finalResponse.Result.ErrorCode);
             }
 
             return finalResponse;

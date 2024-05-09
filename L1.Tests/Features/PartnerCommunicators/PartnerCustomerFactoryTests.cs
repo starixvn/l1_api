@@ -2,6 +2,7 @@
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Configurations;
 using NSubstitute;
+using Sentry;
 using System;
 using Xunit;
 
@@ -13,18 +14,20 @@ namespace L1.Tests.Features.PartnerCommunicators
 
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
         private readonly IAppSettings appSettings;
+        private readonly ISentryClient sentryClient;
 
         public PartnerCustomerFactoryTests()
         {
             serviceProvider = Substitute.For<IServiceProvider>();
             appSettings = Substitute.For<IAppSettings>();
+            sentryClient = Substitute.For<ISentryClient>();
             appSettings.PartnerIds = new PartnerIds
             {
                 OW = "OW",
                 SBO = "SBO"
             };
 
-            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings);
+            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings, sentryClient);
         }
 
         [InlineData("")]

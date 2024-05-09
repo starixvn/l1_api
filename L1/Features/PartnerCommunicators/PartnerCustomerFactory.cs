@@ -47,13 +47,10 @@ namespace L1.Features.PartnerCommunicators
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)
         {
-            sentryClient.CaptureMessage($"GetCustomerService {partnerId} {services.ContainsKey(partnerId)}", SentryLevel.Error);
             var service = !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
                 ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
                 : default;
-
-            Console.WriteLine(string.Join(' ', services.Keys));
-
+            
             if (service != default)
             {
                 service.OperatorId = partnerId;

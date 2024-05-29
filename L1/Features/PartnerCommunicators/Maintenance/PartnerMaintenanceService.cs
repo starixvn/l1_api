@@ -93,23 +93,18 @@ namespace L1.Features.PartnerCommunicators.Maintenance
 
         private static AsyncRetryPolicy<PartnerMaintenanceResult> CreateObservationPolicy()
         {
-            const double retryDelayInMilliseconds = 100;
+            const double retryDelayInMilliseconds = 5000;
             const int numberOfRetries = 3;
 
             var retryDelay = TimeSpan.FromMilliseconds(retryDelayInMilliseconds);
 
             return Policy
                 .HandleResult<PartnerMaintenanceResult>(maintenanceSchedule => maintenanceSchedule.IsUnderMaintenance())
-                .WaitAndRetryAsync(
-                    numberOfRetries,
-                    (_, maintenanceSchedule, _) =>
-                    {
-                        var duration = maintenanceSchedule.Result.CalculateDuration();
-
-                        return duration.Add(retryDelay);
-                    },
+                .WaitAndRetryForeverAsync(
+                    (_, maintenanceSchedule, _) => retryDelay,
                     (_, _, _, _) =>
                     {
+                        Console.WriteLine("Check Maintenance Call!!");
                         return Task.CompletedTask;
                     });
         }

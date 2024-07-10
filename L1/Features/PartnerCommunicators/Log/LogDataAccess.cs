@@ -23,6 +23,8 @@ namespace L1.Features.PartnerCommunicators.Log
         Task WriteEnterPortalAsync(PartnerLog log);
 
         Task WriteGetBetLimitAsync(PartnerLog log);
+
+        Task WriteAwardAsync(PartnerLog log);
     }
 
     public class LogDataAccess : ILogDataAccess
@@ -36,6 +38,7 @@ namespace L1.Features.PartnerCommunicators.Log
         private const string RetrieveEndGameCollectionName = "retrieve_requests";
         private const string EnterPortalCollectionName = "enter_portals";
         private const string GetBetLimitCollectionName = "bet_limits";
+        private const string AwardCollectionName = "awards";
 
         private readonly IMongoCollection<PartnerLog> failedRequestsCollection;
         private readonly IMongoCollection<PartnerLog> betsCollection;
@@ -47,6 +50,7 @@ namespace L1.Features.PartnerCommunicators.Log
 
         private readonly IMongoCollection<PartnerLog> enterPortalsCollection;
         private readonly IMongoCollection<PartnerLog> getBetLimitsCollection;
+        private readonly IMongoCollection<PartnerLog> awardCollection;
 
 
         public LogDataAccess(IMongoClient mongoClient)
@@ -62,6 +66,7 @@ namespace L1.Features.PartnerCommunicators.Log
             retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
             enterPortalsCollection = database.GetCollection<PartnerLog>(EnterPortalCollectionName);
             getBetLimitsCollection = database.GetCollection<PartnerLog>(GetBetLimitCollectionName);
+            awardCollection = database.GetCollection<PartnerLog>(AwardCollectionName);
         }
 
         public Task WriteFailedRequestAsync(PartnerLog log)
@@ -89,5 +94,8 @@ namespace L1.Features.PartnerCommunicators.Log
             => enterPortalsCollection.InsertOneAsync(log);
         public Task WriteGetBetLimitAsync(PartnerLog log)
             => getBetLimitsCollection.InsertOneAsync(log);
+
+        public Task WriteAwardAsync(PartnerLog log)
+            => awardCollection.InsertOneAsync(log);
     }
 }

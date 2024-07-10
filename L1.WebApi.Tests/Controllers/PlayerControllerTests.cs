@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
@@ -207,6 +208,36 @@ namespace L1.WebApi.Tests.Controllers
 
             // Act
             var actualValue = await controller.GetBetLimit(model);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task Award_Always_ReturnOkResult()
+        {
+            // Arrange
+            var model = fixture.Create<Award>();
+            var result = fixture.Create<PartnerResponse<PartnerAwardResult>>();
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
+            oWCustomerService.Award(Arg.Any<PartnerAwardCall>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.Award(model) as OkObjectResult;
+
+            // Assert
+            Assert.Equal(result, actualValue.Value);
+        }
+
+        [Fact]
+        public async Task Award_NotSupportedPartner_ReturnBadRequest()
+        {
+            // Arrange
+            var model = fixture.Create<Award>();
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(default(IPartnerCustomerServices));
+
+            // Act
+            var actualValue = await controller.Award(model);
 
             // Assert
             Assert.IsType<BadRequestResult>(actualValue);

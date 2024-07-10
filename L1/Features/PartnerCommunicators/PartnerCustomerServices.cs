@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
@@ -26,6 +27,8 @@ namespace L1.Features.PartnerCommunicators
         Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call);
 
         Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
+
+        Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call);
 
         string OperatorId { get; set; }
     }

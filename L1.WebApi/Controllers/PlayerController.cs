@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
@@ -177,6 +178,29 @@ namespace L1.WebApi.Controllers
                 model.GameRoundId,
                 model.GameTypeId,
                 model.WinningAmount));
+
+            return Ok(response);
+        }
+
+
+        [HttpPost]
+        [Route("[action]")]
+        [SwaggerOperation(Summary = "Award")]
+        public async Task<IActionResult> Award([FromBody] Award model)
+        {
+            var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
+
+            if (customerService == default)
+            {
+                return BadRequest();
+            }
+
+            var response = await customerService.Award(
+                new PartnerAwardCall(
+                    model.PlayerId,
+                    model.GameTypeId,
+                    model.Amount,
+                    model.PromotionId));
 
             return Ok(response);
         }

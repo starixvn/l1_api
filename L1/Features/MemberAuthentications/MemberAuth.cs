@@ -63,5 +63,7 @@ namespace L1.Features.MemberAuthentications
         }
 
         public string OperatorPlayerId { get; set; }
+
+        public bool DisableAward { get; set; }
     }
 }

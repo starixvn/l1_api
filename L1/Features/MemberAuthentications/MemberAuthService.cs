@@ -73,7 +73,8 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.DisableJackpotGames,
                     memberAuth.OperatorToken,
                     memberAuth.IsCash,
-                    memberAuth.OperatorPlayerId
+                    memberAuth.OperatorPlayerId,
+                    memberAuth.DisableAward
                     );
             }
 

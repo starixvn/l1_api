@@ -6,11 +6,13 @@ namespace L1.Features.PartnerCommunicators.Award
             string playerId,
             int gameTypeId,
             decimal amount,
-            int promotionId) : base(playerId)
+            int promotionId,
+            string currency) : base(playerId)
         {
             GameTypeId = gameTypeId;
             Amount = amount;
             PromotionId = promotionId;
+            Currency = currency;
         }
 
         public decimal Amount { get; set; }
@@ -18,5 +20,7 @@ namespace L1.Features.PartnerCommunicators.Award
         public int GameTypeId { get; set; }
 
         public int PromotionId { get; set; }
+
+        public string Currency { get; set; }
     }
 }

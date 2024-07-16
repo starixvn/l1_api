@@ -198,6 +198,7 @@ namespace L1.WebApi.Controllers
             var response = await customerService.Award(
                 new PartnerAwardCall(
                     model.PlayerId,
+                    model.SiteId,
                     model.GameTypeId,
                     model.Amount,
                     model.PromotionId,

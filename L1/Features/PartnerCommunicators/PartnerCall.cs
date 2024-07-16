@@ -14,13 +14,6 @@ namespace L1.Features.PartnerCommunicators
 
     public class PartnerCall : IPartnerCall
     {
-        public PartnerCall(string playerId)
-        {
-            Seq = Guid.NewGuid().ToString();
-            TimeStamp = DateTimeOffset.UtcNow;
-            PlayerId = ExtractOperatorPlayerId(playerId);
-        }
-
         public PartnerCall(string playerId, string siteId)
             : this(Guid.NewGuid().ToString(), playerId, siteId)
         {

@@ -4,10 +4,11 @@ namespace L1.Features.PartnerCommunicators.Award
     {
         public PartnerAwardCall(
             string playerId,
+            string siteId,
             int gameTypeId,
             decimal amount,
             int promotionId,
-            string currency) : base(playerId)
+            string currency) : base(playerId, siteId)
         {
             GameTypeId = gameTypeId;
             Amount = amount;

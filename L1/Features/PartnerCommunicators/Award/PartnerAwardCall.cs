@@ -1,3 +1,6 @@
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
 namespace L1.Features.PartnerCommunicators.Award
 {
     public class PartnerAwardCall : PartnerCall
@@ -16,6 +19,7 @@ namespace L1.Features.PartnerCommunicators.Award
             Currency = currency;
         }
 
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal Amount { get; set; }
 
         public int GameTypeId { get; set; }

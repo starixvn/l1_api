@@ -30,5 +30,7 @@ namespace L1.Features.OWCommunicators
         public string HitJackpot { get; set; }
 
         public string GetBetLimit { get; set; }
+
+        public string Award { get; set;}
     }
 }

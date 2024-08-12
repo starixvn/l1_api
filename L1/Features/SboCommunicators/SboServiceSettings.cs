@@ -28,5 +28,7 @@ namespace L1.Features.SboCommunicators
         public string HitJackpot { get; set; }
 
         public string GetBetLimit { get; set; }
+
+        public string Award { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using IdentityModel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
@@ -124,6 +125,22 @@ namespace L1.Features.SabaPlayCommunicators
             else
             {
                 sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {appSettings.PartnerIds.SabaPlay} - CustId {call.PlayerId}", SentryLevel.Fatal);
+            }
+
+            return response;
+        }
+
+        public async Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call)
+        {
+            var response = await sabaPlayService.Post<PartnerAwardResult>(endpoints.Award, call);
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogAwardAsync(OperatorId, response);
+            }
+            else
+            {
+                sentryClient.CaptureMessage($"Call Award failed for Partner {appSettings.PartnerIds.SabaPlay} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

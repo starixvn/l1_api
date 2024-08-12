@@ -19,6 +19,8 @@ namespace L1.Features.PartnerCommunicators.Log
         Task LogRetrieveEndGameAsync(SBLog log);
 
         Task LogHitJackpotAsync<T>(string partnerId, PartnerResponse<T> response) where T : PartnerResult;
+
+        Task LogAwardAsync<T>(string partnerId, PartnerResponse<T> response) where T : PartnerResult;
     }
 
     public class LogService : ILogService
@@ -82,5 +84,11 @@ namespace L1.Features.PartnerCommunicators.Log
             response.AccessKey,
             metadata
             );
+        public async Task LogAwardAsync<T>(string partnerId, PartnerResponse<T> response) where T : PartnerResult
+        {
+            var log = ConvertLog(partnerId, response);
+
+            await logDataAccess.WriteAwardAsync(log);
+        }
     }
 }

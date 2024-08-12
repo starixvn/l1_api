@@ -37,7 +37,8 @@ namespace L1.Features.MemberAuthentications
             bool disableJackpotGames,
             string operatorToken,
             bool isCash,
-            string operatorPlayerId
+            string operatorPlayerId,
+            bool disableAward
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
@@ -60,6 +61,7 @@ namespace L1.Features.MemberAuthentications
             DisableJackpotGames = disableJackpotGames;
             IsCash = isCash;
             OperatorPlayerId = operatorPlayerId;
+            DisableAward = disableAward;
         }
 
         public string PlayerId { get; }
@@ -100,6 +102,8 @@ namespace L1.Features.MemberAuthentications
 
         public string OperatorPlayerId { get; set; }
 
+        public bool DisableAward { get; set; }
+
         public static VerificationResult CreateErrorResponse(int code)
            => new(code, string.Empty);
 
@@ -123,7 +127,8 @@ namespace L1.Features.MemberAuthentications
             bool disableJackpotGames,
             string operatorToken,
             bool isCash,
-            string operatorPlayerId)
+            string operatorPlayerId,
+            bool disableAward)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
@@ -145,6 +150,7 @@ namespace L1.Features.MemberAuthentications
                 disableJackpotGames,
                 operatorToken,
                 isCash,
-                operatorPlayerId);
+                operatorPlayerId,
+                disableAward);
     }
 }

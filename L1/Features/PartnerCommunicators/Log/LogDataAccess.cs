@@ -19,6 +19,8 @@ namespace L1.Features.PartnerCommunicators.Log
         Task WriteSignInAsync(SBLog log);
 
         Task WriteRetrieveEndGameAsync(SBLog log);
+
+        Task WriteAwardAsync(PartnerLog log);
     }
 
     public class LogDataAccess : ILogDataAccess
@@ -30,6 +32,7 @@ namespace L1.Features.PartnerCommunicators.Log
         private const string HitJackpotCollectionName = "hit_jackpots";
         private const string SignInCollectionName = "signin_requests";
         private const string RetrieveEndGameCollectionName = "retrieve_requests";
+        private const string AwardCollectionName = "awards";
 
         private readonly IMongoCollection<PartnerLog> failedRequestsCollection;
         private readonly IMongoCollection<PartnerLog> betsCollection;
@@ -39,6 +42,7 @@ namespace L1.Features.PartnerCommunicators.Log
         private readonly IMongoCollection<SBLog> signInCollection;
         private readonly IMongoCollection<SBLog> retrieveCollection;
 
+        private readonly IMongoCollection<PartnerLog> awardCollection;
         public LogDataAccess(IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase(MongoDatabases.Log);
@@ -50,6 +54,7 @@ namespace L1.Features.PartnerCommunicators.Log
             hitJackpotsCollection = database.GetCollection<PartnerLog>(HitJackpotCollectionName);
             signInCollection = database.GetCollection<SBLog>(SignInCollectionName);
             retrieveCollection = database.GetCollection<SBLog>(RetrieveEndGameCollectionName);
+            awardCollection = database.GetCollection<PartnerLog>(AwardCollectionName);
         }
 
         public Task WriteFailedRequestAsync(PartnerLog log)
@@ -72,5 +77,8 @@ namespace L1.Features.PartnerCommunicators.Log
 
         public Task WriteRetrieveEndGameAsync(SBLog log)
             => retrieveCollection.InsertOneAsync(log);
+
+        public Task WriteAwardAsync(PartnerLog log)
+            => awardCollection.InsertOneAsync(log);
     }
 }

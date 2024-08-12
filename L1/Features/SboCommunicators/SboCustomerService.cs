@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
 using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
@@ -103,6 +104,22 @@ namespace L1.Features.SboCommunicators
             else
             {
                 sentryClient.CaptureMessage($"Call HitJackpot failed for Partner {appSettings.PartnerIds.SBO} - CustId {call.PlayerId}", SentryLevel.Fatal);
+            }
+
+            return response;
+        }
+
+        public async Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call)
+        {
+            var response = await sboService.Post<PartnerAwardResult>(endpoints.Award, call);
+
+            if (response.Result.IsSuccessful())
+            {
+                await logService.LogAwardAsync(OperatorId, response);
+            }
+            else
+            {
+                sentryClient.CaptureMessage($"Call Award failed for Partner {appSettings.PartnerIds.SBO} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
             return response;

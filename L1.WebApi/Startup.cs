@@ -1,4 +1,5 @@
 using System;
+using Coravel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
@@ -6,6 +7,7 @@ using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
+using L1.Shared.Configurations;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -55,6 +57,11 @@ namespace L1.WebApi
                 services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings);
             }
 
+            if (appSettings.SabaPlayDailySummaryServiceSettings != null)
+            {
+                services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings);
+            }
+
             services.AddControllers();
 
             services.AddMvc();
@@ -86,6 +93,8 @@ namespace L1.WebApi
                 });
             }
 
+            ConfigureScheduler(app);
+
             app.ConfigureExceptionHandler();
             app.ConfigureLocalization();
 
@@ -102,6 +111,17 @@ namespace L1.WebApi
             });
 
             Sentry.SentrySdk.CaptureMessage($"Game API Started at {DateTime.Now}");
+        }
+
+        private void ConfigureScheduler(IApplicationBuilder app)
+        {
+            var serviceProvider = app.ApplicationServices;
+            var appSettings = serviceProvider.GetService<IAppSettings>();
+
+            if(appSettings.SabaPlayDailySummaryServiceSettings != null)
+            {
+                serviceProvider.UseScheduler(scheduler => scheduler.AddSabaplayScheduleJobs());
+            }
         }
     }
 }

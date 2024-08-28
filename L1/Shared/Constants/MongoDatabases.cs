@@ -6,5 +6,6 @@
         public const string Member = "member";
         public const string Log = "log";
         public const string Minigame = "minigame";
+        public const string Summary = "summary";
     }
 }

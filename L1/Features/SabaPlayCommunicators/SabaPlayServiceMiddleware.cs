@@ -1,7 +1,11 @@
 ﻿using System.Net;
 using System.Net.Http;
+using Coravel;
+using Coravel.Scheduling.Schedule.Interfaces;
 using L1.Features.PartnerCommunicators;
 using L1.Features.SabaPlayCommunicators.CheckMaintenance;
+using L1.Features.SabaPlayCommunicators.DailySummary;
+using L1.Features.SabaPlayCommunicators.ScheduleJob;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.SabaPlayCommunicators
@@ -34,6 +38,39 @@ namespace L1.Features.SabaPlayCommunicators
                     };
                 });
             }
+        }
+
+        public static void AddSabaPlayDailySummaryServices(this IServiceCollection services,
+            SabaPlayDailySummaryServiceSettings sabaPlayDailySummaryServiceSettings)
+        {
+            services.AddScheduler();
+            services.AddTransient<DailySummaryJob>();
+            services.AddScoped<IDailySummaryDataAccess, DailySummaryDataAccess>();
+            services.AddScoped<ISabaPlayDailySummaryService, SabaPlayDailySummaryService>();
+
+            services.AddSingleton(sabaPlayDailySummaryServiceSettings);
+
+            var sabaPlayHttpClient = services.AddHttpClient<ISabaPlayDailySummaryService, SabaPlayDailySummaryService>(httpClient =>
+            {
+                httpClient.BaseAddress = sabaPlayDailySummaryServiceSettings.BaseUrl;
+            });
+
+            if (!string.IsNullOrEmpty(sabaPlayDailySummaryServiceSettings.Proxy))
+            {
+                sabaPlayHttpClient.ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    return new HttpClientHandler
+                    {
+                        Proxy = new WebProxy(sabaPlayDailySummaryServiceSettings.Proxy),
+                        UseProxy = true,
+                    };
+                });
+            }
+        }
+
+        public static void AddSabaplayScheduleJobs(this IScheduler scheduler)
+        {
+            scheduler.Schedule<DailySummaryJob>().EveryMinute();
         }
     }
 }

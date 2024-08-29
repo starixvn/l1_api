@@ -18,9 +18,8 @@ namespace L1.Features.SabaPlayCommunicators.ScheduleJob
 
         public async Task Invoke()
         {
-            Sentry.SentrySdk.CaptureMessage($"Invoke DailySummaryJob!");
+            Sentry.SentrySdk.CaptureMessage("Run SabaPlay Daily Summary Job!");
             var dailySummaryData = await sabaPlayDailySummaryService.Post();
-            Sentry.SentrySdk.CaptureMessage($"dailySummaryData - {dailySummaryData.IsSuccessful()} - {dailySummaryData.Payload.TargetDate} - {dailySummaryData.Payload.SiteData.Count()}");
 
             if (dailySummaryData.IsSuccessful())
             {

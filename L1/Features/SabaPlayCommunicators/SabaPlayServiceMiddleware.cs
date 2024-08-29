@@ -70,7 +70,7 @@ namespace L1.Features.SabaPlayCommunicators
 
         public static void AddSabaplayScheduleJobs(this IScheduler scheduler)
         {
-            scheduler.Schedule<DailySummaryJob>().EveryMinute();
+            scheduler.Schedule<DailySummaryJob>().Cron("0 */6 * * *").RunOnceAtStart();
         }
     }
 }

@@ -117,8 +117,6 @@ namespace L1.WebApi
         {
             var serviceProvider = app.ApplicationServices;
             var appSettings = serviceProvider.GetService<IAppSettings>();
-            Sentry.SentrySdk.CaptureMessage($"{appSettings.SabaPlayDailySummaryServiceSettings != null}");
-
 
             if (appSettings.SabaPlayDailySummaryServiceSettings != null)
             {

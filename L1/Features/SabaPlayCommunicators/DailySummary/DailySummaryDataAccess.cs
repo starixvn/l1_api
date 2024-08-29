@@ -19,7 +19,7 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
         public DailySummaryDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
         {
             this.appSettings = appSettings;
-            var database = mongoClient.GetDatabase(MongoDatabases.Summary);
+            var database = mongoClient.GetDatabase(MongoDatabases.Minigame);
 
             summaryCollection = database.GetCollection<OperatorDailySummary>("operator_daily_summaries");
         }
@@ -48,7 +48,7 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
                 }
             }
 
-            await summaryCollection.BulkWriteAsync(writes);
+            await summaryCollection.BulkWriteAsync(writes, new() { IsOrdered = false });
         }
     }
 }

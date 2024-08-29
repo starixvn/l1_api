@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
@@ -48,7 +49,10 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
                 }
             }
 
-            await summaryCollection.BulkWriteAsync(writes, new() { IsOrdered = false });
+            if(writes.Any())
+            {
+                await summaryCollection.BulkWriteAsync(writes, new() { IsOrdered = false });
+            }
         }
     }
 }

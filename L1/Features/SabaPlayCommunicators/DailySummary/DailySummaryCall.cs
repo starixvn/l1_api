@@ -18,6 +18,6 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
 
     public class DailySummaryCallPayload
     {
-        public string TargetDate { get; set; } = DateTimeOffset.UtcNow.ToString("yyyy/MM/dd");
+        public string TargetDate { get; set; } = DateTimeOffset.UtcNow.AddHours(-4).AddDays(-1).ToString("yyyy/MM/dd");
     }
 }

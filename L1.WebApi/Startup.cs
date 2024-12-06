@@ -6,6 +6,7 @@ using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
+using L1.Features.SKCommunicators;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,11 @@ namespace L1.WebApi
             if (appSettings.SabaPlayServiceSettings != null)
             {
                 services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings);
+            }
+
+            if (appSettings.SKServiceSettings != null)
+            {
+                services.AddSKServices(appSettings.SKServiceSettings);
             }
 
             services.AddControllers();

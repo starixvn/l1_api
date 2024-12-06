@@ -15,5 +15,7 @@
         public string ONEworksCash { get; set; }
 
         public string ONEworksCredit { get; set; }
+
+        public string ONEworksCredit_SK { get; set; }
     }
 }

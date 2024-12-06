@@ -2,6 +2,7 @@
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
+using L1.Features.SKCommunicators;
 using L1.Shared.Configurations;
 using Sentry;
 using Sentry.Protocol;
@@ -35,6 +36,7 @@ namespace L1.Features.PartnerCommunicators
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
             AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
+            AddService(appSettings.PartnerIds.ONEworksCredit_SK, typeof(SKCustomerService));
         }
 
         private void AddService(string key, Type serviceType)

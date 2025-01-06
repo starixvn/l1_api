@@ -70,7 +70,7 @@ namespace L1.WebApi.Controllers
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
-            if (customerService == default)
+            if (customerService == default || model.System == 6)
             {
                 return BadRequest();
             }

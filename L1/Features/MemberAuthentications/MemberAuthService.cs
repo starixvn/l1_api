@@ -50,12 +50,13 @@ namespace L1.Features.MemberAuthentications
 
             if (memberAuth != null)
             {
-                if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
-                {
-                    LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
+                // Temporary comment code to support HOTDOG
+                //if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
+                //{
+                //    LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
 
-                    return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
-                }
+                //    return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
+                //}
 
                 if (new DateTimeOffset(memberAuth.Time, TimeSpan.Zero).AddSeconds(appSettings.TokenExpiredSeconds) <= DateTimeOffset.UtcNow)
                 {

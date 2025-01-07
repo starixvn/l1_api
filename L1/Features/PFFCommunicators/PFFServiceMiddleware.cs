@@ -1,6 +1,9 @@
-﻿using L1.Features.PartnerCommunicators;
+﻿using L1.Features.OWCommunicators;
+using System.Net.Http;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PFFCommunicators.CheckMaintenance;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 
 namespace L1.Features.PFFCommunicators
 {
@@ -16,10 +19,23 @@ namespace L1.Features.PFFCommunicators
                         .AddScoped<IPartnerCustomerServices, PFFCustomerService>(s => s.GetService<PFFCustomerService>());
 
             services.AddHttpClient<IPFFMaintenanceService, PFFMaintenanceService>();
-            services.AddHttpClient<IPFFService, PFFService>(httpClient =>
+
+            var pffHttpClient = services.AddHttpClient<IPFFService, PFFService>(httpClient =>
             {
                 httpClient.BaseAddress = PFFServiceSettings.BaseUrl;
             });
+
+            if (!string.IsNullOrEmpty(PFFServiceSettings.Proxy))
+            {
+                pffHttpClient.ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    return new HttpClientHandler
+                    {
+                        Proxy = new WebProxy(PFFServiceSettings.Proxy),
+                        UseProxy = true,
+                    };
+                });
+            }
         }
     }
 }

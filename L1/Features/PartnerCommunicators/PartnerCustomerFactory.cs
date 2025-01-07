@@ -37,6 +37,7 @@ namespace L1.Features.PartnerCommunicators
             AddService(appSettings.PartnerIds.SBO, typeof(SboCustomerService));
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
             AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
+            AddService(appSettings.PartnerIds.SabaPlay_HD, typeof(PFFCustomerService));
         }
 
         private void AddService(string key, Type serviceType)

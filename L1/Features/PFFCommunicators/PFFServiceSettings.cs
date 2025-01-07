@@ -9,6 +9,8 @@ namespace L1.Features.PFFCommunicators
 
         public string SecretKey { get; set; }
 
+        public string Proxy { get; set; }
+
         public PFFEndPoints Endpoints { get; set; }
     }
 

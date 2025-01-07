@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;

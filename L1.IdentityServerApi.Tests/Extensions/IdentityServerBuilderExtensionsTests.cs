@@ -4,6 +4,7 @@ using NSubstitute;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using L1.Features.SigningCredentials;
+using L1.Shared.Configurations;
 
 namespace L1.IdentityServerApi.Tests.Extensions
 {
@@ -16,6 +17,12 @@ namespace L1.IdentityServerApi.Tests.Extensions
         {
             builder = Substitute.For<Microsoft.Extensions.DependencyInjection.IIdentityServerBuilder>();
             services = new ServiceCollection();
+            var appSettings = Substitute.For<IAppSettings>();
+            appSettings.MongoDBSettings = new MongoDBSettings
+            {
+                ConnectionString = "mongodb://127.0.0.1:27017",
+            };
+            services.AddSingleton<IAppSettings>(appSettings);
             builder.Services.Returns(services);
         }
 

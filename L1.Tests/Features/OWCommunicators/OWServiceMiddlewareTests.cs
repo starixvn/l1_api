@@ -55,6 +55,7 @@ namespace L1.Features.OWCommunicators
             services.AddMongoDBServices(appSettings);
             services.AddSingleton<ISentryClient, MockSentryClient>();
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddSingleton<IAppSettings>(appSettings);
 
             // Act
             OWServiceMiddleware.AddOWServices(services, owServiceSettings);

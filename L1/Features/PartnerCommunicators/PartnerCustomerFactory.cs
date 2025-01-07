@@ -35,6 +35,7 @@ namespace L1.Features.PartnerCommunicators
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
             AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
+            AddService(appSettings.PartnerIds.SabaPlay_HD, typeof(PFFCustomerService));
         }
 
         private void AddService(string key, Type serviceType)

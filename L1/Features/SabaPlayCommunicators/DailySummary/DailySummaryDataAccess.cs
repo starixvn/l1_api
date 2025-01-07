@@ -20,7 +20,7 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
         public DailySummaryDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
         {
             this.appSettings = appSettings;
-            var database = mongoClient.GetDatabase(MongoDatabases.Minigame);
+            var database = mongoClient.GetDatabase(MongoDatabases.GetMinigameDatabase(appSettings.MongoDBSettings.PrefixDbName));
 
             summaryCollection = database.GetCollection<OperatorDailySummary>("operator_daily_summaries");
         }

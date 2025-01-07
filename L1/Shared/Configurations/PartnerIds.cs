@@ -15,5 +15,7 @@
         public string ONEworksCash { get; set; }
 
         public string ONEworksCredit { get; set; }
+
+        public string SabaPlay_HD { get; set; }
     }
 }

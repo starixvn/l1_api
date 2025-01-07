@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -53,9 +54,9 @@ namespace L1.Features.PartnerCommunicators.Log
         private readonly IMongoCollection<PartnerLog> awardCollection;
 
 
-        public LogDataAccess(IMongoClient mongoClient)
+        public LogDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.Log);
+            var database = mongoClient.GetDatabase(MongoDatabases.GetLogDatabase(appSettings.MongoDBSettings.PrefixDbName));
 
             failedRequestsCollection = database.GetCollection<PartnerLog>(FailedRequestsCollectionName);
             betsCollection = database.GetCollection<PartnerLog>(BetsCollectionName);

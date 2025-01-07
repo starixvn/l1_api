@@ -56,6 +56,7 @@ namespace L1.Tests.Features.PFFCommunicators
             services.AddMongoDBServices(appSettings);
             services.AddSingleton<ISentryClient, MockSentryClient>();
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddSingleton<IAppSettings>(appSettings);
 
             // Act
             PFFServiceMiddleware.AddPFFServices(services, PFFServiceSettings);

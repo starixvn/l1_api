@@ -33,7 +33,7 @@ namespace L1.Features.PartnerCommunicators
             AddService(appSettings.PartnerIds.SBO, typeof(SboCustomerService));
             AddService(appSettings.PartnerIds.OW_VG, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
-            AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(PFFCustomerService));
             AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
         }
 

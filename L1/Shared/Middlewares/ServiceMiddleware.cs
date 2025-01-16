@@ -5,7 +5,9 @@ using L1.Features.Partners;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace L1.Shared.Middlewares
@@ -38,6 +40,9 @@ namespace L1.Shared.Middlewares
 
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
             services.AddSingleton<IMongoClient>(new MongoClient(appSettings.MongoDBSettings.ConnectionString));
+
+            var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("L1"));
+            BsonSerializer.RegisterSerializer(objectSerializer);
         }
     }
 }

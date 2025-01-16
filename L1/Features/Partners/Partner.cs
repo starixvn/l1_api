@@ -21,6 +21,8 @@ namespace L1.Features.Partners
 
         public string MegaKenoUrl { get; set; }
 
+        public string MobileDirectUrl { get; set; }
+
         public string TestCurrencyUrl { get; set; }
     }
 }

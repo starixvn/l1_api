@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using Microsoft.Extensions.DependencyInjection;
+using NATS.Client;
 
 namespace L1.Features.OWCommunicators
 {
@@ -35,6 +35,14 @@ namespace L1.Features.OWCommunicators
                     };
                 });
             }
+
+            // Register NATS connection
+            var connectionFactory = new ConnectionFactory();
+            var connection = connectionFactory.CreateConnection("nats://nats.lumigame.com"); // Adjust the URL as needed
+            _ = services.AddSingleton(connection);
+
+            // Register NatsService
+            services.AddSingleton<INatsService, NatsService>();
         }
     }
 }

@@ -29,6 +29,7 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
         private readonly ISentryClient sentryClient;
+        private readonly INatsService natsService;
 
         public OWCustomerService(
             IOWService oWService,
@@ -36,7 +37,8 @@ namespace L1.Features.OWCommunicators
             IAppSettings appSettings,
             IAdminApiService adminApiSerivce,
             OWEndPoints endpoints,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            INatsService natsService)
         {
             this.oWService = oWService;
             this.logService = logService;
@@ -44,6 +46,7 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
             this.adminApiSerivce = adminApiSerivce;
             this.sentryClient = sentryClient;
+            this.natsService = natsService;
         }
 
         public string OperatorId { get; set; }
@@ -59,11 +62,24 @@ namespace L1.Features.OWCommunicators
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
+             // Publish NATS Jetstream here
+                var natsMessage = new NatsMessage
+                {
+                    OperatorId = OperatorId,
+                    System = system,
+                    Metadata = metadata
+                };
+
+            await natsService.PublishAsync("bet.started", natsMessage);
+            
             var response = await oWService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(OperatorId, response, system, metadata);
+
+               
+                await natsService.PublishAsync("bet.placed", natsMessage);
 
                 if (call.Amount >= appSettings.HighStake)
                 {
@@ -144,5 +160,13 @@ namespace L1.Features.OWCommunicators
 
             return response;
         }
+    }
+
+    public class NatsMessage
+    {
+        public string OperatorId { get; set; }
+        public PartnerResponse<PartnerPlaceBetResult> Response { get; set; }
+        public byte System { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

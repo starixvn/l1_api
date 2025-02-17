@@ -10,6 +10,8 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using NATS.Client;
+using NATS.Client.JetStream;
 
 namespace L1.Shared.Middlewares
 {
@@ -49,6 +51,18 @@ namespace L1.Shared.Middlewares
 
             var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("L1"));
             BsonSerializer.RegisterSerializer(objectSerializer);
+        }
+
+        public static void AddJetStreamServices(this IServiceCollection services, IAppSettings appSettings)
+        {
+            services.AddSingleton<IConnection>(sp =>
+            {
+                var opts = ConnectionFactory.GetDefaultOptions();
+                opts.Url = appSettings.StreamSettings.Host;
+                return new ConnectionFactory().CreateConnection(opts);
+            });
+
+            services.AddSingleton<INatsService, NatsService>();
         }
     }
 }

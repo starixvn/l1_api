@@ -10,6 +10,7 @@
 
         PartnerIds PartnerIds { get; set; }
 
+        StreamSettings StreamSettings { get; set; }
         public string MicrositeClientPatternDomain { get; set; }
     }
 
@@ -23,6 +24,7 @@
 
         public PartnerIds PartnerIds { get; set; }
 
+        public StreamSettings StreamSettings { get; set; }
         public string MicrositeClientPatternDomain { get; set; } 
     }
 }

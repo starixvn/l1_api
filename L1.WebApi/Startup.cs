@@ -40,6 +40,7 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddJetStreamServices(appSettings);
             services.AddConfigurationApiServices(appSettings.ConfigurationApiSettings);
 
             if (appSettings.SboServiceSettings != null)
@@ -60,7 +61,7 @@ namespace L1.WebApi
             services.AddControllers();
 
             services.AddMvc();
-            services.AddApiVersioning(options =>
+            services.AddApiVersioning(options =>electrical_feed6110/
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;

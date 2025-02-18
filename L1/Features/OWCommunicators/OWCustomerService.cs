@@ -62,24 +62,13 @@ namespace L1.Features.OWCommunicators
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
-             // Publish NATS Jetstream here
-                var natsMessage = new NatsMessage
-                {
-                    OperatorId = OperatorId,
-                    System = system,
-                    Metadata = metadata
-                };
-
-            await natsService.PublishAsync("bet.started", natsMessage);
-            
             var response = await oWService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(OperatorId, response, system, metadata);
 
-               
-                await natsService.PublishAsync("bet.placed", natsMessage);
+                await natsService.PublishAsync("bet.created", call);
 
                 if (call.Amount >= appSettings.HighStake)
                 {
@@ -106,6 +95,7 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(OperatorId, response);
+                await natsService.PublishAsync("bet.settled", call);
             }
 
             return response;
@@ -160,13 +150,5 @@ namespace L1.Features.OWCommunicators
 
             return response;
         }
-    }
-
-    public class NatsMessage
-    {
-        public string OperatorId { get; set; }
-        public PartnerResponse<PartnerPlaceBetResult> Response { get; set; }
-        public byte System { get; set; }
-        public Dictionary<string, string> Metadata { get; set; }
     }
 }

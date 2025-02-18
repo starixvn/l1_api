@@ -11,7 +11,6 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using NATS.Client;
-using NATS.Client.JetStream;
 
 namespace L1.Shared.Middlewares
 {

@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
+using Microsoft.Extensions.Logging;
+using Sentry;
 
 namespace L1.Features.BackendAuthentications
 {
@@ -37,18 +39,22 @@ namespace L1.Features.BackendAuthentications
     {
         private static TokenResponse TokenResponse;
         private static long LastRequestTicks;
+        private readonly ILogger<BackendAuthService> logger;
 
         private readonly IHttpClientWrapper httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
 
-        public BackendAuthService(IHttpClientWrapper httpClient,
+        public BackendAuthService(
+            IHttpClientWrapper httpClient,
             BackendAuthConfigs backendAuthConfigs,
-            IDiscoveryCache discoveryCache)
+            IDiscoveryCache discoveryCache,
+            ILogger<BackendAuthService> logger)
         {
             this.httpClient = httpClient;
             this.backendAuthConfigs = backendAuthConfigs;
             this.discoveryCache = discoveryCache;
+            this.logger = logger;
         }
 
         public async Task<TokenResponse> GetAccessToken()
@@ -60,26 +66,47 @@ namespace L1.Features.BackendAuthentications
 
             if (checkResponseTokenFunc(TokenResponse, LastRequestTicks))
             {
-                var disco = await discoveryCache.GetAsync();
-
-                if (!disco.IsError)
+                try
                 {
-                    var clientCredentials = new ClientCredentialsTokenRequest
+                    var disco = await discoveryCache.GetAsync();
+
+                    if (!disco.IsError)
                     {
-                        Address = disco.TokenEndpoint,
-                        ClientId = backendAuthConfigs.ClientId,
-                        ClientSecret = backendAuthConfigs.ClientSecret,
-                        Scope = backendAuthConfigs.Scope,
-                    };
+                        var clientCredentials = new ClientCredentialsTokenRequest
+                        {
+                            Address = disco.TokenEndpoint,
+                            ClientId = backendAuthConfigs.ClientId,
+                            ClientSecret = backendAuthConfigs.ClientSecret,
+                            Scope = backendAuthConfigs.Scope,
+                        };
 
-                    var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default);
+                        var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default);
 
-                    Interlocked.Exchange(ref TokenResponse, newTokenResponse);
-                    Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
+                        if (newTokenResponse.IsError)
+                        {
+                            SentrySdk.CaptureMessage($"Token request failed: {newTokenResponse.Error}", 
+                                SentryLevel.Error);
+                            throw new InvalidOperationException(newTokenResponse.Error);
+                        }
+
+                        Interlocked.Exchange(ref TokenResponse, newTokenResponse);
+                        Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
+                    }
+                    else
+                    {
+                        SentrySdk.CaptureMessage($"Discovery failed: {disco.Error}", 
+                            SentryLevel.Error);
+                        throw new InvalidOperationException(disco.Error);
+                    }
                 }
-                else
+                catch (Exception ex) when (ex is not InvalidOperationException)
                 {
-                    throw new InvalidOperationException(disco.Error);
+                    SentrySdk.CaptureException(ex, scope =>
+                    {
+                        scope.SetExtra("message", "Unexpected error getting access token");
+                        scope.Level = SentryLevel.Error;
+                    });
+                    throw;
                 }
             }
 

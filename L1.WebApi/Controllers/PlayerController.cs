@@ -10,6 +10,7 @@ using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace L1.WebApi.Controllers
@@ -30,13 +31,15 @@ namespace L1.WebApi.Controllers
         [HttpPost]
         [Route("[action]")]
         [SwaggerOperation(Summary = "EnterPortal")]
-        public async Task<IActionResult> EnterPortal([FromBody] MemberEnterPortal model)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartnerResponse<PartnerEnterPortalResult>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PartnerResponse<PartnerEnterPortalResult>>> EnterPortal([FromBody] MemberEnterPortal model)
         {
             var customerService = partnerCustomerFactory.GetCustomerService(model.OperatorId);
 
             if (customerService == default)
             {
-                return BadRequest();
+                return BadRequest("Invalid operator ID");
             }
 
             var response = await customerService.EnterPortal(

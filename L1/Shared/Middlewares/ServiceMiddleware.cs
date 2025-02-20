@@ -11,6 +11,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using NATS.Client;
+using Sentry;
 
 namespace L1.Shared.Middlewares
 {
@@ -34,7 +35,7 @@ namespace L1.Shared.Middlewares
             services.AddScoped<ILogDataAccess, LogDataAccess>();
             services.AddScoped<ILogService, LogService>();
 
-            services.AddTransient<ProtectedApiBearerTokenHandler>();
+            services.AddHttpClient<ProtectedApiBearerTokenHandler>();
         }
 
         public static void AddMongoDBServices(this IServiceCollection services, IAppSettings appSettings)
@@ -46,7 +47,7 @@ namespace L1.Shared.Middlewares
             };
 
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
-            services.AddSingleton<IMongoClient>(new MongoClient(appSettings.MongoDBSettings.ConnectionString));
+            services.AddSingleton<IMongoClient>(sp => new MongoClient(appSettings.MongoDBSettings.ConnectionString));
 
             var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("L1"));
             BsonSerializer.RegisterSerializer(objectSerializer);
@@ -56,6 +57,12 @@ namespace L1.Shared.Middlewares
         {
             services.AddSingleton<IConnection>(sp =>
             {
+                if (string.IsNullOrEmpty(appSettings.StreamSettings.Host))
+                {
+                    SentrySdk.CaptureMessage("NATS host is not configured", SentryLevel.Error);
+                    return null;
+                }
+
                 var opts = ConnectionFactory.GetDefaultOptions();
                 opts.Url = appSettings.StreamSettings.Host;
                 return new ConnectionFactory().CreateConnection(opts);

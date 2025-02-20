@@ -44,16 +44,14 @@ namespace L1.Features.AdminApiCommunicators
             }
             catch (Exception ex)
             {
-                sentryClient.CaptureMessage(ex.ToString(), SentryLevel.Error);
+                sentryClient.CaptureException(ex);
             }
         }
 
         private Task<HttpResponseMessage> Post(string apiEndpoint, AdminApiRequest request)
         {
             const string defaultMediaType = "application/json";
-
             var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
-
             return httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
         }
     }

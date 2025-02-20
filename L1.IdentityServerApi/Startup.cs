@@ -33,17 +33,22 @@ namespace L1.IdentityServerApi
             {
                 options.Caching.ResourceStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityResourceCaching"]));
                 options.Caching.ClientStoreExpiration = TimeSpan.FromSeconds(double.Parse(Configuration["IdentityClientCaching"]));
+                options.IssuerUri = Configuration["IdentityServer:IssuerUri"];
             })
             .AddMongoDb(appSettings.MongoDBSettings.ConnectionString)
             .AddIdentityApiResources()
             .AddInMemoryCaching()
             .AddIdentityClients()
-            .AddSigningCredentialStore();            
+            .AddSigningCredentialStore();
 
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddControllers();
-            services.AddMvc();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,14 +56,14 @@ namespace L1.IdentityServerApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
+            app.UseHttpsRedirection();
+
             var forwardOptions = new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-                // Needed because of mixing http and https.
                 RequireHeaderSymmetry = false,
             };
 
-            // Accept X-Forwarded-* headers from all sources.
             forwardOptions.KnownNetworks.Clear();
             forwardOptions.KnownProxies.Clear();
 
@@ -70,13 +75,16 @@ namespace L1.IdentityServerApi
             }
 
             app.ConfigureExceptionHandler();
+            
+            app.UseAuthorization();
+            
             app.UseIdentityServer();
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health");
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

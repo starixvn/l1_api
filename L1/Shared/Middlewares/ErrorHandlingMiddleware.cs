@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace L1.Shared.Middlewares
 {
@@ -18,7 +19,13 @@ namespace L1.Shared.Middlewares
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     context.Response.ContentType = "application/json";
 
-                    await context.Response.WriteAsync(exception?.Message);
+                    var response = new
+                    {
+                        Message = exception?.Message,
+                        StatusCode = StatusCodes.Status500InternalServerError
+                    };
+
+                    await context.Response.WriteAsJsonAsync(response);
                 });
             });
         }

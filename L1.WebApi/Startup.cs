@@ -58,9 +58,13 @@ namespace L1.WebApi
                 services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings);
             }
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
 
-            services.AddMvc();
             services.AddApiVersioning(options =>electrical_feed6110/
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -73,12 +77,20 @@ namespace L1.WebApi
             {
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHttpsRedirection();
+
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
@@ -93,6 +105,10 @@ namespace L1.WebApi
             app.ConfigureLocalization();
 
             app.UseRouting();
+            
+            app.UseCors();
+
+            app.UseAuthorization();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -101,7 +117,7 @@ namespace L1.WebApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
             Sentry.SentrySdk.CaptureMessage($"Game API Started at {DateTime.Now}");

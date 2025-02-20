@@ -70,7 +70,7 @@ namespace L1.Features.SabaPlayCommunicators
 
         public static void AddSabaplayScheduleJobs(this IScheduler scheduler)
         {
-            scheduler.Schedule<DailySummaryJob>().Cron("0 */6 * * *").RunOnceAtStart();
+            scheduler.Schedule<DailySummaryJob>().Cron("15 0,4,11,18 * * *").RunOnceAtStart().Zoned(System.TimeZoneInfo.Utc);
         }
     }
 }

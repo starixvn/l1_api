@@ -41,9 +41,9 @@ namespace L1.IdentityServerApi.IdentityStore
         {
             // Arrange 
             var sites = new List<Site>{
-                new Site { SiteId = "scope1" },
-                new Site { SiteId = "scope2" },
-                new Site { SiteId = "scope1" },
+                new() { SiteId = "scope1" },
+                new() { SiteId = "scope2" },
+                new() { SiteId = "scope1" },
             };
             siteDataService.GetAll().Returns(sites);
             var scopeNames = new List<string> { "scope1" };

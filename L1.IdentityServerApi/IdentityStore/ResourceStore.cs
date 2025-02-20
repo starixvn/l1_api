@@ -46,7 +46,12 @@ namespace L1.IdentityServerApi.IdentityStore
 
         private static IEnumerable<ApiResource> GetAllApiResources(IEnumerable<Site> sites)
         {
-            return sites.Select(site => new ApiResource(site.SiteId, site.SiteId));
+            return sites.Select(site =>
+            {
+                var apiResource = new ApiResource(site.SiteId, site.SiteId);
+                apiResource.Scopes.Add(site.SiteId);
+                return apiResource;
+            });
         }
 
         public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)

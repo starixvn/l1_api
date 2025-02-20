@@ -43,7 +43,7 @@ namespace L1.WebApi.Tests.Controllers
             oWCustomerService.EnterPortal(Arg.Any<PartnerEnterPortalCall>()).Returns(result);
 
             // Act
-            var actualValue = await controller.EnterPortal(model) as OkObjectResult;
+            var actualValue = await controller.EnterPortal(model);
 
             // Assert
             Assert.Equal(result, actualValue.Value);

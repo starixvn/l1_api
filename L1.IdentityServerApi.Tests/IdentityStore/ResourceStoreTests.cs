@@ -30,7 +30,7 @@ namespace L1.IdentityServerApi.IdentityStore
             siteDataService.GetBySiteId(Arg.Any<string>()).Returns(site);
 
             // Act
-            var actualValue = await store.FindApiResourceAsync(name);
+            var actualValue = await store.FindApiResourcesByNameAsync(name);
 
             // Assert
             Assert.True(actualValue.Name == siteId && actualValue.DisplayName == siteId);
@@ -49,7 +49,7 @@ namespace L1.IdentityServerApi.IdentityStore
             var scopeNames = new List<string> { "scope1" };
 
             // Act
-            var actualValue = await store.FindApiResourcesByScopeAsync(scopeNames);
+            var actualValue = await store.FindApiResourcesByScopeNameAsync(scopeNames);
 
             // Assert
             Assert.True(actualValue.Count() == 2);
@@ -59,7 +59,7 @@ namespace L1.IdentityServerApi.IdentityStore
         public async Task FindIdentityResourcesByScopeAsync_Always_ReturnsEmptyList(IEnumerable<string> scopeNames)
         {
             // Act
-            var actualValue = await store.FindIdentityResourcesByScopeAsync(scopeNames);
+            var actualValue = await store.FindIdentityResourcesByScopeNameAsync(scopeNames);
 
             // Assert
             Assert.Empty(actualValue);

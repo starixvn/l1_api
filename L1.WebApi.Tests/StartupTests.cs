@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using NSubstitute;
 using Xunit;
 
@@ -60,6 +62,8 @@ namespace L1.WebApi.Tests
         [Fact]
         public void Configure_IsDevelopment_HaveErrorWhenTest()
         {
+            MongoDbTestInitializer.RegisterCustomSerializers();
+
             // Arrange
             var services = new ServiceCollection();
             services.AddRouting();
@@ -78,6 +82,8 @@ namespace L1.WebApi.Tests
         [Fact]
         public void Configure_NotIsDevelopment_HaveErrorWhenTest()
         {
+            MongoDbTestInitializer.RegisterCustomSerializers();
+
             // Arrange
             var services = new ServiceCollection();
             var provider = services.BuildServiceProvider();
@@ -165,4 +171,29 @@ namespace L1.WebApi.Tests
             sgApiSettingsConfigsSection.GetSection("Endpoints").Returns(sgEndPoints);
         }
     }
+
+    public static class MongoDbTestInitializer
+    {
+        private static bool _isRegistered = false;
+        private static readonly object _lock = new object();
+
+        public static void RegisterCustomSerializers()
+        {
+            lock (_lock)
+            {
+                if (!_isRegistered)
+                {
+                    var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type));
+
+                    if (!(BsonSerializer.LookupSerializer<object>() is ObjectSerializer))
+                    {
+                        BsonSerializer.RegisterSerializer(objectSerializer);
+                    }
+
+                    _isRegistered = true;
+                }
+            }
+        }
+    }
+
 }

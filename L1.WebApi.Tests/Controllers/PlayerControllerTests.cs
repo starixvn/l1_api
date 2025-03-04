@@ -46,7 +46,13 @@ namespace L1.WebApi.Tests.Controllers
             var actualValue = await controller.EnterPortal(model);
 
             // Assert
-            Assert.Equal(result, actualValue.Value);
+            var objectResult = actualValue.Result as OkObjectResult;
+            Assert.NotNull(objectResult);
+
+            var responseValue = objectResult?.Value as PartnerResponse<PartnerEnterPortalResult>;
+            Assert.NotNull(responseValue);
+
+            Assert.Equal(result, responseValue);
         }
 
         [Fact]
@@ -60,7 +66,7 @@ namespace L1.WebApi.Tests.Controllers
             var actualValue = await controller.EnterPortal(model);
 
             // Assert
-            Assert.IsType<BadRequestResult>(actualValue);
+            Assert.IsType<BadRequestObjectResult>(actualValue.Result);
         }
 
         [Fact]

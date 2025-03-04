@@ -1,4 +1,5 @@
-﻿using L1.Shared.Configurations;
+﻿using System.Collections.Generic;
+using L1.Shared.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -13,7 +14,13 @@ namespace L1.Shared.Middlewares
         {
             // Arrange
             var services = new ServiceCollection();
-            var configuration = Substitute.For<IConfiguration>();
+            var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "AppSettings:MongoDBSettings:ConnectionString", "mongodb://127.0.0.1:27017" },
+                { "AppSettings:AdminApiSettings:Endpoints:BaseUrl", "https://api.example.com" }
+            })
+            .Build();
 
             // Act
             AppSettingsMiddleware.AddSettings(services, configuration);

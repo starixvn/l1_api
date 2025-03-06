@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using L1.Features.GameConfigurations;
 using L1.Features.MemberAuthentications;
 using L1.Features.Partners;
 using L1.Shared.Configurations;
@@ -14,6 +15,7 @@ namespace L1.Tests.Features.MemberAuthentications
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
         private readonly IPartnerDataService partnerDataService;
+        private readonly IConfigurationApiService configurationApiService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
 
@@ -23,10 +25,10 @@ namespace L1.Tests.Features.MemberAuthentications
         {
             memberAuthDataAccess = Substitute.For<IMemberAuthDataAccess>();
             partnerDataService = Substitute.For<IPartnerDataService>();
+            configurationApiService = Substitute.For<IConfigurationApiService>();
             appSettings = Substitute.For<IAppSettings>();
             sentryClient = Substitute.For<ISentryClient>();
-
-            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, appSettings, sentryClient);
+            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, configurationApiService, appSettings, sentryClient);
         }
 
         [Theory, AutoData]
@@ -236,6 +238,7 @@ namespace L1.Tests.Features.MemberAuthentications
             });
 
             memberAuthDataAccess.GetForTestCurrency(updateMemberAuthParams.Token).Returns(memberAuth);
+            configurationApiService.GetDetailGameConfiguration(1).Returns(new GameConfigurationResponse());
 
             // Act
             var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);

@@ -11,6 +11,8 @@
         PartnerIds PartnerIds { get; set; }
 
         LogEnabling LogEnabling { get; set; }
+
+        public string MicrositeClientPatternDomain { get; set; }
     }
 
     public partial class AppSettings : IAppSettings
@@ -24,6 +26,8 @@
         public PartnerIds PartnerIds { get; set; }
 
         public LogEnabling LogEnabling { get; set; } = new ();
+
+        public string MicrositeClientPatternDomain { get; set; } 
     }
 
     public class LogEnabling

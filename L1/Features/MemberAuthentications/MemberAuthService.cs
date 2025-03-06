@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using L1.Features.GameConfigurations;
 using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
@@ -22,17 +24,20 @@ namespace L1.Features.MemberAuthentications
     {
         private readonly IMemberAuthDataAccess memberAuthDataAccess;
         private readonly IPartnerDataService partnerDataService;
+        private readonly IConfigurationApiService configurationApiService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
             IPartnerDataService partnerDataService,
+            IConfigurationApiService configurationApiService,
             IAppSettings appSettings,
             ISentryClient sentryClient)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
             this.partnerDataService = partnerDataService;
+            this.configurationApiService = configurationApiService;
             this.appSettings = appSettings;
             this.sentryClient = sentryClient;
         }
@@ -88,7 +93,25 @@ namespace L1.Features.MemberAuthentications
                 SentryLevel.Warning);
         }
 
-        private async Task<Uri> GetRedirectedUrl(MemberAuth memberAuth, bool isTestCurrency)
+        private string GetRootDomain(string domain)
+        {
+            var uri = new Uri(domain);
+            var parts = uri.Host.Split('.');
+            if(parts.Length <= 2)
+            {
+                return uri.Host;
+            }
+            return string.Join('.',parts.Skip(1));
+        }
+
+        private string GetDirectClientUrl(string redirectUrl, int gameId)
+        {
+            var url = appSettings.MicrositeClientPatternDomain.Replace("{host}", GetRootDomain(redirectUrl));
+            var uri = new Uri(url);
+            return new Uri(uri, $"{uri.LocalPath.TrimEnd('/')}/site-{gameId}/").ToString();
+        }
+
+        private async Task<string> GetRedirectedUrl(MemberAuth memberAuth, int? gameId, bool isOpenDirectly)
         {
             var partner = await partnerDataService.GetById(memberAuth.OperatorId);
 
@@ -97,9 +120,7 @@ namespace L1.Features.MemberAuthentications
                 return null;
             }
 
-            var redirectedUrl = isTestCurrency
-                ? partner.TestCurrencyUrl
-                : memberAuth.AppType switch
+            var redirectedUrl = memberAuth.AppType switch
                 {
                     AppTypes.SabaClub => partner.ClubVersionUrl,
                     AppTypes.MiniSabaClub => partner.MiniVersionUrl,
@@ -109,7 +130,21 @@ namespace L1.Features.MemberAuthentications
                     _ => partner.ClubVersionUrl,
                 };
 
-            return string.IsNullOrWhiteSpace(redirectedUrl) ? null : new Uri(redirectedUrl);
+            if (isOpenDirectly && !string.IsNullOrEmpty(redirectedUrl))
+            {
+                return GetDirectClientUrl(redirectedUrl.TrimEnd('/'), gameId.Value);
+            }
+
+            return redirectedUrl?.Trim()?.TrimEnd('/');
+        }
+
+        private async Task<GameConfigurationResponse> GetGameConfigurationAsync(int? gameId)
+        {
+            if(gameId > 0)
+            {
+                return await configurationApiService.GetDetailGameConfiguration(gameId.Value);
+            }
+            return null;
         }
 
         public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams)
@@ -120,10 +155,13 @@ namespace L1.Features.MemberAuthentications
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
-
-            var gameClientUrl = await GetRedirectedUrl(memberAuth, false);
-
-            if (gameClientUrl == null)
+            var gameConfiguration = await GetGameConfigurationAsync(updateParams.GameTypeId);
+            var isOpenDirectly = memberAuth.AppType == AppTypes.SabaClub 
+                && gameConfiguration?.IsMicrosite == true 
+                && gameConfiguration?.IsOpenDirectly == true;
+            var gameClientUrl = await GetRedirectedUrl(memberAuth, updateParams.GameTypeId, isOpenDirectly);
+            
+            if (string.IsNullOrEmpty(gameClientUrl))
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
@@ -134,10 +172,12 @@ namespace L1.Features.MemberAuthentications
                 updateParams.GameTypeId,
                 memberAuth.Token,
                 memberAuth.Language,
-                gameClientUrl.ToString().TrimEnd('/'));
+                gameClientUrl,
+                isOpenDirectly,
+                gameConfiguration?.Gateway?.Id);
         }
 
-        private static SingleSignOnResult CreateSSOResult(int? gameTypeId, string token, string language, string gameClientUrl, string partnerId = null)
+        private static SingleSignOnResult CreateSSOResult(int? gameTypeId, string token, string language, string gameClientUrl, bool isOpenDirectly, int? gatewayId)
         {
             var clientRedirectUrl = new StringBuilder();
             clientRedirectUrl.Append($"{gameClientUrl}?token={token}&lang={language}");
@@ -147,11 +187,15 @@ namespace L1.Features.MemberAuthentications
                 clientRedirectUrl.Append($"&gameId={gameTypeId}");
             }
 
-            if (!string.IsNullOrWhiteSpace(partnerId))
+            if (isOpenDirectly)
             {
-                clientRedirectUrl.Append($"&partnerId={partnerId}");
+                clientRedirectUrl.Append($"&isStandalone=true");
             }
 
+            if (gatewayId > 0)
+            {
+                clientRedirectUrl.Append($"&gatewayId={gatewayId}");
+            }
             return SingleSignOnResult.CreateSuccessResponse(clientRedirectUrl.ToString());
         }
     }

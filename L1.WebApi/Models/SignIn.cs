@@ -19,7 +19,7 @@ namespace L1.WebApi.Models
 
         public string PlayerName { get; set; }     
 
-        public byte? GameTypeId { get; set; }
+        public int? GameTypeId { get; set; }
 
         public byte AppType { get; set; } = AppTypes.SabaClub;
 

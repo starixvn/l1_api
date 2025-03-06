@@ -1,6 +1,7 @@
 using System;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
+using L1.Features.GameConfigurations;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
@@ -39,6 +40,7 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddConfigurationApiServices(appSettings.ConfigurationApiSettings);
 
             if (appSettings.SboServiceSettings != null)
             {

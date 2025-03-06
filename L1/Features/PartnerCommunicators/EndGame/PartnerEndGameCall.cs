@@ -12,7 +12,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
             string playerId,
             string siteId,
             int gameRoundId,
-            byte gameTypeId,
+            int gameTypeId,
             decimal totalAmount,
             decimal totalWin,
             decimal validBetAmount,
@@ -32,7 +32,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
 
         public int GameRoundId { get; set; }
 
-        public byte GameTypeId { get; set; }
+        public int GameTypeId { get; set; }
 
         public decimal TotalAmount { get; set; }
 

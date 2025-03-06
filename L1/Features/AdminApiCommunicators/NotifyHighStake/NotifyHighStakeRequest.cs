@@ -6,7 +6,7 @@ namespace L1.Features.AdminApiCommunicators.NotifyHighStake
     {
         public NotifyHighStakeRequest(
             string obCustId,
-            byte gameTypeId,
+            int gameTypeId,
             decimal amount,
             string currency,
             int choiceId,
@@ -28,7 +28,7 @@ namespace L1.Features.AdminApiCommunicators.NotifyHighStake
 
         public string ObCustId { get; set; }
 
-        public byte GameTypeId { get; set; }
+        public int GameTypeId { get; set; }
 
         public decimal Amount { get; set; }
 

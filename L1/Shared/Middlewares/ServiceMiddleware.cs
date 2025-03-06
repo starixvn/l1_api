@@ -1,4 +1,5 @@
-﻿using L1.Features.BackendAuthentications;
+﻿using System;
+using L1.Features.BackendAuthentications;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
@@ -16,6 +17,11 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddMemoryCache(options =>
+            {
+                options.ExpirationScanFrequency = TimeSpan.FromMinutes(1);
+            });
+            services.AddSingleton<ICacheManager, CacheManager>();
             services.AddScoped<ISiteDataAccess, SiteDataAccess>();
             services.AddScoped<ISiteDataService, SiteDataService>();
 

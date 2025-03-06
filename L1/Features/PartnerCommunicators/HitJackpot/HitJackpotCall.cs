@@ -6,7 +6,7 @@
             string playerId,
             string siteId,
             int gameRoundId,
-            byte gameTypeId,
+            int gameTypeId,
             decimal winningAmount) : base(playerId, siteId)
         {
             GameRoundId = gameRoundId;
@@ -16,7 +16,7 @@
 
         public int GameRoundId { get; set; }
 
-        public byte GameTypeId { get; set; }
+        public int GameTypeId { get; set; }
 
         public decimal WinningAmount { get; set; }
     }

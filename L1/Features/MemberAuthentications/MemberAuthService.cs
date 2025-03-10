@@ -87,9 +87,13 @@ namespace L1.Features.MemberAuthentications
 
         private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
-            sentryClient.CaptureMessage(
-                $"Verification failed on {DateTimeOffset.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
-                SentryLevel.Warning);
+            var logMessage = 
+                $"Verification failed on {DateTimeOffset.UtcNow}. " +
+                $"Reason: {message}. " +
+                $"Request: {JsonConvert.SerializeObject(verificationParams)}. " +
+                $"Member Auth: {JsonConvert.SerializeObject(memberAuth)}";
+            
+            sentryClient.CaptureMessage(logMessage, SentryLevel.Warning);
         }
 
         private string GetRootDomain(string domain)

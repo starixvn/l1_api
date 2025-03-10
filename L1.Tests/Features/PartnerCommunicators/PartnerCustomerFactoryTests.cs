@@ -11,7 +11,7 @@ namespace L1.Tests.Features.PartnerCommunicators
     {
         private readonly IServiceProvider serviceProvider;
 
-        private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly PartnerCustomerFactory partnerCustomerFactory;
         private readonly IAppSettings appSettings;
 
         public PartnerCustomerFactoryTests()

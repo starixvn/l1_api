@@ -1,5 +1,4 @@
-﻿using L1.Features.PartnerCommunicators;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.MemberAuthentications
 {

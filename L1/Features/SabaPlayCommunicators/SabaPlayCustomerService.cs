@@ -66,7 +66,7 @@ namespace L1.Features.SabaPlayCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                    var notifyHighStakeData = new NotifyHighStakeData(
                         SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
                         call.GameTypeId,
                         call.Amount,
@@ -75,7 +75,9 @@ namespace L1.Features.SabaPlayCommunicators
                         system,
                         metadata,
                         call.OperatorId,
-                        call.UserId));
+                        call.UserId);
+
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(notifyHighStakeData));
                 }
             }
 

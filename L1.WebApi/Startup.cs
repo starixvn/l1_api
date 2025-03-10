@@ -120,7 +120,7 @@ namespace L1.WebApi
                 endpoints.MapControllers();
             });
 
-            Sentry.SentrySdk.CaptureMessage($"Game API Started at {DateTime.Now}");
+            Sentry.SentrySdk.CaptureMessage($"Game API Started at {DateTimeOffset.Now}");
         }
     }
 }

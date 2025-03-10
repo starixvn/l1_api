@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
-using Microsoft.Extensions.Logging;
 using Sentry;
 
 namespace L1.Features.BackendAuthentications
@@ -66,34 +65,32 @@ namespace L1.Features.BackendAuthentications
                 {
                     var disco = await discoveryCache.GetAsync();
 
-                    if (!disco.IsError)
-                    {
-                        var clientCredentials = new ClientCredentialsTokenRequest
-                        {
-                            Address = disco.TokenEndpoint,
-                            ClientId = backendAuthConfigs.ClientId,
-                            ClientSecret = backendAuthConfigs.ClientSecret,
-                            Scope = backendAuthConfigs.Scope,
-                        };
-
-                        var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default);
-
-                        if (newTokenResponse.IsError)
-                        {
-                            SentrySdk.CaptureMessage($"Token request failed: {newTokenResponse.Error}", 
-                                SentryLevel.Error);
-                            throw new InvalidOperationException(newTokenResponse.Error);
-                        }
-
-                        Interlocked.Exchange(ref TokenResponse, newTokenResponse);
-                        Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
-                    }
-                    else
+                    if (disco.IsError)
                     {
                         SentrySdk.CaptureMessage($"Discovery failed: {disco.Error}", 
                             SentryLevel.Error);
                         throw new InvalidOperationException(disco.Error);
                     }
+
+                    var clientCredentials = new ClientCredentialsTokenRequest
+                    {
+                        Address = disco.TokenEndpoint,
+                        ClientId = backendAuthConfigs.ClientId,
+                        ClientSecret = backendAuthConfigs.ClientSecret,
+                        Scope = backendAuthConfigs.Scope,
+                    };
+
+                    var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default);
+
+                    if (newTokenResponse.IsError)
+                    {
+                        SentrySdk.CaptureMessage($"Token request failed: {newTokenResponse.Error}", 
+                            SentryLevel.Error);
+                        throw new InvalidOperationException(newTokenResponse.Error);
+                    }
+
+                    Interlocked.Exchange(ref TokenResponse, newTokenResponse);
+                    Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
                 }
                 catch (Exception ex) when (ex is not InvalidOperationException)
                 {
@@ -108,7 +105,6 @@ namespace L1.Features.BackendAuthentications
 
             return TokenResponse;
         }
-
         private static bool IsResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks)
                 => tokenResponse == null || new DateTimeOffset(lastRequestTicks, TimeSpan.Zero)
                         .AddSeconds(tokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1);

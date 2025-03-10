@@ -1,7 +1,6 @@
 ﻿using L1.Features.AdminApiCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Maintenance;
-using L1.Shared.Configurations;
 using L1.Shared.Helpers;
 using Newtonsoft.Json;
 using Sentry;

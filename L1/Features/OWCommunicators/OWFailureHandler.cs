@@ -4,7 +4,6 @@ using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.Resources;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Sentry;
 

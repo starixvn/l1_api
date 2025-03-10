@@ -9,14 +9,14 @@ namespace L1.Shared.Constants
         internal const int InsufficientFunds = 3002;
         internal const int NewInsufficientFunds = 6999;
 
-        internal static Dictionary<int, int> ErrorCodeConversions = new()
+        private static readonly Dictionary<int, int> ErrorCodeConversions = new()
         {
             { 6999, 3002 },
             { 7000, 1001 },
             { 7001, 1001 },
         };
 
-        public static int CovertErrorCode(int code)
+        internal static int CovertErrorCode(int code)
         {
             return ErrorCodeConversions.TryGetValue(code, out int convertedCode) 
                 ? convertedCode 

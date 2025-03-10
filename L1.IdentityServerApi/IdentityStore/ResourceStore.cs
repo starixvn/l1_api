@@ -9,8 +9,6 @@ namespace L1.IdentityServerApi.IdentityStore
 {
     public class ResourceStore(ISiteDataService siteDataService) : IResourceStore
     {
-        private readonly ISiteDataService siteDataService = siteDataService;
-
         public Task<ApiResource> FindApiResourcesByNameAsync(string name)
         {
             var site = siteDataService.GetBySiteId(name);

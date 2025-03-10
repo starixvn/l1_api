@@ -14,7 +14,6 @@ namespace L1.Features.PartnerCommunicators
 
     public class NatsService : INatsService
     {
-        private readonly IConnection connection;
         private readonly IJetStream jetStream;
         private readonly string prefix;
         private readonly JsonSerializerOptions jsonOptions;
@@ -25,8 +24,7 @@ namespace L1.Features.PartnerCommunicators
             IAppSettings appSettings,
             ISentryClient sentryClient)
         {
-            this.connection = connection;
-            this.jetStream = this.connection.CreateJetStreamContext();
+            this.jetStream = connection.CreateJetStreamContext();
             this.prefix = appSettings.StreamSettings.Prefix;
             this.sentryClient = sentryClient;
             

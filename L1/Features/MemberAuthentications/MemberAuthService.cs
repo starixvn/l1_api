@@ -54,7 +54,7 @@ namespace L1.Features.MemberAuthentications
                     return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
                 }
 
-                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
+                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTimeOffset.Now)
                 {
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
@@ -88,7 +88,7 @@ namespace L1.Features.MemberAuthentications
         private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
             sentryClient.CaptureMessage(
-                $"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
+                $"Verification failed on {DateTimeOffset.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
                 SentryLevel.Warning);
         }
 

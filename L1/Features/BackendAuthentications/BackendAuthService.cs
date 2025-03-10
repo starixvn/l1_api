@@ -39,8 +39,6 @@ namespace L1.Features.BackendAuthentications
     {
         private static TokenResponse TokenResponse;
         private static long LastRequestTicks;
-        private readonly ILogger<BackendAuthService> logger;
-
         private readonly IHttpClientWrapper httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
@@ -48,13 +46,11 @@ namespace L1.Features.BackendAuthentications
         public BackendAuthService(
             IHttpClientWrapper httpClient,
             BackendAuthConfigs backendAuthConfigs,
-            IDiscoveryCache discoveryCache,
-            ILogger<BackendAuthService> logger)
+            IDiscoveryCache discoveryCache)
         {
             this.httpClient = httpClient;
             this.backendAuthConfigs = backendAuthConfigs;
             this.discoveryCache = discoveryCache;
-            this.logger = logger;
         }
 
         public async Task<TokenResponse> GetAccessToken()

@@ -75,12 +75,11 @@ namespace L1.IdentityServerApi
             }
 
             app.ConfigureExceptionHandler();
-            
-            app.UseAuthorization();
-            
-            app.UseIdentityServer();
-
             app.UseRouting();
+
+            app.UseAuthorization();           
+            app.UseIdentityServer();
+        
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health");

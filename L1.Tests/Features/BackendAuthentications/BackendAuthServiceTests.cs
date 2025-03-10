@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoFixture;
 using IdentityModel.Client;
 using L1.Features.BackendAuthentications;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
@@ -18,7 +17,6 @@ namespace L1.Tests.Features.BackendAuthentications
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
         private readonly Fixture fixture = new();
-        private readonly ILogger<BackendAuthService> logger;
         private BackendAuthService backendAuthService;
 
         public BackendAuthServiceTests()
@@ -26,7 +24,6 @@ namespace L1.Tests.Features.BackendAuthentications
             httpClient = Substitute.For<IHttpClientWrapper>();
             backendAuthConfigs = fixture.Create<BackendAuthConfigs>();
             discoveryCache = Substitute.For<IDiscoveryCache>();
-            logger = Substitute.For<ILogger<BackendAuthService>>();
         }
 
         [Fact]
@@ -46,7 +43,7 @@ namespace L1.Tests.Features.BackendAuthentications
 
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, logger);
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
 
             // Act
             var actual = backendAuthService.GetAccessToken().Result;
@@ -74,7 +71,7 @@ namespace L1.Tests.Features.BackendAuthentications
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
 
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, logger);
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
 
             // Act
             var result = Assert.ThrowsAsync<InvalidOperationException>(async () => await backendAuthService.GetAccessToken());
@@ -102,7 +99,7 @@ namespace L1.Tests.Features.BackendAuthentications
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
 
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, logger);
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
 
             // Act
             var actual = backendAuthService.GetAccessToken(isResponseTokenExpired).Result;
@@ -130,7 +127,7 @@ namespace L1.Tests.Features.BackendAuthentications
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
 
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, logger);
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
 
             // Assert
             Assert.ThrowsAsync<InvalidOperationException>(async () => await backendAuthService.GetAccessToken(isResponseTokenExpired));
@@ -154,7 +151,7 @@ namespace L1.Tests.Features.BackendAuthentications
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
 
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, logger);
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
             await backendAuthService.GetAccessToken();
 
             // Act
@@ -182,7 +179,7 @@ namespace L1.Tests.Features.BackendAuthentications
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
 
-            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache, logger);
+            backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
             await backendAuthService.GetAccessToken();
 
             // Act

@@ -6,7 +6,6 @@ using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using Newtonsoft.Json;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.AdminApiCommunicators
 {

@@ -22,19 +22,16 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private const string HeaderAccessKey = "Saba-access-key";
         private readonly OWServiceSettings owServiceSettings;
         private readonly string secretKey;
-        private readonly IAppSettings appSettings;
 
         public OWMaintenanceService(
             HttpClient httpClient,
             OWServiceSettings owServiceSettings,
             IAdminApiService adminApiService,
-            ISentryClient sentryClient,
-            IAppSettings appSettings)
+            ISentryClient sentryClient)
             : base(httpClient, adminApiService, sentryClient)
         {
             this.owServiceSettings = owServiceSettings;
             secretKey = owServiceSettings.SecretKey;
-            this.appSettings = appSettings;
         }
 
         public Task ObserveMaintenanceSchedule(OWRequest request, string operatorId)

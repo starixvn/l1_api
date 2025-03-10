@@ -50,8 +50,8 @@ namespace L1.Features.PartnerCommunicators
 
         public IPartnerCustomerServices GetCustomerService(string partnerId)
         {
-            var service = !string.IsNullOrWhiteSpace(partnerId) && services.ContainsKey(partnerId)
-                ? (IPartnerCustomerServices)serviceProvider.GetService(services[partnerId])
+            var service = !string.IsNullOrWhiteSpace(partnerId) && services.TryGetValue(partnerId, out var serviceType)
+                ? (IPartnerCustomerServices)serviceProvider.GetService(serviceType)
                 : default;
 
             if (service != default)

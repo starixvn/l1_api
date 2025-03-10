@@ -50,8 +50,8 @@ namespace L1.Tests.Features.OWCommunicators
 
             // Assert
             Assert.IsType<PartnerResponse<PartnerResult>>(response);
-            Assert.Equal(response.Result.ErrorCode, PartnerSpecialErrorCodes.NetworkError);
-            Assert.Contains(HttpStatusCode.BadGateway.ToString(), response.Result.ErrorDescription);
+            Assert.Equal(PartnerSpecialErrorCodes.NetworkError, response.Result.ErrorCode);
+            Assert.Contains(response.Result.ErrorDescription, HttpStatusCode.BadGateway.ToString());
         }
     }
 }

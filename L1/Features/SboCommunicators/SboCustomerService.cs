@@ -15,7 +15,6 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.SboCommunicators
 {

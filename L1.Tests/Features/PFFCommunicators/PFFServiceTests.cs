@@ -50,7 +50,7 @@ namespace L1.Tests.Features.PFFCommunicators
 
             // Assert
             Assert.IsType<PartnerResponse<PartnerResult>>(response);
-            Assert.Equal(response.Result.ErrorCode, PartnerSpecialErrorCodes.NetworkError);
+            Assert.Equal(PartnerSpecialErrorCodes.NetworkError, response.Result.ErrorCode);
             Assert.Contains(HttpStatusCode.BadGateway.ToString(), response.Result.ErrorDescription);
         }
     }

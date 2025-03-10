@@ -56,7 +56,7 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new OWResponse<MaintenanceResult> { Result = maintenanceResult }));
 
             // Act
-            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient, appSettings);
+            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
 
             // Assert
             Assert.True(maintenanceService.IsUnderMaintenance());
@@ -73,7 +73,7 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.NotFound, JsonConvert.SerializeObject(new OWResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient, appSettings);
+            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
             var call = fixture.Create<OWCall>();
 
             // Act
@@ -94,7 +94,7 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
             };
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new OWResponse<MaintenanceResult> { Result = maintenanceResult }));
-            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient, appSettings);
+            var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient);
             var call = fixture.Create<OWCall>();
 
             // Act

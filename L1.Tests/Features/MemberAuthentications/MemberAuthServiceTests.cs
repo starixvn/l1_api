@@ -157,7 +157,7 @@ namespace L1.Tests.Features.MemberAuthentications
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
-            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+            Assert.Equal(SingleSignOnResult.Unauthorize, result.Code);
         }
 
         [Theory, AutoData]
@@ -171,7 +171,7 @@ namespace L1.Tests.Features.MemberAuthentications
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
-            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+            Assert.Equal(SingleSignOnResult.Unauthorize, result.Code);
         }
 
         [Theory, AutoData]

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
@@ -19,10 +18,10 @@ namespace L1.IdentityServerApi.IdentityStore
             return Task.FromResult(new ApiResource(site.SiteId, site.SiteId));
         }
 
-        public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> names)
+        public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
             var sites = siteDataService.GetAll();
-            var result = GetAllApiResources(sites).Where(x => names.Contains(x.Name));
+            var result = GetAllApiResources(sites).Where(x => apiResourceNames.Contains(x.Name));
 
             return Task.FromResult(result);
         }

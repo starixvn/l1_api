@@ -22,7 +22,7 @@ namespace L1.Shared.Middlewares
         {
             var cultureInfo = DefaultCulture;
             var request = context.Request;
-            var headerContainsLanguageKey = request.Headers.Keys.Contains(LanguageKey);
+            var headerContainsLanguageKey = request.Headers.ContainsKey(LanguageKey);
 
             if (headerContainsLanguageKey)
             {

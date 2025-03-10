@@ -7,7 +7,7 @@ namespace L1.Shared.Middlewares
     public class LocalizationMiddlewareTests
     {
         private readonly LocalizationMiddleware middleware;
-        private readonly HttpContext context;
+        private readonly DefaultHttpContext context;
         private bool isCompletedNext;
 
         public LocalizationMiddlewareTests()

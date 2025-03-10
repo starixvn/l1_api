@@ -9,7 +9,6 @@ using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Newtonsoft.Json;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.MemberAuthentications
 {
@@ -41,7 +40,6 @@ namespace L1.Features.MemberAuthentications
             this.appSettings = appSettings;
             this.sentryClient = sentryClient;
         }
-
 
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
         {

@@ -31,7 +31,7 @@ namespace L1.Tests.Features.OWCommunicators
                 SBO = "SBO"
             };
 
-            owFailureHandler = new OWFailureHandler(logService, maintenanceService, sentryClient, appSettings);
+            owFailureHandler = new OWFailureHandler(logService, maintenanceService, sentryClient);
         }
 
         [Theory, AutoData]

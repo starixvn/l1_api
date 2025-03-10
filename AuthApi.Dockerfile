@@ -1,4 +1,4 @@
-FROM hub.lumigame.com/base/dotnet/core/sdk:5.0.102-ca-patch-buster-slim-2 AS builder
+FROM hub.lumigame.com/base/dotnet/core/sdk:8.0-alpine AS builder
 WORKDIR /src
 
 COPY ./L1 ./L1

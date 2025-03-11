@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
 using L1.Shared.Helpers;
-using Newtonsoft.Json;
-using System.Net.Http.Json;
+using L1.Shared.Services;
 
 namespace L1.Features.OWCommunicators
 {
@@ -21,18 +20,24 @@ namespace L1.Features.OWCommunicators
         private readonly HttpClient httpClient;
         private readonly IOWFailureHandler failureHandler;
         private readonly string secretKey;
+        private readonly IJsonService jsonService;
 
-        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, OWServiceSettings owServiceSettings)
+        public OWService(
+            HttpClient httpClient, 
+            IOWFailureHandler failureHandler, 
+            OWServiceSettings owServiceSettings,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
             this.secretKey = owServiceSettings.SecretKey;
+            this.jsonService = jsonService;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new()
         {
             var request = new PartnerRequest(call);
-            var requestBody = JsonConvert.SerializeObject(request);
+            var requestBody = jsonService.Serialize(request);
             
             using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
@@ -47,7 +52,7 @@ namespace L1.Features.OWCommunicators
             {
                 using var response = await httpClient.SendAsync(requestMessage);
                 var finalResponse = response.IsSuccessStatusCode
-                    ? await response.Content.ReadFromJsonAsync<PartnerResponse<T>>()
+                    ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
                     : await CreateOWNetworkErrorResponse<T>(new OWCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);
 
                 finalResponse!.Request = request;

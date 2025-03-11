@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
-using Newtonsoft.Json;
 using Sentry;
+using L1.Shared.Services;
 
 namespace L1.Features.AdminApiCommunicators
 {
@@ -21,12 +21,18 @@ namespace L1.Features.AdminApiCommunicators
         private readonly HttpClient httpClient;
         private readonly AdminApiEndPoints adminApiEndPoints;
         private readonly ISentryClient sentryClient;
+        private readonly IJsonService jsonService;
 
-        public AdminApiService(HttpClient httpClient, AdminApiEndPoints adminApiEndPoints, ISentryClient sentryClient)
+        public AdminApiService(
+            HttpClient httpClient, 
+            AdminApiEndPoints adminApiEndPoints, 
+            ISentryClient sentryClient,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.adminApiEndPoints = adminApiEndPoints;
             this.sentryClient = sentryClient;
+            this.jsonService = jsonService;
         }
 
         public Task UnderMaintenance(MaintenanceRequest request)
@@ -50,7 +56,7 @@ namespace L1.Features.AdminApiCommunicators
         private Task<HttpResponseMessage> Post(string apiEndpoint, AdminApiRequest request)
         {
             const string defaultMediaType = "application/json";
-            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, defaultMediaType);
+            var content = new StringContent(jsonService.Serialize(request), Encoding.UTF8, defaultMediaType);
             return httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
         }
     }

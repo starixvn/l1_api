@@ -6,6 +6,7 @@ using Sentry;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using L1.Shared.Services;
 
 namespace L1.Features.PFFCommunicators.CheckMaintenance
 {
@@ -18,17 +19,20 @@ namespace L1.Features.PFFCommunicators.CheckMaintenance
     {
         private readonly PFFServiceSettings PFFServiceSettings;
         private readonly IAppSettings appSettings;
+        private readonly IJsonService jsonService;
 
         public PFFMaintenanceService(
             HttpClient httpClient,
             PFFServiceSettings PFFServiceSettings,
             IAdminApiService adminApiService,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
-            : base(httpClient, adminApiService, sentryClient)
+            IAppSettings appSettings,
+            IJsonService jsonService)
+            : base(httpClient, adminApiService, sentryClient, jsonService)
         {
             this.PFFServiceSettings = PFFServiceSettings;
             this.appSettings = appSettings;
+            this.jsonService = jsonService;
         }
 
         public Task ObserveMaintenanceSchedule(PFFRequest request)

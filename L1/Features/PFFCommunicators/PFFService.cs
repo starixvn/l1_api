@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Helpers;
-using Newtonsoft.Json;
+using L1.Shared.Services;
 
 namespace L1.Features.PFFCommunicators
 {
@@ -18,19 +18,25 @@ namespace L1.Features.PFFCommunicators
         private readonly HttpClient httpClient;
         private readonly IPFFFailureHandler failureHandler;
         private readonly string secretKey;
+        private readonly IJsonService jsonService;
 
-        public PFFService(HttpClient httpClient, IPFFFailureHandler failureHandler, PFFServiceSettings owServiceSettings)
+        public PFFService(
+            HttpClient httpClient, 
+            IPFFFailureHandler failureHandler, 
+            PFFServiceSettings owServiceSettings,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
-            secretKey = owServiceSettings.SecretKey;
+            this.secretKey = owServiceSettings.SecretKey;
+            this.jsonService = jsonService;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new()
         {
             const string defaultMediaType = "application/json";
             var request = new PartnerRequest(call);
-            var requestBody = JsonConvert.SerializeObject(call);
+            var requestBody = jsonService.Serialize(call);
             var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
 
             PartnerResponse<T> finalResponse;
@@ -42,8 +48,7 @@ namespace L1.Features.PFFCommunicators
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-
-                finalResponse = JsonConvert.DeserializeObject<PartnerResponse<T>>(responseContent);
+                finalResponse = jsonService.Deserialize<PartnerResponse<T>>(responseContent);
             }
             else
             {

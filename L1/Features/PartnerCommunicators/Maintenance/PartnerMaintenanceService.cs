@@ -4,11 +4,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
-using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
 using Sentry;
 using AdminApi = L1.Features.AdminApiCommunicators.UnderMaintenance;
+using L1.Shared.Services;
 
 namespace L1.Features.PartnerCommunicators.Maintenance
 {
@@ -28,15 +28,18 @@ namespace L1.Features.PartnerCommunicators.Maintenance
         protected readonly HttpClient httpClient;
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
+        private readonly IJsonService jsonService;
 
         public PartnerMaintenanceService(
             HttpClient httpClient,
             IAdminApiService adminApiService,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.adminApiService = adminApiService;
             this.sentryClient = sentryClient;
+            this.jsonService = jsonService;
         }
 
         public bool IsUnderMaintenance() => UnderMaintenanceCounter == 0;
@@ -55,13 +58,13 @@ namespace L1.Features.PartnerCommunicators.Maintenance
         {
             var checkingMaintenanceCall = new PartnerCall(request.Call.PlayerId.ToString(), request.Call.SiteId);
             var owRequestBody = new PartnerRequest(checkingMaintenanceCall);
-            var content = new StringContent(JsonConvert.SerializeObject(owRequestBody), Encoding.UTF8, DefaultMediaType);
+            var content = new StringContent(jsonService.Serialize(owRequestBody), Encoding.UTF8, DefaultMediaType);
             var response = await httpClient.PostAsync(maintenanceUri, content);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var maintenanceScheduleResponse = JsonConvert.DeserializeObject<PartnerResponse<PartnerMaintenanceResult>>(responseContent);
+                var maintenanceScheduleResponse = jsonService.Deserialize<PartnerResponse<PartnerMaintenanceResult>>(responseContent);
                 var maintenanceSchedule = maintenanceScheduleResponse.Result;
 
                 await HandleMaintenanceSchedule(partnerId, maintenanceSchedule);

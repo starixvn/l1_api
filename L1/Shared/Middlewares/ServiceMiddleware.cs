@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text.Json;
 using L1.Features.BackendAuthentications;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
+using L1.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
@@ -19,6 +21,8 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddSingleton(new JsonSerializerOptions());
+            services.AddSingleton<IJsonService, JsonService>();
             services.AddMemoryCache(options =>
             {
                 options.ExpirationScanFrequency = TimeSpan.FromMinutes(1);

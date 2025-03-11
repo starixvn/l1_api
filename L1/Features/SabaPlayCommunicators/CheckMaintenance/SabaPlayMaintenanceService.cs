@@ -6,6 +6,7 @@ using Sentry;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using L1.Shared.Services;
 
 namespace L1.Features.SabaPlayCommunicators.CheckMaintenance
 {
@@ -24,8 +25,9 @@ namespace L1.Features.SabaPlayCommunicators.CheckMaintenance
             SabaPlayServiceSettings SabaPlayServiceSettings,
             IAdminApiService adminApiService,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
-            : base(httpClient, adminApiService, sentryClient)
+            IAppSettings appSettings,
+            IJsonService jsonService)
+            : base(httpClient, adminApiService, sentryClient, jsonService)
         {
             this.SabaPlayServiceSettings = SabaPlayServiceSettings;
             this.appSettings = appSettings;

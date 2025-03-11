@@ -8,10 +8,10 @@ using L1.Features.PFFCommunicators;
 using L1.Features.PFFCommunicators.CheckMaintenance;
 using L1.Shared.Configurations;
 using L1.Tests._Shared;
-using Newtonsoft.Json;
 using NSubstitute;
 using Sentry;
 using Xunit;
+using L1.Shared.Services;
 
 namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
 {
@@ -19,6 +19,7 @@ namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
     {
         private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
+        private readonly IJsonService jsonService;
         private readonly PFFServiceSettings PFFServiceSettings;
         private readonly Fixture fixture = new();
         private readonly IAppSettings appSettings;
@@ -27,6 +28,7 @@ namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
         {
             adminApiService = Substitute.For<IAdminApiService>();
             sentryClient = Substitute.For<ISentryClient>();
+            jsonService = Substitute.For<IJsonService>();
             appSettings = Substitute.For<IAppSettings>();
             appSettings.PartnerIds = new PartnerIds
             {
@@ -54,11 +56,12 @@ namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddMilliseconds(5)
             };
+            var response = new { Result = maintenanceResult };
+            var serializedContent = jsonService.Serialize(response);
+            jsonService.Deserialize<dynamic>(serializedContent).Returns(response);
 
-            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new { Result = maintenanceResult }));
-
-            // Act
-            var maintenanceService = new PFFMaintenanceService(httpClient, PFFServiceSettings, adminApiService, sentryClient, appSettings);
+            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
+            var maintenanceService = new PFFMaintenanceService(httpClient, PFFServiceSettings, adminApiService, sentryClient, appSettings, jsonService);
 
             // Assert
             Assert.True(maintenanceService.IsUnderMaintenance());
@@ -73,9 +76,12 @@ namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddMilliseconds(5)
             };
+            var response = new { Result = maintenanceResult };
+            var serializedContent = jsonService.Serialize(response);
+            jsonService.Deserialize<dynamic>(serializedContent).Returns(response);
 
-            var httpClient = MockHttpClient.Create(HttpStatusCode.NotFound, JsonConvert.SerializeObject(new { Result = maintenanceResult }));
-            var maintenanceService = new PFFMaintenanceService(httpClient, PFFServiceSettings, adminApiService, sentryClient, appSettings);
+            var httpClient = MockHttpClient.Create(HttpStatusCode.NotFound, serializedContent);
+            var maintenanceService = new PFFMaintenanceService(httpClient, PFFServiceSettings, adminApiService, sentryClient, appSettings, jsonService);
             var call = fixture.Create<PFFCall>();
 
             // Act
@@ -94,11 +100,13 @@ namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddMilliseconds(500)
             };
+            var response = new { Result = maintenanceResult };
+            var serializedContent = jsonService.Serialize(response);
+            jsonService.Deserialize<dynamic>(serializedContent).Returns(response);
 
-            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(new { Result = maintenanceResult }));
-            var maintenanceService = new PFFMaintenanceService(httpClient, PFFServiceSettings, adminApiService, sentryClient, appSettings);
+            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
+            var maintenanceService = new PFFMaintenanceService(httpClient, PFFServiceSettings, adminApiService, sentryClient, appSettings, jsonService);
             var call = fixture.Create<PFFCall>();
-            await maintenanceService.ObserveMaintenanceSchedule(new PFFRequest(call));
 
             // Act
             await maintenanceService.ObserveMaintenanceSchedule(new PFFRequest(call));

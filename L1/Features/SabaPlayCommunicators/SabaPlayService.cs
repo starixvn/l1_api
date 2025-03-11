@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
 using L1.Shared.Helpers;
-using Newtonsoft.Json;
-using System.Net.Http.Json;
-using System.Text.Json;
+using L1.Shared.Services;
 
 namespace L1.Features.SabaPlayCommunicators
 {
@@ -22,25 +20,24 @@ namespace L1.Features.SabaPlayCommunicators
         private readonly HttpClient httpClient;
         private readonly ISabaPlayFailureHandler failureHandler;
         private readonly string secretKey;
-        private readonly JsonSerializerOptions jsonOptions;
+        private readonly IJsonService jsonService;
 
-        public SabaPlayService(HttpClient httpClient, ISabaPlayFailureHandler failureHandler, SabaPlayServiceSettings settings)
+        public SabaPlayService(
+            HttpClient httpClient, 
+            ISabaPlayFailureHandler failureHandler, 
+            SabaPlayServiceSettings settings,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
             this.secretKey = settings.SecretKey;
-            
-            this.jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
+            this.jsonService = jsonService;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new()
         {
             var request = new PartnerRequest(call);
-            var requestBody = JsonConvert.SerializeObject(request);
+            var requestBody = jsonService.Serialize(request);
             
             using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
@@ -55,7 +52,7 @@ namespace L1.Features.SabaPlayCommunicators
             {
                 using var response = await httpClient.SendAsync(requestMessage);
                 var finalResponse = response.IsSuccessStatusCode
-                    ? await response.Content.ReadFromJsonAsync<PartnerResponse<T>>(jsonOptions)
+                    ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
                     : await CreateNetworkErrorResponse<T>(new SabaPlayCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);
 
                 finalResponse!.Request = request;

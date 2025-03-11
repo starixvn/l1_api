@@ -2,12 +2,12 @@
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Maintenance;
 using L1.Shared.Helpers;
-using Newtonsoft.Json;
 using Sentry;
 using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using L1.Shared.Services;
 
 namespace L1.Features.OWCommunicators.CheckMaintenance
 {
@@ -21,16 +21,19 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         private const string HeaderAccessKey = "Saba-access-key";
         private readonly OWServiceSettings owServiceSettings;
         private readonly string secretKey;
+        private readonly IJsonService jsonService;
 
         public OWMaintenanceService(
             HttpClient httpClient,
             OWServiceSettings owServiceSettings,
             IAdminApiService adminApiService,
-            ISentryClient sentryClient)
-            : base(httpClient, adminApiService, sentryClient)
+            ISentryClient sentryClient,
+            IJsonService jsonService)
+            : base(httpClient, adminApiService, sentryClient, jsonService)
         {
             this.owServiceSettings = owServiceSettings;
-            secretKey = owServiceSettings.SecretKey;
+            this.secretKey = owServiceSettings.SecretKey;
+            this.jsonService = jsonService;
         }
 
         public Task ObserveMaintenanceSchedule(OWRequest request, string operatorId)
@@ -42,7 +45,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
         protected override async Task<PartnerMaintenanceResult> GetMaintenanceSchedule(string partnerId, PartnerRequest request, Uri maintenanceUri)
         {
             var checkingMaintenanceCall = new PartnerCall(request.Call.PlayerId.ToString(), request.Call.SiteId);
-            var owRequestBody = JsonConvert.SerializeObject(checkingMaintenanceCall);
+            var owRequestBody = jsonService.Serialize(checkingMaintenanceCall);
 
             var content = new StringContent(owRequestBody, Encoding.UTF8, DefaultMediaType);
             var accessKey = Md5Helper.Create($"{secretKey}{owRequestBody}");
@@ -54,7 +57,7 @@ namespace L1.Features.OWCommunicators.CheckMaintenance
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var maintenanceScheduleResponse = JsonConvert.DeserializeObject<PartnerResponse<PartnerMaintenanceResult>>(responseContent);
+                var maintenanceScheduleResponse = jsonService.Deserialize<PartnerResponse<PartnerMaintenanceResult>>(responseContent);
                 var maintenanceSchedule = maintenanceScheduleResponse.Result;
 
                 await HandleMaintenanceSchedule(partnerId, maintenanceSchedule);

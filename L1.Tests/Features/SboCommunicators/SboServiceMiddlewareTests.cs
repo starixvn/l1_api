@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sentry;
 using Xunit;
+using System.Text.Json;
+using L1.Shared.Services;
 
 namespace L1.Tests.Features.SboCommunicators
 {
@@ -61,6 +63,10 @@ namespace L1.Tests.Features.SboCommunicators
             services.AddMongoDBServices(appSettings);
             services.AddSingleton<ISentryClient, MockSentryClient>();
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            
+            // Add JsonService registration
+            services.AddSingleton(new JsonSerializerOptions());
+            services.AddSingleton<IJsonService, JsonService>();
 
             // Act
             SboServiceMiddleware.AddSboServices(services, SboServiceSettings);

@@ -4,15 +4,16 @@ using AutoFixture.Xunit2;
 using L1.Features.PartnerCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Tests._Shared;
-using Newtonsoft.Json;
 using NSubstitute;
 using Xunit;
+using L1.Shared.Services;
 
 namespace L1.Tests.Features.SboCommunicators
 {
     public class SboServiceTests
     {
         private readonly ISboFailureHandler failureHandler;
+        private readonly IJsonService jsonService;
 
         private readonly SboResponse<PartnerResult> defaultContent = new()
         {
@@ -22,14 +23,20 @@ namespace L1.Tests.Features.SboCommunicators
         public SboServiceTests()
         {
             failureHandler = Substitute.For<ISboFailureHandler>();
+            jsonService = Substitute.For<IJsonService>();
         }
 
         [Theory, AutoData]
         public async Task Post_Success_ReturnsOWResponse(SboCall call, SboServiceSettings oWServiceSettings)
         {
             // Arrange
-            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, JsonConvert.SerializeObject(defaultContent));
-            var service = new SboService(httpClient, failureHandler, oWServiceSettings);
+            var serializedContent = jsonService.Serialize(defaultContent);
+            jsonService.Serialize(Arg.Any<SboCall>()).Returns(serializedContent);
+            jsonService.Deserialize<PartnerResponse<PartnerResult>>(serializedContent)
+                .Returns(new PartnerResponse<PartnerResult> { Result = defaultContent.Result });
+
+            var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
+            var service = new SboService(httpClient, failureHandler, oWServiceSettings, jsonService);
 
             // Act
             var result = await service.Post<PartnerResult>("/aaa", call);
@@ -42,8 +49,11 @@ namespace L1.Tests.Features.SboCommunicators
         public async Task Post_Failed_ReturnsOWResponse(SboCall call, SboServiceSettings oWServiceSettings)
         {
             // Arrange
-            var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, JsonConvert.SerializeObject(string.Empty));
-            var service = new SboService(httpClient, failureHandler, oWServiceSettings);
+            var serializedContent = jsonService.Serialize(string.Empty);
+            jsonService.Serialize(Arg.Any<SboCall>()).Returns(serializedContent);
+
+            var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, serializedContent);
+            var service = new SboService(httpClient, failureHandler, oWServiceSettings, jsonService);
 
             // Act
             var response = await service.Post<PartnerResult>("/aaa", call);

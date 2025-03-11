@@ -8,6 +8,7 @@ using L1.Shared.Configurations;
 using NSubstitute;
 using Sentry;
 using Xunit;
+using L1.Shared.Services;
 
 namespace L1.Tests.Features.MemberAuthentications
 {
@@ -18,6 +19,7 @@ namespace L1.Tests.Features.MemberAuthentications
         private readonly IConfigurationApiService configurationApiService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
+        private readonly IJsonService jsonService;
 
         private readonly MemberAuthService memberAuthService;
 
@@ -28,7 +30,9 @@ namespace L1.Tests.Features.MemberAuthentications
             configurationApiService = Substitute.For<IConfigurationApiService>();
             appSettings = Substitute.For<IAppSettings>();
             sentryClient = Substitute.For<ISentryClient>();
+            jsonService = Substitute.For<IJsonService>();
             memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, configurationApiService, appSettings, sentryClient);
+            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, appSettings, sentryClient, jsonService);
         }
 
         [Theory, AutoData]

@@ -6,7 +6,7 @@ using Sentry;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using L1.Shared.Services;
+using L1.Features.Json;
 namespace L1.Features.SboCommunicators.CheckMaintenance
 {
     public interface ISboMaintenanceService

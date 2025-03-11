@@ -3,7 +3,7 @@ using NATS.Client;
 using NATS.Client.JetStream;
 using L1.Shared.Configurations;
 using Sentry;
-using L1.Shared.Services;
+using L1.Features.Json;
 
 namespace L1.Features.PartnerCommunicators
 {

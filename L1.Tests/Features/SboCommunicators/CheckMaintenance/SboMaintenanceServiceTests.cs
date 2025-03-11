@@ -11,7 +11,7 @@ using L1.Tests._Shared;
 using NSubstitute;
 using Sentry;
 using Xunit;
-using L1.Shared.Services;
+using L1.Features.Json;
 
 namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
 {

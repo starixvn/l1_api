@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace L1.Shared.Services
+namespace L1.Features.Json
 {
     public interface IJsonService
     {
@@ -27,4 +27,4 @@ namespace L1.Shared.Services
             return JsonSerializer.Deserialize<T>(json, options);
         }
     }
-} 
+}

@@ -8,7 +8,7 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using L1.Shared.Resources;
 using Sentry;
-using L1.Shared.Services;
+using L1.Features.Json;
 
 namespace L1.Features.MemberAuthentications
 {

@@ -4,7 +4,7 @@ namespace L1.Features.AdminApiCommunicators.NotifyHighStake
 {
     public record NotifyHighStakeData(
         string ObCustId,
-        byte GameTypeId,
+        int GameTypeId,
         decimal Amount,
         string Currency,
         int ChoiceId,

@@ -8,7 +8,7 @@ using Polly;
 using Polly.Retry;
 using Sentry;
 using AdminApi = L1.Features.AdminApiCommunicators.UnderMaintenance;
-using L1.Shared.Services;
+using L1.Features.Json;
 
 namespace L1.Features.PartnerCommunicators.Maintenance
 {

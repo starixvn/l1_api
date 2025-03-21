@@ -90,14 +90,13 @@ namespace L1.WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection();
+            if (env.IsDevelopment() || Configuration["Env"].Contains("LOCAL"))
 
-            if (env.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseReDoc(c =>
                 {
                     c.DocumentTitle = "SC API Documentation";
-                    c.SpecUrl = "/swagger/v1/swagger.json";
                 });
             }
 

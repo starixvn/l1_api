@@ -77,6 +77,13 @@ namespace L1.WebApi
             {
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC API", Version = "v1" });
+                if (Configuration["Env"].Contains("LOCAL"))
+                {
+                    c.AddServer(new OpenApiServer
+                    {
+                        Url = "/game-api"
+                    });
+                }
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.Http,
@@ -91,7 +98,6 @@ namespace L1.WebApi
         {
             app.UseHttpsRedirection();
             if (env.IsDevelopment() || Configuration["Env"].Contains("LOCAL"))
-
             {
                 app.UseSwagger();
                 app.UseReDoc(c =>

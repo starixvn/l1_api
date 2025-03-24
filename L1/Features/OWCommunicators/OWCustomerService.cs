@@ -17,7 +17,6 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
 {
@@ -29,6 +28,7 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
         private readonly ISentryClient sentryClient;
+        private readonly INatsService natsService;
 
         public OWCustomerService(
             IOWService oWService,
@@ -36,7 +36,8 @@ namespace L1.Features.OWCommunicators
             IAppSettings appSettings,
             IAdminApiService adminApiSerivce,
             OWEndPoints endpoints,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            INatsService natsService)
         {
             this.oWService = oWService;
             this.logService = logService;
@@ -44,6 +45,7 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
             this.adminApiSerivce = adminApiSerivce;
             this.sentryClient = sentryClient;
+            this.natsService = natsService;
         }
 
         public string OperatorId { get; set; }
@@ -83,9 +85,11 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogBetAsync(OperatorId, response, system, metadata);
 
+                await natsService.PublishAsync("bet.created", call);
+
                 if (call.Amount >= appSettings.HighStake)
                 {
-                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                    var notifyHighStakeData = new NotifyHighStakeData(
                         call.PlayerId,
                         call.GameTypeId,
                         call.Amount,
@@ -94,7 +98,9 @@ namespace L1.Features.OWCommunicators
                         system,
                         metadata,
                         call.OperatorId,
-                        call.UserId));
+                        call.UserId);
+
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(notifyHighStakeData));
                 }
             }
 
@@ -108,6 +114,7 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(OperatorId, response);
+                await natsService.PublishAsync("bet.settled", call);
             }
 
             return response;

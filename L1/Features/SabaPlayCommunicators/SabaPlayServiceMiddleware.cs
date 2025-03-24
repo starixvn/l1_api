@@ -1,39 +1,41 @@
 ﻿using System.Net;
+using System;
 using System.Net.Http;
 using Coravel;
+using Microsoft.Extensions.DependencyInjection;
 using Coravel.Scheduling.Schedule.Interfaces;
 using L1.Features.PartnerCommunicators;
 using L1.Features.SabaPlayCommunicators.CheckMaintenance;
 using L1.Features.SabaPlayCommunicators.DailySummary;
 using L1.Features.SabaPlayCommunicators.ScheduleJob;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.SabaPlayCommunicators
 {
     public static class SabaPlayServiceMiddleware
     {
-        public static void AddSabaPlayServices(this IServiceCollection services, SabaPlayServiceSettings SabaPlayServiceSettings)
+        public static void AddSabaPlayServices(this IServiceCollection services, SabaPlayServiceSettings sabaPlayServiceSettings)
         {
-            services.AddSingleton(SabaPlayServiceSettings);
-            services.AddSingleton(SabaPlayServiceSettings.Endpoints);
+            services.AddSingleton(sabaPlayServiceSettings);
+            services.AddSingleton(sabaPlayServiceSettings.Endpoints);
             services.AddScoped<ISabaPlayFailureHandler, SabaPlayFailureHandler>();
 
             services.AddScoped<SabaPlayCustomerService>()
-                        .AddScoped<IPartnerCustomerServices, SabaPlayCustomerService>(s => s.GetService<SabaPlayCustomerService>());
+                   .AddScoped<IPartnerCustomerServices, SabaPlayCustomerService>(s => s.GetService<SabaPlayCustomerService>());
 
             services.AddHttpClient<ISabaPlayMaintenanceService, SabaPlayMaintenanceService>();
             var sabaPlayHttpClient = services.AddHttpClient<ISabaPlayService, SabaPlayService>(httpClient =>
             {
-                httpClient.BaseAddress = SabaPlayServiceSettings.BaseUrl;
+                httpClient.BaseAddress = sabaPlayServiceSettings.BaseUrl;
+                httpClient.Timeout = TimeSpan.FromSeconds(30); // Add reasonable timeout
             });
 
-            if (!string.IsNullOrEmpty(SabaPlayServiceSettings.Proxy))
+            if (!string.IsNullOrEmpty(sabaPlayServiceSettings.Proxy))
             {
                 sabaPlayHttpClient.ConfigurePrimaryHttpMessageHandler(() =>
                 {
                     return new HttpClientHandler
                     {
-                        Proxy = new WebProxy(SabaPlayServiceSettings.Proxy),
+                        Proxy = new WebProxy(sabaPlayServiceSettings.Proxy),
                         UseProxy = true,
                     };
                 });

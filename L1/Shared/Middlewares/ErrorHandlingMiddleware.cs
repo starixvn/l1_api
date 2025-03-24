@@ -18,7 +18,13 @@ namespace L1.Shared.Middlewares
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     context.Response.ContentType = "application/json";
 
-                    await context.Response.WriteAsync(exception?.Message);
+                    var response = new
+                    {
+                        Message = exception?.Message,
+                        StatusCode = StatusCodes.Status500InternalServerError
+                    };
+
+                    await context.Response.WriteAsJsonAsync(response);
                 });
             });
         }

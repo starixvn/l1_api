@@ -2,6 +2,7 @@
 using AutoFixture;
 using L1.Features.MemberAuthentications;
 using L1.WebApi.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
 
@@ -24,14 +25,18 @@ namespace L1.WebApi.Tests.Controllers
         {
             // Arrange
             var verificationParams = fixture.Create<VerificationParams>();
-            var result = fixture.Create<VerificationResult>();
-            memberAuthService.VerifyToken(Arg.Any<VerificationParams>()).Returns(result);
+            var expectedResult = fixture.Create<VerificationResult>();
+            memberAuthService.VerifyToken(Arg.Any<VerificationParams>()).Returns(expectedResult);
 
             // Act
             var actualValue = await controller.Verify(verificationParams);
+            var objectResult = actualValue.Result as OkObjectResult; // ✅ Lấy OkObjectResult
+            var responseValue = objectResult?.Value as VerificationResult; // ✅ Giải nén giá trị
 
             // Assert
-            Assert.Equal(result, actualValue);
+            Assert.NotNull(objectResult);
+            Assert.NotNull(responseValue);
+            Assert.Equal(expectedResult, responseValue);
         }
 
         [Fact]
@@ -39,14 +44,18 @@ namespace L1.WebApi.Tests.Controllers
         {
             // Arrange
             var updateParams = fixture.Create<UpdateMemberAuthParams>();
-            var result = fixture.Create<SingleSignOnResult>();
-            memberAuthService.UpdateMemberAuth(Arg.Any<UpdateMemberAuthParams>()).Returns(result);
+            var expectedResult = fixture.Create<SingleSignOnResult>();
+            memberAuthService.UpdateMemberAuth(Arg.Any<UpdateMemberAuthParams>()).Returns(Task.FromResult(expectedResult));
 
             // Act
             var actualValue = await controller.UpdateMemberAuth(updateParams);
+            var objectResult = actualValue.Result as OkObjectResult; // ✅ Lấy OkObjectResult
+            var responseValue = objectResult?.Value as SingleSignOnResult; // ✅ Giải nén giá trị
 
             // Assert
-            Assert.Equal(result, actualValue);
+            Assert.NotNull(objectResult);
+            Assert.NotNull(responseValue);
+            Assert.Equal(expectedResult, responseValue);
         }
     }
 }

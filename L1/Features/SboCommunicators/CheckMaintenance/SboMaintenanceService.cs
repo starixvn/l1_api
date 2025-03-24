@@ -6,7 +6,7 @@ using Sentry;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
+using L1.Features.Json;
 namespace L1.Features.SboCommunicators.CheckMaintenance
 {
     public interface ISboMaintenanceService
@@ -18,17 +18,20 @@ namespace L1.Features.SboCommunicators.CheckMaintenance
     {
         private readonly SboServiceSettings sboServiceSettings;
         private readonly IAppSettings appSettings;
+        private readonly IJsonService jsonService;
 
         public SboMaintenanceService(
             HttpClient httpClient,
             SboServiceSettings sboServiceSettings,
             IAdminApiService adminApiService,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
-            : base(httpClient, adminApiService, sentryClient)
+            IAppSettings appSettings,
+            IJsonService jsonService)
+            : base(httpClient, adminApiService, sentryClient, jsonService)
         {
             this.sboServiceSettings = sboServiceSettings;
             this.appSettings = appSettings;
+            this.jsonService = jsonService;
         }
 
         public Task ObserveMaintenanceSchedule(SboRequest request)

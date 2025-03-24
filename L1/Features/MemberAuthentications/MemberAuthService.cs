@@ -7,9 +7,8 @@ using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using L1.Shared.Resources;
-using Newtonsoft.Json;
 using Sentry;
-using Sentry.Protocol;
+using L1.Features.Json;
 
 namespace L1.Features.MemberAuthentications
 {
@@ -27,19 +26,22 @@ namespace L1.Features.MemberAuthentications
         private readonly IConfigurationApiService configurationApiService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
+        private readonly IJsonService jsonService;
 
         public MemberAuthService(
             IMemberAuthDataAccess memberAuthDataAccess,
             IPartnerDataService partnerDataService,
             IConfigurationApiService configurationApiService,
             IAppSettings appSettings,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            IJsonService jsonService)
         {
             this.memberAuthDataAccess = memberAuthDataAccess;
             this.partnerDataService = partnerDataService;
             this.configurationApiService = configurationApiService;
             this.appSettings = appSettings;
             this.sentryClient = sentryClient;
+            this.jsonService = jsonService;
         }
 
         public async Task<VerificationResult> VerifyToken(VerificationParams verificationParams)
@@ -55,7 +57,7 @@ namespace L1.Features.MemberAuthentications
                     return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
                 }
 
-                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.Now)
+                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTimeOffset.Now)
                 {
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
@@ -88,9 +90,13 @@ namespace L1.Features.MemberAuthentications
 
         private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
-            sentryClient.CaptureMessage(
-                $"Verification failed on {DateTime.UtcNow}. Reason: {message}. Request: {JsonConvert.SerializeObject(verificationParams)}. Member Auth: {JsonConvert.SerializeObject(memberAuth)}",
-                SentryLevel.Warning);
+            var logMessage = 
+                $"Verification failed on {DateTimeOffset.UtcNow}. " +
+                $"Reason: {message}. " +
+                $"Request: {jsonService.Serialize(verificationParams)}. " +
+                $"Member Auth: {jsonService.Serialize(memberAuth)}";
+            
+            sentryClient.CaptureMessage(logMessage, SentryLevel.Warning);
         }
 
         private string GetRootDomain(string domain)

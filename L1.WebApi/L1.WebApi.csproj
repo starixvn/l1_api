@@ -1,53 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <CodeAnalysisRuleSet>..\.sonarlint\l1-apicsharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-        <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.2.26">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.2.3" />
+        <PackageReference Include="NATS.Client" Version="1.1.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.5.0" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\L1\L1.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <AdditionalFiles Include="..\.sonarlint\l1-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Update="appsettings.json">
-            <TransformOnBuild>true</TransformOnBuild>
-        </Content>
+        <AdditionalFiles Include="..\.sonarlint\l1-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
     </ItemGroup>
     <ItemGroup>
         <Content Update="Properties\launchSettings.json">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Update="_Configs\sc1\appsettings.json">
-          <TransformOnBuild>true</TransformOnBuild>
-        </Content>
-        <Content Update="_Configs\sc1\appsettings.LOCAL.json">
-          <DependentUpon>appsettings.json</DependentUpon>
-          <IsTransformFile>true</IsTransformFile>
-        </Content>
-        <Content Update="_Configs\sc1\appsettings.PROD.json">
-          <DependentUpon>appsettings.json</DependentUpon>
-          <IsTransformFile>true</IsTransformFile>
-        </Content>
-        <Content Update="_Configs\sc1\appsettings.SIT.json">
-          <DependentUpon>appsettings.json</DependentUpon>
-          <IsTransformFile>true</IsTransformFile>
-        </Content>
-        <Content Update="_Configs\sc1\appsettings.UAT.json">
-          <DependentUpon>appsettings.json</DependentUpon>
-          <IsTransformFile>true</IsTransformFile>
         </Content>
     </ItemGroup>
     <ItemGroup>
@@ -56,6 +30,6 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Extensions\" />
+        <Folder Include="Extensions\" />
     </ItemGroup>
 </Project>

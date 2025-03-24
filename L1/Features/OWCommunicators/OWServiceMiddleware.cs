@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.OWCommunicators
 {
@@ -16,12 +16,14 @@ namespace L1.Features.OWCommunicators
             services.AddScoped<IOWFailureHandler, OWFailureHandler>();
 
             services.AddScoped<OWCustomerService>()
-                        .AddScoped<IPartnerCustomerServices, OWCustomerService>(s => s.GetService<OWCustomerService>());
+                   .AddScoped<IPartnerCustomerServices, OWCustomerService>(s => s.GetService<OWCustomerService>());
 
             services.AddHttpClient<IOWMaintenanceService, OWMaintenanceService>();
+
             var owHttpClient = services.AddHttpClient<IOWService, OWService>(httpClient =>
             {
                 httpClient.BaseAddress = owServiceSettings.BaseUrl;
+                httpClient.Timeout = TimeSpan.FromSeconds(30); // Add reasonable timeout
             });
 
             if (!string.IsNullOrEmpty(owServiceSettings.Proxy))

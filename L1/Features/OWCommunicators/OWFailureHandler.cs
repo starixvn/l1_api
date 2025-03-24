@@ -4,10 +4,8 @@ using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.Resources;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.OWCommunicators
 {
@@ -21,14 +19,12 @@ namespace L1.Features.OWCommunicators
         private readonly ILogService logService;
         private readonly IOWMaintenanceService maintenanceService;
         private readonly ISentryClient sentryClient;
-        private readonly IAppSettings appSettings;
 
-        public OWFailureHandler(ILogService logService, IOWMaintenanceService maintenanceService, ISentryClient sentryClient, IAppSettings appSettings)
+        public OWFailureHandler(ILogService logService, IOWMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
             this.logService = logService;
             this.maintenanceService = maintenanceService;
             this.sentryClient = sentryClient;
-            this.appSettings = appSettings;
         }
 
         public async Task Handle<T>(PartnerResponse<T> response, string operatorId) where T : PartnerResult

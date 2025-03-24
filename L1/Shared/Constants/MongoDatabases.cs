@@ -2,10 +2,10 @@
 {
     internal static class MongoDatabases
     {
-        public const string Admin = "admin";
-        public const string Member = "member";
-        public const string Log = "log";
-        public const string Minigame = "minigame";
-        public const string Summary = "summary";
+        internal const string Admin = "admin";
+        internal const string Member = "member";
+        internal const string Log = "log";
+        internal const string Minigame = "minigame";
+        internal const string Summary = "summary";
     }
 }

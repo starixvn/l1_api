@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
@@ -8,46 +7,58 @@ using L1.Features.Sites;
 
 namespace L1.IdentityServerApi.IdentityStore
 {
-    public class ResourceStore : IResourceStore
+    public class ResourceStore(ISiteDataService siteDataService) : IResourceStore
     {
-        private readonly ISiteDataService siteDataService;
-
-        public ResourceStore(ISiteDataService siteDataService)
-        {
-            this.siteDataService = siteDataService;
-        }
-
-        public Task<ApiResource> FindApiResourceAsync(string name)
+        public Task<ApiResource> FindApiResourcesByNameAsync(string name)
         {
             var site = siteDataService.GetBySiteId(name);
 
             return Task.FromResult(new ApiResource(site.SiteId, site.SiteId));
         }
 
-        public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeAsync(IEnumerable<string> scopeNames)
+        public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
             var sites = siteDataService.GetAll();
-            var result = GetAllApiResources(sites).Where(x => x.Scopes.Any(s => scopeNames.Contains(s.Name)));
+            var result = GetAllApiResources(sites).Where(x => apiResourceNames.Contains(x.Name));
 
             return Task.FromResult(result);
         }
-
-        public Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeAsync(IEnumerable<string> scopeNames)
+        public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
-            return Task.FromResult(Enumerable.Empty<IdentityResource>());
+            var sites = siteDataService.GetAll();
+            var result = GetAllApiResources(sites).Where(resource => resource.Scopes.Any(scope => scopeNames.Contains(scope)));
+
+            return Task.FromResult(result);
         }
 
         public Task<Resources> GetAllResourcesAsync()
         {
             var sites = siteDataService.GetAll();
-            var result = new Resources(Enumerable.Empty<IdentityResource>(), GetAllApiResources(sites));
+            var apiResources = GetAllApiResources(sites);
+            var apiScopes = Enumerable.Empty<ApiScope>();
+            var result = new Resources(Enumerable.Empty<IdentityResource>(), apiResources, apiScopes);
 
             return Task.FromResult(result);
         }
 
         private static IEnumerable<ApiResource> GetAllApiResources(IEnumerable<Site> sites)
         {
-            return sites.Select(site => new ApiResource(site.SiteId, site.SiteId));
+            return sites.Select(site =>
+            {
+                var apiResource = new ApiResource(site.SiteId, site.SiteId);
+                apiResource.Scopes.Add(site.SiteId);
+                return apiResource;
+            });
+        }
+
+        public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
+        {
+            return Task.FromResult(Enumerable.Empty<ApiScope>());
+        }
+
+        public Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+        {
+            return Task.FromResult(Enumerable.Empty<IdentityResource>());
         }
     }
 }

@@ -69,7 +69,7 @@ namespace L1.Features.MemberAuthentications
         {
             var updates = Builders<MemberAuth>.Update
                 .Set(x => x.CurrencyGroupId, currencyGroupId)
-                .Set(x => x.Time, DateTime.Now);
+                .Set(x => x.Time, DateTimeOffset.Now);
 
             return memberAuthCollection.UpdateOneAsync(x => x.Token == token, updates);
         }

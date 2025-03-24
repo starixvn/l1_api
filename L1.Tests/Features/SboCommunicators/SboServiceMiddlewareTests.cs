@@ -1,4 +1,5 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Collections.Generic;
+using AutoFixture.Xunit2;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.SboCommunicators;
@@ -7,9 +8,10 @@ using L1.Shared.Middlewares;
 using L1.Tests._Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 using Sentry;
 using Xunit;
+using System.Text.Json;
+using L1.Features.Json;
 
 namespace L1.Tests.Features.SboCommunicators
 {
@@ -35,7 +37,12 @@ namespace L1.Tests.Features.SboCommunicators
         {
             // Arrange
             var services = new ServiceCollection();
-            var configuration = Substitute.For<IConfiguration>();
+            var configuration = new ConfigurationBuilder()
+               .AddInMemoryCollection(new Dictionary<string, string>
+               {
+                    { "AppSettings:MongoDBSettings:ConnectionString", "mongodb://127.0.0.1:27017" }
+               })
+               .Build();
             services.AddSettings(configuration);
             var appSettings = new AppSettings
             {
@@ -56,6 +63,10 @@ namespace L1.Tests.Features.SboCommunicators
             services.AddMongoDBServices(appSettings);
             services.AddSingleton<ISentryClient, MockSentryClient>();
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            
+            // Add JsonService registration
+            services.AddSingleton(new JsonSerializerOptions());
+            services.AddSingleton<IJsonService, JsonService>();
 
             // Act
             SboServiceMiddleware.AddSboServices(services, SboServiceSettings);

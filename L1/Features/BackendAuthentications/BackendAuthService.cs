@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
+using Sentry;
 
 namespace L1.Features.BackendAuthentications
 {
@@ -37,12 +38,12 @@ namespace L1.Features.BackendAuthentications
     {
         private static TokenResponse TokenResponse;
         private static long LastRequestTicks;
-
         private readonly IHttpClientWrapper httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
 
-        public BackendAuthService(IHttpClientWrapper httpClient,
+        public BackendAuthService(
+            IHttpClientWrapper httpClient,
             BackendAuthConfigs backendAuthConfigs,
             IDiscoveryCache discoveryCache)
         {
@@ -60,10 +61,17 @@ namespace L1.Features.BackendAuthentications
 
             if (checkResponseTokenFunc(TokenResponse, LastRequestTicks))
             {
-                var disco = await discoveryCache.GetAsync();
-
-                if (!disco.IsError)
+                try
                 {
+                    var disco = await discoveryCache.GetAsync();
+
+                    if (disco.IsError)
+                    {
+                        SentrySdk.CaptureMessage($"Discovery failed: {disco.Error}", 
+                            SentryLevel.Error);
+                        throw new InvalidOperationException(disco.Error);
+                    }
+
                     var clientCredentials = new ClientCredentialsTokenRequest
                     {
                         Address = disco.TokenEndpoint,
@@ -74,18 +82,29 @@ namespace L1.Features.BackendAuthentications
 
                     var newTokenResponse = await httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default);
 
+                    if (newTokenResponse.IsError)
+                    {
+                        SentrySdk.CaptureMessage($"Token request failed: {newTokenResponse.Error}", 
+                            SentryLevel.Error);
+                        throw new InvalidOperationException(newTokenResponse.Error);
+                    }
+
                     Interlocked.Exchange(ref TokenResponse, newTokenResponse);
                     Interlocked.Exchange(ref LastRequestTicks, DateTimeOffset.UtcNow.Ticks);
                 }
-                else
+                catch (Exception ex) when (ex is not InvalidOperationException)
                 {
-                    throw new InvalidOperationException(disco.Error);
+                    SentrySdk.CaptureException(ex, scope =>
+                    {
+                        scope.SetExtra("message", "Unexpected error getting access token");
+                        scope.Level = SentryLevel.Error;
+                    });
+                    throw;
                 }
             }
 
             return TokenResponse;
         }
-
         private static bool IsResponseTokenExpired(TokenResponse tokenResponse, long lastRequestTicks)
                 => tokenResponse == null || new DateTimeOffset(lastRequestTicks, TimeSpan.Zero)
                         .AddSeconds(tokenResponse.ExpiresIn) < DateTimeOffset.UtcNow.AddMinutes(1);

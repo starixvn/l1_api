@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text.Json;
 using L1.Features.BackendAuthentications;
+using L1.Features.Json;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
@@ -10,6 +12,8 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using NATS.Client;
+using Sentry;
 
 namespace L1.Shared.Middlewares
 {
@@ -17,6 +21,8 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddSingleton(new JsonSerializerOptions());
+            services.AddSingleton<IJsonService, JsonService>();
             services.AddMemoryCache(options =>
             {
                 options.ExpirationScanFrequency = TimeSpan.FromMinutes(1);
@@ -33,7 +39,7 @@ namespace L1.Shared.Middlewares
             services.AddScoped<ILogDataAccess, LogDataAccess>();
             services.AddScoped<ILogService, LogService>();
 
-            services.AddTransient<ProtectedApiBearerTokenHandler>();
+            services.AddHttpClient<ProtectedApiBearerTokenHandler>();
         }
 
         public static void AddMongoDBServices(this IServiceCollection services, IAppSettings appSettings)
@@ -45,10 +51,31 @@ namespace L1.Shared.Middlewares
             };
 
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
-            services.AddSingleton<IMongoClient>(new MongoClient(appSettings.MongoDBSettings.ConnectionString));
+            services.AddSingleton<IMongoClient>(sp => new MongoClient(appSettings.MongoDBSettings.ConnectionString));
 
             var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("L1"));
-            BsonSerializer.RegisterSerializer(objectSerializer);
+            if (BsonSerializer.LookupSerializer<object>() is not ObjectSerializer)
+            {
+                BsonSerializer.RegisterSerializer(objectSerializer);
+            }
+        }
+
+        public static void AddJetStreamServices(this IServiceCollection services, IAppSettings appSettings)
+        {
+            services.AddSingleton<IConnection>(sp =>
+            {
+                if (string.IsNullOrEmpty(appSettings.StreamSettings.Host))
+                {
+                    SentrySdk.CaptureMessage("NATS host is not configured", SentryLevel.Error);
+                    return null;
+                }
+
+                var opts = ConnectionFactory.GetDefaultOptions();
+                opts.Url = appSettings.StreamSettings.Host;
+                return new ConnectionFactory().CreateConnection(opts);
+            });
+
+            services.AddSingleton<INatsService, NatsService>();
         }
     }
 }

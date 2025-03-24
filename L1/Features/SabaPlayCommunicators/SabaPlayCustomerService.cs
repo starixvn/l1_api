@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using IdentityModel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
@@ -20,7 +19,6 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.SabaPlayCommunicators
 {
@@ -87,7 +85,7 @@ namespace L1.Features.SabaPlayCommunicators
 
                 if (call.Amount >= appSettings.HighStake)
                 {
-                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(
+                    var notifyHighStakeData = new NotifyHighStakeData(
                         SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId),
                         call.GameTypeId,
                         call.Amount,
@@ -96,7 +94,9 @@ namespace L1.Features.SabaPlayCommunicators
                         system,
                         metadata,
                         call.OperatorId,
-                        call.UserId));
+                        call.UserId);
+
+                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(notifyHighStakeData));
                 }
             }
 

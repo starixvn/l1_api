@@ -2,10 +2,10 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using L1.Features.Json;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
 using L1.Shared.Helpers;
-using Newtonsoft.Json;
 
 namespace L1.Features.OWCommunicators
 {
@@ -20,63 +20,84 @@ namespace L1.Features.OWCommunicators
         private readonly HttpClient httpClient;
         private readonly IOWFailureHandler failureHandler;
         private readonly string secretKey;
+        private readonly IJsonService jsonService;
 
-        public OWService(HttpClient httpClient, IOWFailureHandler failureHandler, OWServiceSettings owServiceSettings)
+        public OWService(
+            HttpClient httpClient, 
+            IOWFailureHandler failureHandler, 
+            OWServiceSettings owServiceSettings,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
-            secretKey = owServiceSettings.SecretKey;
+            this.secretKey = owServiceSettings.SecretKey;
+            this.jsonService = jsonService;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new()
         {
-            const string defaultMediaType = "application/json";
             var request = new PartnerRequest(call);
-            var requestBody = JsonConvert.SerializeObject(call);
-            var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
-
-            PartnerResponse<T> finalResponse;
+            var requestBody = jsonService.Serialize(request);
+            
+            using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
 
-            httpClient.DefaultRequestHeaders.Add(HeaderAccessKey, accessKey);
-            var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
-
-            if (response.IsSuccessStatusCode)
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(apiEndpoint, UriKind.Relative))
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
+                Content = content
+            };
+            requestMessage.Headers.Add(HeaderAccessKey, accessKey);
 
-                finalResponse = JsonConvert.DeserializeObject<PartnerResponse<T>>(responseContent);
-            }
-            else
+            try 
             {
-                finalResponse = await CreateOWNetworkErrorResponse<T>(new OWCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
+                using var response = await httpClient.SendAsync(requestMessage);
+                var finalResponse = response.IsSuccessStatusCode
+                    ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
+                    : await CreateOWNetworkErrorResponse<T>(new OWCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
+
+                finalResponse!.Request = request;
+
+                if (finalResponse.Result.IsFailed())
+                {
+                    finalResponse.AccessKey = accessKey;
+                    await failureHandler.Handle<T>(finalResponse, operatorId);
+                    finalResponse.Result.ErrorCode = ErrorCodes.CovertErrorCode(finalResponse.Result.ErrorCode);
+                }
+
+                return finalResponse;
             }
-
-            finalResponse.Request = request;
-
-            if (finalResponse.Result.IsFailed())
+            catch (HttpRequestException ex)
             {
-                finalResponse.AccessKey = accessKey;
-                await failureHandler.Handle<T>(finalResponse, operatorId);
-
-                finalResponse.Result.ErrorCode = ErrorCodes.CovertErrorCode(finalResponse.Result.ErrorCode);
+                return new PartnerResponse<T>
+                {
+                    TimeStamp = DateTimeOffset.UtcNow,
+                    Request = request,
+                    Result = new T
+                    {
+                        ErrorCode = PartnerSpecialErrorCodes.NetworkError,
+                        ErrorDescription = ex.Message,
+                        Seq = call.Seq
+                    },
+                    AccessKey = accessKey
+                };
             }
-
-            return finalResponse;
         }
 
         private static async Task<PartnerResponse<T>> CreateOWNetworkErrorResponse<T>(OWCall call, HttpResponseMessage response, string accessKey) where T : IPartnerResult, new()
-            => new PartnerResponse<T>
+        {
+            var errorContent = await GetErrorResponseContent(response);
+            return new PartnerResponse<T>
             {
                 TimeStamp = DateTimeOffset.UtcNow,
                 Result = new T
                 {
                     ErrorCode = PartnerSpecialErrorCodes.NetworkError,
-                    ErrorDescription = await GetErrorResponseContent(response),
+                    ErrorDescription = errorContent,
                     Seq = call.Seq
                 },
                 AccessKey = accessKey
             };
+        }
 
         private static async Task<string> GetErrorResponseContent(HttpResponseMessage response)
             => $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}";

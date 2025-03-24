@@ -2,28 +2,30 @@
 
 namespace L1.Features.AdminApiCommunicators.NotifyHighStake
 {
+    public record NotifyHighStakeData(
+        string ObCustId,
+        int GameTypeId,
+        decimal Amount,
+        string Currency,
+        int ChoiceId,
+        byte System,
+        Dictionary<string, string> Metadata,
+        string OperatorId,
+        string UserId);
+
     public class NotifyHighStakeRequest : AdminApiRequest
     {
-        public NotifyHighStakeRequest(
-            string obCustId,
-            int gameTypeId,
-            decimal amount,
-            string currency,
-            int choiceId,
-            byte system,
-            Dictionary<string, string> metadata,
-            string operatorId,
-            string userId)
+        public NotifyHighStakeRequest(NotifyHighStakeData data)
         {
-            ObCustId = obCustId;
-            GameTypeId = gameTypeId;
-            Amount = amount;
-            Currency = currency;
-            ChoiceId = choiceId;
-            System = system;
-            Metadata = metadata;
-            OperatorId = operatorId;
-            UserId = userId;
+            ObCustId = data.ObCustId;
+            GameTypeId = data.GameTypeId;
+            Amount = data.Amount;
+            Currency = data.Currency;
+            ChoiceId = data.ChoiceId;
+            System = data.System;
+            Metadata = data.Metadata;
+            OperatorId = data.OperatorId;
+            UserId = data.UserId;
         }
 
         public string ObCustId { get; set; }

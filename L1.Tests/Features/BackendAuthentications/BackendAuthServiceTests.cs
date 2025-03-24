@@ -13,10 +13,10 @@ namespace L1.Tests.Features.BackendAuthentications
 {
     public class BackendAuthServiceTests
     {
-        private IHttpClientWrapper httpClient;
+        private readonly IHttpClientWrapper httpClient;
         private readonly BackendAuthConfigs backendAuthConfigs;
         private readonly IDiscoveryCache discoveryCache;
-        private readonly Fixture fixture = new Fixture();
+        private readonly Fixture fixture = new();
         private BackendAuthService backendAuthService;
 
         public BackendAuthServiceTests()
@@ -43,7 +43,6 @@ namespace L1.Tests.Features.BackendAuthentications
 
             var expectedTokenReponse = new TokenResponse();
             httpClient.RequestClientCredentialsTokenAsync(clientCredentials, default).ReturnsForAnyArgs(expectedTokenReponse);
-
             backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
 
             // Act
@@ -182,7 +181,6 @@ namespace L1.Tests.Features.BackendAuthentications
 
             backendAuthService = new BackendAuthService(httpClient, backendAuthConfigs, discoveryCache);
             await backendAuthService.GetAccessToken();
-            // System.Threading.Thread.Sleep(60000);
 
             // Act
             var actual = backendAuthService.GetAccessToken().Result;

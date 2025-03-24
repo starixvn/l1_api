@@ -12,7 +12,7 @@ namespace L1.Tests.Features.PartnerCommunicators
     {
         private readonly IServiceProvider serviceProvider;
 
-        private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly PartnerCustomerFactory partnerCustomerFactory;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
 
@@ -50,7 +50,7 @@ namespace L1.Tests.Features.PartnerCommunicators
         public void GetService_OWPartner_ReturnService()
         {
             // Arrange
-            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null));
+            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null, null));
 
             // Act
             var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.OW);
@@ -64,7 +64,7 @@ namespace L1.Tests.Features.PartnerCommunicators
         public void GetService_SBOPartner_ReturnService()
         {
             // Arrange
-            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null));
+            serviceProvider.GetService(Arg.Any<Type>()).Returns(new OWCustomerService(null, null, null, null, null, null, null));
 
             // Act
             var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.SBO);

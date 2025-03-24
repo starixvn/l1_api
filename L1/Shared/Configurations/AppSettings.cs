@@ -12,6 +12,7 @@
 
         LogEnabling LogEnabling { get; set; }
 
+        StreamSettings StreamSettings { get; set; }
         public string MicrositeClientPatternDomain { get; set; }
     }
 
@@ -27,6 +28,7 @@
 
         public LogEnabling LogEnabling { get; set; } = new ();
 
+        public StreamSettings StreamSettings { get; set; }
         public string MicrositeClientPatternDomain { get; set; } 
     }
 

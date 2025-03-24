@@ -35,6 +35,7 @@ namespace L1.Features.AdminApiCommunicators
             services.AddServices();
             services.AddSingleton<ISentryClient, MockSentryClient>();
 
+            services.AddTransient<ProtectedApiBearerTokenHandler>();
             // Act
             AdminApiMiddleware.AddAdminApiServices(services, adminApiSettings);
             var provider = services.BuildServiceProvider();

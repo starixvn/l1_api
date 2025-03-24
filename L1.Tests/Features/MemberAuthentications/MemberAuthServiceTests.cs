@@ -8,6 +8,7 @@ using L1.Shared.Configurations;
 using NSubstitute;
 using Sentry;
 using Xunit;
+using L1.Features.Json;
 
 namespace L1.Tests.Features.MemberAuthentications
 {
@@ -18,6 +19,7 @@ namespace L1.Tests.Features.MemberAuthentications
         private readonly IConfigurationApiService configurationApiService;
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
+        private readonly IJsonService jsonService;
 
         private readonly MemberAuthService memberAuthService;
 
@@ -28,7 +30,8 @@ namespace L1.Tests.Features.MemberAuthentications
             configurationApiService = Substitute.For<IConfigurationApiService>();
             appSettings = Substitute.For<IAppSettings>();
             sentryClient = Substitute.For<ISentryClient>();
-            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, configurationApiService, appSettings, sentryClient);
+            jsonService = Substitute.For<IJsonService>();
+            memberAuthService = new MemberAuthService(memberAuthDataAccess, partnerDataService, configurationApiService, appSettings, sentryClient, jsonService);
         }
 
         [Theory, AutoData]
@@ -157,7 +160,7 @@ namespace L1.Tests.Features.MemberAuthentications
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
-            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+            Assert.Equal(SingleSignOnResult.Unauthorize, result.Code);
         }
 
         [Theory, AutoData]
@@ -171,7 +174,7 @@ namespace L1.Tests.Features.MemberAuthentications
 
             // Assert
             Assert.IsType<SingleSignOnResult>(result);
-            Assert.Equal(result.Code, SingleSignOnResult.Unauthorize);
+            Assert.Equal(SingleSignOnResult.Unauthorize, result.Code);
         }
 
         [Theory, AutoData]

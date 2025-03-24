@@ -6,7 +6,6 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.SboCommunicators.CheckMaintenance;
 using L1.Shared.Constants;
 using Sentry;
-using Sentry.Protocol;
 using L1.Shared.Configurations;
 
 namespace L1.Features.SboCommunicators

@@ -1,5 +1,4 @@
 ﻿using System;
-using L1.Features.Partners;
 
 namespace L1.Features.PartnerCommunicators.Maintenance
 {

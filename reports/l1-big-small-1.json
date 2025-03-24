@@ -1,0 +1,1532 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "077bb2bb-08f3-4dba-85f6-48b05f668028",
+      "exporter_id": "43366102",
+      "collection_link": "https://blue-flare-855581.postman.co/workspace/Automation-API~33dc433e-56f6-4263-8dc0-e79a83789162/collection/18297178-077bb2bb-08f3-4dba-85f6-48b05f668028?action=share&source=collection_link&creator=43366102"
+    },
+    "item": [
+      {
+        "id": "1a6bf7ff-6322-40d0-8355-c4bc3fc71548",
+        "name": "PlaceBet",
+        "request": {
+          "url": {
+            "path": [
+              "PlaceBet"
+            ],
+            "host": [
+              "{{l1_url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "\r\n{\r\n\"operatorId\": \"{{l1_operatorId}}\",\r\n\"playerId\": \"{{playerId}}\",\r\n\"siteId\": \"{{siteId}}\",\r\n\"gameRoundId\": {{roundID}},\r\n\"gameTypeId\": {{gameId}},\r\n\"choiceId\": {{choiceId}},\r\n\"amount\": {{betamount}},\r\n\"currency\": \"{{betamount}}\",\r\n\"ip\": \"string\",\r\n\"roundEndTime\":\"{{current_date}}\",\r\n\"freeSpin\": false,\r\n\"system\": 0,\r\n\"freeBet\": false,\r\n\"metadata\": {\r\n\"property1\": \"string\",\r\n\"property2\": \"string\"\r\n},\r\n\"contributionRate\": 0,\r\n\"contributionAmount\": 0,\r\n\"operatorToken\": \"string\",\r\n\"userId\": \"string\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "af903efb-b4cc-48c4-85e6-ed710dfb2dc7",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "var now = new Date();\r",
+                "var formattedDate = now.toISOString();  // Example: \"2025-03-21T14:30:00.000Z\"\r",
+                "pm.environment.set(\"current_date\", formattedDate);\r",
+                ""
+              ],
+              "_lastExecutionId": "3b33aa6d-b78b-4d0d-bbb0-21d73337399b"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "92364444-908b-4775-b730-4cd0b9487771",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Response status is 200\", function()\r",
+                "{\r",
+                "  pm.expect(pm.response.to.have.status(200));\r",
+                "\r",
+                "})"
+              ],
+              "_lastExecutionId": "bef3aa51-59f5-4ec5-9e84-a38fd6262ebc"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1364fb0b-a06a-41e4-a589-cd601ca4ca49",
+        "name": "EndGame",
+        "request": {
+          "url": {
+            "path": [
+              "EndGame"
+            ],
+            "host": [
+              "{{l1_url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"operatorId\": \"{{l1_operatorId}}\",\r\n  \"playerId\": \"{{playerId}}\",\r\n  \"siteId\": \"{{siteId}}\",\r\n  \"gameRoundId\": {{roundID}},\r\n  \"gameTypeId\": {{gameId}},\r\n  \"totalAmount\": {{betamount}},\r\n  \"totalWin\": {{winAmount}},\r\n  \"validBetAmount\": {{validBetAmount}},\r\n  \"freeBet\": false,\r\n  \"endTime\": \"{{current_date}}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "1688d031-c701-4990-ac72-a5d8ca303729",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "var now = new Date();\r",
+                "var formattedDate = now.toISOString();  // Example: \"2025-03-21T14:30:00.000Z\"\r",
+                "pm.environment.set(\"current_date\", formattedDate);"
+              ],
+              "_lastExecutionId": "a7b7ca07-5dbb-4376-bf2c-f0f12d4ae51b"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "26327322-e683-48af-bdb7-ba19f008206b",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Response status is 200\", function()\r",
+                "{\r",
+                "  pm.expect(pm.response.to.have.status(200));\r",
+                "\r",
+                "})"
+              ],
+              "_lastExecutionId": "eb24d68b-c4de-40b8-a301-5e5c9f00671b"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1c8ebc27-0604-4779-af27-0e9421613ced",
+        "name": "VoidGame",
+        "request": {
+          "url": {
+            "path": [
+              "VoidGame"
+            ],
+            "host": [
+              "{{l1_url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"operatorId\": \"{{l1_operatorId}}\",\r\n  \"playerId\": \"{{playerId}}\",\r\n  \"siteId\": \"{{siteId}}\",\r\n  \"gameRoundId\": {{roundID}},\r\n  \"gameTypeId\": {{gameId}},\r\n  \"reason\": \"string\",\r\n  \"freeBet\": false\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": [],
+        "event": []
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "077bb2bb-08f3-4dba-85f6-48b05f668028",
+      "name": "Upgrade.Net8",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2025-03-24T03:52:04.705Z",
+      "postman_exported_using": "Postman/11.37.5"
+    },
+    "id": "78f90f59-c48a-436b-a651-eccb8914d9b3",
+    "name": "Local",
+    "values": [
+      {
+        "type": "any",
+        "value": "https://l1-proxy2.lumigame.com/game-api/member",
+        "key": "l1_url"
+      },
+      {
+        "type": "any",
+        "value": "ONEworks1",
+        "key": "l1_operatorId"
+      },
+      {
+        "type": "any",
+        "value": "500",
+        "key": "playerId"
+      },
+      {
+        "type": "any",
+        "value": "4100300",
+        "key": "siteId"
+      },
+      {
+        "type": "any",
+        "value": "username_500",
+        "key": "characterName"
+      },
+      {
+        "type": "any",
+        "value": "100",
+        "key": "betamount"
+      },
+      {
+        "type": "any",
+        "value": "$US",
+        "key": "currency"
+      },
+      {
+        "type": "any",
+        "value": "196",
+        "key": "winAmount"
+      },
+      {
+        "type": "any",
+        "value": "50",
+        "key": "validBetAmount"
+      },
+      {
+        "type": "any",
+        "value": "2025-03-24T09:29:51.306Z",
+        "key": "current_date"
+      },
+      {
+        "type": "any",
+        "value": "500",
+        "key": "roundID"
+      },
+      {
+        "type": "any",
+        "value": "1",
+        "key": "gameId"
+      },
+      {
+        "type": "any",
+        "value": "1",
+        "key": "choiceId"
+      },
+      {
+        "type": "any",
+        "value": "29",
+        "key": "jackpotGameId"
+      },
+      {
+        "type": "any",
+        "value": "20000",
+        "key": "winJackpotAmount"
+      },
+      {
+        "type": "any",
+        "value": "https://l2-proxy2.lumigame.com/game-api/member",
+        "key": "l2_url"
+      },
+      {
+        "type": "any",
+        "value": "ONEworksVGCash",
+        "key": "l2_operatorId"
+      },
+      {
+        "type": "any",
+        "value": "30000",
+        "key": "promotionWinAmount"
+      },
+      {
+        "type": "any",
+        "value": "2000",
+        "key": "defaultBalance"
+      },
+      {
+        "type": "any",
+        "value": "200\n",
+        "key": "expected_status_code\n"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "expected_status_code"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "balance"
+      }
+    ]
+  },
+  "globals": {
+    "id": "eeb4d983-5e9c-4653-93d6-8ef0f2f4c132",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 44.333333333333336,
+      "responseMin": 13,
+      "responseMax": 73,
+      "responseSd": 24.567367696917707,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1742808591161,
+      "completed": 1742808591553
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 3,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "326f62e6-9371-47b8-8d6d-e37250410f9d",
+          "httpRequestId": "9a652c00-7d31-42db-8d09-5e487d8232ca"
+        },
+        "item": {
+          "id": "1a6bf7ff-6322-40d0-8355-c4bc3fc71548",
+          "name": "PlaceBet",
+          "request": {
+            "url": {
+              "path": [
+                "PlaceBet"
+              ],
+              "host": [
+                "{{l1_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n\"operatorId\": \"{{l1_operatorId}}\",\r\n\"playerId\": \"{{playerId}}\",\r\n\"siteId\": \"{{siteId}}\",\r\n\"gameRoundId\": {{roundID}},\r\n\"gameTypeId\": {{gameId}},\r\n\"choiceId\": {{choiceId}},\r\n\"amount\": {{betamount}},\r\n\"currency\": \"{{betamount}}\",\r\n\"ip\": \"string\",\r\n\"roundEndTime\":\"{{current_date}}\",\r\n\"freeSpin\": false,\r\n\"system\": 0,\r\n\"freeBet\": false,\r\n\"metadata\": {\r\n\"property1\": \"string\",\r\n\"property2\": \"string\"\r\n},\r\n\"contributionRate\": 0,\r\n\"contributionAmount\": 0,\r\n\"operatorToken\": \"string\",\r\n\"userId\": \"string\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth",
+              "noauth": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "af903efb-b4cc-48c4-85e6-ed710dfb2dc7",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "var now = new Date();\r",
+                  "var formattedDate = now.toISOString();  // Example: \"2025-03-21T14:30:00.000Z\"\r",
+                  "pm.environment.set(\"current_date\", formattedDate);\r",
+                  ""
+                ],
+                "_lastExecutionId": "3b33aa6d-b78b-4d0d-bbb0-21d73337399b"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "92364444-908b-4775-b730-4cd0b9487771",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Response status is 200\", function()\r",
+                  "{\r",
+                  "  pm.expect(pm.response.to.have.status(200));\r",
+                  "\r",
+                  "})"
+                ],
+                "_lastExecutionId": "bef3aa51-59f5-4ec5-9e84-a38fd6262ebc"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "game-api",
+              "member",
+              "PlaceBet"
+            ],
+            "host": [
+              "l1-proxy2",
+              "lumigame",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "1c346aae-a518-4883-9cd6-3cd42906ef82",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "l1-proxy2.lumigame.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "445",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "\r\n{\r\n\"operatorId\": \"ONEworks1\",\r\n\"playerId\": \"500\",\r\n\"siteId\": \"4100300\",\r\n\"gameRoundId\": 500,\r\n\"gameTypeId\": 1,\r\n\"choiceId\": 1,\r\n\"amount\": 100,\r\n\"currency\": \"100\",\r\n\"ip\": \"string\",\r\n\"roundEndTime\":\"2025-03-24T09:29:51.198Z\",\r\n\"freeSpin\": false,\r\n\"system\": 0,\r\n\"freeBet\": false,\r\n\"metadata\": {\r\n\"property1\": \"string\",\r\n\"property2\": \"string\"\r\n},\r\n\"contributionRate\": 0,\r\n\"contributionAmount\": 0,\r\n\"operatorToken\": \"string\",\r\n\"userId\": \"string\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": {
+          "id": "8e7cf665-ef3e-4670-822b-ed772cb8705b",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "date",
+              "value": "Mon, 24 Mar 2025 09:29:52 GMT"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\";ma=60;"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              83,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              51,
+              45,
+              50,
+              52,
+              84,
+              48,
+              57,
+              58,
+              50,
+              57,
+              58,
+              53,
+              51,
+              46,
+              57,
+              52,
+              52,
+              55,
+              57,
+              49,
+              56,
+              43,
+              48,
+              48,
+              58,
+              48,
+              48,
+              34,
+              44,
+              34,
+              114,
+              101,
+              115,
+              117,
+              108,
+              116,
+              34,
+              58,
+              123,
+              34,
+              111,
+              98,
+              84,
+              114,
+              97,
+              110,
+              115,
+              73,
+              100,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              112,
+              108,
+              97,
+              121,
+              101,
+              114,
+              73,
+              100,
+              34,
+              58,
+              34,
+              53,
+              48,
+              48,
+              34,
+              44,
+              34,
+              98,
+              97,
+              108,
+              97,
+              110,
+              99,
+              101,
+              34,
+              58,
+              50,
+              54,
+              55,
+              55,
+              46,
+              52,
+              44,
+              34,
+              109,
+              105,
+              110,
+              66,
+              101,
+              116,
+              34,
+              58,
+              49,
+              44,
+              34,
+              109,
+              97,
+              120,
+              66,
+              101,
+              116,
+              34,
+              58,
+              51,
+              48,
+              48,
+              48,
+              44,
+              34,
+              115,
+              101,
+              113,
+              34,
+              58,
+              34,
+              56,
+              56,
+              48,
+              54,
+              99,
+              50,
+              49,
+              51,
+              45,
+              99,
+              56,
+              53,
+              51,
+              45,
+              52,
+              49,
+              97,
+              53,
+              45,
+              98,
+              99,
+              54,
+              49,
+              45,
+              50,
+              53,
+              55,
+              98,
+              48,
+              49,
+              100,
+              97,
+              99,
+              51,
+              57,
+              48,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              48,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              77,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              68,
+              101,
+              115,
+              99,
+              114,
+              105,
+              112,
+              116,
+              105,
+              111,
+              110,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 13,
+          "responseSize": 239
+        },
+        "id": "1a6bf7ff-6322-40d0-8355-c4bc3fc71548",
+        "assertions": [
+          {
+            "assertion": "Response status is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "510b506b-3dcd-4468-b730-dd0cab066132",
+          "length": 3,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "1a08aae6-ee7f-4a45-884a-2d52f46b009b"
+        },
+        "item": {
+          "id": "1364fb0b-a06a-41e4-a589-cd601ca4ca49",
+          "name": "EndGame",
+          "request": {
+            "url": {
+              "path": [
+                "EndGame"
+              ],
+              "host": [
+                "{{l1_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"operatorId\": \"{{l1_operatorId}}\",\r\n  \"playerId\": \"{{playerId}}\",\r\n  \"siteId\": \"{{siteId}}\",\r\n  \"gameRoundId\": {{roundID}},\r\n  \"gameTypeId\": {{gameId}},\r\n  \"totalAmount\": {{betamount}},\r\n  \"totalWin\": {{winAmount}},\r\n  \"validBetAmount\": {{validBetAmount}},\r\n  \"freeBet\": false,\r\n  \"endTime\": \"{{current_date}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth",
+              "noauth": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "1688d031-c701-4990-ac72-a5d8ca303729",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "var now = new Date();\r",
+                  "var formattedDate = now.toISOString();  // Example: \"2025-03-21T14:30:00.000Z\"\r",
+                  "pm.environment.set(\"current_date\", formattedDate);"
+                ],
+                "_lastExecutionId": "a7b7ca07-5dbb-4376-bf2c-f0f12d4ae51b"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "26327322-e683-48af-bdb7-ba19f008206b",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Response status is 200\", function()\r",
+                  "{\r",
+                  "  pm.expect(pm.response.to.have.status(200));\r",
+                  "\r",
+                  "})"
+                ],
+                "_lastExecutionId": "eb24d68b-c4de-40b8-a301-5e5c9f00671b"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "game-api",
+              "member",
+              "EndGame"
+            ],
+            "host": [
+              "l1-proxy2",
+              "lumigame",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "5e7bcb52-6913-4705-bb74-edc34038c4ae",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "l1-proxy2.lumigame.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "253",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"operatorId\": \"ONEworks1\",\r\n  \"playerId\": \"500\",\r\n  \"siteId\": \"4100300\",\r\n  \"gameRoundId\": 500,\r\n  \"gameTypeId\": 1,\r\n  \"totalAmount\": 100,\r\n  \"totalWin\": 196,\r\n  \"validBetAmount\": 50,\r\n  \"freeBet\": false,\r\n  \"endTime\": \"2025-03-24T09:29:51.306Z\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": {
+          "id": "e3e57784-1b78-4662-a1e3-d180e6de40ed",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "date",
+              "value": "Mon, 24 Mar 2025 09:29:56 GMT"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\";ma=60;"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              83,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              51,
+              45,
+              50,
+              52,
+              84,
+              48,
+              57,
+              58,
+              50,
+              57,
+              58,
+              53,
+              52,
+              46,
+              48,
+              54,
+              51,
+              50,
+              53,
+              53,
+              57,
+              43,
+              48,
+              48,
+              58,
+              48,
+              48,
+              34,
+              44,
+              34,
+              114,
+              101,
+              115,
+              117,
+              108,
+              116,
+              34,
+              58,
+              123,
+              34,
+              112,
+              108,
+              97,
+              121,
+              101,
+              114,
+              73,
+              100,
+              34,
+              58,
+              34,
+              53,
+              48,
+              48,
+              34,
+              44,
+              34,
+              115,
+              101,
+              113,
+              34,
+              58,
+              34,
+              54,
+              102,
+              52,
+              100,
+              54,
+              97,
+              53,
+              49,
+              45,
+              55,
+              48,
+              99,
+              54,
+              45,
+              52,
+              53,
+              98,
+              50,
+              45,
+              98,
+              56,
+              51,
+              49,
+              45,
+              101,
+              100,
+              55,
+              57,
+              57,
+              50,
+              56,
+              49,
+              51,
+              57,
+              102,
+              99,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              48,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              77,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              68,
+              101,
+              115,
+              99,
+              114,
+              105,
+              112,
+              116,
+              105,
+              111,
+              110,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 73,
+          "responseSize": 180
+        },
+        "id": "1364fb0b-a06a-41e4-a589-cd601ca4ca49",
+        "assertions": [
+          {
+            "assertion": "Response status is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "083b1211-5342-4860-a63b-2a5572972fe0",
+          "length": 3,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "500ad792-f106-422b-ae28-2e5c84211e4a"
+        },
+        "item": {
+          "id": "1c8ebc27-0604-4779-af27-0e9421613ced",
+          "name": "VoidGame",
+          "request": {
+            "url": {
+              "path": [
+                "VoidGame"
+              ],
+              "host": [
+                "{{l1_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"operatorId\": \"{{l1_operatorId}}\",\r\n  \"playerId\": \"{{playerId}}\",\r\n  \"siteId\": \"{{siteId}}\",\r\n  \"gameRoundId\": {{roundID}},\r\n  \"gameTypeId\": {{gameId}},\r\n  \"reason\": \"string\",\r\n  \"freeBet\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth",
+              "noauth": []
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "game-api",
+              "member",
+              "VoidGame"
+            ],
+            "host": [
+              "l1-proxy2",
+              "lumigame",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "72078c96-50de-477c-91b0-6a39e3e01311",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "l1-proxy2.lumigame.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "166",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"operatorId\": \"ONEworks1\",\r\n  \"playerId\": \"500\",\r\n  \"siteId\": \"4100300\",\r\n  \"gameRoundId\": 500,\r\n  \"gameTypeId\": 1,\r\n  \"reason\": \"string\",\r\n  \"freeBet\": false\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": {
+          "id": "dcf785df-27cb-4a39-9c8c-8b4322cf734f",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "date",
+              "value": "Mon, 24 Mar 2025 09:29:53 GMT"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\";ma=60;"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              83,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              51,
+              45,
+              50,
+              52,
+              84,
+              48,
+              57,
+              58,
+              50,
+              57,
+              58,
+              53,
+              52,
+              46,
+              50,
+              50,
+              53,
+              48,
+              51,
+              52,
+              52,
+              43,
+              48,
+              48,
+              58,
+              48,
+              48,
+              34,
+              44,
+              34,
+              114,
+              101,
+              115,
+              117,
+              108,
+              116,
+              34,
+              58,
+              123,
+              34,
+              112,
+              108,
+              97,
+              121,
+              101,
+              114,
+              73,
+              100,
+              34,
+              58,
+              34,
+              53,
+              48,
+              48,
+              34,
+              44,
+              34,
+              115,
+              101,
+              113,
+              34,
+              58,
+              34,
+              54,
+              100,
+              100,
+              57,
+              56,
+              102,
+              53,
+              50,
+              45,
+              99,
+              52,
+              54,
+              99,
+              45,
+              52,
+              55,
+              50,
+              102,
+              45,
+              97,
+              55,
+              101,
+              49,
+              45,
+              57,
+              49,
+              48,
+              55,
+              97,
+              48,
+              102,
+              49,
+              57,
+              98,
+              56,
+              55,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              48,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              77,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              68,
+              101,
+              115,
+              99,
+              114,
+              105,
+              112,
+              116,
+              105,
+              111,
+              110,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 47,
+          "responseSize": 180
+        },
+        "id": "1c8ebc27-0604-4779-af27-0e9421613ced"
+      }
+    ],
+    "transfers": {
+      "responseTotal": 599
+    },
+    "failures": [],
+    "error": null
+  }
+}

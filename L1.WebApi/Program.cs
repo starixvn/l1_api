@@ -20,7 +20,7 @@ namespace L1.WebApi
                 opt.Environment = builder.Configuration["Env"]);
 
             // Configure port
-            builder.WebHost.UseUrls($"https://0.0.0.0:{builder.Configuration["AppSettings:HostingPort"]}");
+            builder.WebHost.UseUrls($"http://0.0.0.0:{builder.Configuration["AppSettings:HostingPort"]}");
 
             // Add services from Startup.cs
             var startup = new Startup(builder.Configuration);

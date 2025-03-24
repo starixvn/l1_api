@@ -21,7 +21,7 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton(new JsonSerializerOptions());
+            services.AddSingleton(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             services.AddSingleton<IJsonService, JsonService>();
             services.AddMemoryCache(options =>
             {

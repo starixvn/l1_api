@@ -54,10 +54,7 @@ namespace L1.Shared.Middlewares
             services.AddSingleton<IMongoClient>(sp => new MongoClient(appSettings.MongoDBSettings.ConnectionString));
 
             var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("L1"));
-            if (BsonSerializer.LookupSerializer<object>() is not ObjectSerializer)
-            {
-                BsonSerializer.RegisterSerializer(objectSerializer);
-            }
+            BsonSerializer.RegisterSerializer(objectSerializer);
         }
 
         public static void AddJetStreamServices(this IServiceCollection services, IAppSettings appSettings)

@@ -11,7 +11,7 @@ COPY ./L1.IdentityServerApi .
 
 RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
-FROM hub.lumigame.com/base/dotnet/core/aspnet:5.0-alpine AS base
+FROM hub.lumigame.com/base/dotnet/core/aspnet:8.0-alpine-24h1.1 AS base
 
 WORKDIR /app
 RUN adduser app_user --disabled-password

@@ -57,6 +57,9 @@ namespace L1.Features.OWCommunicators
 
                 finalResponse!.Request = request;
 
+                Console.WriteLine(requestBody);
+                Console.WriteLine(jsonService.Serialize(finalResponse));
+
                 if (finalResponse.Result.IsFailed())
                 {
                     finalResponse.AccessKey = accessKey;

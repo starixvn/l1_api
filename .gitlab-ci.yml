@@ -5,3 +5,12 @@ include:
 
 variables:
   BYPASS_CRITICAL_VULNERABILITY : "true"
+
+api_tests:
+  image: node:18
+  stage: test
+  before_script:
+    - npm install newman
+    - npm install newman csv-parser
+  script:
+    - node api-test.js

@@ -4,8 +4,8 @@ const csv = require('csv-parser');
 
 // Constants
 const CONFIG = {
-    LOBBY_ENDPOINTS: ['EnterPortal', '/GetBalance', '/GetBetLimit', '/Award'],
-    GAME_ENDPOINTS: ['/PlaceBet', '/EndGame', '/VoidGame', '/HitJackpot'],
+    LOBBY_ENDPOINTS: ['Enter Portal', 'Get Balance', 'Get Bet Limit', 'Award'],
+    GAME_ENDPOINTS: ['Place Bet', 'End Game', 'Void Game', 'Hit Jackpot'],
     JACKPOT_GAME_IDS: ['29', '70', '74', '76'],
     IS_CI: process.env.CI || false,
     JUNIT_REPORT_NAME: 'junit-report.xml'
@@ -32,19 +32,45 @@ class ReportConfig {
 class CollectionHandler {
     static filterByEndpoints(collection, patterns) {
         const filteredCollection = JSON.parse(JSON.stringify(collection));
-        filteredCollection.item = collection.item.filter(item => 
-            patterns.some(pattern => item.request.url.raw.includes(pattern))
-        );
+        
+        // Xử lý cấu trúc phân cấp của collection
+        filteredCollection.item = collection.item.reduce((acc, folder) => {
+            if (folder.item) {
+                // Đây là folder, kiểm tra các request bên trong
+                const filteredRequests = folder.item.filter(request => 
+                    patterns.some(pattern => {
+                        // Kiểm tra URL hoặc tên folder
+                        return request.request?.url?.raw?.includes(pattern) || 
+                               folder.name?.includes(pattern);
+                    })
+                );
+                
+                if (filteredRequests.length > 0) {
+                    // Nếu có request phù hợp, thêm folder với các request đã lọc
+                    acc.push({
+                        ...folder,
+                        item: filteredRequests
+                    });
+                }
+            } else {
+                // Đây là request trực tiếp
+                if (patterns.some(pattern => folder.request?.url?.raw?.includes(pattern))) {
+                    acc.push(folder);
+                }
+            }
+            return acc;
+        }, []);
+
         return filteredCollection;
     }
 
     static filterGameEndpoints(collection, skipVoidGame, gameId) {
         let endpoints = skipVoidGame ? 
-            ['/PlaceBet', '/EndGame'] : 
-            ['/PlaceBet', '/EndGame', '/VoidGame'];
+            ['Place Bet', 'End Game'] : 
+            ['Place Bet', 'End Game', 'Void Game'];
 
         if (CONFIG.JACKPOT_GAME_IDS.includes(gameId)) {
-            endpoints.push('/HitJackpot');
+            endpoints.push('Hit Jackpot');
         }
 
         return this.filterByEndpoints(collection, endpoints);
@@ -273,7 +299,7 @@ class Utilities {
 // Main execution
 async function main() {
     try {
-        const collection = require('./Upgrade.Net8.postman_collection.json');
+        const collection = require('./ApisTest.postman_collection.json');
         const environment = require('./Local.postman_environment.json');
 
         const envUrls = EnvironmentHandler.getUrls(environment);

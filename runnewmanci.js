@@ -2,149 +2,227 @@ const newman = require('newman');
 const fs = require('fs');
 const csv = require('csv-parser');
 
-// Đọc collection và environment
-const collection = require('./Upgrade.Net8.postman_collection.json');
-const environment = require('./Local.postman_environment.json');
+// Constants
+const CONFIG = {
+    LOBBY_ENDPOINTS: ['EnterPortal', '/GetBalance', '/GetBetLimit', '/Award'],
+    GAME_ENDPOINTS: ['/PlaceBet', '/EndGame', '/VoidGame', '/HitJackpot'],
+    JACKPOT_GAME_IDS: ['29', '70', '74', '76'],
+    IS_CI: process.env.CI || false,
+    JUNIT_REPORT_NAME: 'junit-report.xml'
+};
 
-// Định nghĩa các endpoint
-const LOBBY_ENDPOINTS = ['EnterPortal' ,'/GetBalance', '/GetBetLimit'];
-const GAME_ENDPOINTS = ['/PlaceBet', '/EndGame', '/VoidGame'];
-
-// Thêm các constants cho CI/CD
-const IS_CI = process.env.CI || false;
-const REPORTS_DIR = './reports';
-const JUNIT_REPORT_NAME = 'junit-report.xml';
-
-// Function để lọc request theo URL pattern
-function filterRequestsByUrl(collection, patterns) {
-    const filteredCollection = JSON.parse(JSON.stringify(collection));
-    filteredCollection.item = collection.item.filter(item => 
-        patterns.some(pattern => item.request.url.raw.includes(pattern))
-    );
-    return filteredCollection;
-}
-
-// Function để tạo tên file report an toàn
-function createSafeReportName(gameName, gameId, prefix = '') {
-    // Loại bỏ các ký tự không hợp lệ và thay thế bằng dấu gạch ngang
-    const safeName = gameName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-    return `${prefix}${safeName}-${gameId}`;
-}
-
-// Function để chạy newman với promise và report chi tiết
-function runNewman(collection, environment, reportName) {
-    return new Promise((resolve, reject) => {
+// Report Configuration
+class ReportConfig {
+    static getReporterConfig(reportName) {
         const reporters = ['cli'];
         const reporterOptions = {};
 
-        // Thêm reporters dựa vào môi trường
-        if (IS_CI) {
-            reporters.push('junit', 'htmlextra');
+        if (CONFIG.IS_CI) {
+            reporters.push('junit');
             reporterOptions.junit = {
-                export: `${REPORTS_DIR}/${reportName}-${JUNIT_REPORT_NAME}`
+                export: `${reportName}-${CONFIG.JUNIT_REPORT_NAME}`
             };
-        } else {
-            reporters.push('htmlextra');
         }
 
-        reporterOptions.htmlextra = {
-            export: `${REPORTS_DIR}/${reportName}.html`,
-            title: reportName,
-            browserTitle: "API Test Report",
-            templateOptions: {
-                showEnvironmentData: true,
-                showGlobalData: true,
-                showMarkdownLinks: true
-            }
-        };
+        return { reporters, reporterOptions };
+    }
+}
 
-        newman.run({
-            collection: collection,
-            environment: environment,
-            reporters: reporters,
-            reporter: reporterOptions,
-            bail: IS_CI, // Dừng ngay khi fail trong CI
-            suppressExitCode: !IS_CI // Không thoát với error code trong local
-        }, function (err, summary) {
-            if (err) {
-                reject(err);
-                return;
-            }
+// Collection Handler
+class CollectionHandler {
+    static filterByEndpoints(collection, patterns) {
+        const filteredCollection = JSON.parse(JSON.stringify(collection));
+        filteredCollection.item = collection.item.filter(item => 
+            patterns.some(pattern => item.request.url.raw.includes(pattern))
+        );
+        return filteredCollection;
+    }
 
-            // Kiểm tra kết quả test
-            const failures = summary.run.failures;
-            if (failures.length > 0) {
-                const error = {
-                    message: 'Test failures detected',
-                    failures: failures.map(f => ({
-                        name: f.source.name,
-                        error: f.error.message,
-                        test: f.parent.name
-                    })),
-                    reportPath: `./reports/${reportName}.html`
-                };
-                reject(error);
-            } else {
-                resolve(summary);
+    static filterGameEndpoints(collection, skipVoidGame, gameId) {
+        let endpoints = skipVoidGame ? 
+            ['/PlaceBet', '/EndGame'] : 
+            ['/PlaceBet', '/EndGame', '/VoidGame'];
+
+        if (CONFIG.JACKPOT_GAME_IDS.includes(gameId)) {
+            endpoints.push('/HitJackpot');
+        }
+
+        return this.filterByEndpoints(collection, endpoints);
+    }
+}
+
+// Environment Handler
+class EnvironmentHandler {
+    static getUrls(environment) {
+        return environment.values
+            .filter(v => v.key.endsWith('_url') && v.enabled)
+            .map(v => ({
+                key: v.key,
+                value: v.value,
+                isL2: v.key === 'l2_url'
+            }));
+    }
+
+    static createUrlEnvironment(baseEnv, urlConfig) {
+        const newEnv = JSON.parse(JSON.stringify(baseEnv));
+        newEnv.values.forEach(v => {
+            if (v.key.endsWith('_url')) {
+                v.enabled = false;
             }
         });
-    });
-}
-
-// Function để tạo environment cho game
-function createGameEnvironment(baseEnv, game, isL2Url) {
-    const gameEnvironment = JSON.parse(JSON.stringify(baseEnv));
-    
-    // Cập nhật gameId
-    const gameIdValue = gameEnvironment.values.find(v => v.key === 'gameId');
-    if (gameIdValue) {
-        gameIdValue.value = game.gameId;
+        const currentUrl = newEnv.values.find(v => v.key === urlConfig.key);
+        if (currentUrl) {
+            currentUrl.enabled = true;
+        }
+        return newEnv;
     }
 
-    // Thêm contributionRate và contributionAmount cho l2_url
-    if (isL2Url) {
-        // Tìm giá trị l2_url trong environment
-        const urlValue = gameEnvironment.values.find(v => v.key === 'l2_url');
-        if (urlValue && urlValue.enabled) {
-            // Thêm hoặc cập nhật contributionRate
-            const contributionRateIndex = gameEnvironment.values.findIndex(v => v.key === 'contributionRate');
-            if (contributionRateIndex >= 0) {
-                gameEnvironment.values[contributionRateIndex].value = game.contributionRate;
-            } else {
-                gameEnvironment.values.push({
-                    key: 'contributionRate',
-                    value: game.contributionRate,
-                    type: 'default',
-                    enabled: true
-                });
-            }
+    static createGameEnvironment(baseEnv, game, isL2Url) {
+        const gameEnvironment = JSON.parse(JSON.stringify(baseEnv));
+        
+        // Update gameId
+        const gameIdValue = gameEnvironment.values.find(v => v.key === 'gameId');
+        if (gameIdValue) {
+            gameIdValue.value = game.gameId;
+        }
 
-            // Thêm hoặc cập nhật contributionAmount
-            const contributionAmountIndex = gameEnvironment.values.findIndex(v => v.key === 'contributionAmount');
-            if (contributionAmountIndex >= 0) {
-                gameEnvironment.values[contributionAmountIndex].value = game.contributionAmount;
+        if (isL2Url) {
+            this.addL2UrlParameters(gameEnvironment, game);
+        }
+
+        return gameEnvironment;
+    }
+
+    static addL2UrlParameters(environment, game) {
+        const l2Parameters = [
+            { key: 'contributionRate', value: game.contributionRate },
+            { key: 'contributionAmount', value: game.contributionAmount }
+        ];
+
+        l2Parameters.forEach(param => {
+            const existingIndex = environment.values.findIndex(v => v.key === param.key);
+            if (existingIndex >= 0) {
+                environment.values[existingIndex].value = param.value;
             } else {
-                gameEnvironment.values.push({
-                    key: 'contributionAmount',
-                    value: game.contributionAmount,
+                environment.values.push({
+                    key: param.key,
+                    value: param.value,
                     type: 'default',
                     enabled: true
                 });
             }
+        });
+    }
+}
+
+// Test Runner
+class TestRunner {
+    static async runNewman(collection, environment, reportName) {
+        const { reporters, reporterOptions } = ReportConfig.getReporterConfig(reportName);
+
+        return new Promise((resolve, reject) => {
+            newman.run({
+                collection,
+                environment,
+                reporters,
+                reporter: reporterOptions,
+                bail: CONFIG.IS_CI,
+                suppressExitCode: !CONFIG.IS_CI
+            }, (err, summary) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const failures = summary.run.failures;
+                if (failures.length > 0) {
+                    reject({
+                        message: 'Test failures detected',
+                        failures: failures.map(f => ({
+                            name: f.source.name,
+                            error: f.error.message,
+                            test: f.parent.name
+                        }))
+                    });
+                } else {
+                    resolve(summary);
+                }
+            });
+        });
+    }
+
+    static async runLobbyTests(collection, urlConfig, urlEnvironment) {
+        const lobbyCollection = CollectionHandler.filterByEndpoints(collection, CONFIG.LOBBY_ENDPOINTS);
+        const lobbyReportName = `lobby-apis-${urlConfig.key.replace('_url', '')}`;
+        
+        try {
+            await this.runNewman(lobbyCollection, urlEnvironment, lobbyReportName);
+            console.log(`✓ Lobby APIs completed successfully for ${urlConfig.key}`);
+        } catch (error) {
+            console.error(`\n❌ Lobby APIs Failed for ${urlConfig.key}`);
+            ErrorHandler.displayError(error);
+            process.exit(1);
         }
     }
 
-    return gameEnvironment;
+    static async runGameTests(collection, game, urlConfig, urlEnvironment) {
+        const gameEnvironment = EnvironmentHandler.createGameEnvironment(urlEnvironment, game, urlConfig.isL2);
+        const reportName = Utilities.createSafeReportName(
+            game.name, 
+            game.gameId, 
+            `${urlConfig.key.replace('_url', '')}-`
+        );
+
+        const skipVoidGame = game.type === '2' || game.type === '3';
+        const gameCollection = CollectionHandler.filterGameEndpoints(collection, skipVoidGame, game.gameId);
+        
+        if (skipVoidGame) {
+            console.log(`Note: VoidGame will be skipped for game type ${game.type}`);
+        }
+        if (CONFIG.JACKPOT_GAME_IDS.includes(game.gameId)) {
+            console.log(`Note: HitJackpot will be included for game ID ${game.gameId}`);
+        }
+
+        try {
+            await this.runNewman(gameCollection, gameEnvironment, reportName);
+            console.log(`✓ Game tests completed successfully for ${game.name} (ID: ${game.gameId})`);
+        } catch (error) {
+            console.error(`\n❌ Game tests failed for ${game.name} (ID: ${game.gameId})`);
+            ErrorHandler.displayError(error, {
+                ...game,
+                environmentUrl: urlConfig.key,
+                isL2: urlConfig.isL2,
+                contributionRate: urlConfig.isL2 ? game.contributionRate : 'N/A',
+                contributionAmount: urlConfig.isL2 ? game.contributionAmount : 'N/A'
+            });
+            process.exit(1);
+        }
+    }
 }
 
-// Function để hiển thị lỗi chi tiết
-function displayError(error, gameInfo = null) {
-    const errorMessage = [
-        '\n=== TEST FAILURE REPORT ===',
-        `Error: ${error.message}`
-    ];
+// Error Handler
+class ErrorHandler {
+    static displayError(error, gameInfo = null) {
+        const errorMessage = [
+            '\n=== TEST FAILURE REPORT ===',
+            `Error: ${error.message}`
+        ];
 
-    if (gameInfo) {
+        if (gameInfo) {
+            this.addGameInfo(errorMessage, gameInfo);
+        }
+
+        if (error.failures) {
+            this.addFailureDetails(errorMessage, error);
+        }
+
+        errorMessage.push('\n=========================');
+
+        const logMethod = CONFIG.IS_CI ? console.error : console.log;
+        logMethod(errorMessage.join('\n'));
+    }
+
+    static addGameInfo(errorMessage, gameInfo) {
         errorMessage.push(
             '\nGame Information:',
             `Game Name: ${gameInfo.name}`,
@@ -160,7 +238,7 @@ function displayError(error, gameInfo = null) {
         }
     }
 
-    if (error.failures) {
+    static addFailureDetails(errorMessage, error) {
         errorMessage.push('\nFailure Details:');
         error.failures.forEach((failure, index) => {
             errorMessage.push(
@@ -169,155 +247,61 @@ function displayError(error, gameInfo = null) {
                 `   Error: ${failure.error}`
             );
         });
-        errorMessage.push(`\nDetailed HTML report available at: ${error.reportPath}`);
+    }
+}
+
+// Utilities
+class Utilities {
+    static createSafeReportName(gameName, gameId, prefix = '') {
+        const safeName = gameName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+        return `${prefix}${safeName}-${gameId}`;
     }
 
-    errorMessage.push('\n=========================');
-
-    // Sử dụng console.error trong CI, console.log trong local
-    const logMethod = IS_CI ? console.error : console.log;
-    logMethod(errorMessage.join('\n'));
-}
-
-// Function để lấy danh sách environment URLs
-function getEnvironmentUrls(environment) {
-    return environment.values
-        .filter(v => v.key.endsWith('_url') && v.enabled)
-        .map(v => ({
-            key: v.key,
-            value: v.value,
-            isL2: v.key === 'l2_url'
-        }));
-}
-
-// Function để tạo environment cho mỗi URL
-function createUrlEnvironment(baseEnv, urlConfig) {
-    const newEnv = JSON.parse(JSON.stringify(baseEnv));
-    // Disable tất cả các URL
-    newEnv.values.forEach(v => {
-        if (v.key.endsWith('_url')) {
-            v.enabled = false;
-        }
-    });
-    // Enable URL hiện tại
-    const currentUrl = newEnv.values.find(v => v.key === urlConfig.key);
-    if (currentUrl) {
-        currentUrl.enabled = true;
+    static async readGamesFromCSV() {
+        const games = [];
+        await new Promise((resolve, reject) => {
+            fs.createReadStream('games.csv')
+                .pipe(csv())
+                .on('data', (data) => games.push(data))
+                .on('end', resolve)
+                .on('error', reject);
+        });
+        return games;
     }
-    return newEnv;
 }
 
-// Function chính để chạy test
-async function runTests() {
+// Main execution
+async function main() {
     try {
-        // Tạo thư mục reports
-        if (!fs.existsSync(REPORTS_DIR)) {
-            fs.mkdirSync(REPORTS_DIR, { recursive: true });
-        }
+        const collection = require('./Upgrade.Net8.postman_collection.json');
+        const environment = require('./Local.postman_environment.json');
 
-        // Lấy danh sách URLs từ environment
-        const envUrls = getEnvironmentUrls(environment);
+        const envUrls = EnvironmentHandler.getUrls(environment);
         console.log(`Found ${envUrls.length} environment URLs to test`);
 
-        // Chạy test cho từng environment URL
         for (const urlConfig of envUrls) {
             console.log(`\nTesting with ${urlConfig.key}...`);
-            const urlEnvironment = createUrlEnvironment(environment, urlConfig);
+            const urlEnvironment = EnvironmentHandler.createUrlEnvironment(environment, urlConfig);
 
-            // 1. Chạy Lobby APIs
-            try {
-                const lobbyCollection = filterRequestsByUrl(collection, LOBBY_ENDPOINTS);
-                const lobbyReportName = `lobby-apis-${urlConfig.key.replace('_url', '')}`;
-                await runNewman(lobbyCollection, urlEnvironment, lobbyReportName);
-            } catch (error) {
-                console.error(`\nLobby APIs Failed for ${urlConfig.key}`);
-                displayError(error);
-                continue; // Tiếp tục với URL tiếp theo nếu lobby APIs fail
-            }
+            await TestRunner.runLobbyTests(collection, urlConfig, urlEnvironment);
 
-            // 2. Đọc và chạy game tests
-            const games = [];
-            await new Promise((resolve, reject) => {
-                fs.createReadStream('games.csv')
-                    .pipe(csv())
-                    .on('data', (data) => games.push(data))
-                    .on('end', resolve)
-                    .on('error', reject);
-            });
-
-            const gameCollection = filterRequestsByUrl(collection, GAME_ENDPOINTS);
-
-            // Chạy test cho từng game
+            const games = await Utilities.readGamesFromCSV();
             for (const game of games) {
                 console.log(`\nProcessing game: ${game.name} (ID: ${game.gameId}) for ${urlConfig.key}`);
-
-                // Tạo environment cho game
-                let gameEnvironment = JSON.parse(JSON.stringify(urlEnvironment));
-                
-                // Cập nhật gameId
-                const gameIdValue = gameEnvironment.values.find(v => v.key === 'gameId');
-                if (gameIdValue) {
-                    gameIdValue.value = game.gameId;
-                }
-
-                // Thêm contribution values cho l2_url
-                if (urlConfig.isL2) {
-                    // Thêm contributionRate
-                    gameEnvironment.values.push({
-                        key: 'contributionRate',
-                        value: game.contributionRate,
-                        type: 'default',
-                        enabled: true
-                    });
-                    // Thêm contributionAmount
-                    gameEnvironment.values.push({
-                        key: 'contributionAmount',
-                        value: game.contributionAmount,
-                        type: 'default',
-                        enabled: true
-                    });
-                }
-
-                // Tạo tên report
-                const reportName = createSafeReportName(
-                    game.name, 
-                    game.gameId, 
-                    `${urlConfig.key.replace('_url', '')}-`
-                );
-
-                // Skip VoidGame cho game type 2 hoặc 3
-                const skipVoidGame = game.type === '2' || game.type === '3';
-                if (skipVoidGame) {
-                    console.log(`Note: VoidGame will be skipped for game type ${game.type}`);
-                }
-
-                try {
-                    await runNewman(gameCollection, gameEnvironment, reportName);
-                } catch (error) {
-                    displayError(error, {
-                        ...game,
-                        environmentUrl: urlConfig.key,
-                        isL2: urlConfig.isL2,
-                        contributionRate: urlConfig.isL2 ? game.contributionRate : 'N/A',
-                        contributionAmount: urlConfig.isL2 ? game.contributionAmount : 'N/A'
-                    });
-                    continue; // Tiếp tục với game tiếp theo nếu test fail
-                }
+                await TestRunner.runGameTests(collection, game, urlConfig, urlEnvironment);
             }
         }
 
-        console.log('\nAll environment tests completed!');
-
-        if (IS_CI) {
+        console.log('\n✅ All environment tests completed successfully!');
+        if (CONFIG.IS_CI) {
             console.log('Test execution completed in CI environment');
         }
     } catch (error) {
-        displayError(error);
-        if (IS_CI) {
-            process.exit(1);
-        }
+        console.error('\n❌ Test execution failed');
+        ErrorHandler.displayError(error);
+        process.exit(1);
     }
 }
 
-// Chạy tests
-runTests();
+// Run the application
+main();

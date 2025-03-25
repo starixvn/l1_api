@@ -7,7 +7,7 @@ variables:
   BYPASS_CRITICAL_VULNERABILITY : "true"
 
 api_tests:
-  image: node:18
+  image: hub.lumigame.com/base/node:22-alpine-25h1.1
   stage: test
   before_script:
     - npm install newman

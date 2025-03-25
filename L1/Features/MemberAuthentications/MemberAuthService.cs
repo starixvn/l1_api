@@ -111,7 +111,7 @@ namespace L1.Features.MemberAuthentications
             return new Uri(uri, $"{uri.LocalPath.TrimEnd('/')}/site-{gameId}/").ToString();
         }
 
-        private async Task<string> GetRedirectedUrl(MemberAuth memberAuth, int? gameId, bool isOpenDirectly)
+        private async Task<Uri> GetClientUrl(MemberAuth memberAuth)
         {
             var partner = await partnerDataService.GetById(memberAuth.OperatorId);
 
@@ -120,22 +120,29 @@ namespace L1.Features.MemberAuthentications
                 return null;
             }
 
-            var redirectedUrl = memberAuth.AppType switch
-                {
-                    AppTypes.SabaClub => partner.ClubVersionUrl,
-                    AppTypes.MiniSabaClub => partner.MiniVersionUrl,
-                    AppTypes.SabaMobi => partner.MobiVersionUrl,
-                    AppTypes.MegaKeno => partner.MegaKenoUrl,
-                    AppTypes.MobileDirect => partner.MobileDirectUrl,
-                    _ => partner.ClubVersionUrl,
-                };
-
-            if (isOpenDirectly && !string.IsNullOrEmpty(redirectedUrl))
+            var clientUrl = memberAuth.AppType switch
             {
-                return GetDirectClientUrl(redirectedUrl.TrimEnd('/'), gameId.Value);
+                AppTypes.SabaClub => partner.ClubVersionUrl,
+                AppTypes.MiniSabaClub => partner.MiniVersionUrl,
+                AppTypes.SabaMobi => partner.MobiVersionUrl,
+                AppTypes.MegaKeno => partner.MegaKenoUrl,
+                AppTypes.MobileDirect => partner.MobileDirectUrl,
+                _ => partner.ClubVersionUrl,
+            };
+            
+            return !string.IsNullOrEmpty(clientUrl) ? new Uri(clientUrl) : null;
+        }
+
+        private string GetRedirectedUrl(Uri clientUrl, int? gameId, bool isOpenDirectly)
+        {
+            var gameClientUrl = clientUrl?.ToString();
+
+            if (isOpenDirectly && !string.IsNullOrEmpty(gameClientUrl))
+            {
+                return GetDirectClientUrl(gameClientUrl.TrimEnd('/'), gameId.Value);
             }
 
-            return redirectedUrl?.Trim()?.TrimEnd('/');
+            return gameClientUrl?.TrimEnd('/');
         }
 
         private async Task<GameConfigurationResponse> GetGameConfigurationAsync(int? gameId)
@@ -159,44 +166,61 @@ namespace L1.Features.MemberAuthentications
             var isOpenDirectly = memberAuth.AppType == AppTypes.SabaClub 
                 && gameConfiguration?.IsMicrosite == true 
                 && gameConfiguration?.IsOpenDirectly == true;
-            var gameClientUrl = await GetRedirectedUrl(memberAuth, updateParams.GameTypeId, isOpenDirectly);
+            var gameClientUrl = await GetClientUrl(memberAuth);
+            var redirectUrl = GetRedirectedUrl(gameClientUrl, updateParams.GameTypeId, isOpenDirectly);
             
-            if (string.IsNullOrEmpty(gameClientUrl))
+            if (string.IsNullOrEmpty(redirectUrl))
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
 
             await memberAuthDataAccess.UpdateCurrencyGroup(updateParams.Token, updateParams.CurrencyGroupId);
 
+            var optionalUrlParams = new OptionalURLParams
+            {
+                GameId = updateParams.GameTypeId,
+                IsStandalone = isOpenDirectly,
+                LobbyUrl = isOpenDirectly ? gameClientUrl?.ToString().TrimEnd('/') : null,
+            };
+
             return CreateSSOResult(
-                updateParams.GameTypeId,
+                redirectUrl,
                 memberAuth.Token,
                 memberAuth.Language,
-                gameClientUrl,
-                isOpenDirectly,
-                gameConfiguration?.Gateway?.Id);
+                optionalUrlParams);
         }
 
-        private static SingleSignOnResult CreateSSOResult(int? gameTypeId, string token, string language, string gameClientUrl, bool isOpenDirectly, int? gatewayId)
+        private static SingleSignOnResult CreateSSOResult(string redirectUrl, string token, string language, OptionalURLParams optionalURLParams)
         {
             var clientRedirectUrl = new StringBuilder();
-            clientRedirectUrl.Append($"{gameClientUrl}?token={token}&lang={language}");
+            clientRedirectUrl.Append($"{redirectUrl}?token={token}&lang={language}");
 
-            if (gameTypeId.HasValue)
+            var gameId = optionalURLParams.GameId;
+            var isStandalone = optionalURLParams.IsStandalone;
+            var lobbyUrl = optionalURLParams.LobbyUrl;
+
+            if (gameId.HasValue)
             {
-                clientRedirectUrl.Append($"&gameId={gameTypeId}");
+                clientRedirectUrl.Append($"&gameId={gameId}");
             }
 
-            if (isOpenDirectly)
+            if (isStandalone)
             {
                 clientRedirectUrl.Append($"&isStandalone=true");
             }
 
-            if (gatewayId > 0)
+            if (!string.IsNullOrEmpty(lobbyUrl))
             {
-                clientRedirectUrl.Append($"&gatewayId={gatewayId}");
+                var lobbyUrlEncoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(lobbyUrl));
+                clientRedirectUrl.Append($"&lurl={lobbyUrlEncoded}");
             }
             return SingleSignOnResult.CreateSuccessResponse(clientRedirectUrl.ToString());
         }
+    }
+    class OptionalURLParams
+    {
+        public int? GameId { get; set; }
+        public bool IsStandalone { get; set; }
+        public string LobbyUrl { get; set; }
     }
 }

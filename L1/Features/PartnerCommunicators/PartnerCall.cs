@@ -1,7 +1,24 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using L1.Features.PartnerCommunicators.Award;
+using L1.Features.PartnerCommunicators.EndGame;
+using L1.Features.PartnerCommunicators.EnterPortal;
+using L1.Features.PartnerCommunicators.GetBalance;
+using L1.Features.PartnerCommunicators.GetBetLimit;
+using L1.Features.PartnerCommunicators.HitJackpot;
+using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.VoidGame;
 
 namespace L1.Features.PartnerCommunicators
 {
+    [JsonDerivedType(typeof(PartnerPlaceBetCall))]
+    [JsonDerivedType(typeof(PartnerGetBalanceCall))]
+    [JsonDerivedType(typeof(PartnerEnterPortalCall))]
+    [JsonDerivedType(typeof(PartnerEndGameCall))]
+    [JsonDerivedType(typeof(PartnerAwardCall))]
+    [JsonDerivedType(typeof(HitJackpotCall))]
+    [JsonDerivedType(typeof(PartnerVoidGameCall))]
+    [JsonDerivedType(typeof(PartnerGetBetLimitCall))]
     public interface IPartnerCall
     {
         string Seq { get; set; }

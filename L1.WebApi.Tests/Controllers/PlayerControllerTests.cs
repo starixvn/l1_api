@@ -21,6 +21,7 @@ namespace L1.WebApi.Tests.Controllers
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
         private readonly IPartnerCustomerServices oWCustomerService;
+        private readonly IPartnerPlayerIdConverter partnerPlayerIdConverter;
 
         private readonly PlayerController controller;
         private readonly Fixture fixture = new();
@@ -29,8 +30,10 @@ namespace L1.WebApi.Tests.Controllers
         {
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
             oWCustomerService = Substitute.For<IPartnerCustomerServices>();
+            partnerPlayerIdConverter = Substitute.For<IPartnerPlayerIdConverter>();
+            partnerPlayerIdConverter.ConvertPlayerId(Arg.Any<string>(), Arg.Any<string>()).Returns(x => x.ArgAt<string>(1));
 
-            controller = new PlayerController(partnerCustomerFactory);
+            controller = new PlayerController(partnerCustomerFactory, partnerPlayerIdConverter);
         }
 
         [Fact]

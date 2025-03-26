@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using NATS.Client;
+using NATS.Client.Internals;
 using NATS.Client.JetStream;
 using Sentry;
 
@@ -80,17 +81,27 @@ namespace L1.Shared.Middlewares
         {
             try
             {
+                var settings = appSettings.StreamSettings;
                 var jsm = connection.CreateJetStreamManagementContext();
+                
                 var streamConfig = StreamConfiguration.Builder()
-                    .WithName(appSettings.StreamSettings.StreamName)
-                    .WithSubjects($"{appSettings.StreamSettings.Prefix}.>")
+                    .WithName(settings.Prefix)
+                    .WithSubjects($"{settings.SubjectPrefix}.>")
+                    .WithStorageType(settings.GetStorageType())
+                    .WithRetentionPolicy(settings.GetRetentionPolicy())
+                    .WithDiscardPolicy(settings.GetDiscardPolicy())
+                    .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
+                    .WithMaxBytes(settings.MaxSizeMB * 1024 * 1024)
+                    .WithDuplicateWindow(Duration.OfMinutes(settings.DuplicateWindowMinutes))
+                    .WithMaxMessages(settings.MaxMessages)
+                    .WithReplicas(settings.Replicas)
                     .Build();
 
                 jsm.AddStream(streamConfig);
             }
             catch (NATSJetStreamException ex) when (ex.ErrorCode == 10058)
             {
-                sentryClient.CaptureMessage($"Stream {appSettings.StreamSettings.StreamName} already exists");
+                sentryClient.CaptureMessage($"Stream {appSettings.StreamSettings.Prefix} already exists");
             }
             catch (Exception ex)
             {

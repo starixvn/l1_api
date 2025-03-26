@@ -37,7 +37,7 @@ namespace L1.Features.SabaPlayCommunicators
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new()
         {
             var request = new PartnerRequest(call);
-            var requestBody = jsonService.Serialize(request);
+            var requestBody = jsonService.Serialize(call);
             
             using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");

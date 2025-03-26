@@ -6,7 +6,7 @@ namespace L1.Features.PartnerCommunicators.Award
     public class PartnerAwardCall : PartnerCall
     {
         public PartnerAwardCall(
-            string playerId,
+            object playerId,
             string siteId,
             int gameTypeId,
             decimal amount,

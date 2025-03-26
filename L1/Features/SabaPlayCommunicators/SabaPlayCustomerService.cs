@@ -86,7 +86,7 @@ namespace L1.Features.SabaPlayCommunicators
                 if (call.Amount >= appSettings.HighStake)
                 {
                     var notifyHighStakeData = new NotifyHighStakeData(
-                        SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId),
+                        SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
                         call.GameTypeId,
                         call.Amount,
                         call.Currency,

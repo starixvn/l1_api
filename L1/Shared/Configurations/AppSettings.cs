@@ -26,10 +26,10 @@
 
         public PartnerIds PartnerIds { get; set; }
 
-        public LogEnabling LogEnabling { get; set; } = new ();
+        public LogEnabling LogEnabling { get; set; } = new();
 
-        public StreamSettings StreamSettings { get; set; }
-        public string MicrositeClientPatternDomain { get; set; } 
+        public StreamSettings StreamSettings { get; set; } = new();
+        public string MicrositeClientPatternDomain { get; set; }
     }
 
     public class LogEnabling

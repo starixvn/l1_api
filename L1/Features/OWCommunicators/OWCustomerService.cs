@@ -90,7 +90,7 @@ namespace L1.Features.OWCommunicators
                 if (call.Amount >= appSettings.HighStake)
                 {
                     var notifyHighStakeData = new NotifyHighStakeData(
-                        call.PlayerId,
+                        call.PlayerId.ToString(),
                         call.GameTypeId,
                         call.Amount,
                         call.Currency,

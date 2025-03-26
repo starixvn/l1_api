@@ -35,6 +35,7 @@ namespace L1.Shared.Middlewares
             services.AddScoped<ICurrencyDataAccess, CurrencyDataAccess>();
             services.AddScoped<IPartnerDataService, PartnerDataService>();
             services.AddScoped<IPartnerCustomerFactory, PartnerCustomerFactory>();
+            services.AddScoped<IPartnerPlayerIdConverter, PartnerPlayerIdConverter>();
 
             services.AddScoped<ILogDataAccess, LogDataAccess>();
             services.AddScoped<ILogService, LogService>();

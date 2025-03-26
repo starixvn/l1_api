@@ -9,7 +9,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public PartnerPlaceBetCall(
-            string playerId,
+            object playerId,
             string siteId,
             int gameRoundId,
             int gameTypeId,
@@ -23,7 +23,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             float contributionRate,
             bool freeBet,
             string operatorToken,
-              string operatorId,
+            string operatorId,
             string userId) : base(playerId, siteId)
 #pragma warning restore S107 // Methods should not have too many parameters
         {

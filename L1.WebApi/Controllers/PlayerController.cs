@@ -22,10 +22,12 @@ namespace L1.WebApi.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
+        private readonly IPartnerPlayerIdConverter partnerPlayerIdConverter;
 
-        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory)
+        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory, IPartnerPlayerIdConverter partnerPlayerIdConverter)
         {
             this.partnerCustomerFactory = partnerCustomerFactory;
+            this.partnerPlayerIdConverter = partnerPlayerIdConverter;
         }
 
         [HttpPost]
@@ -43,7 +45,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.EnterPortal(
-                new PartnerEnterPortalCall(model.PlayerId, model.SiteId, model.CharacterName, model.FirstLogin, model.OperatorToken));
+                new PartnerEnterPortalCall(partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId), model.SiteId, model.CharacterName, model.FirstLogin, model.OperatorToken));
 
             return Ok(response);
         }
@@ -61,7 +63,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.GetBalance(
-                new PartnerGetBalanceCall(model.PlayerId, model.SiteId, model.OperatorToken));
+                new PartnerGetBalanceCall(partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId), model.SiteId, model.OperatorToken));
 
             return Ok(response);
         }
@@ -79,7 +81,7 @@ namespace L1.WebApi.Controllers
             }
 
             var placeBetCall = new PartnerPlaceBetCall(
-                model.PlayerId,
+                partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -115,7 +117,7 @@ namespace L1.WebApi.Controllers
 
             var response = await customerService.EndGame(
                 new PartnerEndGameCall(
-                    model.PlayerId,
+                    partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
                     model.SiteId,
                     model.GameRoundId,
                     model.GameTypeId,
@@ -141,7 +143,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.VoidGame(
-                new PartnerVoidGameCall(model.PlayerId, model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
+                new PartnerVoidGameCall(partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId), model.SiteId, model.GameRoundId, model.GameTypeId, model.Reason, model.FreeBet));
 
             return Ok(response);
         }
@@ -158,7 +160,7 @@ namespace L1.WebApi.Controllers
                 return BadRequest();
             }
 
-            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(model.PlayerId, model.SiteId, model.OperatorToken));
+            var response = await customerService.GetBetLimit(new PartnerGetBetLimitCall(partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId), model.SiteId, model.OperatorToken));
 
             return Ok(response);
         }
@@ -176,7 +178,7 @@ namespace L1.WebApi.Controllers
             }
 
             var response = await customerService.HitJackpot(new HitJackpotCall(
-                model.PlayerId,
+                partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
@@ -200,7 +202,7 @@ namespace L1.WebApi.Controllers
 
             var response = await customerService.Award(
                 new PartnerAwardCall(
-                    model.PlayerId,
+                    partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
                     model.SiteId,
                     model.GameTypeId,
                     model.Amount,

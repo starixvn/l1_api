@@ -4,7 +4,7 @@ namespace L1.Features.PartnerCommunicators
     {
         public static string FormatSubject(string prefix, string subject)
         {
-            return $"{prefix}_{subject}";
+            return $"{prefix}.{subject}";
         }
     }
 }

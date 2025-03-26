@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using NATS.Client;
+using NATS.Client.JetStream;
 using Sentry;
 
 namespace L1.Shared.Middlewares
@@ -62,18 +63,39 @@ namespace L1.Shared.Middlewares
         {
             services.AddSingleton<IConnection>(sp =>
             {
-                if (string.IsNullOrEmpty(appSettings.StreamSettings.Host))
-                {
-                    SentrySdk.CaptureMessage("NATS host is not configured", SentryLevel.Error);
-                    return null;
-                }
-
                 var opts = ConnectionFactory.GetDefaultOptions();
                 opts.Url = appSettings.StreamSettings.Host;
-                return new ConnectionFactory().CreateConnection(opts);
+                var connection = new ConnectionFactory().CreateConnection(opts);
+
+                var sentryClient = sp.GetRequiredService<ISentryClient>();
+                InitializeJetStream(connection, appSettings, sentryClient);
+
+                return connection;
             });
 
             services.AddSingleton<INatsService, NatsService>();
+        }
+
+        private static void InitializeJetStream(IConnection connection, IAppSettings appSettings, ISentryClient sentryClient)
+        {
+            try
+            {
+                var jsm = connection.CreateJetStreamManagementContext();
+                var streamConfig = StreamConfiguration.Builder()
+                    .WithName(appSettings.StreamSettings.StreamName)
+                    .WithSubjects($"{appSettings.StreamSettings.Prefix}.>")
+                    .Build();
+
+                jsm.AddStream(streamConfig);
+            }
+            catch (NATSJetStreamException ex) when (ex.ErrorCode == 10058)
+            {
+                sentryClient.CaptureMessage($"Stream {appSettings.StreamSettings.StreamName} already exists");
+            }
+            catch (Exception ex)
+            {
+                sentryClient.CaptureException(ex);
+            }
         }
     }
 }

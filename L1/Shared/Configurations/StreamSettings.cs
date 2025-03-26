@@ -6,6 +6,8 @@ namespace L1.Shared.Configurations
 
         public string Prefix { get; set; }
 
+        public string StreamName { get; set; }
+
         public bool Enable { get; set; }
     }
 }

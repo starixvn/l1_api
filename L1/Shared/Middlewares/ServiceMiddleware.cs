@@ -86,8 +86,6 @@ namespace L1.Shared.Middlewares
                 var streamConfig = StreamConfiguration.Builder()
                     .WithName($"{settings.Prefix}_{settings.StreamName}")
                     .WithSubjects($"{settings.SubjectPrefix}.>")
-                    .WithStorageType(settings.GetStorageType())
-                    .WithMaxMessages(settings.MaxMessages)
                     .Build();
 
                 jsm.AddStream(streamConfig);

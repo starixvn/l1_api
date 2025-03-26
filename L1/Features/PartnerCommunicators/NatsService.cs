@@ -16,6 +16,7 @@ namespace L1.Features.PartnerCommunicators
     {
         private readonly IJetStream jetStream;
         private readonly string prefix;
+        private readonly bool enable;
         private readonly ISentryClient sentryClient;
         private readonly IJsonService jsonService;
 
@@ -27,12 +28,15 @@ namespace L1.Features.PartnerCommunicators
         {
             this.jetStream = connection.CreateJetStreamContext();
             this.prefix = appSettings.StreamSettings.Prefix;
+            this.enable = appSettings.StreamSettings.Enable;
             this.sentryClient = sentryClient;
             this.jsonService = jsonService;
         }
 
         public async Task PublishAsync(string subject, object message)
         {
+            if (!enable) return;
+
             var formattedSubject = SubjectFormatter.FormatSubject(prefix, subject);
             var jsonMessage = jsonService.Serialize(message);
             var msg = new Msg(formattedSubject, (MsgHeader)null, System.Text.Encoding.UTF8.GetBytes(jsonMessage));

@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using NATS.Client;
+using NATS.Client.Internals;
 using NATS.Client.JetStream;
 using Sentry;
 
@@ -86,6 +87,10 @@ namespace L1.Shared.Middlewares
                 var streamConfig = StreamConfiguration.Builder()
                     .WithName($"{settings.Prefix}_{settings.StreamName}")
                     .WithSubjects($"{settings.SubjectPrefix}.>")
+                    .WithRetentionPolicy(settings.GetRetentionPolicy())
+                    .WithDiscardPolicy(settings.GetDiscardPolicy())
+                    .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
+                    .WithDuplicateWindow(Duration.OfMinutes(settings.DuplicateWindowMinutes))
                     .Build();
 
                 jsm.AddStream(streamConfig);

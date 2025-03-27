@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace L1.Features.PartnerCommunicators
 {
-    public class OperatorPlayerIdConverter : JsonConverter<dynamic>
+    public class OperatorPlayerIdJsonConverter : JsonConverter<dynamic>
     {
         public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

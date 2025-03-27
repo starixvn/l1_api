@@ -8,7 +8,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
     {
         public long? ObTransId { get; set; }
 
-        [JsonConverter(typeof(OperatorPlayerIdConverter))]
+        [JsonConverter(typeof(OperatorPlayerIdJsonConverter))]
         public dynamic PlayerId { get; set; }
 
         public decimal Balance { get; set; }

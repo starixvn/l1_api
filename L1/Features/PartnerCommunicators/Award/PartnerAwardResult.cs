@@ -4,7 +4,7 @@ namespace L1.Features.PartnerCommunicators.Award
 {
     public class PartnerAwardResult : PartnerResult
     {
-        [JsonConverter(typeof(OperatorPlayerIdConverter))]
+        [JsonConverter(typeof(OperatorPlayerIdJsonConverter))]
         public dynamic PlayerId { get; set; }
     }
 }

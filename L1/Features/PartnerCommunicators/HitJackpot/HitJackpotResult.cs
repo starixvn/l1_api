@@ -4,7 +4,7 @@ namespace L1.Features.PartnerCommunicators.HitJackpot
 {
     public class HitJackpotResult : PartnerResult
     {
-        [JsonConverter(typeof(OperatorPlayerIdConverter))]
+        [JsonConverter(typeof(OperatorPlayerIdJsonConverter))]
         public dynamic PlayerId { get; set; }
     }
 }

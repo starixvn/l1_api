@@ -44,7 +44,6 @@ namespace L1.WebApi
             services.AddAdminApiServices(appSettings.AdminApiSettings);
             services.AddConfigurationApiServices(appSettings.ConfigurationApiSettings);
             services.AddJetStreamServices(appSettings);
-            services.AddConfigurationApiServices(appSettings.ConfigurationApiSettings);
 
             if (appSettings.SboServiceSettings != null)
             {
@@ -97,7 +96,6 @@ namespace L1.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseHttpsRedirection();
             if (env.IsDevelopment() || Configuration["Env"].Contains("LOCAL"))
 
             {

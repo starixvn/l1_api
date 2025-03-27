@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.AdminApiCommunicators;
+using L1.Features.Json;
 using L1.Features.OWCommunicators;
 using L1.Features.OWCommunicators.CheckMaintenance;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Maintenance;
 using L1.Shared.Configurations;
 using L1.Tests._Shared;
 using NSubstitute;
 using Sentry;
 using Xunit;
-using L1.Features.Json;
 
 namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
 {
@@ -93,14 +96,14 @@ namespace L1.Tests.Features.OWCommunicators.CheckMaintenance
         public async Task ObserveMaintenanceSchedule_Success_ShouldResetCounterToZero()
         {
             // Arrange
-            var maintenanceResult = new MaintenanceResult
+            var maintenanceResult = new PartnerMaintenanceResult
             {
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddMilliseconds(500)
             };
-            var response = new OWResponse<MaintenanceResult> { Result = maintenanceResult };
-            var serializedContent = jsonService.Serialize(response);
-            jsonService.Deserialize<OWResponse<MaintenanceResult>>(serializedContent).Returns(response);
+            var response = new PartnerResponse<PartnerMaintenanceResult> { Result = maintenanceResult };
+            var serializedContent = JsonSerializer.Serialize(response);
+            jsonService.Deserialize<PartnerResponse<PartnerMaintenanceResult>>(serializedContent).Returns(response);
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
             var maintenanceService = new OWMaintenanceService(httpClient, owServiceSettings, adminApiService, sentryClient, jsonService);

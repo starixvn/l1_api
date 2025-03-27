@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using L1.Features.GameConfigurations;
 using L1.Shared.Middlewares;
 using L1.Tests._Shared;
 using Microsoft.Extensions.Configuration;
@@ -26,8 +27,10 @@ namespace L1.Features.MemberAuthentications
 
             var appSettings = services.AddSettings(configuration);
             services.AddServices();
+            services.AddConfigurationApiServices(new ConfigurationApiSettings { Endpoints = new() });
             services.AddMongoDBServices(appSettings);
             services.AddSingleton<ISentryClient, MockSentryClient>();
+            services.AddSingleton<IConfiguration>(x => configuration);
 
             // Act
             MemberAuthMiddleware.AddMemberAuthentications(services);

@@ -39,6 +39,7 @@ namespace L1.WebApi.Tests
             AddAdminApiSettingsConfigsSection(configurationSection);
             AddSboServiceSettingsConfigsSection(configurationSection);
             AddSGApiSettingsConfigsSection(configurationSection);
+            AddConfigurationuApiSettingsConfigsSection(configurationSection);
 
             configuration.GetSection("AppSettings").Returns(configurationSection);
             startup = new Startup(configuration);
@@ -62,8 +63,6 @@ namespace L1.WebApi.Tests
         [Fact]
         public void Configure_IsDevelopment_HaveErrorWhenTest()
         {
-            MongoDbTestInitializer.RegisterCustomSerializers();
-
             // Arrange
             var services = new ServiceCollection();
             services.AddRouting();
@@ -82,8 +81,6 @@ namespace L1.WebApi.Tests
         [Fact]
         public void Configure_NotIsDevelopment_HaveErrorWhenTest()
         {
-            MongoDbTestInitializer.RegisterCustomSerializers();
-
             // Arrange
             var services = new ServiceCollection();
             var provider = services.BuildServiceProvider();
@@ -170,30 +167,22 @@ namespace L1.WebApi.Tests
             sgEndPoints.GetChildren().Returns(children);
             sgApiSettingsConfigsSection.GetSection("Endpoints").Returns(sgEndPoints);
         }
-    }
 
-    public static class MongoDbTestInitializer
-    {
-        private static bool _isRegistered = false;
-        private static readonly object _lock = new object();
-
-        public static void RegisterCustomSerializers()
+        private static void AddConfigurationuApiSettingsConfigsSection(IConfigurationSection configSection)
         {
-            lock (_lock)
-            {
-                if (!_isRegistered)
-                {
-                    var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type));
+            var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
+            var configurationApiSettingsConfigsSection = Substitute.For<IConfigurationSection>();
+            configurationApiSettingsConfigsSection.GetChildren().Returns(children);
+            configSection.GetSection("ConfigurationApiSettings").Returns(configurationApiSettingsConfigsSection);
 
-                    if (!(BsonSerializer.LookupSerializer<object>() is ObjectSerializer))
-                    {
-                        BsonSerializer.RegisterSerializer(objectSerializer);
-                    }
+            var baseUrl = Substitute.For<IConfigurationSection>();
+            baseUrl.GetChildren().Returns(children);
+            configurationApiSettingsConfigsSection.GetSection("BaseUrl").Returns(baseUrl);
 
-                    _isRegistered = true;
-                }
-            }
+            var endpoints = Substitute.For<IConfigurationSection>();
+            endpoints.GetChildren().Returns(children);
+            endpoints.GetSection("DetailGameConfiguration").Returns(Substitute.For<IConfigurationSection>());
+            configurationApiSettingsConfigsSection.GetSection("Endpoints").Returns(endpoints);
         }
     }
-
 }

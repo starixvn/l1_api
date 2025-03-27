@@ -12,6 +12,9 @@ using NSubstitute;
 using Sentry;
 using Xunit;
 using L1.Features.Json;
+using System.Text.Json;
+using L1.Features.PartnerCommunicators;
+using L1.Features.PartnerCommunicators.Maintenance;
 
 namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
 {
@@ -56,7 +59,7 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
                 EndTime = DateTime.Now.AddMilliseconds(5)
             };
             var response = new SboResponse<MaintenanceResult> { Result = maintenanceResult };
-            var serializedContent = jsonService.Serialize(response);
+            var serializedContent = JsonSerializer.Serialize(response);
             jsonService.Deserialize<SboResponse<MaintenanceResult>>(serializedContent).Returns(response);
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
@@ -76,7 +79,7 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
                 EndTime = DateTime.Now.AddMilliseconds(5)
             };
             var response = new SboResponse<MaintenanceResult> { Result = maintenanceResult };
-            var serializedContent = jsonService.Serialize(response);
+            var serializedContent = JsonSerializer.Serialize(response);
             jsonService.Deserialize<SboResponse<MaintenanceResult>>(serializedContent).Returns(response);
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.NotFound, serializedContent);
@@ -94,14 +97,14 @@ namespace L1.Tests.Features.SboCommunicators.CheckMaintenance
         public async Task ObserveMaintenanceSchedule_Success_ShouldResetCounterToZero()
         {
             // Arrange
-            var maintenanceResult = new MaintenanceResult
+            var maintenanceResult = new PartnerMaintenanceResult
             {
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddMilliseconds(500)
             };
-            var response = new SboResponse<MaintenanceResult> { Result = maintenanceResult };
-            var serializedContent = jsonService.Serialize(response);
-            jsonService.Deserialize<SboResponse<MaintenanceResult>>(serializedContent).Returns(response);
+            var response = new PartnerResponse<PartnerMaintenanceResult> { Result = maintenanceResult };
+            var serializedContent = JsonSerializer.Serialize(response);
+            jsonService.Deserialize<PartnerResponse<PartnerMaintenanceResult>>(serializedContent).Returns(response);
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
             var maintenanceService = new SboMaintenanceService(httpClient, sboServiceSettings, adminApiService, sentryClient, appSettings, jsonService);

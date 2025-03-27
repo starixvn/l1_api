@@ -4,14 +4,12 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using L1.Shared;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.GameConfigurations
 {
     public interface IConfigurationApiService
     {
         Task<GameConfigurationResponse> GetDetailGameConfiguration(int gameId);
-
     }
 
     public class ConfigurationApiService : IConfigurationApiService
@@ -22,8 +20,8 @@ namespace L1.Features.GameConfigurations
         private readonly ICacheManager cache;
 
         public ConfigurationApiService(
-            HttpClient httpClient, 
-            ConfigurationEndPoints configurationApiEndPoints, 
+            HttpClient httpClient,
+            ConfigurationEndPoints configurationApiEndPoints,
             ISentryClient sentryClient,
             ICacheManager cache)
         {
@@ -52,7 +50,8 @@ namespace L1.Features.GameConfigurations
                 cache.SetCache(key, result);
                 return result;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 sentryClient.CaptureMessage(ex.ToString(), SentryLevel.Error);
                 return null;
             }

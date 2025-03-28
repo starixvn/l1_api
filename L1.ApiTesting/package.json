@@ -4,8 +4,8 @@
   "description": "API Testing Framework for L1",
   "main": "index.js",
   "scripts": {
-    "test:sc": "node index.js --env=sc",
-    "test:vg": "node index.js --env=vg",
+    "test:sc": "node index.js --env=sc-local",
+    "test:vg": "node index.js --env=vg-local",
     "test:all": "npm run test:sc && npm run test:vg"
   },
   "dependencies": {

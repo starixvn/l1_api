@@ -10,7 +10,7 @@ async function main() {
             alias: 'e',
             describe: 'Specify the environment',
             type: 'string',
-            demandOption: true
+            demandOption: false 
         }).argv;
 
         const environmentName = argv.env;

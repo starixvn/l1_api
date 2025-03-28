@@ -17,6 +17,7 @@ class TestRunner {
             HIT_JACKPOT: 'HitJackpot'
         };
         this.JACKPOT_GAME_IDS = ['29', '70', '74', '76'];
+        this.gameTypesSlot = ['2', '3'];
     }
 
     static getReporterConfig(reportName) {
@@ -69,7 +70,7 @@ class TestRunner {
             
             for (const [collectionType, typeCollections] of Object.entries(this.collections)) {
                 for (const [collectionName, collection] of Object.entries(typeCollections)) {
-                    const skipVoidGame = game.type === '2' || game.type === '3';
+                    const skipVoidGame = this.gameTypesSlot.includes(game.type);
                     const filteredCollection = this.filterGameEndpoints(collection, skipVoidGame, game.gameId);
                     
                     if (filteredCollection.item.length > 0) {

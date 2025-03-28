@@ -11,10 +11,10 @@ using L1.Tests._Shared;
 using NSubstitute;
 using Sentry;
 using Xunit;
-using L1.Features.Json;
 using System.Text.Json;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Maintenance;
+using L1.Shared.Json;
 
 namespace L1.Tests.Features.PFFCommunicators.CheckMaintenance
 {

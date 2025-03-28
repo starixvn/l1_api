@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace L1.Features.Json
+namespace L1.Shared.Json
 {
     public interface IJsonService
     {

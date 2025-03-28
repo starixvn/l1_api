@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using Sentry;
-using L1.Features.Json;
+using L1.Shared.Json;
 
 namespace L1.Features.AdminApiCommunicators
 {

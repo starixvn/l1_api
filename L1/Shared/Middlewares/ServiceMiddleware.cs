@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text.Json;
 using L1.Features.BackendAuthentications;
-using L1.Features.Json;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.Partners;
 using L1.Features.Sites;
 using L1.Shared.Configurations;
+using L1.Shared.Json;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;

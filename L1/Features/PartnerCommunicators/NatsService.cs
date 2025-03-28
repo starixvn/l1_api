@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using L1.Features.Json;
 using L1.Shared.Configurations;
+using L1.Shared.Json;
 using NATS.Client;
 using NATS.Client.JetStream;
 using Sentry;

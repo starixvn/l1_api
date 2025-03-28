@@ -8,7 +8,7 @@ using L1.Shared.Configurations;
 using NSubstitute;
 using Sentry;
 using Xunit;
-using L1.Features.Json;
+using L1.Shared.Json;
 
 namespace L1.Tests.Features.MemberAuthentications
 {

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sentry;
 using Xunit;
 using System.Text.Json;
-using L1.Features.Json;
+using L1.Shared.Json;
 
 namespace L1.Tests.Features.SboCommunicators
 {

@@ -6,8 +6,7 @@ class CollectionLoader {
         const collections = {
             authentication: {}, // for enter-portal.postman_collection.json
             balance: {},       // for get-balance and get-bet-limit
-            betting: {         // Ensure game flow order
-            },
+            betting: {},        // Ensure game flow order
             special: {}        // for hit-jackpot and promotion-award
         };
 
@@ -16,13 +15,10 @@ class CollectionLoader {
         for (const type of collectionTypes) {
             const typePath = path.join(__dirname, '..', 'collections', type);
             try {
-                const files = await fs.readdir(typePath);
-                
                 if (type === 'betting') {
-                    // Special handling for betting to ensure order
                     await this.loadBettingCollections(collections.betting, typePath);
                 } else {
-                    // Normal handling for other types
+                    const files = await fs.readdir(typePath);
                     for (const file of files) {
                         if (file.endsWith('.postman_collection.json')) {
                             const content = await fs.readFile(path.join(typePath, file));
@@ -49,19 +45,32 @@ class CollectionLoader {
     }
 
     static async loadBettingCollections(bettingCollections, typePath) {
-        const bettingFlow = ['place-bet', 'end-game', 'void-game'];
+        const bettingFlow = {
+            'place-bet': /placebet/i,
+            'end-game': /endgame/i,
+            'void-game': /voidgame/i
+        };
         
-        for (const collectionName of bettingFlow) {
-            const fileName = `${collectionName}.postman_collection.json`;
-            const filePath = path.join(typePath, fileName);
-            
-            try {
-                const content = await fs.readFile(filePath);
-                bettingCollections[collectionName] = JSON.parse(content);
-            } catch (error) {
-                console.warn(`Warning: Could not load betting collection ${fileName}: ${error.message}`);
-                bettingCollections[collectionName] = null;
+        try {
+            const files = await fs.readdir(typePath);
+            const collections = {};
+
+            // First, load all collection files
+            for (const file of files) {
+                if (file.endsWith('.postman_collection.json')) {
+                    const content = await fs.readFile(path.join(typePath, file));
+                    const collection = JSON.parse(content);
+                    collections[file] = collection;
+                }
             }
+
+            // Then, categorize collections based on their URLs
+            for (const [flowKey, urlPattern] of Object.entries(bettingFlow)) {
+                bettingCollections[flowKey] = this.findCollectionByUrl(collections, urlPattern);
+            }
+
+        } catch (error) {
+            console.warn(`Warning: Error loading betting collections: ${error.message}`);
         }
 
         // Remove null collections
@@ -70,6 +79,32 @@ class CollectionLoader {
                 delete bettingCollections[key];
             }
         });
+    }
+
+    static findCollectionByUrl(collections, urlPattern) {
+        for (const [fileName, collection] of Object.entries(collections)) {
+            if (this.hasMatchingRequest(collection, urlPattern)) {
+                return collection;
+            }
+        }
+        return null;
+    }
+
+    static hasMatchingRequest(collection, urlPattern) {
+        if (!collection.item) return false;
+
+        const hasMatch = collection.item.some(item => {
+            if (item.request?.url) {
+                const url = typeof item.request.url === 'string' 
+                    ? item.request.url 
+                    : item.request.url.raw || item.request.url.path?.join('/');
+                
+                return urlPattern.test(url) || urlPattern.test(item.name);
+            }
+            return false;
+        });
+
+        return hasMatch;
     }
 }
 

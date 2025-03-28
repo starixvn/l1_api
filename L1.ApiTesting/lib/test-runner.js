@@ -18,6 +18,63 @@ class TestRunner {
         };
         this.JACKPOT_GAME_IDS = ['29', '70', '74', '76'];
         this.gameTypesSlot = ['2', '3'];
+        this.commonScripts = this.loadCommonScripts();
+    }
+
+    async loadCommonScripts() {
+        const scriptsPath = path.join(__dirname, '..', 'scripts');
+        const [preReqScript, testScript] = await Promise.all([
+            fs.readFile(path.join(scriptsPath, 'pre-request', 'common-validations.js'), 'utf8'),
+            fs.readFile(path.join(scriptsPath, 'tests', 'common-tests.js'), 'utf8')
+        ]);
+        return { preReqScript, testScript };
+    }
+
+    addCommonScripts(collection) {
+        const clonedCollection = JSON.parse(JSON.stringify(collection));
+        
+        clonedCollection.item = collection.item.map(item => {
+            if (item.request) {
+                if (!item.event) {
+                    item.event = [];
+                }
+
+                // Add pre-request script
+                const hasPreReq = item.event.some(e => e.listen === 'prerequest');
+                if (!hasPreReq) {
+                    item.event.push({
+                        listen: 'prerequest',
+                        script: {
+                            type: 'text/javascript',
+                            exec: [this.commonScripts.preReqScript]
+                        }
+                    });
+                }
+
+                // Add test script
+                const hasTest = item.event.some(e => e.listen === 'test');
+                if (!hasTest) {
+                    item.event.push({
+                        listen: 'test',
+                        script: {
+                            type: 'text/javascript',
+                            exec: [this.commonScripts.testScript]
+                        }
+                    });
+                } else {
+                    // Append common tests to existing test script
+                    const testEvent = item.event.find(e => e.listen === 'test');
+                    if (typeof testEvent.script.exec === 'string') {
+                        testEvent.script.exec = [testEvent.script.exec, this.commonScripts.testScript];
+                    } else {
+                        testEvent.script.exec = [...testEvent.script.exec, this.commonScripts.testScript];
+                    }
+                }
+            }
+            return item;
+        });
+
+        return clonedCollection;
     }
 
     static getReporterConfig(reportName) {
@@ -84,10 +141,11 @@ class TestRunner {
 
     async runTest(collection, environment, reportName) {
         const { reporters, reporterOptions } = TestRunner.getReporterConfig(reportName);
+        const collectionWithScripts = await this.addCommonScripts(collection);
 
         return new Promise((resolve, reject) => {
             newman.run({
-                collection: collection,
+                collection: collectionWithScripts,
                 environment: environment,
                 reporters: reporters,
                 reporter: reporterOptions,

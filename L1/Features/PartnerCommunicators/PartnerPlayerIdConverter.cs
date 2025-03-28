@@ -15,7 +15,7 @@ namespace L1.Features.PartnerCommunicators
         {
             { "ONEworks1", typeof(int) },
             { "SBO", typeof(int) },
-            { "PFF", typeof(int) },
+            { "PFF", typeof(string) },
             { "ONEworksVGCash", typeof(string) },
             { "ONEworks_VG", typeof(string) },
             { "ONEworksSeal888", typeof(string) },

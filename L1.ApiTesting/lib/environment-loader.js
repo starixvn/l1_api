@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class EnvironmentLoader {
-    static async loadEnvironments() {
+    static async loadEnvironments(environmentName) {
         const environments = {};
         const envPath = path.join(__dirname, '..', 'environments');
         
@@ -24,6 +24,10 @@ class EnvironmentLoader {
                         }
                     }
                 }
+            }
+
+            if(environmentName) {
+                return { [environmentName]: environments[environmentName] };
             }
         } catch (error) {
             console.error(`Error loading environments: ${error.message}`);

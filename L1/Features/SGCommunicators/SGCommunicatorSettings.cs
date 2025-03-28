@@ -2,7 +2,7 @@ using System;
 
 namespace L1.Features.SGCommunicators
 {
-    public class SGCommunicatorSettings
+    public class OWSGServiceSettings
     {
         public Uri BaseUrl { get; set; }
 

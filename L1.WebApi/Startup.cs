@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Coravel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
@@ -8,6 +9,7 @@ using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
+using L1.Features.SGCommunicators;
 using L1.Shared.Configurations;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -40,29 +42,26 @@ namespace L1.WebApi
             services.AddServices();
             services.AddMongoDBServices(appSettings);
             services.AddMemberAuthentications();
-            services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
             services.AddConfigurationApiServices(appSettings.ConfigurationApiSettings);
             services.AddJetStreamServices(appSettings);
 
-            if (appSettings.SboServiceSettings != null)
+            var serviceRegistrations = new List<(object Settings, Action Registration)>
             {
-                services.AddSboServices(appSettings.SboServiceSettings);
-            }
+                (appSettings.OWSGServiceSettings, () => services.AddSGServices(appSettings.OWSGServiceSettings)),
+                (appSettings.OWServiceSettings, () => services.AddOWServices(appSettings.OWServiceSettings)),
+                (appSettings.SboServiceSettings, () => services.AddSboServices(appSettings.SboServiceSettings)),
+                (appSettings.PFFServiceSettings, () => services.AddPFFServices(appSettings.PFFServiceSettings)),
+                (appSettings.SabaPlayServiceSettings, () => services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings)),
+                (appSettings.SabaPlayDailySummaryServiceSettings, () => services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings))
+            };
 
-            if (appSettings.PFFServiceSettings != null)
+            foreach (var (settings, registration) in serviceRegistrations)
             {
-                services.AddPFFServices(appSettings.PFFServiceSettings);
-            }
-
-            if (appSettings.SabaPlayServiceSettings != null)
-            {
-                services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings);
-            }
-
-            if (appSettings.SabaPlayDailySummaryServiceSettings != null)
-            {
-                services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings);
+                if (settings != null)
+                {
+                    registration();
+                }
             }
 
             services.AddControllers()

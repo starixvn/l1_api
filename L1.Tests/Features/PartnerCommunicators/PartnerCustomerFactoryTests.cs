@@ -1,9 +1,10 @@
-﻿using L1.Features.OWCommunicators;
+﻿using System;
+using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
+using L1.Features.SGCommunicators;
 using L1.Shared.Configurations;
 using NSubstitute;
 using Sentry;
-using System;
 using Xunit;
 
 namespace L1.Tests.Features.PartnerCommunicators
@@ -23,8 +24,10 @@ namespace L1.Tests.Features.PartnerCommunicators
             sentryClient = Substitute.For<ISentryClient>();
             appSettings.PartnerIds = new PartnerIds
             {
-                OW = "OW",
-                SBO = "SBO"
+                OW = "ONEworksVGCash",
+                SBO = "SBO",
+                SG = "ONEworks1",
+                OW_VG = "ONEworks_VG"
             };
 
             partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings, sentryClient);
@@ -68,6 +71,20 @@ namespace L1.Tests.Features.PartnerCommunicators
 
             // Act
             var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.SBO);
+
+            // Assert
+            Assert.IsAssignableFrom<IPartnerCustomerServices>(result);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void GetService_SGPartner_ReturnService()
+        {
+            // Arrange
+            serviceProvider.GetService(Arg.Any<Type>()).Returns(new SGCustomerService(null, null, null, null, null, null, null));
+
+            // Act
+            var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.SG);
 
             // Assert
             Assert.IsAssignableFrom<IPartnerCustomerServices>(result);

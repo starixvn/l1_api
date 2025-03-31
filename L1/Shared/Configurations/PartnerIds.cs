@@ -2,17 +2,18 @@
 {
     public class PartnerIds
     {
-       
+
         public string SBO { get; set; }
 
         public string OW_VG { get; set; }
+
         public string PFF { get; set; }
 
-        public string ONEworksSeal888 {get; set; }
+        public string ONEworksSeal888 { get; set; }
 
         public string SabaPlay { get; set; }
 
-        public string OW { get; set; } 
+        public string OW { get; set; }
 
         public string ONEworksCash { get; set; }
 

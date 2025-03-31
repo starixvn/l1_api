@@ -9,7 +9,7 @@ namespace L1.Tests._Shared
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            throw new Exception();
+            throw new HttpRequestException("Network error occurred");
         }
     }
 }

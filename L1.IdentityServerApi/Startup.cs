@@ -56,8 +56,6 @@ namespace L1.IdentityServerApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
-            app.UseHttpsRedirection();
-
             var forwardOptions = new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,

@@ -32,10 +32,10 @@ namespace L1.Features.PartnerCommunicators
 
             //Operators using playerId as string
             AddService(appSettings.PartnerIds.OW, typeof(OWCustomerService));
-            AddService(appSettings.PartnerIds.ONEworksCash, typeof(OWCustomerService));
-            AddService(appSettings.PartnerIds.ONEworksCredit, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.OW_VG, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.ONEworksCash_XD, typeof(OWCustomerService));
+            AddService(appSettings.PartnerIds.ONEworksCredit_XD, typeof(OWCustomerService));
 
             AddService(appSettings.PartnerIds.SBO, typeof(SboCustomerService));
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));

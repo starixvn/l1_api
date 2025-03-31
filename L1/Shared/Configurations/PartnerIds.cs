@@ -15,9 +15,9 @@
 
         public string OW { get; set; }
 
-        public string ONEworksCash { get; set; }
+        public string ONEworksCash_XD { get; set; }
 
-        public string ONEworksCredit { get; set; }
+        public string ONEworksCredit_XD { get; set; } //TODO: need to check operator id value in database
 
         public string SG { get; set; } // TODO: use OW instead of SG
     }

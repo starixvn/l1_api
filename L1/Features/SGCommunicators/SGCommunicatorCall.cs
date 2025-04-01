@@ -1,6 +1,6 @@
 using System;
-using System.Text.Json.Serialization;
 using L1.Features.PartnerCommunicators;
+using Newtonsoft.Json;
 
 namespace L1.Features.SGCommunicators
 {
@@ -11,7 +11,7 @@ namespace L1.Features.SGCommunicators
         {
         }
 
-        public SGCommunicatorCall(string seq, int playerId, string siteId) 
+        public SGCommunicatorCall(string seq, int playerId, string siteId)
             : base(seq, playerId.ToString(), siteId)
         {
         }
@@ -23,4 +23,4 @@ namespace L1.Features.SGCommunicators
             set => base.PlayerId = value.ToString();
         }
     }
-} 
+}

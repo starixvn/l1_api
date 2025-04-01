@@ -16,7 +16,7 @@ namespace L1.Features.SGCommunicators
 
     public class SGService : ISGService
     {
-        private const string HeaderAccessKey = "SG-access-key";
+        private const string HeaderAccessKey = "Saba-access-key";
         private readonly HttpClient httpClient;
         private readonly ISGFailureHandler failureHandler;
         private readonly string secretKey;
@@ -38,7 +38,7 @@ namespace L1.Features.SGCommunicators
         {
             var request = new PartnerRequest(call);
             var requestBody = jsonService.Serialize(call);
-            
+
             using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
 
@@ -48,7 +48,7 @@ namespace L1.Features.SGCommunicators
             };
             requestMessage.Headers.Add(HeaderAccessKey, accessKey);
 
-            try 
+            try
             {
                 using var response = await httpClient.SendAsync(requestMessage);
                 var finalResponse = response.IsSuccessStatusCode
@@ -102,4 +102,4 @@ namespace L1.Features.SGCommunicators
         private static async Task<string> GetErrorResponseContent(HttpResponseMessage response)
             => $"{response.StatusCode}-{response.ReasonPhrase}-{await response.Content.ReadAsStringAsync()}";
     }
-} 
+}

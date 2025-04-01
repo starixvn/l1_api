@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
 using L1.Features.PartnerCommunicators;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.SGCommunicators
 {
@@ -36,4 +36,4 @@ namespace L1.Features.SGCommunicators
             }
         }
     }
-} 
+}

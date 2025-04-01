@@ -2,13 +2,12 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using L1.Features.SGCommunicators;
 using L1.Features.PartnerCommunicators;
-using L1.Shared.Constants;
+using L1.Features.SGCommunicators;
 using L1.Shared.Json;
+using L1.Tests._Shared;
 using NSubstitute;
 using Xunit;
-using L1.Tests._Shared;
 
 namespace L1.Tests.Features.SGCommunicators
 {
@@ -24,7 +23,8 @@ namespace L1.Tests.Features.SGCommunicators
         {
             failureHandler = Substitute.For<ISGFailureHandler>();
             jsonService = Substitute.For<IJsonService>();
-            settings = new SGServiceSettings { 
+            settings = new SGServiceSettings
+            {
                 SecretKey = "test-secret",
                 BaseUrl = new Uri("https://localhost")
             };
@@ -100,4 +100,4 @@ namespace L1.Tests.Features.SGCommunicators
             Assert.Equal(call.Seq, response.Result.Seq);
         }
     }
-} 
+}

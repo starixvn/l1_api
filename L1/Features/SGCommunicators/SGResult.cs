@@ -1,4 +1,3 @@
-using System;
 using L1.Features.PartnerCommunicators;
 
 namespace L1.Features.SGCommunicators
@@ -19,4 +18,4 @@ namespace L1.Features.SGCommunicators
         public bool IsFailed()
             => ErrorCode != 0;
     }
-} 
+}

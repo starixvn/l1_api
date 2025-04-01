@@ -25,7 +25,7 @@ namespace L1.Features.SGCommunicators
         public SGService(
             HttpClient httpClient,
             ISGFailureHandler failureHandler,
-            OWSGServiceSettings settings,
+            SGServiceSettings settings,
             IJsonService jsonService)
         {
             this.httpClient = httpClient;

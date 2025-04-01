@@ -8,7 +8,7 @@ namespace L1.Features.SGCommunicators
 {
     public static class SGServiceMiddleware
     {
-        public static void AddSGServices(this IServiceCollection services, OWSGServiceSettings settings)
+        public static void AddSGServices(this IServiceCollection services, SGServiceSettings settings)
         {
             services.AddSingleton(settings);
             services.AddSingleton(settings.Endpoints);

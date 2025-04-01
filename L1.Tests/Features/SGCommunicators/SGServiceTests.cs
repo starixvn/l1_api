@@ -16,7 +16,7 @@ namespace L1.Tests.Features.SGCommunicators
     {
         private readonly ISGFailureHandler failureHandler;
         private readonly IJsonService jsonService;
-        private readonly OWSGServiceSettings settings;
+        private readonly SGServiceSettings settings;
         private readonly PartnerResponse<PartnerResult> defaultContent;
         private const int TestPlayerId = 12345;
 
@@ -24,7 +24,7 @@ namespace L1.Tests.Features.SGCommunicators
         {
             failureHandler = Substitute.For<ISGFailureHandler>();
             jsonService = Substitute.For<IJsonService>();
-            settings = new OWSGServiceSettings { 
+            settings = new SGServiceSettings { 
                 SecretKey = "test-secret",
                 BaseUrl = new Uri("https://localhost")
             };

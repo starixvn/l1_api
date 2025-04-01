@@ -48,7 +48,7 @@ namespace L1.WebApi
 
             var serviceRegistrations = new List<(object Settings, Action Registration)>
             {
-                (appSettings.OWSGServiceSettings, () => services.AddSGServices(appSettings.OWSGServiceSettings)),
+                (appSettings.SGServiceSettings, () => services.AddSGServices(appSettings.SGServiceSettings)),
                 (appSettings.OWServiceSettings, () => services.AddOWServices(appSettings.OWServiceSettings)),
                 (appSettings.SboServiceSettings, () => services.AddSboServices(appSettings.SboServiceSettings)),
                 (appSettings.PFFServiceSettings, () => services.AddPFFServices(appSettings.PFFServiceSettings)),
@@ -111,7 +111,7 @@ namespace L1.WebApi
             app.ConfigureLocalization();
 
             app.UseRouting();
-            
+
             app.UseCors();
 
             app.UseAuthorization();

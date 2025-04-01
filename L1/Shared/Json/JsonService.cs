@@ -1,4 +1,4 @@
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace L1.Shared.Json
 {
@@ -10,21 +10,19 @@ namespace L1.Shared.Json
 
     public class JsonService : IJsonService
     {
-        private readonly JsonSerializerOptions options;
 
-        public JsonService(JsonSerializerOptions options)
+        public JsonService()
         {
-            this.options = options;
         }
 
         public string Serialize<T>(T value)
         {
-            return JsonSerializer.Serialize(value, options);
+            return JsonConvert.SerializeObject(value);
         }
 
         public T Deserialize<T>(string json)
         {
-            return JsonSerializer.Deserialize<T>(json, options);
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

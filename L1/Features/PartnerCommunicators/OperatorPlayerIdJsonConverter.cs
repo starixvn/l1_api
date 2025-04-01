@@ -1,39 +1,65 @@
 ﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using System.Reflection;
 
 namespace L1.Features.PartnerCommunicators
 {
-    public class OperatorPlayerIdJsonConverter : JsonConverter<dynamic>
+    public class OperatorPlayerIdJsonConverter : JsonConverter
     {
-        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override bool CanConvert(Type objectType)
         {
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                return reader.GetString();
-            }
-            else if (reader.TokenType == JsonTokenType.Number && reader.TryGetInt32(out int intValue))
-            {
-                return intValue;
-            }
-
-            throw new JsonException("PlayerId must be a string or int.");
+            return true; 
         }
 
-        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
+
+            if (reader.TokenType == JsonToken.String)
+            {
+                return reader.Value.ToString();
+            }
+
+            if (reader.TokenType == JsonToken.Integer)
+            {
+                var value = Convert.ToInt64(reader.Value);
+                if (value <= int.MaxValue && value >= int.MinValue)
+                {
+                    return (int)value;
+                }
+                return value.ToString();
+            }
+
+            throw new JsonSerializationException("PlayerId must be a string or integer.");
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
             if (value is int intValue)
             {
-                writer.WriteNumberValue(intValue);
+                writer.WriteValue(intValue);
+                return;
             }
-            else if (value is string stringValue)
+
+            if (value is string)
             {
-                writer.WriteStringValue(stringValue);
+                writer.WriteValue(value);
+                return;
             }
-            else
-            {
-                throw new JsonException("PlayerId must be a string or int.");
-            }
+
+            throw new JsonSerializationException("PlayerId must be a string or integer.");
         }
+
+        public override bool CanRead => true;
+        public override bool CanWrite => true;
     }
 }

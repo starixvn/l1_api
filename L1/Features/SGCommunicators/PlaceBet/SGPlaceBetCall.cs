@@ -21,9 +21,9 @@ namespace L1.Features.SGCommunicators.PlaceBet
             bool freeBet,
             string operatorToken,
             string operatorId,
-            string userId) 
+            string userId)
             : base(playerId, siteId, gameRoundId, gameTypeId, choiceId, amount, currency, roundEndTime, ip, freeSpin, contributionAmount, contributionRate, freeBet, operatorToken, operatorId, userId)
         {
         }
     }
-} 
+}

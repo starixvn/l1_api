@@ -27,12 +27,9 @@ namespace L1.Features.PartnerCommunicators
         {
             var extractedPlayerId = ExtractOperatorPlayerId(playerId);
 
-            if (operatorPlayerIdTypes.TryGetValue(operatorId, out var playerIdType))
+            if (operatorPlayerIdTypes.TryGetValue(operatorId, out var playerIdType) && playerIdType == typeof(int))
             {
-                if (playerIdType == typeof(int))
-                {
-                    return int.Parse(extractedPlayerId);
-                }
+                return int.Parse(extractedPlayerId);
             }
 
             return extractedPlayerId;

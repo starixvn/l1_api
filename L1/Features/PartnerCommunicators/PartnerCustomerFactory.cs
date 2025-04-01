@@ -6,7 +6,6 @@ using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Features.SGCommunicators;
 using L1.Shared.Configurations;
-using Sentry;
 
 namespace L1.Features.PartnerCommunicators
 {
@@ -19,13 +18,11 @@ namespace L1.Features.PartnerCommunicators
     {
         private readonly Dictionary<string, Type> services;
         private readonly IServiceProvider serviceProvider;
-        private readonly ISentryClient sentryClient;
 
-        public PartnerCustomerFactory(IServiceProvider serviceProvider, IAppSettings appSettings, ISentryClient sentryClient)
+        public PartnerCustomerFactory(IServiceProvider serviceProvider, IAppSettings appSettings)
         {
-            this.sentryClient = sentryClient;
             this.serviceProvider = serviceProvider;
-            services = new() { };
+            services = [];
 
             //Operators using playerId as integer
             AddService(appSettings.PartnerIds.SG, typeof(SGCustomerService));

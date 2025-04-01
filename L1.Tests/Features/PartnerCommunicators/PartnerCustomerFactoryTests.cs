@@ -4,7 +4,6 @@ using L1.Features.PartnerCommunicators;
 using L1.Features.SGCommunicators;
 using L1.Shared.Configurations;
 using NSubstitute;
-using Sentry;
 using Xunit;
 
 namespace L1.Tests.Features.PartnerCommunicators
@@ -15,13 +14,11 @@ namespace L1.Tests.Features.PartnerCommunicators
 
         private readonly PartnerCustomerFactory partnerCustomerFactory;
         private readonly IAppSettings appSettings;
-        private readonly ISentryClient sentryClient;
 
         public PartnerCustomerFactoryTests()
         {
             serviceProvider = Substitute.For<IServiceProvider>();
             appSettings = Substitute.For<IAppSettings>();
-            sentryClient = Substitute.For<ISentryClient>();
             appSettings.PartnerIds = new PartnerIds
             {
                 OW = "ONEworksVGCash",
@@ -30,7 +27,7 @@ namespace L1.Tests.Features.PartnerCommunicators
                 OW_VG = "ONEworks_VG"
             };
 
-            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings, sentryClient);
+            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings);
         }
 
         [InlineData("")]

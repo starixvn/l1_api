@@ -13,17 +13,17 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
-using L1.Shared.Configurations;
-using L1.Shared.Constants;
-using Polly;
-using Sentry;
+using L1.Features.SGCommunicators.Award;
+using L1.Features.SGCommunicators.EndGame;
 using L1.Features.SGCommunicators.EnterPortal;
 using L1.Features.SGCommunicators.GetBalance;
 using L1.Features.SGCommunicators.GetBetLimit;
 using L1.Features.SGCommunicators.PlaceBet;
-using L1.Features.SGCommunicators.EndGame;
 using L1.Features.SGCommunicators.VoidGame;
-using L1.Features.SGCommunicators.Award;
+using L1.Shared.Configurations;
+using L1.Shared.Constants;
+using Polly;
+using Sentry;
 
 namespace L1.Features.SGCommunicators
 {
@@ -134,8 +134,8 @@ namespace L1.Features.SGCommunicators
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
             var response = await sgService.Post<PartnerEndGameResult>(endpoints.EndGame, new SGEndGameCall(
-                (int)call.PlayerId, 
-                call.SiteId, 
+                (int)call.PlayerId,
+                call.SiteId,
                 call.GameRoundId,
                 call.GameTypeId,
                 call.TotalAmount,
@@ -156,8 +156,8 @@ namespace L1.Features.SGCommunicators
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
         {
             var response = await sgService.Post<PartnerVoidGameResult>(endpoints.VoidGame, new SGVoidGameCall(
-                (int)call.PlayerId, 
-                call.SiteId, 
+                (int)call.PlayerId,
+                call.SiteId,
                 call.GameRoundId,
                 call.GameTypeId,
                 call.Reason,
@@ -209,4 +209,4 @@ namespace L1.Features.SGCommunicators
             return response;
         }
     }
-} 
+}

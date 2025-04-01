@@ -13,6 +13,7 @@ using L1.WebApi.Controllers;
 using L1.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using Sentry;
 using Xunit;
 
 namespace L1.WebApi.Tests.Controllers
@@ -22,6 +23,7 @@ namespace L1.WebApi.Tests.Controllers
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
         private readonly IPartnerCustomerServices oWCustomerService;
         private readonly IPartnerPlayerIdConverter partnerPlayerIdConverter;
+        private readonly ISentryClient sentryClient;
 
         private readonly PlayerController controller;
         private readonly Fixture fixture = new();
@@ -31,9 +33,10 @@ namespace L1.WebApi.Tests.Controllers
             partnerCustomerFactory = Substitute.For<IPartnerCustomerFactory>();
             oWCustomerService = Substitute.For<IPartnerCustomerServices>();
             partnerPlayerIdConverter = Substitute.For<IPartnerPlayerIdConverter>();
+            sentryClient = Substitute.For<ISentryClient>();
             partnerPlayerIdConverter.ConvertPlayerId(Arg.Any<string>(), Arg.Any<string>()).Returns(x => x.ArgAt<string>(1));
 
-            controller = new PlayerController(partnerCustomerFactory, partnerPlayerIdConverter);
+            controller = new PlayerController(partnerCustomerFactory, partnerPlayerIdConverter, sentryClient);
         }
 
         [Fact]

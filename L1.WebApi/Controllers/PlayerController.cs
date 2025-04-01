@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -9,8 +10,9 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.WebApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Sentry;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace L1.WebApi.Controllers
@@ -23,11 +25,13 @@ namespace L1.WebApi.Controllers
     {
         private readonly IPartnerCustomerFactory partnerCustomerFactory;
         private readonly IPartnerPlayerIdConverter partnerPlayerIdConverter;
+        private readonly ISentryClient sentryClient;
 
-        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory, IPartnerPlayerIdConverter partnerPlayerIdConverter)
+        public PlayerController(IPartnerCustomerFactory partnerCustomerFactory, IPartnerPlayerIdConverter partnerPlayerIdConverter, ISentryClient sentryClient)
         {
             this.partnerCustomerFactory = partnerCustomerFactory;
             this.partnerPlayerIdConverter = partnerPlayerIdConverter;
+            this.sentryClient = sentryClient;
         }
 
         [HttpPost]
@@ -62,10 +66,19 @@ namespace L1.WebApi.Controllers
                 return BadRequest();
             }
 
-            var response = await customerService.GetBalance(
+            try
+            {
+
+                var response = await customerService.GetBalance(
                 new PartnerGetBalanceCall(partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId), model.SiteId, model.OperatorToken));
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                sentryClient.CaptureException(ex);
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -80,7 +93,9 @@ namespace L1.WebApi.Controllers
                 return BadRequest();
             }
 
-            var placeBetCall = new PartnerPlaceBetCall(
+            try
+            {
+                var placeBetCall = new PartnerPlaceBetCall(
                 partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
                 model.SiteId,
                 model.GameRoundId,
@@ -98,9 +113,14 @@ namespace L1.WebApi.Controllers
                 model.OperatorId,
                 model.UserId);
 
-            var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
-
-            return Ok(response);
+                var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                sentryClient.CaptureException(ex);
+                return BadRequest();
+            }
         }
 
         [HttpPost]

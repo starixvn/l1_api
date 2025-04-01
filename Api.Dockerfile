@@ -12,6 +12,7 @@ COPY ./L1.WebApi .
 RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
 FROM hub.lumigame.com/base/dotnet/core/aspnet:8.0-alpine-24h1.1 AS base
+ENV ASPNETCORE_HTTP_PORTS=
 
 WORKDIR /app
 RUN adduser app_user --disabled-password

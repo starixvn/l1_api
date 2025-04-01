@@ -5,6 +5,12 @@
         <CodeAnalysisRuleSet>..\.sonarlint\l1-apicsharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
+      <Compile Remove="Extensions\**" />
+      <Content Remove="Extensions\**" />
+      <EmbeddedResource Remove="Extensions\**" />
+      <None Remove="Extensions\**" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
         <PackageReference Include="NATS.Client" Version="1.1.6" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -28,8 +34,5 @@
         <None Update="gitlab-ci-after-script.sh">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Extensions\" />
     </ItemGroup>
 </Project>

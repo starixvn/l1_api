@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
+using L1.Features.AdminApiCommunicators.VoidTicket;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -13,6 +14,7 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Features.SabaPlayCommunicators;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
@@ -110,7 +112,25 @@ namespace L1.Features.OWCommunicators
                 await logService.LogEndGameAsync(OperatorId, response);
             }
 
+            if (response.Result.IsFailed())
+            {
+                await HandleFailedEndGame(call, response);
+            }
+
             return response;
+        }
+
+        private async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response)
+        {
+            var voidTicketRequest = new VoidTicketRequest(
+                playerId: call.PlayerId,
+                operatorId: OperatorId,
+                siteId: call.SiteId,
+                gameRoundId: call.GameRoundId,
+                gameTypeId: call.GameTypeId,
+                reason: response.Result.ErrorMessage);
+            sentryClient.CaptureMessage($"Failed End Game, Error Code: {response.Result.ErrorCode}, Error Message: {response.Result.ErrorMessage} - Error Description: {response.Result.ErrorDescription}");
+            await adminApiSerivce.VoidTicket(voidTicketRequest);
         }
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)

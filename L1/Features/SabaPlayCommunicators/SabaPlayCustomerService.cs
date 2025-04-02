@@ -123,14 +123,12 @@ namespace L1.Features.SabaPlayCommunicators
         private async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response)
         {
             var voidTicketRequest = new VoidTicketRequest(
-            playerId: call.PlayerId,
-            operatorId: appSettings.PartnerIds.SabaPlay,
-            siteId: call.SiteId,
-            gameRoundId: call.GameRoundId,
-            gameTypeId: call.GameTypeId,
-            reason: response.Result.ErrorMessage
-            );
-            sentryClient.CaptureMessage($"Failed End Game, Error Code: {response.Result.ErrorCode}, Error Message: {response.Result.ErrorMessage} - Error Description: {response.Result.ErrorDescription}");
+                playerId: call.PlayerId,
+                operatorId: appSettings.PartnerIds.SabaPlay,
+                siteId: call.SiteId,
+                gameRoundId: call.GameRoundId,
+                gameTypeId: call.GameTypeId,
+                reason: response.Result.ErrorMessage);
             await adminApiSerivce.VoidTicket(voidTicketRequest);
         }
 

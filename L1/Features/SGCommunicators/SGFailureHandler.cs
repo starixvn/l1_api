@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using L1.Features.OWCommunicators;
+using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.Resources;
@@ -17,11 +19,13 @@ namespace L1.Features.SGCommunicators
     {
         private readonly ILogService logService;
         private readonly ISentryClient sentryClient;
+        private readonly IOWMaintenanceService maintenanceService;
 
-        public SGFailureHandler(ILogService logService, ISentryClient sentryClient)
+        public SGFailureHandler(ILogService logService, IOWMaintenanceService maintenanceService, ISentryClient sentryClient)
         {
             this.logService = logService;
             this.sentryClient = sentryClient;
+            this.maintenanceService = maintenanceService;
         }
 
         public async Task Handle<T>(PartnerResponse<T> response, string operatorId) where T : PartnerResult
@@ -32,9 +36,14 @@ namespace L1.Features.SGCommunicators
             sentryClient.CaptureMessage(
                 $"Request to {operatorId} failed at {DateTimeOffset.UtcNow} - {response.Result.ErrorDescription}",
                 SentryLevel.Warning);
+
+            if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)
+            {
+                await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(response.Request.Call), operatorId);
+            }
         }
 
         private static void MapErrorMessage(IPartnerResult result)
             => result.ErrorMessage = PartnerErrors.ResourceManager.GetString(result.ErrorCode.ToString()) ?? PartnerErrors.ResourceManager.GetString(ErrorCodes.InternalError);
     }
-} 
+}

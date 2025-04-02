@@ -12,6 +12,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using NATS.Client;
 using NATS.Client.Internals;
 using NATS.Client.JetStream;
@@ -54,7 +55,14 @@ namespace L1.Shared.Middlewares
             };
 
             ConventionRegistry.Register(nameof(camelIgnoringExtraElementConventions), camelIgnoringExtraElementConventions, t => true);
-            services.AddSingleton<IMongoClient>(sp => new MongoClient(appSettings.MongoDBSettings.ConnectionString));
+            var clientSettings = MongoClientSettings.FromConnectionString(appSettings.MongoDBSettings.ConnectionString);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            //TODO we will use V3 after transforming our query to builder
+            clientSettings.LinqProvider = LinqProvider.V2;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            services.AddSingleton<IMongoClient>(sp => new MongoClient(clientSettings));
 
             var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("L1"));
             BsonSerializer.TryRegisterSerializer(objectSerializer);

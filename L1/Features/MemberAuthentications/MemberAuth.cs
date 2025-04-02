@@ -18,7 +18,7 @@ namespace L1.Features.MemberAuthentications
 
         public string Token { get; set; }
 
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime Time { get; set; }
 
         public string Language { get; set; }

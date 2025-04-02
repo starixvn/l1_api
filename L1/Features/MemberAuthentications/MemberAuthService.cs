@@ -6,9 +6,9 @@ using L1.Features.GameConfigurations;
 using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
+using L1.Shared.Json;
 using L1.Shared.Resources;
 using Sentry;
-using L1.Shared.Json;
 
 namespace L1.Features.MemberAuthentications
 {
@@ -57,7 +57,7 @@ namespace L1.Features.MemberAuthentications
                     return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
                 }
 
-                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTimeOffset.Now)
+                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.UtcNow)
                 {
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }
@@ -90,12 +90,12 @@ namespace L1.Features.MemberAuthentications
 
         private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)
         {
-            var logMessage = 
+            var logMessage =
                 $"Verification failed on {DateTimeOffset.UtcNow}. " +
                 $"Reason: {message}. " +
                 $"Request: {jsonService.Serialize(verificationParams)}. " +
                 $"Member Auth: {jsonService.Serialize(memberAuth)}";
-            
+
             sentryClient.CaptureMessage(logMessage, SentryLevel.Warning);
         }
 
@@ -103,11 +103,11 @@ namespace L1.Features.MemberAuthentications
         {
             var uri = new Uri(domain);
             var parts = uri.Host.Split('.');
-            if(parts.Length <= 2)
+            if (parts.Length <= 2)
             {
                 return uri.Host;
             }
-            return string.Join('.',parts.Skip(1));
+            return string.Join('.', parts.Skip(1));
         }
 
         private string GetDirectClientUrl(string redirectUrl, int gameId)
@@ -135,7 +135,7 @@ namespace L1.Features.MemberAuthentications
                 AppTypes.MobileDirect => partner.MobileDirectUrl,
                 _ => partner.ClubVersionUrl,
             };
-            
+
             return !string.IsNullOrEmpty(clientUrl) ? new Uri(clientUrl) : null;
         }
 
@@ -153,7 +153,7 @@ namespace L1.Features.MemberAuthentications
 
         private async Task<GameConfigurationResponse> GetGameConfigurationAsync(int? gameId)
         {
-            if(gameId > 0)
+            if (gameId > 0)
             {
                 return await configurationApiService.GetDetailGameConfiguration(gameId.Value);
             }
@@ -168,13 +168,15 @@ namespace L1.Features.MemberAuthentications
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
+
+
             var gameConfiguration = await GetGameConfigurationAsync(updateParams.GameTypeId);
-            var isOpenDirectly = memberAuth.AppType == AppTypes.SabaClub 
-                && gameConfiguration?.IsMicrosite == true 
+            var isOpenDirectly = memberAuth.AppType == AppTypes.SabaClub
+                && gameConfiguration?.IsMicrosite == true
                 && gameConfiguration?.IsOpenDirectly == true;
             var gameClientUrl = await GetClientUrl(memberAuth);
             var redirectUrl = GetRedirectedUrl(gameClientUrl, updateParams.GameTypeId, isOpenDirectly);
-            
+
             if (string.IsNullOrEmpty(redirectUrl))
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);

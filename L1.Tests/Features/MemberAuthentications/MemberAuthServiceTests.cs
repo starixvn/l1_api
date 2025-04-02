@@ -55,7 +55,7 @@ namespace L1.Tests.Features.MemberAuthentications
             memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(new MemberAuth
             {
                 Token = token,
-                Time = DateTime.Now
+                Time = DateTime.UtcNow
             });
 
             // Act
@@ -75,7 +75,7 @@ namespace L1.Tests.Features.MemberAuthentications
             memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(new MemberAuth
             {
                 Token = token,
-                Time = DateTime.Now,
+                Time = DateTime.UtcNow,
                 BrowserUserAgent = "BrowserUserAgent"
             });
 
@@ -95,7 +95,7 @@ namespace L1.Tests.Features.MemberAuthentications
             memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(new MemberAuth
             {
                 Token = token,
-                Time = DateTime.Now.AddSeconds(-70),
+                Time = DateTime.UtcNow.AddSeconds(-70),
                 BrowserUserAgent = verificationParams.BrowserUserAgent
             });
             appSettings.TokenExpiredSeconds.Returns(60);
@@ -115,7 +115,7 @@ namespace L1.Tests.Features.MemberAuthentications
             var memberAuth = new MemberAuth
             {
                 Token = "token",
-                Time = DateTime.Now,
+                Time = DateTime.UtcNow,
                 BrowserUserAgent = verificationParams.BrowserUserAgent,
                 PlayerId = "1",
                 PlayerName = "name",
@@ -145,7 +145,7 @@ namespace L1.Tests.Features.MemberAuthentications
             var memberAuth = new MemberAuth
             {
                 Token = "token",
-                Time = DateTime.Now,
+                Time = DateTime.UtcNow,
                 PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
@@ -185,7 +185,7 @@ namespace L1.Tests.Features.MemberAuthentications
             var memberAuth = new MemberAuth
             {
                 Token = updateMemberAuthParams.Token,
-                Time = DateTime.Now,
+                Time = DateTime.UtcNow,
                 PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
@@ -223,7 +223,7 @@ namespace L1.Tests.Features.MemberAuthentications
             var memberAuth = new MemberAuth
             {
                 Token = updateMemberAuthParams.Token,
-                Time = DateTime.Now,
+                Time = DateTime.UtcNow,
                 PlayerId = "1",
                 PlayerName = "name",
                 SiteId = "3332",
@@ -252,6 +252,52 @@ namespace L1.Tests.Features.MemberAuthentications
             Assert.Contains(updateMemberAuthParams.Token, result.RedirectUrl);
             Assert.Contains(updateMemberAuthParams.Language, result.RedirectUrl);
             Assert.Contains($"&gameId={updateMemberAuthParams.GameTypeId}", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
+        public async Task VerifyToken_TokenNotExpired_ReturnsSuccess(VerificationParams verificationParams)
+        {
+            // Arrange
+            var token = "token";
+            var currentTime = DateTime.UtcNow;
+            memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(new MemberAuth
+            {
+                Token = token,
+                Time = currentTime,
+                BrowserUserAgent = verificationParams.BrowserUserAgent,
+                PlayerId = "1"
+            });
+            appSettings.TokenExpiredSeconds.Returns(60);
+
+            // Act
+            var result = await memberAuthService.VerifyToken(verificationParams);
+
+            // Assert
+            Assert.IsType<VerificationResult>(result);
+            Assert.NotEqual(VerificationResult.TokenExpiredCode, result.Code);
+        }
+
+        [Theory, AutoData]
+        public async Task VerifyToken_TokenJustExpired_ReturnsError(VerificationParams verificationParams)
+        {
+            // Arrange
+            var token = "token";
+            var expirationSeconds = 60;
+            var currentTime = DateTime.UtcNow;
+            memberAuthDataAccess.GetByToken(verificationParams.Token).Returns(new MemberAuth
+            {
+                Token = token,
+                Time = currentTime.AddSeconds(-expirationSeconds),
+                BrowserUserAgent = verificationParams.BrowserUserAgent
+            });
+            appSettings.TokenExpiredSeconds.Returns(expirationSeconds);
+
+            // Act
+            var result = await memberAuthService.VerifyToken(verificationParams);
+
+            // Assert
+            Assert.IsType<VerificationResult>(result);
+            Assert.Equal(VerificationResult.TokenExpiredCode, result.Code);
         }
     }
 }

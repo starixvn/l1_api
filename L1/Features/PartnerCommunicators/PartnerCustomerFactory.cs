@@ -3,8 +3,6 @@ using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
 using L1.Shared.Configurations;
-using Sentry;
-using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +21,7 @@ namespace L1.Features.PartnerCommunicators
         public PartnerCustomerFactory(IServiceProvider serviceProvider, IAppSettings appSettings)
         {
             this.serviceProvider = serviceProvider;
-            services = new() { };
+            services = [];
 
             AddService(appSettings.PartnerIds.ONEworksCash, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.OW, typeof(OWCustomerService));

@@ -19,7 +19,6 @@ namespace L1.Features.PFFCommunicators.CheckMaintenance
     {
         private readonly PFFServiceSettings PFFServiceSettings;
         private readonly IAppSettings appSettings;
-        private readonly IJsonService jsonService;
 
         public PFFMaintenanceService(
             HttpClient httpClient,
@@ -32,7 +31,6 @@ namespace L1.Features.PFFCommunicators.CheckMaintenance
         {
             this.PFFServiceSettings = PFFServiceSettings;
             this.appSettings = appSettings;
-            this.jsonService = jsonService;
         }
 
         public Task ObserveMaintenanceSchedule(PFFRequest request)

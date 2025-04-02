@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace L1.Features.PartnerCommunicators.PlaceBet
 {

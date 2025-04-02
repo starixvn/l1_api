@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;

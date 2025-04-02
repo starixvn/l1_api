@@ -13,8 +13,6 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
-using L1.Features.PFFCommunicators;
-using L1.Features.SboCommunicators;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;

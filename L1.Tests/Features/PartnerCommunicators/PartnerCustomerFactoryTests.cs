@@ -14,20 +14,18 @@ namespace L1.Tests.Features.PartnerCommunicators
 
         private readonly PartnerCustomerFactory partnerCustomerFactory;
         private readonly IAppSettings appSettings;
-        private readonly ISentryClient sentryClient;
 
         public PartnerCustomerFactoryTests()
         {
             serviceProvider = Substitute.For<IServiceProvider>();
             appSettings = Substitute.For<IAppSettings>();
-            sentryClient = Substitute.For<ISentryClient>();
             appSettings.PartnerIds = new PartnerIds
             {
                 OW = "OW",
                 SBO = "SBO"
             };
 
-            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings, sentryClient);
+            partnerCustomerFactory = new PartnerCustomerFactory(serviceProvider, appSettings);
         }
 
         [InlineData("")]

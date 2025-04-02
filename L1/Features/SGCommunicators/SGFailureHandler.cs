@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using L1.Features.OWCommunicators;
-using L1.Features.OWCommunicators.CheckMaintenance;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.Resources;
+using L1.Features.SGCommunicators.CheckMaintenance;
 using L1.Shared.Constants;
 using Sentry;
 
@@ -19,9 +18,12 @@ namespace L1.Features.SGCommunicators
     {
         private readonly ILogService logService;
         private readonly ISentryClient sentryClient;
-        private readonly IOWMaintenanceService maintenanceService;
+        private readonly ISGMaintenanceService maintenanceService;
 
-        public SGFailureHandler(ILogService logService, IOWMaintenanceService maintenanceService, ISentryClient sentryClient)
+        public SGFailureHandler(
+            ILogService logService, 
+            ISGMaintenanceService maintenanceService, 
+            ISentryClient sentryClient)
         {
             this.logService = logService;
             this.sentryClient = sentryClient;
@@ -39,7 +41,7 @@ namespace L1.Features.SGCommunicators
 
             if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)
             {
-                await maintenanceService.ObserveMaintenanceSchedule(new OWRequest(response.Request.Call), operatorId);
+                await maintenanceService.ObserveMaintenanceSchedule(new SGRequest(response.Request.Call), operatorId);
             }
         }
 

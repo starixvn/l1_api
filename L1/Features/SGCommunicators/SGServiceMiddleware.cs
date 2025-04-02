@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using L1.Features.PartnerCommunicators;
+using L1.Features.SGCommunicators.CheckMaintenance;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace L1.Features.SGCommunicators
@@ -16,6 +17,8 @@ namespace L1.Features.SGCommunicators
 
             services.AddScoped<SGCustomerService>()
                    .AddScoped<IPartnerCustomerServices, SGCustomerService>(s => s.GetService<SGCustomerService>());
+
+            services.AddHttpClient<ISGMaintenanceService, SGMaintenanceService>();
 
             var sgHttpClient = services.AddHttpClient<ISGService, SGService>(httpClient =>
             {

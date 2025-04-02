@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
 using L1.Shared.Helpers;
@@ -17,12 +18,14 @@ namespace L1.Features.SabaPlayCommunicators
     public class SabaPlayService : ISabaPlayService
     {
         private readonly HttpClient httpClient;
+        private readonly IAdminApiService adminApiService;
         private readonly ISabaPlayFailureHandler failureHandler;
         private readonly string secretKey;
 
-        public SabaPlayService(HttpClient httpClient, ISabaPlayFailureHandler failureHandler, SabaPlayServiceSettings owServiceSettings)
+        public SabaPlayService(HttpClient httpClient, ISabaPlayFailureHandler failureHandler, IAdminApiService adminApiService, SabaPlayServiceSettings owServiceSettings)
         {
             this.httpClient = httpClient;
+            this.adminApiService = adminApiService;
             this.failureHandler = failureHandler;
             secretKey = owServiceSettings.SecretKey;
         }
@@ -49,6 +52,7 @@ namespace L1.Features.SabaPlayCommunicators
             else
             {
                 finalResponse = await CreateNetworkErrorResponse<T>(new SabaPlayCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
+
             }
 
             finalResponse.Request = request;

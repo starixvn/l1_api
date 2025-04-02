@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using IdentityModel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
+using L1.Features.AdminApiCommunicators.VoidTicket;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -110,9 +111,27 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(appSettings.PartnerIds.SabaPlay, response);
+            } 
+            if (response.Result.IsFailed())
+            {
+                await HandleFailedEndGame(call, response);
             }
 
             return response;
+        }
+
+        private async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response)
+        {
+            var voidTicketRequest = new VoidTicketRequest(
+            playerId: call.PlayerId,
+            operatorId: appSettings.PartnerIds.SabaPlay,
+            siteId: call.SiteId,
+            gameRoundId: call.GameRoundId,
+            gameTypeId: call.GameTypeId,
+            reason: response.Result.ErrorMessage
+            );
+            sentryClient.CaptureMessage($"Failed End Game, Error Code: {response.Result.ErrorCode}, Error Message: {response.Result.ErrorMessage} - Error Description: {response.Result.ErrorDescription}");
+            await adminApiSerivce.VoidTicket(voidTicketRequest);
         }
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
@@ -122,7 +141,7 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogVoidGameAsync(appSettings.PartnerIds.SabaPlay, response);
-            }
+            } 
 
             return response;
         }

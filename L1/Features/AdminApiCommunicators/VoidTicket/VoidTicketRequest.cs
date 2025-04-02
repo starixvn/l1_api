@@ -5,7 +5,7 @@ namespace L1.Features.AdminApiCommunicators.VoidTicket
 {
     public class VoidTicketRequest : AdminApiRequest
     {
-        public VoidTicketRequest(string playerId, string operatorId, string siteId, long gameRoundId, int gameTypeId, string reason, bool freeBet, bool callApi = true)
+        public VoidTicketRequest(string playerId, string operatorId, string siteId, long gameRoundId, int gameTypeId, string reason, bool freeBet = false, bool callApi = true)
         {
             PlayerId = StringFormatExtensions.FormatPlayerId(operatorId, siteId, playerId);
             OperatorId = operatorId;

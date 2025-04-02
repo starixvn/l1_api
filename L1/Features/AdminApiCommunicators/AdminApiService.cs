@@ -16,6 +16,8 @@ namespace L1.Features.AdminApiCommunicators
         Task UnderMaintenance(MaintenanceRequest request);
 
         Task NotifyHighStake(NotifyHighStakeRequest request);
+
+        Task VoidTicket(VoidTicketRequest request);
     }
 
     public class AdminApiService : IAdminApiService

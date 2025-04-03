@@ -99,7 +99,7 @@ namespace L1.Features.MemberAuthentications
             sentryClient.CaptureMessage(logMessage, SentryLevel.Warning);
         }
 
-        private string GetRootDomain(string domain)
+        private static string GetRootDomain(string domain)
         {
             var uri = new Uri(domain);
             var parts = uri.Host.Split('.');
@@ -110,11 +110,11 @@ namespace L1.Features.MemberAuthentications
             return string.Join('.', parts.Skip(1));
         }
 
-        private string GetDirectClientUrl(string redirectUrl, int gameId)
+        private Uri GetDirectClientUrl(string redirectUrl, int gameId)
         {
             var url = appSettings.MicrositeClientPatternDomain.Replace("{host}", GetRootDomain(redirectUrl));
             var uri = new Uri(url);
-            return new Uri(uri, $"{uri.LocalPath.TrimEnd('/')}/site-{gameId}/").ToString();
+            return new Uri(uri, $"{uri.LocalPath.TrimEnd('/')}/site-{gameId}/");
         }
 
         private async Task<Uri> GetClientUrl(MemberAuth memberAuth)
@@ -139,7 +139,7 @@ namespace L1.Features.MemberAuthentications
             return !string.IsNullOrEmpty(clientUrl) ? new Uri(clientUrl) : null;
         }
 
-        private string GetRedirectedUrl(Uri clientUrl, int? gameId, bool isOpenDirectly)
+        private Uri GetRedirectedUrl(Uri clientUrl, int? gameId, bool isOpenDirectly)
         {
             var gameClientUrl = clientUrl?.ToString();
 
@@ -148,7 +148,7 @@ namespace L1.Features.MemberAuthentications
                 return GetDirectClientUrl(gameClientUrl.TrimEnd('/'), gameId.Value);
             }
 
-            return gameClientUrl?.TrimEnd('/');
+            return clientUrl;
         }
 
         private async Task<GameConfigurationResponse> GetGameConfigurationAsync(int? gameId)
@@ -177,7 +177,7 @@ namespace L1.Features.MemberAuthentications
             var gameClientUrl = await GetClientUrl(memberAuth);
             var redirectUrl = GetRedirectedUrl(gameClientUrl, updateParams.GameTypeId, isOpenDirectly);
 
-            if (string.IsNullOrEmpty(redirectUrl))
+            if (redirectUrl == null)
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.GameServerNotFoundCode);
             }
@@ -192,7 +192,7 @@ namespace L1.Features.MemberAuthentications
             };
 
             return CreateSSOResult(
-                redirectUrl,
+                redirectUrl.ToString(),
                 memberAuth.Token,
                 memberAuth.Language,
                 optionalUrlParams);

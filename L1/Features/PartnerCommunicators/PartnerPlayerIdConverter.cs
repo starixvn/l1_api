@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +22,8 @@ namespace L1.Features.PartnerCommunicators
             { "ONEworks_VG", typeof(string) },
             { "ONEworksSeal888", typeof(string) },
             { "SabaPlay", typeof(string) },
+            { "ONEworksCash", typeof(string) },
+            { "ONEworksCredit", typeof(string) },
         };
 
         public object ConvertPlayerId(string operatorId, string playerId)

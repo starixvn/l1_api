@@ -1,6 +1,5 @@
 ﻿using System;
 using Newtonsoft.Json;
-using System.Reflection;
 
 namespace L1.Features.PartnerCommunicators
 {
@@ -8,7 +7,7 @@ namespace L1.Features.PartnerCommunicators
     {
         public override bool CanConvert(Type objectType)
         {
-            return true; 
+            return true;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

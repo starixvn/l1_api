@@ -21,7 +21,6 @@ namespace L1.Features.PartnerCommunicators
         private readonly int publishTimeoutMs;
         private readonly ISentryClient sentryClient;
         private readonly IJsonService jsonService;
-        private readonly StreamSettings streamSettings;
 
         public NatsService(
             IConnection connection,
@@ -35,12 +34,14 @@ namespace L1.Features.PartnerCommunicators
             this.publishTimeoutMs = appSettings.StreamSettings.PublishTimeoutMs;
             this.sentryClient = sentryClient;
             this.jsonService = jsonService;
-            this.streamSettings = appSettings.StreamSettings;
         }
 
         public async Task PublishAsync(string subject, object message)
         {
-            if (!enable) return;
+            if (!enable)
+            {
+                return;
+            }
 
             var formattedSubject = SubjectFormatter.FormatSubject(subjectPrefix, subject);
             var jsonMessage = jsonService.Serialize(message);

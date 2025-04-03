@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,22 +8,22 @@ namespace L1.Tests._Shared
 {
     public class MockHttpMessageHandler : HttpMessageHandler
     {
-        private const string defaultMediaType = "application/json";
-        private readonly HttpStatusCode statusCode;
-        private readonly string content;
-
-        public MockHttpMessageHandler(HttpStatusCode statusCode, string content)
-        {
-            this.statusCode = statusCode;
-            this.content = content;
-        }
+        public Uri RequestUri { get; private set; }
+        public HttpContent RequestContent { get; private set; }
+        public HttpStatusCode ResponseStatusCode { get; set; } = HttpStatusCode.OK;
+        public string ResponseContent { get; set; } = "{}";
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = new HttpResponseMessage(statusCode)
+            RequestUri = request.RequestUri;
+            RequestContent = request.Content;
+
+            var response = new HttpResponseMessage
             {
-                Content = new StringContent(content, Encoding.UTF8, defaultMediaType)
+                StatusCode = ResponseStatusCode,
+                Content = new StringContent(ResponseContent)
             };
+            response.Headers.Add("X-Requested-Uri", RequestUri.AbsolutePath.TrimStart('/'));
 
             return Task.FromResult(response);
         }

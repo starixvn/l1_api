@@ -9,15 +9,15 @@ namespace L1.Tests._Shared
     {
         public static HttpClient Create(HttpStatusCode statusCode, string content)
         {
-            var httpClientFactory = Substitute.For<IHttpClientFactory>();
-            var httpClient = new HttpClient(new MockHttpMessageHandler(statusCode, content))
+            var handler = new MockHttpMessageHandler
+            {
+                ResponseStatusCode = statusCode,
+                ResponseContent = content
+            };
+            return new HttpClient(handler)
             {
                 BaseAddress = new Uri("https://localhost")
             };
-
-            httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
-
-            return httpClient;
         }
 
         public static HttpClient CreateErrorClient()

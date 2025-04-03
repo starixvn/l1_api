@@ -33,6 +33,7 @@ namespace L1.Features.SabaPlayCommunicators
         private readonly ISentryClient sentryClient;
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
+        private readonly IPartnerEndGameHandler partnerEndGameHandler;
 
         public SabaPlayCustomerService(
             ISabaPlayService SabaPlayService,
@@ -40,7 +41,8 @@ namespace L1.Features.SabaPlayCommunicators
             IAdminApiService adminApiSerivce,
             SabaPlayEndPoints endpoints,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
+            IAppSettings appSettings,
+            IPartnerEndGameHandler partnerEndGameHandler)
         {
             this.sabaPlayService = SabaPlayService;
             this.logService = logService;
@@ -48,6 +50,7 @@ namespace L1.Features.SabaPlayCommunicators
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
             this.adminApiSerivce = adminApiSerivce;
+            this.partnerEndGameHandler = partnerEndGameHandler;
         }
 
         public string OperatorId { get; set; }
@@ -107,29 +110,17 @@ namespace L1.Features.SabaPlayCommunicators
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
             var response = await sabaPlayService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var operatorId = appSettings.PartnerIds.SabaPlay;
 
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(appSettings.PartnerIds.SabaPlay, response);
-            } 
-            if (response.Result.IsFailed())
+            } else
             {
-                await HandleFailedEndGame(call, response);
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, operatorId);
             }
 
             return response;
-        }
-
-        private async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response)
-        {
-            var voidTicketRequest = new VoidTicketRequest(
-                playerId: call.PlayerId,
-                operatorId: appSettings.PartnerIds.SabaPlay,
-                siteId: call.SiteId,
-                gameRoundId: call.GameRoundId,
-                gameTypeId: call.GameTypeId,
-                reason: response.Result.ErrorMessage);
-            await adminApiSerivce.VoidTicket(voidTicketRequest);
         }
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)

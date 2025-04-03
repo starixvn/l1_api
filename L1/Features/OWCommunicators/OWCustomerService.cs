@@ -31,6 +31,7 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
         private readonly ISentryClient sentryClient;
+        IPartnerEndGameHandler partnerEndGameHandler;
 
         public OWCustomerService(
             IOWService oWService,
@@ -38,7 +39,8 @@ namespace L1.Features.OWCommunicators
             IAppSettings appSettings,
             IAdminApiService adminApiSerivce,
             OWEndPoints endpoints,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            IPartnerEndGameHandler partnerEndGameHandler)
         {
             this.oWService = oWService;
             this.logService = logService;
@@ -46,6 +48,7 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
             this.adminApiSerivce = adminApiSerivce;
             this.sentryClient = sentryClient;
+            this.partnerEndGameHandler = partnerEndGameHandler;
         }
 
         public string OperatorId { get; set; }
@@ -111,26 +114,12 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogEndGameAsync(OperatorId, response);
             }
-
-            if (response.Result.IsFailed())
-            {
-                await HandleFailedEndGame(call, response);
+            else 
+            { 
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, OperatorId);
             }
 
             return response;
-        }
-
-        private async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response)
-        {
-            var voidTicketRequest = new VoidTicketRequest(
-                playerId: call.PlayerId,
-                operatorId: OperatorId,
-                siteId: call.SiteId,
-                gameRoundId: call.GameRoundId,
-                gameTypeId: call.GameTypeId,
-                reason: response.Result.ErrorMessage);
-            sentryClient.CaptureMessage($"Failed End Game, Error Code: {response.Result.ErrorCode}, Error Message: {response.Result.ErrorMessage} - Error Description: {response.Result.ErrorDescription}");
-            await adminApiSerivce.VoidTicket(voidTicketRequest);
         }
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)

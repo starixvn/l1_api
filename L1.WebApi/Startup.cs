@@ -4,6 +4,7 @@ using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
@@ -41,6 +42,7 @@ namespace L1.WebApi
             services.AddMemberAuthentications();
             services.AddOWServices(appSettings.OWServiceSettings);
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddPartnerCommunicatorService();
 
             if (appSettings.SboServiceSettings != null)
             {

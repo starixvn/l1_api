@@ -24,6 +24,7 @@ namespace L1.Tests.Features.SboCommunicators
         private readonly ISboService sboService = Substitute.For<ISboService>();
         private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
         private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
+        private readonly IPartnerEndGameHandler partnerEndGameHandler = Substitute.For<IPartnerEndGameHandler>();
 
 
         private readonly SboCustomerService service;
@@ -35,7 +36,7 @@ namespace L1.Tests.Features.SboCommunicators
                 OW = "OW",
                 SBO = "SBO"
             };
-            service = new SboCustomerService(sboService, logService, endpoints, sentryClient, appSettings);
+            service = new SboCustomerService(sboService, logService, endpoints, sentryClient, appSettings, partnerEndGameHandler);
         }
 
         [Theory, AutoData]

@@ -23,6 +23,7 @@ namespace L1.Tests.Features.PFFCommunicators
         private readonly IPFFService PFFService = Substitute.For<IPFFService>();
         private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
         private readonly IAppSettings appSettings = Substitute.For<IAppSettings>();
+        private readonly IPartnerEndGameHandler partnerEndGameHandler = Substitute.For<IPartnerEndGameHandler>();
 
         private readonly PFFCustomerService service;
 
@@ -34,7 +35,7 @@ namespace L1.Tests.Features.PFFCommunicators
                 SBO = "SBO",
                 PFF = "PFF"
             };
-            service = new PFFCustomerService(PFFService, logService, endpoints, sentryClient, appSettings);
+            service = new PFFCustomerService(PFFService, logService, endpoints, sentryClient, appSettings, partnerEndGameHandler);
         }
 
         [Theory, AutoData]

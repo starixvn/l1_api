@@ -1,4 +1,5 @@
-﻿using L1.Features.OWCommunicators;
+﻿using L1.Features.HotdogCommunicators;
+using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
@@ -35,7 +36,7 @@ namespace L1.Features.PartnerCommunicators
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
             AddService(appSettings.PartnerIds.ONEworksSeal888, typeof(OWCustomerService));
             AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
-            AddService(appSettings.PartnerIds.SabaPlay_HD, typeof(PFFCustomerService));
+            AddService(appSettings.PartnerIds.SabaPlay_HD, typeof(HotdogCustomerService));
         }
 
         private void AddService(string key, Type serviceType)

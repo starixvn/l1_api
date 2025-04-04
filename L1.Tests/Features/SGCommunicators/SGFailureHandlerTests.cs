@@ -47,7 +47,7 @@ namespace L1.Tests.Features.SGCommunicators
         {
             // Arrange
             var response = new PartnerResponse<PartnerResult> { Result = result };
-            var expectedMessage = $"SG: {result.ErrorDescription}";
+            var expectedMessage = $"Request to {operatorId} failed at {DateTimeOffset.UtcNow} - {result.ErrorDescription}";
 
             // Act
             await failureHandler.Handle(response, operatorId);

@@ -18,7 +18,6 @@ namespace L1.Features.SboCommunicators.CheckMaintenance
     {
         private readonly SboServiceSettings sboServiceSettings;
         private readonly IAppSettings appSettings;
-        private readonly IJsonService jsonService;
 
         public SboMaintenanceService(
             HttpClient httpClient,
@@ -31,7 +30,6 @@ namespace L1.Features.SboCommunicators.CheckMaintenance
         {
             this.sboServiceSettings = sboServiceSettings;
             this.appSettings = appSettings;
-            this.jsonService = jsonService;
         }
 
         public Task ObserveMaintenanceSchedule(SboRequest request)

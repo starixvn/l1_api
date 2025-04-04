@@ -129,7 +129,7 @@ namespace L1.WebApi
             Sentry.SentrySdk.CaptureMessage($"Game API Started at {DateTimeOffset.Now}");
         }
 
-        private void ConfigureScheduler(IApplicationBuilder app)
+        private static void ConfigureScheduler(IApplicationBuilder app)
         {
             var serviceProvider = app.ApplicationServices;
             var appSettings = serviceProvider.GetService<IAppSettings>();

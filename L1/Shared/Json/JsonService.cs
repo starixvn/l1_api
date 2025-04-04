@@ -10,11 +10,6 @@ namespace L1.Shared.Json
 
     public class JsonService : IJsonService
     {
-
-        public JsonService()
-        {
-        }
-
         public string Serialize<T>(T value)
         {
             return JsonConvert.SerializeObject(value);

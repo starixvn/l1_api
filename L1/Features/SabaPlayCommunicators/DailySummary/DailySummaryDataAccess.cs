@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
@@ -45,11 +44,10 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
                         filterBuilder.Eq(x => x.CurrencyIso, betData.CurrencyIso));
 
                     writes.Add(new UpdateOneModel<OperatorDailySummary>(filterDefinition, updateDefinition) { IsUpsert = true });
-
                 }
             }
 
-            if(writes.Any())
+            if (writes.Count != 0)
             {
                 await summaryCollection.BulkWriteAsync(writes, new() { IsOrdered = false });
             }

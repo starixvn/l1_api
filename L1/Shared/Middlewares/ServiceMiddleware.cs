@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 using L1.Features.BackendAuthentications;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Log;
@@ -23,7 +22,6 @@ namespace L1.Shared.Middlewares
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             services.AddSingleton<IJsonService, JsonService>();
             services.AddMemoryCache(options =>
             {

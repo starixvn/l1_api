@@ -32,7 +32,7 @@ namespace L1.Features.SabaPlayCommunicators.DailySummary
             var requestBody = JsonConvert.SerializeObject(call);
             var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
 
-            var finalResponse = new DailySummaryResponse() { TimeStamp = DateTimeOffset.UtcNow };
+            var finalResponse = new DailySummaryResponse { TimeStamp = DateTimeOffset.UtcNow };
 
             var httpResponse = await httpClient.PostAsync(new Uri(settings.Endpoints.DailySummary, UriKind.Relative), content);
 

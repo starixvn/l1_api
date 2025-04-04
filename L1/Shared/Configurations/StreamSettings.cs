@@ -25,15 +25,7 @@ namespace L1.Shared.Configurations
         public int DuplicateWindowMinutes { get; set; } = 2;
         public int MaxMessages { get; set; } = 100_000;
         public int Replicas { get; set; } = 1;
-
-        // Move parsing logic into the settings class
-        public StorageType GetStorageType() =>
-            StorageType?.ToLower() switch
-            {
-                "file" => NATS.Client.JetStream.StorageType.File,
-                _ => NATS.Client.JetStream.StorageType.Memory
-            };
-
+        
         public RetentionPolicy GetRetentionPolicy() =>
             RetentionPolicy?.ToLower() switch
             {

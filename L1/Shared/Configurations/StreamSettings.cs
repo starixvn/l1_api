@@ -1,4 +1,5 @@
 using NATS.Client.JetStream;
+using System;
 
 namespace L1.Shared.Configurations
 {
@@ -35,16 +36,16 @@ namespace L1.Shared.Configurations
         public int Replicas { get; set; } = 1;
         
         public RetentionPolicy GetRetentionPolicy() =>
-            RetentionPolicy?.ToLower() switch
+            RetentionPolicy switch
             {
-                var policy when policy == RetentionPolicyInterest.ToLower() => NATS.Client.JetStream.RetentionPolicy.Interest,
-                var policy when policy == RetentionPolicyLimits.ToLower() => NATS.Client.JetStream.RetentionPolicy.Limits,
+                var policy when String.Equals(policy, RetentionPolicyInterest, StringComparison.OrdinalIgnoreCase) => NATS.Client.JetStream.RetentionPolicy.Interest,
+                var policy when String.Equals(policy, RetentionPolicyLimits, StringComparison.OrdinalIgnoreCase) => NATS.Client.JetStream.RetentionPolicy.Limits,
                 _ => NATS.Client.JetStream.RetentionPolicy.WorkQueue
             };
 
         public DiscardPolicy GetDiscardPolicy()
         {
-            return DiscardPolicy?.ToLower() == DiscardPolicyNew.ToLower()
+            return String.Equals(DiscardPolicy, DiscardPolicyNew, StringComparison.OrdinalIgnoreCase)
                 ? NATS.Client.JetStream.DiscardPolicy.New
                 : NATS.Client.JetStream.DiscardPolicy.Old;
         }

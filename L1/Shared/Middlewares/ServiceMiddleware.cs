@@ -20,6 +20,8 @@ namespace L1.Shared.Middlewares
 {
     public static class ServiceMiddleware
     {
+        private const int JetStreamErrorStreamAlreadyExists = 10058;
+
         public static void AddServices(this IServiceCollection services)
         {
             services.AddSingleton<IJsonService, JsonService>();
@@ -93,7 +95,7 @@ namespace L1.Shared.Middlewares
 
                 jsm.AddStream(streamConfig);
             }
-            catch (NATSJetStreamException ex) when (ex.ErrorCode == 10058)
+            catch (NATSJetStreamException ex) when (ex.ErrorCode == JetStreamErrorStreamAlreadyExists)
             {
                 sentryClient.CaptureMessage($"Stream {appSettings.StreamSettings.Prefix} already exists");
             }

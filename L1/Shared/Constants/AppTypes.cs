@@ -17,7 +17,7 @@ namespace L1.Shared.Constants
 
         public static bool IsValid(byte appType)
         {
-            return appTypes.Any(x => x == appType);
+            return appTypes.Contains(appType);
         }
     }
 }

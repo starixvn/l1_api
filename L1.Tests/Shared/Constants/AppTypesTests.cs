@@ -1,18 +1,15 @@
 ﻿using Xunit;
+using L1.Shared.Constants;
 
-namespace L1.Shared.Constants
+namespace L1.Tests.Shared.Constants
 {
     public class AppTypesTests
     {
-        public const byte SabaClub = 1;
-        public const byte SabaMobi = 2;
-        public const byte MiniSabaClub = 3;
-
         [Fact]
         public void IsValid_SabaClub_ReturnTrue()
         {
             // Act
-            var actualValue = AppTypes.IsValid(SabaClub);
+            var actualValue = AppTypes.IsValid(AppTypes.SabaClub);
 
             // Assert
             Assert.True(actualValue);
@@ -22,7 +19,7 @@ namespace L1.Shared.Constants
         public void IsValid_SabaMobi_ReturnTrue()
         {
             // Act
-            var actualValue = AppTypes.IsValid(SabaMobi);
+            var actualValue = AppTypes.IsValid(AppTypes.SabaMobi);
 
             // Assert
             Assert.True(actualValue);
@@ -32,18 +29,58 @@ namespace L1.Shared.Constants
         public void IsValid_MiniSabaClub_ReturnTrue()
         {
             // Act
-            var actualValue = AppTypes.IsValid(MiniSabaClub);
+            var actualValue = AppTypes.IsValid(AppTypes.MiniSabaClub);
 
             // Assert
             Assert.True(actualValue);
         }
 
         [Fact]
-        public void IsValid_NotValidAppType_ReturnFalse()
+        public void IsValid_MegaKeno_ReturnTrue()
         {
-            // Arrange
-            byte appType = 0;
+            // Act
+            var actualValue = AppTypes.IsValid(AppTypes.MegaKeno);
 
+            // Assert
+            Assert.True(actualValue);
+        }
+
+        [Fact]
+        public void IsValid_SabaApp_ReturnTrue()
+        {
+            // Act
+            var actualValue = AppTypes.IsValid(AppTypes.SabaApp);
+
+            // Assert
+            Assert.True(actualValue);
+        }
+
+        [Fact]
+        public void IsValid_LivePage_ReturnTrue()
+        {
+            // Act
+            var actualValue = AppTypes.IsValid(AppTypes.LivePage);
+
+            // Assert
+            Assert.True(actualValue);
+        }
+
+        [Fact]
+        public void IsValid_MobileDirect_ReturnTrue()
+        {
+            // Act
+            var actualValue = AppTypes.IsValid(AppTypes.MobileDirect);
+
+            // Assert
+            Assert.True(actualValue);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(8)]
+        [InlineData(255)]
+        public void IsValid_NotValidAppType_ReturnFalse(byte appType)
+        {
             // Act
             var actualValue = AppTypes.IsValid(appType);
 

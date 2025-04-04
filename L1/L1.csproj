@@ -11,7 +11,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Coravel" Version="4.2.2" />
-        <PackageReference Include="IdentityServer4" Version="4.1.2" />
+        <PackageReference Include="IdentityServer4" Version="3.1.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
         <PackageReference Include="NATS.Client" Version="1.1.6" />

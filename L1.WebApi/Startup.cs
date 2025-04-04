@@ -2,6 +2,7 @@ using System;
 using Coravel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
+using L1.Features.HotdogCommunicators;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
@@ -57,6 +58,11 @@ namespace L1.WebApi
             if (appSettings.SabaPlayServiceSettings != null)
             {
                 services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings);
+            }
+
+            if (appSettings.HotdogServiceSettings != null)
+            {
+                services.AddHotdogServices(appSettings.HotdogServiceSettings);
             }
 
             if (appSettings.SabaPlayDailySummaryServiceSettings != null)

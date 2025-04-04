@@ -4,6 +4,14 @@ namespace L1.Shared.Configurations
 {
     public class StreamSettings
     {
+        // Constants for policy values
+        public const string StorageTypeMemory = "Memory";
+        public const string RetentionPolicyWorkQueue = "WorkQueue";
+        public const string RetentionPolicyInterest = "Interest";
+        public const string RetentionPolicyLimits = "Limits";
+        public const string DiscardPolicyOld = "Old";
+        public const string DiscardPolicyNew = "New";
+
         public string Host { get; set; }
 
         public string StreamName { get; set; }
@@ -17,9 +25,9 @@ namespace L1.Shared.Configurations
         public int PublishTimeoutMs { get; set; } = 500;
 
         // Stream configuration settings
-        public string StorageType { get; set; } = "Memory";
-        public string RetentionPolicy { get; set; } = "WorkQueue";
-        public string DiscardPolicy { get; set; } = "Old";
+        public string StorageType { get; set; } = StorageTypeMemory;
+        public string RetentionPolicy { get; set; } = RetentionPolicyWorkQueue;
+        public string DiscardPolicy { get; set; } = DiscardPolicyOld;
         public int MaxAgeHours { get; set; } = 1;
         public int MaxSizeMB { get; set; } = 100;
         public int DuplicateWindowMinutes { get; set; } = 2;
@@ -29,16 +37,16 @@ namespace L1.Shared.Configurations
         public RetentionPolicy GetRetentionPolicy() =>
             RetentionPolicy?.ToLower() switch
             {
-                "interest" => NATS.Client.JetStream.RetentionPolicy.Interest,
-                "limits" => NATS.Client.JetStream.RetentionPolicy.Limits,
+                var policy when policy == RetentionPolicyInterest.ToLower() => NATS.Client.JetStream.RetentionPolicy.Interest,
+                var policy when policy == RetentionPolicyLimits.ToLower() => NATS.Client.JetStream.RetentionPolicy.Limits,
                 _ => NATS.Client.JetStream.RetentionPolicy.WorkQueue
             };
 
-        public DiscardPolicy GetDiscardPolicy() =>
-            DiscardPolicy?.ToLower() switch
-            {
-                "new" => NATS.Client.JetStream.DiscardPolicy.New,
-                _ => NATS.Client.JetStream.DiscardPolicy.Old
-            };
+        public DiscardPolicy GetDiscardPolicy()
+        {
+            return DiscardPolicy?.ToLower() == DiscardPolicyNew.ToLower()
+                ? NATS.Client.JetStream.DiscardPolicy.New
+                : NATS.Client.JetStream.DiscardPolicy.Old;
+        }
     }
 }

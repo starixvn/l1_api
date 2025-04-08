@@ -89,10 +89,6 @@ namespace L1.Shared.Middlewares
                 var streamConfig = StreamConfiguration.Builder()
                     .WithName(formattedStreamName)
                     .WithSubjects($"{settings.SubjectPrefix}.>")
-                    .WithRetentionPolicy(RetentionPolicy.WorkQueue)
-                    .WithDiscardPolicy(DiscardPolicy.Old)
-                    .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
-                    .WithDuplicateWindow(Duration.OfMinutes(settings.DuplicateWindowMinutes))
                     .Build();
 
                 jsm.AddStream(streamConfig);

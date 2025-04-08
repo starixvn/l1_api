@@ -18,6 +18,8 @@ namespace L1.Shared.Configurations
         public string MicrositeClientPatternDomain { get; set; }
 
         public VoidTicketWhenEndingRoundFailed VoidTicketWhenEndingRoundFailed { get; set; }
+
+        public bool IsCheckBrowserUserAgent { get; set; }
     }
 
     public partial class AppSettings : IAppSettings
@@ -33,9 +35,13 @@ namespace L1.Shared.Configurations
         public LogEnabling LogEnabling { get; set; } = new();
 
         public StreamSettings StreamSettings { get; set; } = new();
+
         public string MicrositeClientPatternDomain { get; set; }
-        
+      
         public VoidTicketWhenEndingRoundFailed VoidTicketWhenEndingRoundFailed { get; set; } = new();
+
+        public bool IsCheckBrowserUserAgent { get; set; } = true;
+
     }
 
     public class LogEnabling

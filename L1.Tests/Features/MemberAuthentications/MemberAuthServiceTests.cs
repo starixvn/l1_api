@@ -58,6 +58,8 @@ namespace L1.Tests.Features.MemberAuthentications
                 Time = DateTime.UtcNow
             });
 
+            appSettings.IsCheckBrowserUserAgent.Returns(true);
+
             // Act
             var result = await memberAuthService.VerifyToken(verificationParams);
 
@@ -78,6 +80,8 @@ namespace L1.Tests.Features.MemberAuthentications
                 Time = DateTime.UtcNow,
                 BrowserUserAgent = "BrowserUserAgent"
             });
+
+            appSettings.IsCheckBrowserUserAgent.Returns(true);
 
             // Act
             var result = await memberAuthService.VerifyToken(verificationParams);

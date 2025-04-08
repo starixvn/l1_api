@@ -31,6 +31,10 @@ namespace L1.IdentityServerApi.Tests
             highStakeSection.Value = "60";
             configurationSection.GetSection("HighStake").Returns(highStakeSection);
 
+            var isCheckBrowserUserAgentSection = Substitute.For<IConfigurationSection>();
+            isCheckBrowserUserAgentSection.Value = "true";
+            configurationSection.GetSection("IsCheckBrowserUserAgent").Returns(isCheckBrowserUserAgentSection);
+
             AddBackendAuthConfigsSection(configurationSection);
             AddMongoDBSettingsConfigsSection(configurationSection);
             AddOWServiceSettingsConfigsSection(configurationSection);

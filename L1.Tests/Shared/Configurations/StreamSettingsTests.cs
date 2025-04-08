@@ -101,7 +101,6 @@ namespace L1.Tests.Shared.Configurations
             var settings = new StreamSettings();
 
             // Assert
-            Assert.Equal(StreamSettings.StorageTypeMemory, settings.StorageType);
             Assert.Equal(StreamSettings.RetentionPolicyWorkQueue, settings.RetentionPolicy);
             Assert.Equal(StreamSettings.DiscardPolicyOld, settings.DiscardPolicy);
             Assert.Equal(500, settings.PublishTimeoutMs);

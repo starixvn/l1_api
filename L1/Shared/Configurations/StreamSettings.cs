@@ -5,8 +5,7 @@ namespace L1.Shared.Configurations
 {
     public class StreamSettings
     {
-        // Constants for policy values
-        public const string StorageTypeMemory = "Memory";
+        // Constants for policy values       
         public const string RetentionPolicyWorkQueue = "WorkQueue";
         public const string RetentionPolicyInterest = "Interest";
         public const string RetentionPolicyLimits = "Limits";
@@ -26,7 +25,6 @@ namespace L1.Shared.Configurations
         public int PublishTimeoutMs { get; set; } = 500;
 
         // Stream configuration settings
-        public string StorageType { get; set; } = StorageTypeMemory;
         public string RetentionPolicy { get; set; } = RetentionPolicyWorkQueue;
         public string DiscardPolicy { get; set; } = DiscardPolicyOld;
         public int MaxAgeHours { get; set; } = 1;

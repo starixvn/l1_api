@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -24,9 +23,9 @@ namespace L1.Features.Sites
         private const string collectionName = "sites";
         private readonly IMongoCollection<Site> siteCollection;
 
-        public SiteDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
+        public SiteDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.GetMemberDatabase(appSettings.MongoDBSettings.PrefixDbName));
+            var database = mongoClient.GetDatabase(MongoDatabases.Member);
             siteCollection = database.GetCollection<Site>(collectionName);
         }
 

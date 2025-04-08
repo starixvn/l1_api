@@ -22,6 +22,8 @@ namespace L1.Features.AdminApiCommunicators
         public string RetrieveEndGameInfo { get; set; }
 
         public string NotifyHighStake { get; set; }
+
+        public string VoidTicket { get; set; }
     }
 
     public class CloudSettings

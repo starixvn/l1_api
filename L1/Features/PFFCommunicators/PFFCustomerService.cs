@@ -25,19 +25,22 @@ namespace L1.Features.PFFCommunicators
         private readonly PFFEndPoints endpoints;
         private readonly ISentryClient sentryClient;
         private readonly IAppSettings appSettings;
+        private readonly IPartnerEndGameHandler partnerEndGameHandler;
 
         public PFFCustomerService(
             IPFFService PFFService,
             ILogService logService,
             PFFEndPoints endpoints,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
+            IAppSettings appSettings,
+            IPartnerEndGameHandler partnerEndGameHandler)
         {
             this.PFFService = PFFService;
             this.logService = logService;
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
+            this.partnerEndGameHandler = partnerEndGameHandler;
         }
 
         public string OperatorId { get; set; }
@@ -66,10 +69,14 @@ namespace L1.Features.PFFCommunicators
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
             var response = await PFFService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var operatorId = appSettings.PartnerIds.PFF;
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(appSettings.PartnerIds.PFF, response);
+                await logService.LogEndGameAsync(operatorId, response);
+            } else
+            {
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, operatorId);
             }
 
             return response;

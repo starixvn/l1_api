@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators.VoidTicket;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -26,6 +27,7 @@ namespace L1.Features.SabaPlayCommunicators
         private readonly ISentryClient sentryClient;
         private readonly IAppSettings appSettings;
         private readonly INatsService natsService;
+        private readonly IPartnerEndGameHandler partnerEndGameHandler;
 
         public SabaPlayCustomerService(
             ISabaPlayService SabaPlayService,
@@ -33,7 +35,8 @@ namespace L1.Features.SabaPlayCommunicators
             INatsService natsService,
             SabaPlayEndPoints endpoints,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
+            IAppSettings appSettings,
+            IPartnerEndGameHandler partnerEndGameHandler)
         {
             this.sabaPlayService = SabaPlayService;
             this.logService = logService;
@@ -41,6 +44,7 @@ namespace L1.Features.SabaPlayCommunicators
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
+            this.partnerEndGameHandler = partnerEndGameHandler;
         }
 
         public string OperatorId { get; set; }
@@ -109,11 +113,15 @@ namespace L1.Features.SabaPlayCommunicators
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
             var response = await sabaPlayService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var operatorId = appSettings.PartnerIds.SabaPlay;
 
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(appSettings.PartnerIds.SabaPlay, response);
                 await natsService.PublishAsync("bet.settled", call);
+            } else
+            {
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, operatorId);
             }
 
             return response;
@@ -126,7 +134,7 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogVoidGameAsync(appSettings.PartnerIds.SabaPlay, response);
-            }
+            } 
 
             return response;
         }

@@ -27,12 +27,13 @@ namespace L1.Tests.Features.OWCommunicators
         private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
 
         private readonly INatsService natsService = Substitute.For<INatsService>();
+        private readonly IPartnerEndGameHandler partnerEndGameHandler = Substitute.For<IPartnerEndGameHandler>();
 
         private readonly OWCustomerService service;
 
         public OWCustomerServiceTests()
         {
-            service = new OWCustomerService(owService, logService, appSettings, endpoints, sentryClient, natsService);
+            service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints, sentryClient, natsService, partnerEndGameHandler);
             appSettings.PartnerIds = new PartnerIds
             {
                 OW = "OW",

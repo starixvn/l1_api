@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Features.Sites;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -18,9 +17,9 @@ namespace L1.Features.SigningCredentials
         private const string collectionName = "signing_credential_keys";
         private readonly IMongoCollection<SigningCredentialKey> collection;
 
-        public SigningCredentialsDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
+        public SigningCredentialsDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.GetMemberDatabase(appSettings.MongoDBSettings.PrefixDbName));
+            var database = mongoClient.GetDatabase(MongoDatabases.Member);
             collection = database.GetCollection<SigningCredentialKey>(collectionName);
         }
 

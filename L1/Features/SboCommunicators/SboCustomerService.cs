@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
@@ -25,19 +25,23 @@ namespace L1.Features.SboCommunicators
         private readonly SboEndPoints endpoints;
         private readonly ISentryClient sentryClient;
         private readonly IAppSettings appSettings;
+        private readonly IPartnerEndGameHandler partnerEndGameHandler;
 
         public SboCustomerService(
             ISboService SboService,
             ILogService logService,
             SboEndPoints endpoints,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
+            IAppSettings appSettings,
+            IPartnerEndGameHandler partnerEndGameHandler)
         {
             this.sboService = SboService;
             this.logService = logService;
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
+            this.partnerEndGameHandler = partnerEndGameHandler;
+
         }
         public string OperatorId { get; set; }
 
@@ -65,10 +69,14 @@ namespace L1.Features.SboCommunicators
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
             var response = await sboService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
+            var operatorId = appSettings.PartnerIds.SBO;
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(appSettings.PartnerIds.SBO, response);
+                await logService.LogEndGameAsync(operatorId, response);
+            } else
+            {
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, operatorId);
             }
 
             return response;

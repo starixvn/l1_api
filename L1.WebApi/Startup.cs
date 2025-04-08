@@ -4,8 +4,10 @@ using Coravel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.GameConfigurations;
+using L1.Features.HotdogCommunicators;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
+using L1.Features.PartnerCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
@@ -43,6 +45,7 @@ namespace L1.WebApi
             services.AddMongoDBServices(appSettings);
             services.AddMemberAuthentications();
             services.AddAdminApiServices(appSettings.AdminApiSettings);
+            services.AddPartnerCommunicatorService();
             services.AddConfigurationApiServices(appSettings.ConfigurationApiSettings);
             services.AddJetStreamServices(appSettings);
 

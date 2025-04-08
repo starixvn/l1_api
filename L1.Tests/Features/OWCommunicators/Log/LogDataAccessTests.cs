@@ -4,7 +4,6 @@ using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
 using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators.Log;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using L1.Shared.Models;
 using MongoDB.Driver;
@@ -43,13 +42,8 @@ namespace L1.Tests.Features.OWCommunicators.Log
             database.GetCollection<PartnerLog>("void_games").Returns(voidGamesCollection);
             database.GetCollection<SBLog>("signin_requests").Returns(signInCollection);
             database.GetCollection<SBLog>("retrieve_requests").Returns(retrieveCollection);
-            var appSettings = Substitute.For<IAppSettings>();
-            appSettings.MongoDBSettings = new MongoDBSettings
-            {
-                ConnectionString = "mongodb://127.0.0.1:27017",
-            };
 
-            logDataAccess = new LogDataAccess(mongoClient, appSettings);
+            logDataAccess = new LogDataAccess(mongoClient);
         }
 
         [Theory, AutoData]

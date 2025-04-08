@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -19,9 +18,9 @@ namespace L1.Features.Partners
 
         private readonly IMongoCollection<Currency> currencyCollection;
 
-        public CurrencyDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
+        public CurrencyDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.GetMinigameDatabase(appSettings.MongoDBSettings.PrefixDbName));
+            var database = mongoClient.GetDatabase(MongoDatabases.Minigame);
             currencyCollection = database.GetCollection<Currency>(collectionName);
         }
 

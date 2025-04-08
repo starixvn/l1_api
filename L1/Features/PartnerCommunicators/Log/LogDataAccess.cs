@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using MongoDB.Driver;
 
@@ -54,9 +53,9 @@ namespace L1.Features.PartnerCommunicators.Log
         private readonly IMongoCollection<PartnerLog> awardCollection;
 
 
-        public LogDataAccess(IMongoClient mongoClient, IAppSettings appSettings)
+        public LogDataAccess(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.GetLogDatabase(appSettings.MongoDBSettings.PrefixDbName));
+            var database = mongoClient.GetDatabase(MongoDatabases.Log);
 
             failedRequestsCollection = database.GetCollection<PartnerLog>(FailedRequestsCollectionName);
             betsCollection = database.GetCollection<PartnerLog>(BetsCollectionName);
@@ -82,10 +81,10 @@ namespace L1.Features.PartnerCommunicators.Log
         public Task WriteVoidGameAsync(PartnerLog log)
             => voidGamesCollection.InsertOneAsync(log);
 
-         public Task WriteHitJackpotAsync(PartnerLog log)
-            => hitJackpotsCollection.InsertOneAsync(log);
-            
-        public Task WriteSignInAsync(SBLog log)       
+        public Task WriteHitJackpotAsync(PartnerLog log)
+           => hitJackpotsCollection.InsertOneAsync(log);
+
+        public Task WriteSignInAsync(SBLog log)
             => signInCollection.InsertOneAsync(log);
 
         public Task WriteRetrieveEndGameAsync(SBLog log)

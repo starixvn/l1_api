@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
+using L1.Features.AdminApiCommunicators.VoidTicket;
+using Newtonsoft.Json;
 using Sentry;
 using L1.Shared.Json;
 
@@ -14,6 +16,8 @@ namespace L1.Features.AdminApiCommunicators
         Task UnderMaintenance(MaintenanceRequest request);
 
         Task NotifyHighStake(NotifyHighStakeRequest request);
+
+        Task VoidTicket(VoidTicketRequest request);
     }
 
     public class AdminApiService : IAdminApiService
@@ -40,6 +44,9 @@ namespace L1.Features.AdminApiCommunicators
 
         public Task NotifyHighStake(NotifyHighStakeRequest request)
             => PostAndForget(adminApiEndPoints.NotifyHighStake, request);
+
+        public Task VoidTicket(VoidTicketRequest request)
+            => PostAndForget(adminApiEndPoints.VoidTicket, request);
 
         public async Task PostAndForget(string apiEndpoint, AdminApiRequest request)
         {

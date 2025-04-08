@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
+using L1.Features.AdminApiCommunicators.VoidTicket;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -11,6 +14,7 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Features.SabaPlayCommunicators;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
@@ -26,14 +30,14 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
         private readonly INatsService natsService;
+        IPartnerEndGameHandler partnerEndGameHandler;
 
         public OWCustomerService(
             IOWService oWService,
             ILogService logService,
             IAppSettings appSettings,
             OWEndPoints endpoints,
-            ISentryClient sentryClient,
-            INatsService natsService)
+            ISentryClient sentryClient)
         {
             this.oWService = oWService;
             this.logService = logService;
@@ -41,6 +45,7 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
             this.sentryClient = sentryClient;
             this.natsService = natsService;
+            this.partnerEndGameHandler = partnerEndGameHandler;
         }
 
         public string OperatorId { get; set; }
@@ -116,6 +121,10 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogEndGameAsync(OperatorId, response);
                 await natsService.PublishAsync("bet.settled", call);
+            }
+            else 
+            { 
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, OperatorId);
             }
 
             return response;

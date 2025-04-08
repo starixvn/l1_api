@@ -79,12 +79,12 @@ namespace L1.Shared.Middlewares
 
         private static void InitializeJetStream(IConnection connection, IAppSettings appSettings, ISentryClient sentryClient)
         {
+            var formattedStreamName = $"{appSettings.StreamSettings.StreamName}_{appSettings.StreamSettings.Postfix}";
+
             try
             {
                 var settings = appSettings.StreamSettings;
-                var jsm = connection.CreateJetStreamManagementContext();
-
-                string formattedStreamName = $"{settings.Prefix}_{settings.StreamName}";
+                var jsm = connection.CreateJetStreamManagementContext();                          
                 
                 var streamConfig = StreamConfiguration.Builder()
                     .WithName(formattedStreamName)
@@ -99,7 +99,7 @@ namespace L1.Shared.Middlewares
             }
             catch (NATSJetStreamException ex) when (ex.ErrorCode == JetStreamErrorStreamAlreadyExists)
             {
-                sentryClient.CaptureMessage($"Stream {appSettings.StreamSettings.Prefix} already exists");
+                sentryClient.CaptureMessage($"Stream {formattedStreamName} already exists");
             }
             catch (Exception ex)
             {

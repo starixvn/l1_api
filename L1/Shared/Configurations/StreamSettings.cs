@@ -17,7 +17,7 @@ namespace L1.Shared.Configurations
 
         public string StreamName { get; set; }
 
-        public string Prefix { get; set; }
+        public string Postfix { get; set; }
 
         public string SubjectPrefix { get; set; }
 

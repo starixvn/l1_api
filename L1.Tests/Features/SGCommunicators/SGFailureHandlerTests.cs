@@ -53,7 +53,10 @@ namespace L1.Tests.Features.SGCommunicators
             await failureHandler.Handle(response, operatorId);
 
             // Assert
+#pragma warning disable NS1001 // Non-virtual setup specification.
+            // this is SentryExtensions
             sentryClient.Received(1).CaptureMessage(expectedMessage, SentryLevel.Warning);
+#pragma warning restore NS1001 // Non-virtual setup specification.
         }
 
         [Theory, AutoData]
@@ -126,4 +129,4 @@ namespace L1.Tests.Features.SGCommunicators
                 result.ErrorMessage);
         }
     }
-} 
+}

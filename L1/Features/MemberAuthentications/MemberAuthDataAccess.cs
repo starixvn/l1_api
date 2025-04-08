@@ -65,6 +65,8 @@ namespace L1.Features.MemberAuthentications
             return memberAuth;
         }
 
+#pragma warning disable S6566 // Disable SonarQube's DateTime warning
+        // MongoDB store dates in UTC.
         public Task UpdateCurrencyGroup(string token, string currencyGroupId)
         {
             var updates = Builders<MemberAuth>.Update
@@ -73,6 +75,7 @@ namespace L1.Features.MemberAuthentications
 
             return memberAuthCollection.UpdateOneAsync(x => x.Token == token, updates);
         }
+#pragma warning restore S6566
 
         public async Task<MemberAuth> GetForTestCurrency(string token)
         => (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Token == token && memberAuth.IsTestCurrency)).FirstOrDefault();

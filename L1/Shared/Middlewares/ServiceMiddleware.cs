@@ -84,8 +84,10 @@ namespace L1.Shared.Middlewares
                 var settings = appSettings.StreamSettings;
                 var jsm = connection.CreateJetStreamManagementContext();
 
+                string formattedStreamName = $"{settings.Prefix}_{settings.StreamName}";
+                
                 var streamConfig = StreamConfiguration.Builder()
-                    .WithName($"{settings.Prefix}_{settings.StreamName}")
+                    .WithName(formattedStreamName)
                     .WithSubjects($"{settings.SubjectPrefix}.>")
                     .WithRetentionPolicy(settings.GetRetentionPolicy())
                     .WithDiscardPolicy(settings.GetDiscardPolicy())

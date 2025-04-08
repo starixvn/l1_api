@@ -3,65 +3,87 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
+using L1.Shared.Constants;
 using L1.Shared.Helpers;
-using Newtonsoft.Json;
+using L1.Shared.Json;
 
 namespace L1.Features.HotdogCommunicators
 {
     public interface IHotdogService
     {
-        Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new();
+        Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new();
     }
 
     public class HotdogService : IHotdogService
     {
+        private const string HeaderAccessKey = "Saba-access-key";
         private readonly HttpClient httpClient;
         private readonly IHotdogFailureHandler failureHandler;
         private readonly string secretKey;
+        private readonly IJsonService jsonService;
 
-        public HotdogService(HttpClient httpClient, IHotdogFailureHandler failureHandler, HotdogServiceSettings owServiceSettings)
+        public HotdogService(
+            HttpClient httpClient,
+            IHotdogFailureHandler failureHandler,
+            HotdogServiceSettings hotdogServiceSettings,
+            IJsonService jsonService)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
-            secretKey = owServiceSettings.SecretKey;
+            this.secretKey = hotdogServiceSettings.SecretKey;
+            this.jsonService = jsonService;
         }
 
-        public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new()
+        public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new()
         {
-            const string defaultMediaType = "application/json";
             var request = new PartnerRequest(call);
-            var requestBody = JsonConvert.SerializeObject(call);
-            var content = new StringContent(requestBody, Encoding.UTF8, defaultMediaType);
+            var requestBody = jsonService.Serialize(call);
 
-            PartnerResponse<T> finalResponse;
+            using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
 
-            httpClient.DefaultRequestHeaders.Add("Saba-access-key", accessKey);
-            var response = await httpClient.PostAsync(new Uri(apiEndpoint, UriKind.Relative), content);
-
-            if (response.IsSuccessStatusCode)
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(apiEndpoint, UriKind.Relative))
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
+                Content = content
+            };
+            requestMessage.Headers.Add(HeaderAccessKey, accessKey);
 
-                finalResponse = JsonConvert.DeserializeObject<PartnerResponse<T>>(responseContent);
-            }
-            else
+            try
             {
-                finalResponse = await CreateNetworkErrorResponse<T>(new HotdogCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
+                using var response = await httpClient.SendAsync(requestMessage);
+                var finalResponse = response.IsSuccessStatusCode
+                    ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
+                    : await CreateHotdogNetworkErrorResponse<T>(new HotdogCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
+
+                finalResponse!.Request = request;
+
+                if (finalResponse.Result.IsFailed())
+                {
+                    finalResponse.AccessKey = accessKey;
+                    await failureHandler.Handle<T>(finalResponse, operatorId);
+                    finalResponse.Result.ErrorCode = ErrorCodes.CovertErrorCode(finalResponse.Result.ErrorCode);
+                }
+
+                return finalResponse;
             }
-
-            finalResponse.Request = request;
-
-            if (finalResponse.Result.IsFailed())
+            catch (HttpRequestException ex)
             {
-                finalResponse.AccessKey = accessKey;
-                await failureHandler.Handle<T>(finalResponse);
+                return new PartnerResponse<T>
+                {
+                    TimeStamp = DateTimeOffset.UtcNow,
+                    Request = request,
+                    Result = new T
+                    {
+                        ErrorCode = PartnerSpecialErrorCodes.NetworkError,
+                        ErrorDescription = ex.Message,
+                        Seq = call.Seq
+                    },
+                    AccessKey = accessKey
+                };
             }
-
-            return finalResponse;
         }
 
-        private static async Task<PartnerResponse<T>> CreateNetworkErrorResponse<T>(HotdogCall call, HttpResponseMessage response, string accessKey) where T : IPartnerResult, new()
+        private static async Task<PartnerResponse<T>> CreateHotdogNetworkErrorResponse<T>(HotdogCall call, HttpResponseMessage response, string accessKey) where T : IPartnerResult, new()
             => new PartnerResponse<T>
             {
                 TimeStamp = DateTimeOffset.UtcNow,

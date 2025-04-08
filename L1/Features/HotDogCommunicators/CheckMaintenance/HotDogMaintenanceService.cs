@@ -1,7 +1,7 @@
 ﻿using L1.Features.AdminApiCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Maintenance;
-using L1.Shared.Configurations;
+using L1.Shared.Json;
 using Sentry;
 using System;
 using System.Net.Http;
@@ -11,30 +11,33 @@ namespace L1.Features.HotdogCommunicators.CheckMaintenance
 {
     public interface IHotdogMaintenanceService
     {
-        Task ObserveMaintenanceSchedule(HotdogRequest request);
+        Task ObserveMaintenanceSchedule(HotdogRequest request, string operatorId);
     }
 
     public class HotdogMaintenanceService : PartnerMaintenanceService, IHotdogMaintenanceService
     {
-        private readonly HotdogServiceSettings HotdogServiceSettings;
-        private readonly IAppSettings appSettings;
+        private readonly HotdogServiceSettings hotdogServiceSettings;
+        private readonly string secretKey;
+        private readonly IJsonService jsonService;
+
 
         public HotdogMaintenanceService(
             HttpClient httpClient,
-            HotdogServiceSettings HotdogServiceSettings,
+            HotdogServiceSettings hotdogServiceSettings,
             IAdminApiService adminApiService,
             ISentryClient sentryClient,
-            IAppSettings appSettings)
-            : base(httpClient, adminApiService, sentryClient)
+            IJsonService jsonService)
+            : base(httpClient, adminApiService, sentryClient, jsonService)
         {
-            this.HotdogServiceSettings = HotdogServiceSettings;
-            this.appSettings = appSettings;
+            this.hotdogServiceSettings = hotdogServiceSettings;
+            this.secretKey = hotdogServiceSettings.SecretKey;
+            this.jsonService = jsonService;
         }
 
-        public Task ObserveMaintenanceSchedule(HotdogRequest request)
+        public Task ObserveMaintenanceSchedule(HotdogRequest request, string operatorId)
         => ObserveMaintenanceSchedule(
-                appSettings.PartnerIds.SabaPlay_HD,
+                operatorId,
                 new PartnerRequest(request.Call),
-                new Uri(HotdogServiceSettings.BaseUrl, HotdogServiceSettings.Endpoints.CheckMaintenance));
+                new Uri(hotdogServiceSettings.BaseUrl, hotdogServiceSettings.Endpoints.CheckMaintenance));
     }
 }

@@ -14,7 +14,7 @@ namespace L1.Features.HotdogCommunicators
 {
     public interface IHotdogFailureHandler
     {
-        Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult;
+        Task Handle<T>(PartnerResponse<T> response, string operatorId) where T : PartnerResult;
     }
 
     public class HotdogFailureHandler : IHotdogFailureHandler
@@ -32,7 +32,7 @@ namespace L1.Features.HotdogCommunicators
             this.appSettings = appSettings;
         }
 
-        public async Task Handle<T>(PartnerResponse<T> response) where T : PartnerResult
+        public async Task Handle<T>(PartnerResponse<T> response, string operatorId) where T : PartnerResult
         {
             MapErrorMessage(response.Result);
             await logService.LogFailedRequestAsync(appSettings.PartnerIds.SabaPlay_HD, response);
@@ -43,7 +43,7 @@ namespace L1.Features.HotdogCommunicators
 
             if (response.Result.ErrorCode == PartnerSpecialErrorCodes.UnderMaintenance)
             {
-                await maintenanceService.ObserveMaintenanceSchedule(new HotdogRequest(response.Request.Call));
+                await maintenanceService.ObserveMaintenanceSchedule(new HotdogRequest(response.Request.Call), operatorId);
             }
         }
 

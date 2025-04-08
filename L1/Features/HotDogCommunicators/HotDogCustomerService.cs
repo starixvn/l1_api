@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -16,7 +15,6 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
 using Sentry;
-using Sentry.Protocol;
 
 namespace L1.Features.HotdogCommunicators
 {
@@ -48,17 +46,17 @@ namespace L1.Features.HotdogCommunicators
         public string OperatorId { get; set; }
 
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
-        => HotdogService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call);
+        => HotdogService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, OperatorId);
 
         public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
-        => HotdogService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call);
+        => HotdogService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call, OperatorId);
 
         public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
-        => HotdogService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call);
+        => HotdogService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, OperatorId);
 
         public async Task<PartnerResponse<PartnerPlaceBetResult>> PlaceBet(PartnerPlaceBetCall call, byte system = AppTypes.SabaClub, Dictionary<string, string> metadata = null)
         {
-            var response = await HotdogService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call);
+            var response = await HotdogService.Post<PartnerPlaceBetResult>(endpoints.PlaceBet, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
@@ -70,15 +68,14 @@ namespace L1.Features.HotdogCommunicators
 
         public async Task<PartnerResponse<PartnerEndGameResult>> EndGame(PartnerEndGameCall call)
         {
-            var response = await HotdogService.Post<PartnerEndGameResult>(endpoints.EndGame, call);
-            var operatorId = appSettings.PartnerIds.SabaPlay_HD;
+            var response = await HotdogService.Post<PartnerEndGameResult>(endpoints.EndGame, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
-                await logService.LogEndGameAsync(operatorId, response);
+                await logService.LogEndGameAsync(OperatorId, response);
             } else
             {
-                await partnerEndGameHandler.HandleFailedEndGame(call, response, operatorId);
+                await partnerEndGameHandler.HandleFailedEndGame(call, response, OperatorId);
             }
 
             return response;
@@ -86,7 +83,7 @@ namespace L1.Features.HotdogCommunicators
 
         public async Task<PartnerResponse<PartnerVoidGameResult>> VoidGame(PartnerVoidGameCall call)
         {
-            var response = await HotdogService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call);
+            var response = await HotdogService.Post<PartnerVoidGameResult>(endpoints.VoidGame, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {
@@ -104,7 +101,7 @@ namespace L1.Features.HotdogCommunicators
             var response = await Policy
                 .HandleResult<PartnerResponse<HitJackpotResult>>(response => response.Result.IsFailed())
                 .WaitAndRetryAsync(numberOfRetries, retryAttempt => TimeSpan.FromSeconds(retryDelayInSeconds))
-                .ExecuteAsync(() => HotdogService.Post<HitJackpotResult>(endpoints.HitJackpot, call));
+                .ExecuteAsync(() => HotdogService.Post<HitJackpotResult>(endpoints.HitJackpot, call, OperatorId));
 
             if (response.Result.IsSuccessful())
             {
@@ -120,7 +117,7 @@ namespace L1.Features.HotdogCommunicators
 
         public async Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call)
         {
-            var response = await HotdogService.Post<PartnerAwardResult>(endpoints.Award, call);
+            var response = await HotdogService.Post<PartnerAwardResult>(endpoints.Award, call, OperatorId);
 
             if (response.Result.IsSuccessful())
             {

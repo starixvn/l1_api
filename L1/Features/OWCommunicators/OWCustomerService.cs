@@ -30,14 +30,16 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
         private readonly INatsService natsService;
-        IPartnerEndGameHandler partnerEndGameHandler;
+        private readonly IPartnerEndGameHandler partnerEndGameHandler;
 
         public OWCustomerService(
             IOWService oWService,
             ILogService logService,
             IAppSettings appSettings,
             OWEndPoints endpoints,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            INatsService natsService,
+            IPartnerEndGameHandler partnerEndGameHandler)
         {
             this.oWService = oWService;
             this.logService = logService;

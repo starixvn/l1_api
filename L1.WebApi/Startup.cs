@@ -56,7 +56,8 @@ namespace L1.WebApi
                 (appSettings.SboServiceSettings, () => services.AddSboServices(appSettings.SboServiceSettings)),
                 (appSettings.PFFServiceSettings, () => services.AddPFFServices(appSettings.PFFServiceSettings)),
                 (appSettings.SabaPlayServiceSettings, () => services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings)),
-                (appSettings.SabaPlayDailySummaryServiceSettings, () => services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings))
+                (appSettings.SabaPlayDailySummaryServiceSettings, () => services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings)),
+                (appSettings.HotdogServiceSettings, () => services.AddHotdogServices(appSettings.HotdogServiceSettings)),
             };
 
             foreach (var (settings, registration) in serviceRegistrations)

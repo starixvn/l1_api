@@ -45,7 +45,7 @@ public class PartnerEndGameHandler : IPartnerEndGameHandler
         string operatorId)
     {
         return new VoidTicketRequest(
-            playerId: call.PlayerId,
+            playerId: call.PlayerId.ToString(),
             operatorId: operatorId,
             siteId: call.SiteId,
             gameRoundId: call.GameRoundId,

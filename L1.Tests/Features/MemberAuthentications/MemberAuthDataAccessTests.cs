@@ -1,80 +1,75 @@
-﻿using System;
-using System.Threading.Tasks;
-using L1.Shared.Constants;
+﻿using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using MongoDB.Driver;
+using NSubstitute;
+using Xunit;
 
 namespace L1.Features.MemberAuthentications
 {
-    public interface IMemberAuthDataAccess
+    public class MemberAuthDataAccessTests
     {
-        Task<MemberAuth> Get(string id);
-
-        Task<MemberAuth> GetByToken(string token);
-
-        Task<MemberAuth> Create(MemberAuth memberAuth);
-
-        Task<MemberAuth> GetLatest(MemberAuth memberAuth);
-
-        Task UpdateCurrencyGroup(string token, string currencyGroupId);
-
-        Task<MemberAuth> GetForTestCurrency(string token);
-    }
-
-    public class MemberAuthDataAccess : IMemberAuthDataAccess
-    {
-        private const string collectionName = "member_auths";
         private readonly IMongoCollection<MemberAuth> memberAuthCollection;
+        private readonly MemberAuthDataAccess dataAccess;
 
-        public MemberAuthDataAccess(IMongoClient mongoClient)
+        public MemberAuthDataAccessTests()
         {
-            var database = mongoClient.GetDatabase(MongoDatabases.Member);
-            memberAuthCollection = database.GetCollection<MemberAuth>(collectionName);
+            memberAuthCollection = Substitute.For<IMongoCollection<MemberAuth>>();
+            var mongoClient = Substitute.For<IMongoClient>();
+            var database = Substitute.For<IMongoDatabase>();
+            mongoClient.GetDatabase("member").Returns(database);
+            database.GetCollection<MemberAuth>("member_auths").Returns(memberAuthCollection);
+
+            dataAccess = new MemberAuthDataAccess(mongoClient);
         }
 
-        public async Task<MemberAuth> Get(string id) =>
-            (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Id == id)).FirstOrDefault();
-
-        public async Task<MemberAuth> GetLatest(MemberAuth memberAuth)
+        [Theory, AutoData]
+        public async Task Get_Always_ReturnCorrectMemberAuth(string id)
         {
-            var builder = Builders<MemberAuth>.Filter;
-            var filter = builder.Eq(x => x.IP, memberAuth.IP) &
-                builder.Eq(x => x.PlayerId, memberAuth.PlayerId) &
-                builder.Eq(x => x.AppType, memberAuth.AppType) &
-                builder.Eq(x => x.SiteId, memberAuth.SiteId) &
-                builder.Eq(x => x.BrowserUserAgent, memberAuth.BrowserUserAgent) &
-                builder.Eq(x => x.Language, memberAuth.Language) &
-                builder.Eq(x => x.CurrencyName, memberAuth.CurrencyName);
+            // Act
+            var actualValue = await dataAccess.Get(id);
 
-            var options = new FindOptions<MemberAuth, MemberAuth>
-            {
-                Limit = 1,
-                Sort = Builders<MemberAuth>.Sort.Descending(x => x.Time),
-                Collation = new Collation("en", strength: CollationStrength.Secondary)
-            };
-
-            return (await memberAuthCollection.FindAsync(filter, options)).FirstOrDefault();
+            // Assert
+            Assert.Null(actualValue);
         }
 
-        public async Task<MemberAuth> GetByToken(string token) =>
-            (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Token == token)).FirstOrDefault();
-
-        public async Task<MemberAuth> Create(MemberAuth memberAuth)
+        [Theory, AutoData]
+        public async Task GetByToken_Always_ReturnCorrectMemberAuth(string token)
         {
-            await memberAuthCollection.InsertOneAsync(memberAuth);
+            // Act
+            var actualValue = await dataAccess.GetByToken(token);
 
-            return memberAuth;
+            // Assert
+            Assert.Null(actualValue);
         }
 
-        public Task UpdateCurrencyGroup(string token, string currencyGroupId)
+        [Theory, AutoData]
+        public async Task GetLatest_Always_ReturnCorrectMemberAuth(MemberAuth memberAuth)
         {
-            var updates = Builders<MemberAuth>.Update
-                .Set(x => x.CurrencyGroupId, currencyGroupId)
-                .Set(x => x.Time, DateTime.UtcNow);
+            // Act
+            var actualValue = await dataAccess.GetLatest(memberAuth);
 
-            return memberAuthCollection.UpdateOneAsync(x => x.Token == token, updates);
+            // Assert
+            Assert.Null(actualValue);
         }
 
-        public async Task<MemberAuth> GetForTestCurrency(string token)
-        => (await memberAuthCollection.FindAsync(memberAuth => memberAuth.Token == token && memberAuth.IsTestCurrency)).FirstOrDefault();
+        [Theory, AutoData]
+        public async Task Create_Always_InjectInsertOneAsync(MemberAuth memberAuth)
+        {
+            // Act
+            await dataAccess.Create(memberAuth);
+
+            // Assert
+            await memberAuthCollection.Received().InsertOneAsync(memberAuth);
+        }
+
+        [Theory, AutoData]
+        public async Task UpdateCurrencyGroup_Always_InjectUpdateOneAsync(string token, string currencyGroupId)
+        {
+            // Act
+            await dataAccess.UpdateCurrencyGroup(token, currencyGroupId);
+
+            // Assert
+            await memberAuthCollection.Received().UpdateOneAsync(Arg.Any<FilterDefinition<MemberAuth>>(), Arg.Any<UpdateDefinition<MemberAuth>>());
+        }
     }
 }

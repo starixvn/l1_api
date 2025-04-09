@@ -85,23 +85,29 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogBetAsync(OperatorId, response, system, metadata);
 
-                await natsService.PublishAsync("bet.created", call);
-
-                if (call.Amount >= appSettings.HighStake)
+                await natsService.PublishAsync("bet.created", new
                 {
-                    var notifyHighStakeData = new NotifyHighStakeData(
-                        call.PlayerId.ToString(),
-                        call.GameTypeId,
-                        call.Amount,
-                        call.Currency,
-                        call.ChoiceId,
-                        system,
-                        metadata,
-                        call.OperatorId,
-                        call.UserId);
-
-                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(notifyHighStakeData));
-                }
+                    call.GameRoundId,
+                    call.GameTypeId,
+                    call.ChoiceId,
+                    call.Amount,
+                    call.Currency,
+                    call.RoundEndTime,
+                    call.Ip,
+                    call.FreeSpin,
+                    call.ContributionAmount,
+                    call.ContributionRate,
+                    call.OperatorToken,
+                    call.FreeBet,
+                    call.OperatorId,
+                    call.UserId,
+                    call.Seq,
+                    call.PlayerId,
+                    call.SiteId,
+                    call.TimeStamp,
+                    System = system,
+                    Metadata = metadata
+                });
             }
 
             return response;

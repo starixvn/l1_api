@@ -92,7 +92,7 @@ namespace L1.Shared.Middlewares
                     .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
                     .WithDiscardPolicy(DiscardPolicy.Old)
                     .WithRetentionPolicy(RetentionPolicy.Limits)
-                    .WithMaxMessages(100_000)
+                    .WithMaxMessages(settings.MaxMessages)
                     .Build();
 
                 jsm.AddStream(streamConfig);

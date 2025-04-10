@@ -91,6 +91,8 @@ namespace L1.Shared.Middlewares
                     .WithSubjects($"{settings.SubjectPrefix}.>")
                     .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
                     .WithDiscardPolicy(DiscardPolicy.Old)
+                    .WithRetentionPolicy(RetentionPolicy.Limits)
+                    .WithMaxMessages(100_000)
                     .Build();
 
                 jsm.AddStream(streamConfig);

@@ -84,11 +84,12 @@ namespace L1.Shared.Middlewares
             try
             {
                 var settings = appSettings.StreamSettings;
-                var jsm = connection.CreateJetStreamManagementContext();                          
-                
+                var jsm = connection.CreateJetStreamManagementContext();
+
                 var streamConfig = StreamConfiguration.Builder()
                     .WithName(formattedStreamName)
                     .WithSubjects($"{settings.SubjectPrefix}.>")
+                    .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
                     .Build();
 
                 jsm.AddStream(streamConfig);

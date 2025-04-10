@@ -90,6 +90,7 @@ namespace L1.Shared.Middlewares
                     .WithName(formattedStreamName)
                     .WithSubjects($"{settings.SubjectPrefix}.>")
                     .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
+                    .WithDiscardPolicy(DiscardPolicy.Old)
                     .Build();
 
                 jsm.AddStream(streamConfig);

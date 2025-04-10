@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -31,7 +29,6 @@ namespace L1.Features.SGCommunicators
     {
         private readonly ILogService logService;
         private readonly IAppSettings appSettings;
-        private readonly IAdminApiService adminApiService;
         private readonly ISentryClient sentryClient;
         private readonly ISGService sgService;
         private readonly INatsService natsService;
@@ -43,8 +40,7 @@ namespace L1.Features.SGCommunicators
             ILogService logService,
             SGEndPoints endpoints,
             ISentryClient sentryClient,
-            IAppSettings appSettings,
-            IAdminApiService adminApiService)
+            IAppSettings appSettings)
         {
             this.sgService = sgService;
             this.natsService = natsService;
@@ -52,7 +48,6 @@ namespace L1.Features.SGCommunicators
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
-            this.adminApiService = adminApiService;
         }
 
         public string OperatorId { get; set; }

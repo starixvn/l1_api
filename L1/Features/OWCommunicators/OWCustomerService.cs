@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -26,7 +24,6 @@ namespace L1.Features.OWCommunicators
         private readonly ILogService logService;
         private readonly OWEndPoints endpoints;
         private readonly IAppSettings appSettings;
-        private readonly IAdminApiService adminApiSerivce;
         private readonly ISentryClient sentryClient;
         private readonly INatsService natsService;
 
@@ -34,7 +31,6 @@ namespace L1.Features.OWCommunicators
             IOWService oWService,
             ILogService logService,
             IAppSettings appSettings,
-            IAdminApiService adminApiSerivce,
             OWEndPoints endpoints,
             ISentryClient sentryClient,
             INatsService natsService)
@@ -43,7 +39,6 @@ namespace L1.Features.OWCommunicators
             this.logService = logService;
             this.endpoints = endpoints;
             this.appSettings = appSettings;
-            this.adminApiSerivce = adminApiSerivce;
             this.sentryClient = sentryClient;
             this.natsService = natsService;
         }

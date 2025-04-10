@@ -1,8 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.SGCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -53,8 +51,7 @@ namespace L1.Tests.Features.SGCommunicators
                 logService,
                 endpoints,
                 sentryClient,
-                appSettings,
-                adminApiService);
+                appSettings);
 
             var partnerIds = new PartnerIds { SG = "SG" };
             appSettings.PartnerIds.Returns(partnerIds);

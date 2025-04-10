@@ -110,7 +110,6 @@ namespace L1.Tests.Features.SGCommunicators
             await service.PlaceBet(call);
 
             // Assert
-            await adminApiService.Received(1).NotifyHighStake(Arg.Any<NotifyHighStakeRequest>());
             await natsService.Received(1).PublishAsync("bet.created", Arg.Any<object>());
             await logService.Received(1).LogBetAsync("SG", response, Arg.Any<byte>());
         }

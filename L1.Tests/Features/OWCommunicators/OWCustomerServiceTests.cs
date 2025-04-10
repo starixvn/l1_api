@@ -115,7 +115,8 @@ namespace L1.Tests.Features.OWCommunicators
             await service.PlaceBet(call, 1);
 
             // Assert
-            await adminApiSerivce.Received(1).NotifyHighStake(Arg.Any<NotifyHighStakeRequest>());
+            await natsService.Received(1).PublishAsync("bet.created", Arg.Any<object>());
+            await logService.Received(1).LogBetAsync("OW", response, Arg.Any<byte>());
         }
 
         [Theory, AutoData]

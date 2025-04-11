@@ -1,5 +1,7 @@
 # Partner Communicators Architecture
 
+This document describes the architecture of the Partner Communicators system, which handles communication with different gaming partners.
+
 ## Class Diagram
 
 ```mermaid

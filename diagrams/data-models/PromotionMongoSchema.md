@@ -10,6 +10,7 @@
     code: String,                     // PromotionCode (derived from name, e.g., "VIP Classic Free Spins" => "vip-classic-free-spins")
     operatorId: String,               // Operator identifier
     siteIds: [String],                // Array of site identifiers
+    currencyGroups: [String],         // Array of currency groups (e.g., ["EUR", "USD", "GBP"])
     startDate: ISODate,              // Start date and time
     endDate: ISODate,                // End date and time
     freeSpinCount: Number,           // Number of free spins per player
@@ -36,6 +37,7 @@
     siteId: String,                  // Site identifier (single site per player promotion)
     promotionId: ObjectId,           // Reference to Promotions collection
     promotionCode: String,           // Promotion code for quick reference
+    currencyGroup: String,           // Currency group for this player's promotion
     remainingSpins: Number,          // 0 means promotion is completed
     lastUsedDate: ISODate,
     createdAt: ISODate,
@@ -54,6 +56,7 @@
     code: "summer-classic-free-spins",
     operatorId: "op123",
     siteIds: ["site456", "site789", "site101"],
+    currencyGroups: ["EUR", "USD", "GBP"],
     startDate: ISODate("2024-06-01T00:00:00Z"),
     endDate: ISODate("2024-06-30T23:59:59Z"),
     freeSpinCount: 50,
@@ -83,6 +86,7 @@
     siteId: "site456",
     promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
     promotionCode: "summer-classic-free-spins",
+    currencyGroup: "EUR",
     remainingSpins: 50,
     lastUsedDate: null,
     createdAt: ISODate("2024-06-01T00:00:00Z"),
@@ -99,6 +103,7 @@
     code: "vip-classic-free-spins",
     operatorId: "op123",
     siteIds: ["site456"],
+    currencyGroups: ["USD", "GBP"],
     startDate: ISODate("2024-06-15T00:00:00Z"),
     endDate: ISODate("2024-06-30T23:59:59Z"),
     freeSpinCount: 100,
@@ -123,6 +128,7 @@
     siteId: "site456",
     promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j3"),
     promotionCode: "vip-classic-free-spins",
+    currencyGroup: "USD",
     remainingSpins: 100,
     lastUsedDate: null,
     createdAt: ISODate("2024-06-15T00:00:00Z"),
@@ -147,6 +153,7 @@ db.playerPromotions.findOne({
 db.promotions.find({
     operatorId: "op123",
     siteIds: "site456",  // Will match if site456 is in the siteIds array
+    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() }
 })
@@ -158,6 +165,7 @@ db.promotions.find({
 db.promotions.find({
     operatorId: "op123",
     siteIds: "site456",  // Will match if site456 is in the siteIds array
+    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() },
     isAllPlayers: false,
@@ -168,6 +176,7 @@ db.promotions.find({
 db.promotions.find({
     operatorId: "op123",
     siteIds: "site456",  // Will match if site456 is in the siteIds array
+    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() },
     isAllPlayers: true
@@ -179,6 +188,7 @@ db.promotions.find({
 db.promotions.find({
     operatorId: "op123",
     siteIds: "site456",  // Will match if site456 is in the siteIds array
+    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() },
     "games.gameId": gameId

@@ -7,6 +7,7 @@
 {
     _id: ObjectId,                    // PromotionId
     name: String,                     // PromotionName
+    code: String,                     // PromotionCode (derived from name, e.g., "VIP Classic Free Spins" => "vip-classic-free-spins")
     operatorId: String,               // Operator identifier
     siteIds: [String],                // Array of site identifiers
     startDate: ISODate,              // Start date and time
@@ -34,6 +35,7 @@
     operatorId: String,              // Operator identifier
     siteId: String,                  // Site identifier (single site per player promotion)
     promotionId: ObjectId,           // Reference to Promotions collection
+    promotionCode: String,           // Promotion code for quick reference
     remainingSpins: Number,          // 0 means promotion is completed
     lastUsedDate: ISODate,
     createdAt: ISODate,
@@ -49,6 +51,7 @@
 {
     _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
     name: "Summer Classic Free Spins",
+    code: "summer-classic-free-spins",
     operatorId: "op123",
     siteIds: ["site456", "site789", "site101"],
     startDate: ISODate("2024-06-01T00:00:00Z"),
@@ -79,6 +82,7 @@
     operatorId: "op123",
     siteId: "site456",
     promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
+    promotionCode: "summer-classic-free-spins",
     remainingSpins: 50,
     lastUsedDate: null,
     createdAt: ISODate("2024-06-01T00:00:00Z"),
@@ -92,6 +96,7 @@
 {
     _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j3"),
     name: "VIP Classic Free Spins",
+    code: "vip-classic-free-spins",
     operatorId: "op123",
     siteIds: ["site456"],
     startDate: ISODate("2024-06-15T00:00:00Z"),
@@ -117,6 +122,7 @@
     operatorId: "op123",
     siteId: "site456",
     promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j3"),
+    promotionCode: "vip-classic-free-spins",
     remainingSpins: 100,
     lastUsedDate: null,
     createdAt: ISODate("2024-06-15T00:00:00Z"),

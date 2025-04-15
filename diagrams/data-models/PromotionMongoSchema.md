@@ -41,6 +41,89 @@
 }
 ```
 
+## Example Data
+
+### 1. Promotion for All Players
+```javascript
+// Promotion document
+{
+    _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
+    name: "Summer Classic Free Spins",
+    operatorId: "op123",
+    siteIds: ["site456", "site789", "site101"],
+    startDate: ISODate("2024-06-01T00:00:00Z"),
+    endDate: ISODate("2024-06-30T23:59:59Z"),
+    freeSpinCount: 50,
+    isAllPlayers: true,
+    playerIds: [],  // Empty as it's for all players
+    games: [
+        {
+            gameId: 1001,
+            gameName: "Classic Fruit",
+            gameType: "ClassicSlot"
+        },
+        {
+            gameId: 1002,
+            gameName: "Lucky 7s",
+            gameType: "ClassicSlot"
+        }
+    ],
+    createdAt: ISODate("2024-05-15T10:00:00Z"),
+    updatedAt: ISODate("2024-05-15T10:00:00Z")
+}
+
+// Example player promotion document
+{
+    _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j2"),
+    playerId: "player123",
+    operatorId: "op123",
+    siteId: "site456",
+    promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
+    remainingSpins: 50,
+    lastUsedDate: null,
+    createdAt: ISODate("2024-06-01T00:00:00Z"),
+    updatedAt: ISODate("2024-06-01T00:00:00Z")
+}
+```
+
+### 2. Promotion for Limited Players
+```javascript
+// Promotion document
+{
+    _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j3"),
+    name: "VIP Classic Free Spins",
+    operatorId: "op123",
+    siteIds: ["site456"],
+    startDate: ISODate("2024-06-15T00:00:00Z"),
+    endDate: ISODate("2024-06-30T23:59:59Z"),
+    freeSpinCount: 100,
+    isAllPlayers: false,
+    playerIds: ["player123", "player456", "player789"],
+    games: [
+        {
+            gameId: 1001,
+            gameName: "Classic Fruit",
+            gameType: "ClassicSlot"
+        }
+    ],
+    createdAt: ISODate("2024-06-10T10:00:00Z"),
+    updatedAt: ISODate("2024-06-10T10:00:00Z")
+}
+
+// Example player promotion document
+{
+    _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j4"),
+    playerId: "player123",
+    operatorId: "op123",
+    siteId: "site456",
+    promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j3"),
+    remainingSpins: 100,
+    lastUsedDate: null,
+    createdAt: ISODate("2024-06-15T00:00:00Z"),
+    updatedAt: ISODate("2024-06-15T00:00:00Z")
+}
+```
+
 ## Example Queries
 
 ### 1. Check Player's Active Promotion

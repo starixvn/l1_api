@@ -13,13 +13,18 @@
     currencyGroups: [ObjectId],         // Array of currency groups (e.g., ["EUR_objid", "USD_objid"]), not allow empty
     startDate: ISODate,              // Start date and time
     endDate: ISODate,                // End date and time
-    freeSpinBonusCount: Number,           // Number of free spins per player
+    bonusItemCount: Number,              // Number of free spins per player
     offeredPlayerIds: [String],             // List of eligible player IDs (if not all players), empty means all
     gameConfigType: Number ,        // 2: "ClassicSlot" | 3: "CascadingSlot",
-    gameIds: [Number],      // List of eligible games, not null
+    gameIds: [Number],              // List of eligible games, not null
     createdAt: ISODate,
     updatedAt: ISODate,
-    betLevels: [{currencyGroup, betLevel} ...]
+    betLevels: [                    // List of bet levels apply for this promotion
+        {
+            currencyGroup : ObjectId, 
+            betLevel: Number
+        } 
+    ]
 }
 ```
 
@@ -29,11 +34,11 @@
     _id: ObjectId,
     playerId: String,
     operatorId: String,              // Operator identifier
-    siteId: String,                  // Site identifier (single site per player promotion)
+    siteName: String,                // Site identifier (single site per player promotion)
     promotionId: ObjectId,           // Reference to Promotions collection
     promotionCode: String,           // Promotion code for quick reference
-    currencyGroup: String,           // Currency group for this player's promotion
-    remainingSpins: Number,          // 0 means promotion is completed
+    currencyGroup: ObjectId,         // Currency group ObjectId for this player's promotion
+    remainingBonusItems: Number,     // Number of remaining bonus items (0 means promotion is completed)
     lastUsedDate: ISODate,
     createdAt: ISODate,
     updatedAt: ISODate
@@ -50,23 +55,22 @@
     name: "Summer Classic Free Spins",
     code: "summer-classic-free-spins",
     operatorId: "op123",
-    siteIds: ["site456", "site789", "site101"],
-    currencyGroups: ["EUR", "USD", "GBP"],
+    offeredSiteNames: [],  // Offer to all sites
+    currencyGroups: [ObjectId("EUR_123"), ObjectId("USD_456")],
     startDate: ISODate("2024-06-01T00:00:00Z"),
     endDate: ISODate("2024-06-30T23:59:59Z"),
-    freeSpinCount: 50,
-    isAllPlayers: true,
-    playerIds: [],  // Empty as it's for all players
-    games: [
+    bonusItemCount: 50,
+    offeredPlayerIds: [],  // Offer to all players
+    gameConfigType: 2,  // ClassicSlot
+    gameIds: [1001, 1002],
+    betLevels: [
         {
-            gameId: 1001,
-            gameName: "Classic Fruit",
-            gameType: "ClassicSlot"
+            currencyGroup: ObjectId("EUR_123"),
+            betLevel: 0.20
         },
         {
-            gameId: 1002,
-            gameName: "Lucky 7s",
-            gameType: "ClassicSlot"
+            currencyGroup: ObjectId("USD_456"),
+            betLevel: 0.25
         }
     ],
     createdAt: ISODate("2024-05-15T10:00:00Z"),
@@ -81,8 +85,8 @@
     siteId: "site456",
     promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
     promotionCode: "summer-classic-free-spins",
-    currencyGroup: "EUR",
-    remainingSpins: 50,
+    currencyGroup: ObjectId("EUR_123"),
+    remainingBonusItems: 50,
     lastUsedDate: null,
     createdAt: ISODate("2024-06-01T00:00:00Z"),
     updatedAt: ISODate("2024-06-01T00:00:00Z")
@@ -97,18 +101,22 @@
     name: "VIP Classic Free Spins",
     code: "vip-classic-free-spins",
     operatorId: "op123",
-    siteIds: ["site456"],
-    currencyGroups: ["USD", "GBP"],
+    offeredSiteNames: ["site456"],
+    currencyGroups: [ObjectId("USD_456"), ObjectId("GBP_789")],
     startDate: ISODate("2024-06-15T00:00:00Z"),
     endDate: ISODate("2024-06-30T23:59:59Z"),
-    freeSpinCount: 100,
-    isAllPlayers: false,
-    playerIds: ["player123", "player456", "player789"],
-    games: [
+    bonusItemCount: 100,
+    offeredPlayerIds: ["player123", "player456", "player789"],
+    gameConfigType: 2,  // ClassicSlot
+    gameIds: [1001],
+    betLevels: [
         {
-            gameId: 1001,
-            gameName: "Classic Fruit",
-            gameType: "ClassicSlot"
+            currencyGroup: ObjectId("USD_456"),
+            betLevel: 0.25
+        },
+        {
+            currencyGroup: ObjectId("GBP_789"),
+            betLevel: 0.20
         }
     ],
     createdAt: ISODate("2024-06-10T10:00:00Z"),
@@ -123,8 +131,8 @@
     siteId: "site456",
     promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j3"),
     promotionCode: "vip-classic-free-spins",
-    currencyGroup: "USD",
-    remainingSpins: 100,
+    currencyGroup: ObjectId("USD_456"),
+    remainingBonusItems: 100,
     lastUsedDate: null,
     createdAt: ISODate("2024-06-15T00:00:00Z"),
     updatedAt: ISODate("2024-06-15T00:00:00Z")
@@ -139,7 +147,7 @@ db.playerPromotions.findOne({
     operatorId: "op123",
     siteId: "site456",
     playerId: "player123",
-    remainingSpins: { $gt: 0 }  // Active promotion has remaining spins
+    remainingBonusItems: { $gt: 0 }  // Active promotion has remaining bonus items
 })
 ```
 
@@ -147,8 +155,8 @@ db.playerPromotions.findOne({
 ```javascript
 db.promotions.find({
     operatorId: "op123",
-    siteIds: "site456",  // Will match if site456 is in the siteIds array
-    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
+    offeredSiteNames: { $in: ["site456"] },  // Will match if site456 is in the offeredSiteNames array
+    currencyGroups: ObjectId("EUR_123"),  // Will match if EUR_123 is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() }
 })
@@ -159,22 +167,21 @@ db.promotions.find({
 // For specific player list promotions
 db.promotions.find({
     operatorId: "op123",
-    siteIds: "site456",  // Will match if site456 is in the siteIds array
-    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
+    offeredSiteNames: { $in: ["site456"] },  // Will match if site456 is in the offeredSiteNames array
+    currencyGroups: ObjectId("EUR_123"),  // Will match if EUR_123 is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() },
-    isAllPlayers: false,
-    playerIds: "player123"
+    offeredPlayerIds: { $in: ["player123"] }  // Will match if player123 is in the offeredPlayerIds array
 })
 
 // For all players promotions
 db.promotions.find({
     operatorId: "op123",
-    siteIds: "site456",  // Will match if site456 is in the siteIds array
-    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
+    offeredSiteNames: { $in: ["site456"] },  // Will match if site456 is in the offeredSiteNames array
+    currencyGroups: ObjectId("EUR_123"),  // Will match if EUR_123 is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() },
-    isAllPlayers: true
+    offeredPlayerIds: []  // Empty array means all players
 })
 ```
 
@@ -182,10 +189,10 @@ db.promotions.find({
 ```javascript
 db.promotions.find({
     operatorId: "op123",
-    siteIds: "site456",  // Will match if site456 is in the siteIds array
-    currencyGroups: "EUR",  // Will match if EUR is in the currencyGroups array
+    offeredSiteNames: { $in: ["site456"] },  // Will match if site456 is in the offeredSiteNames array
+    currencyGroups: ObjectId("EUR_123"),  // Will match if EUR_123 is in the currencyGroups array
     startDate: { $lte: new Date() },
     endDate: { $gt: new Date() },
-    "games.gameId": gameId
+    gameIds: 1001  // Will match if 1001 is in the gameIds array
 })
 ``` 

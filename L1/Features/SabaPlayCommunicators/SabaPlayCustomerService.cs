@@ -28,10 +28,12 @@ namespace L1.Features.SabaPlayCommunicators
         private readonly ISentryClient sentryClient;
         private readonly IAppSettings appSettings;
         private readonly IAdminApiService adminApiSerivce;
+        private readonly INatsService natsService;
 
         public SabaPlayCustomerService(
             ISabaPlayService SabaPlayService,
             ILogService logService,
+            INatsService natsService,
             IAdminApiService adminApiSerivce,
             SabaPlayEndPoints endpoints,
             ISentryClient sentryClient,
@@ -39,6 +41,7 @@ namespace L1.Features.SabaPlayCommunicators
         {
             this.sabaPlayService = SabaPlayService;
             this.logService = logService;
+            this.natsService = natsService;
             this.endpoints = endpoints;
             this.sentryClient = sentryClient;
             this.appSettings = appSettings;
@@ -80,22 +83,29 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(appSettings.PartnerIds.SabaPlay, response, system);
-
-                if (call.Amount >= appSettings.HighStake)
+                await natsService.PublishAsync("bet.created", new
                 {
-                    var notifyHighStakeData = new NotifyHighStakeData(
-                        SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
-                        call.GameTypeId,
-                        call.Amount,
-                        call.Currency,
-                        call.ChoiceId,
-                        system,
-                        metadata,
-                        call.OperatorId,
-                        call.UserId);
-
-                    await adminApiSerivce.NotifyHighStake(new NotifyHighStakeRequest(notifyHighStakeData));
-                }
+                    call.GameRoundId,
+                    call.GameTypeId,
+                    call.ChoiceId,
+                    call.Amount,
+                    call.Currency,
+                    call.RoundEndTime,
+                    call.Ip,
+                    call.FreeSpin,
+                    call.ContributionAmount,
+                    call.ContributionRate,
+                    call.OperatorToken,
+                    call.FreeBet,
+                    call.OperatorId,
+                    call.UserId,
+                    call.Seq,
+                    PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
+                    call.SiteId,
+                    call.TimeStamp,
+                    System = system,
+                    Metadata = metadata
+                });
             }
 
             return response;
@@ -108,6 +118,7 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(appSettings.PartnerIds.SabaPlay, response);
+                await natsService.PublishAsync("bet.settled", call);
             }
 
             return response;

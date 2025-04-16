@@ -9,22 +9,17 @@
     name: String,                     // PromotionName
     code: String,                     // PromotionCode (derived from name, e.g., "VIP Classic Free Spins" => "vip-classic-free-spins")
     operatorId: String,               // Operator identifier
-    siteIds: [String],                // Array of site identifiers
-    currencyGroups: [String],         // Array of currency groups (e.g., ["EUR", "USD", "GBP"])
+    offeredSiteNames: [String],     // Array of site identifiers, empty value means offer all
+    currencyGroups: [ObjectId],         // Array of currency groups (e.g., ["EUR_objid", "USD_objid"]), not allow empty
     startDate: ISODate,              // Start date and time
     endDate: ISODate,                // End date and time
-    freeSpinCount: Number,           // Number of free spins per player
-    isAllPlayers: Boolean,           // Whether promotion is for all players
-    playerIds: [String],             // List of eligible player IDs (if not all players)
-    games: [                         // List of eligible games
-        {
-            gameId: Number,
-            gameName: String,
-            gameType: String         // "ClassicSlot" | "CascadingSlot"
-        }
-    ],
+    freeSpinBonusCount: Number,           // Number of free spins per player
+    offeredPlayerIds: [String],             // List of eligible player IDs (if not all players), empty means all
+    gameConfigType: Number ,        // 2: "ClassicSlot" | 3: "CascadingSlot",
+    gameIds: [Number],      // List of eligible games, not null
     createdAt: ISODate,
-    updatedAt: ISODate
+    updatedAt: ISODate,
+    betLevels: [{currencyGroup, betLevel} ...]
 }
 ```
 

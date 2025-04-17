@@ -2,33 +2,20 @@
 
 ## Collections
 
-### 1. Bets Collection
+### 1. Bets Collection (promotion_bets)
 ```javascript
 {
     _id: ObjectId,                    // BetId
-    seq: String,                      // Sequence number
     playerId: String,                 // Player identifier
-    siteId: String,                   // Site identifier
-    timestamp: ISODate,               // When the bet was placed
-    gameRoundId: Number,              // Game round identifier
-    gameTypeId: Number,               // Game type identifier
-    choiceId: Number,                 // Choice identifier
-    amount: Number,                   // Amount wagered
-    currency: String,                 // Currency code
-    roundEndTime: ISODate?,           // Optional round end time
-    ip: String,                       // Player's IP address
-    isFreeSpin: Boolean,              // Whether this is a free spin bet
-    contributionAmount: Number,       // Contribution amount
-    contributionRate: Number,         // Contribution rate
-    isFreeBet: Boolean,               // Whether this is a free bet
+    siteName: String,                   // Site identifier
+    currency: String,
     operatorId: String,               // Operator identifier
-    userId: String,                   // User identifier
-    promotionId: ObjectId?,           // Optional reference to Promotions collection
-    promotionCode: String?,           // Optional promotion code for quick reference
-    winAmount: Number,                // Amount won
-    paid: Boolean,                    // Whether the bet has been paid out
-    createdAt: ISODate,
-    updatedAt: ISODate
+    time: ISODate,               // When the bet was placed
+    gameRoundId: Number,              // Game round identifier
+    gameId: Number,               // Game type identifier
+    promotionId: ObjectId,           // Optional reference to Promotions collection
+    winningAmount: Number,                // Amount won
+    baseWinningAmount: Number,  // Base amount won
 }
 ```
 

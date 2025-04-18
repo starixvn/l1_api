@@ -1,55 +1,56 @@
 ﻿using L1.Features.AdminApiCommunicators.VoidTicket;
 using L1.Features.AdminApiCommunicators;
-using L1.Features.PartnerCommunicators.EndGame;
-using L1.Features.PartnerCommunicators;
 using System.Threading.Tasks;
 using System;
 using L1.Shared.Configurations;
 using System.Linq;
 
-public interface IPartnerEndGameHandler
+namespace L1.Features.PartnerCommunicators.EndGame
 {
-    Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response, string operatorId);
-}
-
-public class PartnerEndGameHandler : IPartnerEndGameHandler
-{
-    private readonly IAdminApiService adminApiService;
-    private readonly IAppSettings appSettings;
-
-    public PartnerEndGameHandler(IAdminApiService adminApiService, IAppSettings appSettings)
+    public interface IPartnerEndGameHandler
     {
-        this.adminApiService = adminApiService;
-        this.appSettings = appSettings;
+        Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response, string operatorId);
     }
 
-    public async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response, string operatorId)
+    public class PartnerEndGameHandler : IPartnerEndGameHandler
     {
-        if (!ShouldHandleFailedEndGame(operatorId))
+        private readonly IAdminApiService adminApiService;
+        private readonly IAppSettings appSettings;
+
+        public PartnerEndGameHandler(IAdminApiService adminApiService, IAppSettings appSettings)
         {
-            return;
+            this.adminApiService = adminApiService;
+            this.appSettings = appSettings;
         }
-        var voidTicketRequest = CreateVoidTicketRequest(call, response, operatorId);
-        await adminApiService.VoidTicket(voidTicketRequest);
-    }
 
-    private bool ShouldHandleFailedEndGame(string operatorId)
-    {
-        return appSettings.VoidTicketWhenEndingRoundFailed?.Operators
-            ?.Contains(operatorId, StringComparer.OrdinalIgnoreCase) ?? false;
-    }
+        public async Task HandleFailedEndGame(PartnerEndGameCall call, PartnerResponse<PartnerEndGameResult> response, string operatorId)
+        {
+            if (!ShouldHandleFailedEndGame(operatorId))
+            {
+                return;
+            }
+            var voidTicketRequest = CreateVoidTicketRequest(call, response, operatorId);
+            await adminApiService.VoidTicket(voidTicketRequest);
+        }
 
-    private VoidTicketRequest CreateVoidTicketRequest(
-        PartnerEndGameCall call,
-        PartnerResponse<PartnerEndGameResult> response,
-        string operatorId)
-    {
-        return new VoidTicketRequest(
-            playerId: call.PlayerId.ToString(),
-            operatorId: operatorId,
-            siteId: call.SiteId,
-            gameRoundId: call.GameRoundId,
-            gameTypeId: call.GameTypeId,
-            reason: response.Result.ErrorMessage);
+        private bool ShouldHandleFailedEndGame(string operatorId)
+        {
+            return appSettings.VoidTicketWhenEndingRoundFailed?.Operators
+                ?.Contains(operatorId, StringComparer.OrdinalIgnoreCase) ?? false;
+        }
+
+        private static VoidTicketRequest CreateVoidTicketRequest(
+            PartnerEndGameCall call,
+            PartnerResponse<PartnerEndGameResult> response,
+            string operatorId)
+        {
+            return new VoidTicketRequest(
+                playerId: call.PlayerId.ToString(),
+                operatorId: operatorId,
+                siteId: call.SiteId,
+                gameRoundId: call.GameRoundId,
+                gameTypeId: call.GameTypeId,
+                reason: response.Result.ErrorMessage);
+        }
     }
 }

@@ -28,7 +28,6 @@ namespace L1.Features.OWCommunicators
         private readonly IAppSettings appSettings;
         private readonly ISentryClient sentryClient;
         private readonly INatsService natsService;
-        private readonly IPartnerEndGameHandler partnerEndGameHandler;
 
         public OWCustomerService(
             IOWService oWService,
@@ -36,8 +35,7 @@ namespace L1.Features.OWCommunicators
             IAppSettings appSettings,
             OWEndPoints endpoints,
             ISentryClient sentryClient,
-            INatsService natsService,
-            IPartnerEndGameHandler partnerEndGameHandler)
+            INatsService natsService)
         {
             this.oWService = oWService;
             this.logService = logService;
@@ -45,7 +43,6 @@ namespace L1.Features.OWCommunicators
             this.appSettings = appSettings;
             this.sentryClient = sentryClient;
             this.natsService = natsService;
-            this.partnerEndGameHandler = partnerEndGameHandler;
         }
 
         public string OperatorId { get; set; }
@@ -121,10 +118,6 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogEndGameAsync(OperatorId, response);
                 await natsService.PublishAsync("bet.settled", call);
-            }
-            else 
-            { 
-                await partnerEndGameHandler.HandleFailedEndGame(call, response, OperatorId);
             }
 
             return response;

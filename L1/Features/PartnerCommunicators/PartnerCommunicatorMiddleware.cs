@@ -1,6 +1,5 @@
-﻿using IdentityModel.Client;
+﻿using L1.Features.PartnerCommunicators.EndGame;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
 
 namespace L1.Features.PartnerCommunicators
 {

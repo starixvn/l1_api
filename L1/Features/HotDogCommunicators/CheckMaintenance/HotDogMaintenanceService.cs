@@ -17,9 +17,6 @@ namespace L1.Features.HotdogCommunicators.CheckMaintenance
     public class HotdogMaintenanceService : PartnerMaintenanceService, IHotdogMaintenanceService
     {
         private readonly HotdogServiceSettings hotdogServiceSettings;
-        private readonly string secretKey;
-        private readonly IJsonService jsonService;
-
 
         public HotdogMaintenanceService(
             HttpClient httpClient,
@@ -30,8 +27,6 @@ namespace L1.Features.HotdogCommunicators.CheckMaintenance
             : base(httpClient, adminApiService, sentryClient, jsonService)
         {
             this.hotdogServiceSettings = hotdogServiceSettings;
-            this.secretKey = hotdogServiceSettings.SecretKey;
-            this.jsonService = jsonService;
         }
 
         public Task ObserveMaintenanceSchedule(HotdogRequest request, string operatorId)

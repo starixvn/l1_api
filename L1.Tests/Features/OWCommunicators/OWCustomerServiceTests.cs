@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.AdminApiCommunicators;
+using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.EndGame;
@@ -27,13 +28,11 @@ namespace L1.Tests.Features.OWCommunicators
         private readonly ISentryClient sentryClient = Substitute.For<ISentryClient>();
 
         private readonly INatsService natsService = Substitute.For<INatsService>();
-        private readonly IPartnerEndGameHandler partnerEndGameHandler = Substitute.For<IPartnerEndGameHandler>();
-
         private readonly OWCustomerService service;
 
         public OWCustomerServiceTests()
         {
-            service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints, sentryClient, natsService, partnerEndGameHandler);
+            service = new OWCustomerService(owService, logService, appSettings, adminApiSerivce, endpoints, sentryClient, natsService);
             appSettings.PartnerIds = new PartnerIds
             {
                 OW = "OW",

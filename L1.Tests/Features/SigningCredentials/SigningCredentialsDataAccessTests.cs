@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using L1.Features.Sites;
+using L1.Shared.Configurations;
 using MongoDB.Driver;
 using NSubstitute;
 using Xunit;
@@ -18,8 +19,12 @@ namespace L1.Features.SigningCredentials
             var database = Substitute.For<IMongoDatabase>();
             mongoClient.GetDatabase("member").Returns(database);
             database.GetCollection<SigningCredentialKey>("signing_credential_keys").Returns(collection);
-
-            dataAccess = new SigningCredentialsDataAccess(mongoClient);
+            var appSettings = Substitute.For<IAppSettings>();
+            appSettings.MongoDBSettings = new MongoDBSettings
+            {
+                ConnectionString = "mongodb://127.0.0.1:27017",
+            };
+            dataAccess = new SigningCredentialsDataAccess(mongoClient, appSettings);
         }
 
         [Fact]

@@ -67,6 +67,7 @@ namespace L1.Tests.Features.SboCommunicators
             // Add JsonService registration
             services.AddSingleton(new JsonSerializerOptions());
             services.AddSingleton<IJsonService, JsonService>();
+            services.AddSingleton<IAppSettings>(appSettings);
 
             // Act
             SboServiceMiddleware.AddSboServices(services, SboServiceSettings);

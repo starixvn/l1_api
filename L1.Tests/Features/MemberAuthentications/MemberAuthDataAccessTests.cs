@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using L1.Shared.Configurations;
 using MongoDB.Driver;
 using NSubstitute;
 using Xunit;
@@ -18,8 +19,13 @@ namespace L1.Features.MemberAuthentications
             var database = Substitute.For<IMongoDatabase>();
             mongoClient.GetDatabase("member").Returns(database);
             database.GetCollection<MemberAuth>("member_auths").Returns(memberAuthCollection);
+            var appSettings = Substitute.For<IAppSettings>();
+            appSettings.MongoDBSettings = new MongoDBSettings
+            {
+                ConnectionString = "mongodb://127.0.0.1:27017",
+            };
 
-            dataAccess = new MemberAuthDataAccess(mongoClient);
+            dataAccess = new MemberAuthDataAccess(mongoClient, appSettings);
         }
 
         [Theory, AutoData]

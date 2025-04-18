@@ -2,7 +2,6 @@
 {
     public class PartnerIds
     {
-
         public string SBO { get; set; }
 
         public string OW_VG { get; set; }

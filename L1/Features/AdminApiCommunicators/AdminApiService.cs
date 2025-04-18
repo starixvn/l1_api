@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.AdminApiCommunicators.UnderMaintenance;
 using L1.Features.AdminApiCommunicators.VoidTicket;
-using Newtonsoft.Json;
 using Sentry;
 using L1.Shared.Json;
 

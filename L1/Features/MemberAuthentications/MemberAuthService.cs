@@ -60,7 +60,7 @@ namespace L1.Features.MemberAuthentications
                     }
                 }
 
-                if (memberAuth.Time.AddSeconds(appSettings.TokenExpiredSeconds) <= DateTime.UtcNow)
+                if (new DateTimeOffset(memberAuth.Time, TimeSpan.Zero).AddSeconds(appSettings.TokenExpiredSeconds) <= DateTimeOffset.UtcNow)
                 {
                     return VerificationResult.CreateErrorResponse(VerificationResult.TokenExpiredCode);
                 }

@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
 using L1.Shared.Helpers;
@@ -19,7 +18,6 @@ namespace L1.Features.SabaPlayCommunicators
     {
         private const string HeaderAccessKey = "Saba-access-key";
         private readonly HttpClient httpClient;
-        private readonly IAdminApiService adminApiService;
         private readonly ISabaPlayFailureHandler failureHandler;
         private readonly string secretKey;
         private readonly IJsonService jsonService;
@@ -27,11 +25,10 @@ namespace L1.Features.SabaPlayCommunicators
         public SabaPlayService(
             HttpClient httpClient, 
             ISabaPlayFailureHandler failureHandler, 
-            IAdminApiService adminApiService, SabaPlayServiceSettings settings,
+            SabaPlayServiceSettings settings,
             IJsonService jsonService)
         {
             this.httpClient = httpClient;
-            this.adminApiService = adminApiService;
             this.failureHandler = failureHandler;
             this.secretKey = settings.SecretKey;
             this.jsonService = jsonService;
@@ -57,7 +54,6 @@ namespace L1.Features.SabaPlayCommunicators
                 var finalResponse = response.IsSuccessStatusCode
                     ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
                     : await CreateNetworkErrorResponse<T>(new SabaPlayCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);
-
 
                 finalResponse!.Request = request;
 

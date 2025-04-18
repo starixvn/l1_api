@@ -37,11 +37,10 @@ namespace L1.Shared.Configurations
         public StreamSettings StreamSettings { get; set; } = new();
 
         public string MicrositeClientPatternDomain { get; set; }
-      
+
         public VoidTicketWhenEndingRoundFailed VoidTicketWhenEndingRoundFailed { get; set; } = new();
 
         public bool IsCheckBrowserUserAgent { get; set; } = true;
-
     }
 
     public class LogEnabling

@@ -6,9 +6,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.HotdogCommunicators.CheckMaintenance;
 using L1.Shared.Constants;
 using Sentry;
-using Sentry.Protocol;
 using L1.Shared.Configurations;
-using L1.Features.SboCommunicators;
 
 namespace L1.Features.HotdogCommunicators
 {

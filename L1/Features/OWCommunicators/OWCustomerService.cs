@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using L1.Features.AdminApiCommunicators;
-using L1.Features.AdminApiCommunicators.NotifyHighStake;
 using L1.Features.PartnerCommunicators;
 using L1.Features.PartnerCommunicators.Award;
 using L1.Features.PartnerCommunicators.EndGame;

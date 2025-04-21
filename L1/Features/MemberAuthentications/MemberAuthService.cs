@@ -6,6 +6,7 @@ using L1.Features.GameConfigurations;
 using L1.Features.Partners;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
+using L1.Shared.Helpers;
 using L1.Shared.Json;
 using L1.Shared.Resources;
 using Sentry;
@@ -117,7 +118,7 @@ namespace L1.Features.MemberAuthentications
             return new Uri(uri, $"{uri.LocalPath.TrimEnd('/')}/site-{gameId}/");
         }
 
-        private async Task<Uri> GetClientUrl(MemberAuth memberAuth)
+        private async Task<Uri> GetClientUrl(MemberAuth memberAuth, bool shouldUsePortraitOrientation)
         {
             var partner = await partnerDataService.GetById(memberAuth.OperatorId);
 
@@ -128,7 +129,7 @@ namespace L1.Features.MemberAuthentications
 
             var clientUrl = memberAuth.AppType switch
             {
-                AppTypes.SabaClub => partner.ClubVersionUrl,
+                AppTypes.SabaClub => shouldUsePortraitOrientation ? partner.MobileDirectUrl : partner.ClubVersionUrl,
                 AppTypes.MiniSabaClub => partner.MiniVersionUrl,
                 AppTypes.SabaMobi => partner.MobiVersionUrl,
                 AppTypes.MegaKeno => partner.MegaKenoUrl,
@@ -139,10 +140,14 @@ namespace L1.Features.MemberAuthentications
             return !string.IsNullOrEmpty(clientUrl) ? new Uri(clientUrl) : null;
         }
 
-        private Uri GetRedirectedUrl(Uri clientUrl, int? gameId, bool isOpenDirectly)
+        private Uri GetRedirectedUrl(Uri clientUrl, int? gameId, bool isOpenDirectly, bool shouldUsePortraitOrientation)
         {
+            if (shouldUsePortraitOrientation)
+            {
+                return clientUrl;
+            }
+            
             var gameClientUrl = clientUrl?.ToString();
-
             if (isOpenDirectly && !string.IsNullOrEmpty(gameClientUrl))
             {
                 return GetDirectClientUrl(gameClientUrl.TrimEnd('/'), gameId.Value);
@@ -160,6 +165,16 @@ namespace L1.Features.MemberAuthentications
             return null;
         }
 
+        private static bool IsUsePortraitOrientation(MemberAuth memberAuth, GameConfigurationResponse gameConfiguration)
+        {
+            const string SABA_PLAY_OPERATOR_ID = "SabaPlay";
+            var deviceType = DeviceTypeHelper.GetDeviceType(memberAuth.BrowserUserAgent);
+            System.Diagnostics.Debug.WriteLine(memberAuth.OperatorId, gameConfiguration?.IsSupportedPortraitMode, deviceType);
+            return memberAuth.OperatorId == SABA_PLAY_OPERATOR_ID
+               && gameConfiguration?.IsSupportedPortraitMode == true
+               && deviceType.Equals(DeviceType.Mobile);
+        }
+
         public async Task<SingleSignOnResult> UpdateMemberAuth(UpdateMemberAuthParams updateParams)
         {
             var memberAuth = await memberAuthDataAccess.GetForTestCurrency(updateParams.Token);
@@ -168,14 +183,13 @@ namespace L1.Features.MemberAuthentications
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
-
-
             var gameConfiguration = await GetGameConfigurationAsync(updateParams.GameTypeId);
+            var shouldUsePortraitOrientation = IsUsePortraitOrientation(memberAuth, gameConfiguration);
             var isOpenDirectly = memberAuth.AppType == AppTypes.SabaClub
                 && gameConfiguration?.IsMicrosite == true
                 && gameConfiguration?.IsOpenDirectly == true;
-            var gameClientUrl = await GetClientUrl(memberAuth);
-            var redirectUrl = GetRedirectedUrl(gameClientUrl, updateParams.GameTypeId, isOpenDirectly);
+            var gameClientUrl = await GetClientUrl(memberAuth, shouldUsePortraitOrientation);
+            var redirectUrl = GetRedirectedUrl(gameClientUrl, updateParams.GameTypeId, isOpenDirectly, shouldUsePortraitOrientation);
 
             if (redirectUrl == null)
             {

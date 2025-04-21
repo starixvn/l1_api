@@ -255,6 +255,54 @@ namespace L1.Tests.Features.MemberAuthentications
         }
 
         [Theory, AutoData]
+        public async Task UpdateMemberAuth_WithSabaPlayOpenDirect_ReturnsDirectUrl(UpdateMemberAuthParams updateMemberAuthParams)
+        {
+            // Arrange
+            updateMemberAuthParams.GameTypeId = 1;
+            var memberAuth = new MemberAuth
+            {
+                Token = updateMemberAuthParams.Token,
+                Time = DateTime.UtcNow,
+                PlayerId = "1",
+                PlayerName = "name",
+                SiteId = "3332",
+                OperatorId = "SabaPlay",
+                CurrencyName = "ISA",
+                IsTestCurrency = true,
+                Language = updateMemberAuthParams.Language,
+                BrowserUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15",
+                AppType = 1
+            };
+
+            partnerDataService.GetById(memberAuth.OperatorId).Returns(new Partner
+            {
+                ClubVersionUrl = "http://local.com/",
+                MobiVersionUrl = "http://mobi.com/",
+                MiniVersionUrl = "http://mini.com/",
+                MobileDirectUrl = "http://direct.com/"
+            });
+
+            memberAuthDataAccess.GetForTestCurrency(updateMemberAuthParams.Token).Returns(memberAuth);
+            var gameConfig = new GameConfigurationResponse
+            {
+                Id = 1,
+                IsSupportedPortraitMode = true
+            };
+            configurationApiService.GetDetailGameConfiguration(1).Returns(gameConfig);
+
+            // Act
+            var result = await memberAuthService.UpdateMemberAuth(updateMemberAuthParams);
+
+            // Assert
+            await memberAuthDataAccess.Received(1).UpdateCurrencyGroup(updateMemberAuthParams.Token, updateMemberAuthParams.CurrencyGroupId);
+            Assert.IsType<SingleSignOnResult>(result);
+            Assert.Contains(updateMemberAuthParams.Token, result.RedirectUrl);
+            Assert.Contains(updateMemberAuthParams.Language, result.RedirectUrl);
+            Assert.Contains($"&gameId={updateMemberAuthParams.GameTypeId}", result.RedirectUrl);
+            Assert.Contains("http://direct.com/", result.RedirectUrl);
+        }
+
+        [Theory, AutoData]
         public async Task VerifyToken_TokenNotExpired_ReturnsSuccess(VerificationParams verificationParams)
         {
             // Arrange

@@ -152,7 +152,7 @@ namespace L1.Features.MemberAuthentications
 
         private async Task<GameConfigurationResponse> GetGameConfigurationAsync(int? gameId)
         {
-            if (gameId > 0)
+            if (gameId > 0 && configurationApiService != null)
             {
                 return await configurationApiService.GetDetailGameConfiguration(gameId.Value);
             }
@@ -167,7 +167,6 @@ namespace L1.Features.MemberAuthentications
             {
                 return SingleSignOnResult.CreateErrorResponse(SingleSignOnResult.Unauthorize);
             }
-
 
             var gameConfiguration = await GetGameConfigurationAsync(updateParams.GameTypeId);
             var isOpenDirectly = memberAuth.AppType == AppTypes.SabaClub

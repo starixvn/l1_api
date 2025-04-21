@@ -6,12 +6,19 @@ namespace L1.Features.GameConfigurations
     {
         public static void AddConfigurationApiServices(this IServiceCollection services, ConfigurationApiSettings settings)
         {
-            services.AddSingleton(settings.Endpoints);
-            services
-                .AddHttpClient<IConfigurationApiService, ConfigurationApiService>(httpClient =>
-                {
-                    httpClient.BaseAddress = settings.BaseUrl;
-                });
+            if(settings != null)
+            {
+                services.AddSingleton(settings.Endpoints);
+                services
+                    .AddHttpClient<IConfigurationApiService, ConfigurationApiService>(httpClient =>
+                    {
+                        httpClient.BaseAddress = settings.BaseUrl;
+                    });
+            }
+            else
+            {
+                services.AddSingleton<IConfigurationApiService>(provider => null);
+            }
         }
     }
 }

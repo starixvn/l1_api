@@ -21,65 +21,22 @@
 
 ## Example Data
 
-### 1. Regular Bet (No Promotion)
 ```javascript
 {
     _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),
-    seq: "BET20240601100000",
     playerId: "player123",
     siteId: "site456",
-    timestamp: ISODate("2024-06-01T10:00:00Z"),
+    time: ISODate("2024-06-01T10:00:00Z"),
     gameRoundId: 10001,
-    gameTypeId: 1,
-    choiceId: 1,
-    amount: 1.00,
+    gameId: 1, 
     currency: "EUR",
-    roundEndTime: ISODate("2024-06-01T10:00:30Z"),
-    ip: "192.168.1.1",
-    isFreeSpin: false,
-    contributionAmount: 0.10,
-    contributionRate: 0.1,
-    isFreeBet: false,
     operatorId: "op123",
-    userId: "user123",
-    promotionId: null,
-    promotionCode: null,
-    winAmount: 2.50,
-    paid: true,
-    createdAt: ISODate("2024-06-01T10:00:00Z"),
-    updatedAt: ISODate("2024-06-01T10:00:01Z")
+    promotionId: 100,
+    winningAmount: 100 + 10000000,
+    baseWinningAmount: 100 + 10000000,
 }
 ```
 
-### 2. Promotion Bet (Free Spins)
-```javascript
-{
-    _id: ObjectId("65f1a2b3c4d5e6f7g8h9i0j2"),
-    seq: "BET20240601110000",
-    playerId: "player123",
-    siteId: "site456",
-    timestamp: ISODate("2024-06-01T11:00:00Z"),
-    gameRoundId: 10002,
-    gameTypeId: 1,
-    choiceId: 1,
-    amount: 0.00,                     // Free spin bet amount is 0
-    currency: "EUR",
-    roundEndTime: ISODate("2024-06-01T11:00:30Z"),
-    ip: "192.168.1.1",
-    isFreeSpin: true,
-    contributionAmount: 0.00,         // No contribution for free spins
-    contributionRate: 0.0,            // No contribution rate for free spins
-    isFreeBet: false,
-    operatorId: "op123",
-    userId: "user123",
-    promotionId: ObjectId("65f1a2b3c4d5e6f7g8h9i0j1"),  // Reference to Summer Classic Free Spins
-    promotionCode: "summer-classic-free-spins",
-    winAmount: 5.00,
-    paid: true,
-    createdAt: ISODate("2024-06-01T11:00:00Z"),
-    updatedAt: ISODate("2024-06-01T11:00:01Z")
-}
-```
 
 ## Example Queries
 

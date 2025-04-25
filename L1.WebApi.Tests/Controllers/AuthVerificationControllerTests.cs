@@ -38,24 +38,5 @@ namespace L1.WebApi.Tests.Controllers
             Assert.NotNull(responseValue);
             Assert.Equal(expectedResult, responseValue);
         }
-
-        [Fact]
-        public async Task UpdateMemberAuth_Always_ReturnResultFromMemberAuthService()
-        {
-            // Arrange
-            var updateParams = fixture.Create<UpdateMemberAuthParams>();
-            var expectedResult = fixture.Create<SingleSignOnResult>();
-            memberAuthService.UpdateMemberAuth(Arg.Any<UpdateMemberAuthParams>()).Returns(Task.FromResult(expectedResult));
-
-            // Act
-            var actualValue = await controller.UpdateMemberAuth(updateParams);
-            var objectResult = actualValue.Result as OkObjectResult; // ✅ Lấy OkObjectResult
-            var responseValue = objectResult?.Value as SingleSignOnResult; // ✅ Giải nén giá trị
-
-            // Assert
-            Assert.NotNull(objectResult);
-            Assert.NotNull(responseValue);
-            Assert.Equal(expectedResult, responseValue);
-        }
     }
 }

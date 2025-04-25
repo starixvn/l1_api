@@ -99,7 +99,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task WriteSignInAsync_Always_InsertOneAsync(Request request, SingleSignOnResult result)
+        public async Task WriteSignInAsync_Always_InsertOneAsync(Request request, VerificationResult result)
         {
             // Arrange
             var log = new SBLog(request, result, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
@@ -112,7 +112,7 @@ namespace L1.Tests.Features.OWCommunicators.Log
         }
 
         [Theory, AutoData]
-        public async Task WriteRetrieveEndGameAsync_Always_InsertOneAsync(Request request, SingleSignOnResult result)
+        public async Task WriteRetrieveEndGameAsync_Always_InsertOneAsync(Request request, VerificationResult result)
         {
             // Arrange
             var log = new SBLog(request, result, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);

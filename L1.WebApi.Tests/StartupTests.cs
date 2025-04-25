@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using NSubstitute;
 using Xunit;
 
@@ -39,7 +37,6 @@ namespace L1.WebApi.Tests
             AddAdminApiSettingsConfigsSection(configurationSection);
             AddSboServiceSettingsConfigsSection(configurationSection);
             AddSGApiSettingsConfigsSection(configurationSection);
-            AddConfigurationuApiSettingsConfigsSection(configurationSection);
 
             configuration.GetSection("AppSettings").Returns(configurationSection);
             startup = new Startup(configuration);
@@ -166,23 +163,6 @@ namespace L1.WebApi.Tests
             var sgEndPoints = Substitute.For<IConfigurationSection>();
             sgEndPoints.GetChildren().Returns(children);
             sgApiSettingsConfigsSection.GetSection("Endpoints").Returns(sgEndPoints);
-        }
-
-        private static void AddConfigurationuApiSettingsConfigsSection(IConfigurationSection configSection)
-        {
-            var children = new List<IConfigurationSection> { Substitute.For<IConfigurationSection>() };
-            var configurationApiSettingsConfigsSection = Substitute.For<IConfigurationSection>();
-            configurationApiSettingsConfigsSection.GetChildren().Returns(children);
-            configSection.GetSection("ConfigurationApiSettings").Returns(configurationApiSettingsConfigsSection);
-
-            var baseUrl = Substitute.For<IConfigurationSection>();
-            baseUrl.GetChildren().Returns(children);
-            configurationApiSettingsConfigsSection.GetSection("BaseUrl").Returns(baseUrl);
-
-            var endpoints = Substitute.For<IConfigurationSection>();
-            endpoints.GetChildren().Returns(children);
-            endpoints.GetSection("DetailGameConfiguration").Returns(Substitute.For<IConfigurationSection>());
-            configurationApiSettingsConfigsSection.GetSection("Endpoints").Returns(endpoints);
         }
     }
 }

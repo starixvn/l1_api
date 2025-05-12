@@ -252,23 +252,6 @@ namespace L1.Tests.Features.Partners
             await promotionDataAccess.Received(1).GetPromotion(partnerId, promotionCode);
         }
 
-        [Theory]
-        [InlineData(null, "PROMO123")]
-        [InlineData("", "PROMO123")]
-        [InlineData(" ", "PROMO123")]
-        [InlineData("PARTNER123", null)]
-        [InlineData("PARTNER123", "")]
-        [InlineData("PARTNER123", " ")]
-        public async Task GetPromotion_WithInvalidData_ShouldReturnNull(string partnerId, string promotionCode)
-        {
-            // Act
-            var result = await partnerDataService.GetPromotion(partnerId, promotionCode);
-
-            // Assert
-            Assert.Null(result);
-            await promotionDataAccess.DidNotReceive().GetPromotion(Arg.Any<string>(), Arg.Any<string>());
-        }
-
         [Fact]
         public async Task GetPromotion_WithNonExistentPromotion_ShouldReturnNull()
         {

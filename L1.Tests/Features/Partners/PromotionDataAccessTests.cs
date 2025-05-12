@@ -44,13 +44,11 @@ namespace L1.Tests.Features.Partners
                 EndTime = DateTime.UtcNow.AddDays(5)
             };
 
-            // Create a cursor that will return our expected data
             var asyncCursor = Substitute.For<IAsyncCursor<Promotion>>();
             asyncCursor.Current.Returns(new List<Promotion> { expectedPromotion });
             asyncCursor.MoveNext(Arg.Any<CancellationToken>()).Returns(true, false);
             asyncCursor.MoveNextAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(true), Task.FromResult(false));
 
-            // Set up the mock for FindAsync
             promotionCollection
                 .FindAsync(Arg.Any<FilterDefinition<Promotion>>(),
                           Arg.Any<FindOptions<Promotion, Promotion>>(),
@@ -69,13 +67,11 @@ namespace L1.Tests.Features.Partners
         public async Task GetPromotion_WithNonexistentPromotion_ShouldReturnNull(string partnerId, string promotionCode)
         {
             // Arrange
-            // Create a cursor that will return no data
             var asyncCursor = Substitute.For<IAsyncCursor<Promotion>>();
             asyncCursor.Current.Returns(new List<Promotion>());
             asyncCursor.MoveNext(Arg.Any<CancellationToken>()).Returns(false);
             asyncCursor.MoveNextAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(false));
 
-            // Set up the mock for FindAsync
             promotionCollection
                 .FindAsync(Arg.Any<FilterDefinition<Promotion>>(),
                           Arg.Any<FindOptions<Promotion, Promotion>>(),

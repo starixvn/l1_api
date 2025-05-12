@@ -59,11 +59,6 @@ namespace L1.Features.Partners
             
         public async Task<PromotionDto> GetPromotion(string partnerId, string promotionCode)
         {
-            if (string.IsNullOrWhiteSpace(partnerId) || string.IsNullOrWhiteSpace(promotionCode))
-            {
-                return null;
-            }
-            
             var promotion = await promotionDataAccess.GetPromotion(partnerId, promotionCode);
             if (promotion == null)
             {
@@ -85,18 +80,12 @@ namespace L1.Features.Partners
         
         private PromotionStatus DeterminePromotionStatus(DateTime startTime, DateTime endTime, DateTime currentTime)
         {
-            if (currentTime < startTime)
+            return currentTime switch
             {
-                return PromotionStatus.Upcoming;
-            }
-            else if (currentTime > endTime)
-            {
-                return PromotionStatus.Completed;
-            }
-            else
-            {
-                return PromotionStatus.Running;
-            }
+                var time when time < startTime => PromotionStatus.Upcoming,
+                var time when time > endTime => PromotionStatus.Completed,
+                _ => PromotionStatus.Running
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using L1.Features.Partners;
@@ -11,6 +12,7 @@ namespace L1.Tests.Features.Partners
     {
         private readonly IPartnerDataAccess partnerDataAccess;
         private readonly ICurrencyDataAccess currencyDataAccess;
+        private readonly IPromotionDataAccess promotionDataAccess;
         private readonly Fixture fixture = new();
 
         private readonly PartnerDataService partnerDataService;
@@ -19,8 +21,9 @@ namespace L1.Tests.Features.Partners
         {
             partnerDataAccess = Substitute.For<IPartnerDataAccess>();
             currencyDataAccess = Substitute.For<ICurrencyDataAccess>();
+            promotionDataAccess = Substitute.For<IPromotionDataAccess>();
 
-            partnerDataService = new PartnerDataService(partnerDataAccess, currencyDataAccess);
+            partnerDataService = new PartnerDataService(partnerDataAccess, currencyDataAccess, promotionDataAccess);
         }
 
         [InlineData("")]
@@ -148,6 +151,139 @@ namespace L1.Tests.Features.Partners
             Assert.Equal(isVerifiedPartner && isVerifiedCurrency, result);
             await partnerDataAccess.Received(1).Verify(partnerId, secretKey);
             await currencyDataAccess.Received(1).Verify(partnerId, currency);
+        }
+
+        [Fact]
+        public async Task GetPromotion_WithValidData_ShouldReturnPromotionWithUpcomingStatus()
+        {
+            // Arrange
+            var partnerId = "PARTNER123";
+            var promotionCode = "PROMO123";
+            var futureStartTime = DateTime.UtcNow.AddDays(1);
+            var futureEndTime = DateTime.UtcNow.AddDays(10);
+            
+            var promotion = new Promotion
+            {
+                PartnerId = partnerId,
+                PromotionCode = promotionCode,
+                PromotionName = "Test Promotion",
+                StartTime = futureStartTime,
+                EndTime = futureEndTime
+            };
+
+            promotionDataAccess.GetPromotion(partnerId, promotionCode).Returns(promotion);
+
+            // Act
+            var result = await partnerDataService.GetPromotion(partnerId, promotionCode);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(promotionCode, result.PromotionCode);
+            Assert.Equal("Test Promotion", result.PromotionName);
+            Assert.Equal(PromotionStatus.Upcoming, result.Status);
+            Assert.Equal(futureStartTime, result.StartTime);
+            Assert.Equal(futureEndTime, result.EndTime);
+            await promotionDataAccess.Received(1).GetPromotion(partnerId, promotionCode);
+        }
+
+        [Fact]
+        public async Task GetPromotion_WithValidData_ShouldReturnPromotionWithRunningStatus()
+        {
+            // Arrange
+            var partnerId = "PARTNER123";
+            var promotionCode = "PROMO123";
+            var pastStartTime = DateTime.UtcNow.AddDays(-1);
+            var futureEndTime = DateTime.UtcNow.AddDays(1);
+            
+            var promotion = new Promotion
+            {
+                PartnerId = partnerId,
+                PromotionCode = promotionCode,
+                PromotionName = "Test Promotion",
+                StartTime = pastStartTime,
+                EndTime = futureEndTime
+            };
+
+            promotionDataAccess.GetPromotion(partnerId, promotionCode).Returns(promotion);
+
+            // Act
+            var result = await partnerDataService.GetPromotion(partnerId, promotionCode);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(promotionCode, result.PromotionCode);
+            Assert.Equal("Test Promotion", result.PromotionName);
+            Assert.Equal(PromotionStatus.Running, result.Status);
+            Assert.Equal(pastStartTime, result.StartTime);
+            Assert.Equal(futureEndTime, result.EndTime);
+            await promotionDataAccess.Received(1).GetPromotion(partnerId, promotionCode);
+        }
+
+        [Fact]
+        public async Task GetPromotion_WithValidData_ShouldReturnPromotionWithCompletedStatus()
+        {
+            // Arrange
+            var partnerId = "PARTNER123";
+            var promotionCode = "PROMO123";
+            var pastStartTime = DateTime.UtcNow.AddDays(-10);
+            var pastEndTime = DateTime.UtcNow.AddDays(-1);
+            
+            var promotion = new Promotion
+            {
+                PartnerId = partnerId,
+                PromotionCode = promotionCode,
+                PromotionName = "Test Promotion",
+                StartTime = pastStartTime,
+                EndTime = pastEndTime
+            };
+
+            promotionDataAccess.GetPromotion(partnerId, promotionCode).Returns(promotion);
+
+            // Act
+            var result = await partnerDataService.GetPromotion(partnerId, promotionCode);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(promotionCode, result.PromotionCode);
+            Assert.Equal("Test Promotion", result.PromotionName);
+            Assert.Equal(PromotionStatus.Completed, result.Status);
+            Assert.Equal(pastStartTime, result.StartTime);
+            Assert.Equal(pastEndTime, result.EndTime);
+            await promotionDataAccess.Received(1).GetPromotion(partnerId, promotionCode);
+        }
+
+        [Theory]
+        [InlineData(null, "PROMO123")]
+        [InlineData("", "PROMO123")]
+        [InlineData(" ", "PROMO123")]
+        [InlineData("PARTNER123", null)]
+        [InlineData("PARTNER123", "")]
+        [InlineData("PARTNER123", " ")]
+        public async Task GetPromotion_WithInvalidData_ShouldReturnNull(string partnerId, string promotionCode)
+        {
+            // Act
+            var result = await partnerDataService.GetPromotion(partnerId, promotionCode);
+
+            // Assert
+            Assert.Null(result);
+            await promotionDataAccess.DidNotReceive().GetPromotion(Arg.Any<string>(), Arg.Any<string>());
+        }
+
+        [Fact]
+        public async Task GetPromotion_WithNonExistentPromotion_ShouldReturnNull()
+        {
+            // Arrange
+            var partnerId = "PARTNER123";
+            var promotionCode = "PROMO123";
+            
+            promotionDataAccess.GetPromotion(partnerId, promotionCode).Returns((Promotion)null);
+            
+            // Act
+            var result = await partnerDataService.GetPromotion(partnerId, promotionCode);
+            
+            // Assert
+            Assert.Null(result);
+            await promotionDataAccess.Received(1).GetPromotion(partnerId, promotionCode);
         }
     }
 }

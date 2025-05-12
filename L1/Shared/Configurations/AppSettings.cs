@@ -36,5 +36,6 @@
     {
         public bool EnterPortal { get; set; }
         public bool GetBetLimit { get; set; }
+        public bool Promotion { get; set; }
     }
 }

@@ -32,5 +32,7 @@ namespace L1.Features.SabaPlayCommunicators
         public string GetBetLimit { get; set; }
 
         public string Award { get; set; }
+        
+        public string GetPromotion { get; set; }
     }
 }

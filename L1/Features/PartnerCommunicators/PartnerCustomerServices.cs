@@ -7,6 +7,7 @@ using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.Promotion;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Constants;
 
@@ -29,6 +30,8 @@ namespace L1.Features.PartnerCommunicators
         Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
 
         Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call);
+        
+        Task<PartnerResponse<PartnerPromotionResult>> GetPromotion(PartnerPromotionCall call);
 
         string OperatorId { get; set; }
     }

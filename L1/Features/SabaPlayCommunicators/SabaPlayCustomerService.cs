@@ -10,6 +10,7 @@ using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.Promotion;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
@@ -164,6 +165,25 @@ namespace L1.Features.SabaPlayCommunicators
             else
             {
                 sentryClient.CaptureMessage($"Call Award failed for Partner {appSettings.PartnerIds.SabaPlay} - CustId {call.PlayerId}", SentryLevel.Fatal);
+            }
+
+            return response;
+        }
+
+        public async Task<PartnerResponse<PartnerPromotionResult>> GetPromotion(PartnerPromotionCall call)
+        {
+            var response = await sabaPlayService.Post<PartnerPromotionResult>(endpoints.GetPromotion, call);
+
+            if (response.Result.IsSuccessful())
+            {
+                if (appSettings.LogEnabling.Promotion)
+                {
+                    await logService.LogPromotionAsync(OperatorId, response);
+                }
+            }
+            else
+            {
+                sentryClient.CaptureMessage($"Call GetPromotion failed for Partner {appSettings.PartnerIds.SabaPlay} - PromotionCode {call.PromotionCode} - PlayerId {call.PlayerId}", SentryLevel.Warning);
             }
 
             return response;

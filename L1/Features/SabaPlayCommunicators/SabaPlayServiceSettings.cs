@@ -33,6 +33,6 @@ namespace L1.Features.SabaPlayCommunicators
 
         public string Award { get; set; }
         
-        public string GetPromotion { get; set; }
+        public string StartPromotion { get; set; }
     }
 }

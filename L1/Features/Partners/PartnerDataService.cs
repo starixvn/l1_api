@@ -14,24 +14,19 @@ namespace L1.Features.Partners
         Task<Currency> GetCurrency(string partnerId, string currencyName);
 
         Task<bool> VerifyWithCurrency(string partnerId, string currency);
-        
-        Task<PromotionDto> GetPromotion(string partnerId, string promotionCode);
     }
 
     public class PartnerDataService : IPartnerDataService
     {
         private readonly IPartnerDataAccess partnerDataAccess;
         private readonly ICurrencyDataAccess currencyDataAccess;
-        private readonly IPromotionDataAccess promotionDataAccess;
 
         public PartnerDataService(
             IPartnerDataAccess partnerDataAccess, 
-            ICurrencyDataAccess currencyDataAccess,
-            IPromotionDataAccess promotionDataAccess)
+            ICurrencyDataAccess currencyDataAccess)
         {
             this.partnerDataAccess = partnerDataAccess;
             this.currencyDataAccess = currencyDataAccess;
-            this.promotionDataAccess = promotionDataAccess;
         }
 
         public Task<Partner> GetById(string id)
@@ -56,36 +51,5 @@ namespace L1.Features.Partners
 
         public Task<bool> VerifyWithCurrency(string partnerId, string currency)
             => currencyDataAccess.Verify(partnerId, currency);
-            
-        public async Task<PromotionDto> GetPromotion(string partnerId, string promotionCode)
-        {
-            var promotion = await promotionDataAccess.GetPromotion(partnerId, promotionCode);
-            if (promotion == null)
-            {
-                return null;
-            }
-            
-            var currentDateTime = DateTime.UtcNow;
-            var status = DeterminePromotionStatus(promotion.StartTime, promotion.EndTime, currentDateTime);
-            
-            return new PromotionDto
-            {
-                PromotionCode = promotion.PromotionCode,
-                PromotionName = promotion.PromotionName,
-                Status = status,
-                StartTime = promotion.StartTime,
-                EndTime = promotion.EndTime
-            };
-        }
-        
-        private PromotionStatus DeterminePromotionStatus(DateTime startTime, DateTime endTime, DateTime currentTime)
-        {
-            return currentTime switch
-            {
-                var time when time < startTime => PromotionStatus.Upcoming,
-                var time when time > endTime => PromotionStatus.Completed,
-                _ => PromotionStatus.Running
-            };
-        }
     }
 }

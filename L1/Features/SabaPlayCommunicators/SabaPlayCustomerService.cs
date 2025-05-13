@@ -170,22 +170,15 @@ namespace L1.Features.SabaPlayCommunicators
             return response;
         }
 
-        public async Task<PartnerResponse<PartnerPromotionResult>> GetPromotion(PartnerPromotionCall call)
+        public async Task<PartnerResponse<PartnerStartPromotionResult>> StartPromotion(PartnerStartPromotionCall call)
         {
-            var response = await sabaPlayService.Post<PartnerPromotionResult>(endpoints.GetPromotion, call);
+            var response = await sabaPlayService.Post<PartnerStartPromotionResult>(endpoints.StartPromotion, call);
 
-            if (response.Result.IsSuccessful())
+            if (response.Result.IsSuccessful() && appSettings.LogEnabling.Promotion)
             {
-                if (appSettings.LogEnabling.Promotion)
-                {
-                    await logService.LogPromotionAsync(OperatorId, response);
-                }
+                await logService.LogPromotionAsync(OperatorId, response);
             }
-            else
-            {
-                sentryClient.CaptureMessage($"Call GetPromotion failed for Partner {appSettings.PartnerIds.SabaPlay} - PromotionCode {call.PromotionCode} - PlayerId {call.PlayerId}", SentryLevel.Warning);
-            }
-
+           
             return response;
         }
     }

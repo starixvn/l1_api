@@ -22,6 +22,7 @@ using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
 using Sentry;
+using L1.Features.PartnerCommunicators.Promotion;
 
 namespace L1.Features.SGCommunicators
 {
@@ -208,6 +209,23 @@ namespace L1.Features.SGCommunicators
             }
 
             return response;
+        }
+
+        public Task<PartnerResponse<PartnerStartPromotionResult>> StartPromotion(PartnerStartPromotionCall call)
+        {
+            var result = new PartnerStartPromotionResult
+            {
+                ErrorCode = 1000, // Not supported promotion
+                ErrorDescription = "Promotions are not supported for this partner"
+            };
+            
+            var response = new PartnerResponse<PartnerStartPromotionResult> 
+            {
+                Result = result,
+                TimeStamp = DateTimeOffset.UtcNow
+            };
+            
+            return Task.FromResult(response);
         }
     }
 }

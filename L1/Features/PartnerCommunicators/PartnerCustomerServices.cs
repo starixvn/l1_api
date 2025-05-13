@@ -30,8 +30,8 @@ namespace L1.Features.PartnerCommunicators
         Task<PartnerResponse<HitJackpotResult>> HitJackpot(HitJackpotCall call);
 
         Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call);
-        
-        Task<PartnerResponse<PartnerPromotionResult>> GetPromotion(PartnerPromotionCall call);
+
+        Task<PartnerResponse<PartnerStartPromotionResult>> StartPromotion(PartnerStartPromotionCall call);
 
         string OperatorId { get; set; }
     }

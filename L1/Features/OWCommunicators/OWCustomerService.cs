@@ -11,6 +11,7 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Features.PartnerCommunicators.Promotion;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
@@ -168,6 +169,18 @@ namespace L1.Features.OWCommunicators
                 sentryClient.CaptureMessage($"Call Award failed for Partner {OperatorId} - CustId {call.PlayerId}", SentryLevel.Fatal);
             }
 
+            return response;
+        }
+
+        public async Task<PartnerResponse<PartnerStartPromotionResult>> StartPromotion(PartnerStartPromotionCall call)
+        {
+            var response = await oWService.Post<PartnerStartPromotionResult>(endpoints.StartPromotion, call, OperatorId);
+
+            if (response.Result.IsSuccessful() && appSettings.LogEnabling.Promotion)
+            {
+                await logService.LogPromotionAsync(OperatorId, response);
+            }
+           
             return response;
         }
     }

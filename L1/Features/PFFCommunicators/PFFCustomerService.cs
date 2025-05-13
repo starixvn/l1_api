@@ -11,6 +11,7 @@ using L1.Features.PartnerCommunicators.HitJackpot;
 using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
+using L1.Features.PartnerCommunicators.Promotion;
 using L1.Shared.Configurations;
 using L1.Shared.Constants;
 using Polly;
@@ -123,6 +124,23 @@ namespace L1.Features.PFFCommunicators
             }
 
             return response;
+        }
+
+        public Task<PartnerResponse<PartnerStartPromotionResult>> StartPromotion(PartnerStartPromotionCall call)
+        {
+            var result = new PartnerStartPromotionResult
+            {
+                ErrorCode = 1000,
+                ErrorDescription = "Promotions are not supported for this partner"
+            };
+            
+            var response = new PartnerResponse<PartnerStartPromotionResult> 
+            {
+                Result = result,
+                TimeStamp = DateTimeOffset.UtcNow
+            };
+            
+            return Task.FromResult(response);
         }
     }
 }

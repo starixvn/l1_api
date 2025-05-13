@@ -24,7 +24,8 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             bool freeBet,
             string operatorToken,
             string operatorId,
-            string userId) : base(playerId, siteId)
+            string userId,
+            string promotionCode = null) : base(playerId, siteId)
 #pragma warning restore S107 // Methods should not have too many parameters
         {
             GameRoundId = gameRoundId;
@@ -41,6 +42,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             OperatorToken = operatorToken;
             OperatorId = operatorId;
             UserId = userId;
+            PromotionCode = promotionCode;
         }
 
         public int GameRoundId { get; set; }
@@ -71,5 +73,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
         public string OperatorId { get; set; }
 
         public string UserId { get; set; }
+        
+        public string PromotionCode { get; set; }
     }
 }

@@ -101,6 +101,7 @@ namespace L1.Features.OWCommunicators
                     call.PlayerId,
                     call.SiteId,
                     call.TimeStamp,
+                    call.PromotionCode,
                     System = system,
                     Metadata = metadata
                 });

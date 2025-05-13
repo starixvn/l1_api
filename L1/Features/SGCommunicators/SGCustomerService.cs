@@ -100,7 +100,8 @@ namespace L1.Features.SGCommunicators
                 call.FreeBet,
                 call.OperatorToken,
                 call.OperatorId,
-                call.UserId), OperatorId);
+                call.UserId,
+                call.PromotionCode), OperatorId);
 
             if (response.Result.IsSuccessful())
             {
@@ -125,6 +126,7 @@ namespace L1.Features.SGCommunicators
                     call.PlayerId,
                     call.SiteId,
                     call.TimeStamp,
+                    call.PromotionCode,
                     System = system,
                     Metadata = metadata
                 });

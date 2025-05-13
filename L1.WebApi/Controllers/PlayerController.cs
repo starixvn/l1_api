@@ -112,7 +112,8 @@ namespace L1.WebApi.Controllers
                 model.FreeBet,
                 model.OperatorToken,
                 model.OperatorId,
-                model.UserId);
+                model.UserId,
+                model.PromotionCode);
 
                 var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
                 return Ok(response);

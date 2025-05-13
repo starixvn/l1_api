@@ -99,6 +99,7 @@ namespace L1.Features.SabaPlayCommunicators
                     PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
                     call.SiteId,
                     call.TimeStamp,
+                    call.PromotionCode,
                     System = system,
                     Metadata = metadata
                 });

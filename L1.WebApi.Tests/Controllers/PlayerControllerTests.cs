@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using L1.Features.PartnerCommunicators;
@@ -8,6 +9,7 @@ using L1.Features.PartnerCommunicators.EnterPortal;
 using L1.Features.PartnerCommunicators.GetBalance;
 using L1.Features.PartnerCommunicators.GetBetLimit;
 using L1.Features.PartnerCommunicators.PlaceBet;
+using L1.Features.PartnerCommunicators.Promotion;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.WebApi.Controllers;
 using L1.WebApi.Models;
@@ -15,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Sentry;
 using Xunit;
+using System.Linq;
 
 namespace L1.WebApi.Tests.Controllers
 {
@@ -253,6 +256,214 @@ namespace L1.WebApi.Tests.Controllers
 
             // Assert
             Assert.IsType<BadRequestResult>(actualValue);
+        }
+
+        [Fact]
+        public async Task StartPromotion_ValidInput_ReturnsOkResult()
+        {
+            // Arrange
+            var model = new StartPromotion
+            {
+                OperatorId = "OP123",
+                PlayerId = "PLAYER456",
+                SiteId = "SITE789",
+                PromotionCode = "PROMO2023",
+                Start = "2023/12/01 00:00:00.000 +00:00",
+                End = "2023/12/31 23:59:59.999 +00:00"
+            };
+            
+            var result = new PartnerResponse<PartnerStartPromotionResult>
+            {
+                Result = new PartnerStartPromotionResult
+                {
+                    PromotionCode = "PROMO2023",
+                    ErrorCode = 0,
+                    ErrorDescription = ""
+                },
+                TimeStamp = DateTimeOffset.UtcNow
+            };
+            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
+            oWCustomerService.StartPromotion(Arg.Any<PartnerStartPromotionCall>()).Returns(result);
+
+            // Act
+            var actualValue = await controller.StartPromotion(model);
+
+            // Assert
+            var objectResult = actualValue as OkObjectResult;
+            Assert.NotNull(objectResult);
+            
+            var responseValue = objectResult?.Value as PartnerResponse<PartnerStartPromotionResult>;
+            Assert.NotNull(responseValue);
+            Assert.Equal(result.Result.PromotionCode, responseValue.Result.PromotionCode);
+            Assert.Equal(0, responseValue.Result.ErrorCode);
+        }
+
+        [Fact]
+        public async Task StartPromotion_InvalidOperatorId_ReturnsBadRequestResult()
+        {
+            // Arrange
+            var model = new StartPromotion
+            {
+                OperatorId = "INVALID",
+                PlayerId = "PLAYER456",
+                SiteId = "SITE789",
+                PromotionCode = "PROMO2023",
+                Start = "2023/12/01 00:00:00.000 +00:00",
+                End = "2023/12/31 23:59:59.999 +00:00"
+            };
+            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(default(IPartnerCustomerServices));
+
+            // Act
+            var actualValue = await controller.StartPromotion(model);
+
+            // Assert
+            var badRequestResult = actualValue as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            Assert.Equal("Invalid operator ID", badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task StartPromotion_MissingPromotionCode_ReturnsBadRequestWithErrorCode1007()
+        {
+            // Arrange
+            var model = new StartPromotion
+            {
+                OperatorId = "OP123",
+                PlayerId = "PLAYER456",
+                SiteId = "SITE789",
+                PromotionCode = "", // Empty promotion code
+                Start = "2023/12/01 00:00:00.000 +00:00",
+                End = "2023/12/31 23:59:59.999 +00:00"
+            };
+            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
+
+            // Act
+            var actualValue = await controller.StartPromotion(model);
+
+            // Assert
+            var badRequestResult = actualValue as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            
+            var errorResponse = badRequestResult.Value as object;
+            Assert.NotNull(errorResponse);
+            
+            // Convert to dictionary to access dynamic properties
+            var properties = errorResponse.GetType().GetProperties();
+            var errorCode = properties.FirstOrDefault(p => p.Name == "ErrorCode")?.GetValue(errorResponse);
+            var errorDescription = properties.FirstOrDefault(p => p.Name == "ErrorDescription")?.GetValue(errorResponse);
+            
+            Assert.Equal(1007, errorCode);
+            Assert.Equal("PromotionCode is required", errorDescription);
+        }
+
+        [Fact]
+        public async Task StartPromotion_MissingStartDate_ReturnsBadRequestWithErrorCode1007()
+        {
+            // Arrange
+            var model = new StartPromotion
+            {
+                OperatorId = "OP123",
+                PlayerId = "PLAYER456",
+                SiteId = "SITE789",
+                PromotionCode = "PROMO2023",
+                Start = "", // Empty start date
+                End = "2023/12/31 23:59:59.999 +00:00"
+            };
+            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
+
+            // Act
+            var actualValue = await controller.StartPromotion(model);
+
+            // Assert
+            var badRequestResult = actualValue as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            
+            var errorResponse = badRequestResult.Value as object;
+            Assert.NotNull(errorResponse);
+            
+            // Convert to dictionary to access dynamic properties
+            var properties = errorResponse.GetType().GetProperties();
+            var errorCode = properties.FirstOrDefault(p => p.Name == "ErrorCode")?.GetValue(errorResponse);
+            var errorDescription = properties.FirstOrDefault(p => p.Name == "ErrorDescription")?.GetValue(errorResponse);
+            
+            Assert.Equal(1007, errorCode);
+            Assert.Equal("Start and End dates are required", errorDescription);
+        }
+
+        [Fact]
+        public async Task StartPromotion_InvalidDateFormat_ReturnsBadRequestWithErrorCode1007()
+        {
+            // Arrange
+            var model = new StartPromotion
+            {
+                OperatorId = "OP123",
+                PlayerId = "PLAYER456",
+                SiteId = "SITE789",
+                PromotionCode = "PROMO2023",
+                Start = "Invalid-Date-Format", // Invalid date format
+                End = "2023/12/31 23:59:59.999 +00:00"
+            };
+            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
+
+            // Act
+            var actualValue = await controller.StartPromotion(model);
+
+            // Assert
+            var badRequestResult = actualValue as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            
+            var errorResponse = badRequestResult.Value as object;
+            Assert.NotNull(errorResponse);
+            
+            // Convert to dictionary to access dynamic properties
+            var properties = errorResponse.GetType().GetProperties();
+            var errorCode = properties.FirstOrDefault(p => p.Name == "ErrorCode")?.GetValue(errorResponse);
+            var errorDescription = properties.FirstOrDefault(p => p.Name == "ErrorDescription")?.GetValue(errorResponse);
+            
+            Assert.Equal(1007, errorCode);
+            Assert.Equal("Invalid date format. Please use format: yyyy/MM/dd HH:mm:ss.fff +00:00", errorDescription);
+        }
+
+        [Fact]
+        public async Task StartPromotion_ServiceThrowsException_ReturnsBadRequestWithErrorCode1007()
+        {
+            // Arrange
+            var model = new StartPromotion
+            {
+                OperatorId = "OP123",
+                PlayerId = "PLAYER456",
+                SiteId = "SITE789",
+                PromotionCode = "PROMO2023",
+                Start = "2023/12/01 00:00:00.000 +00:00",
+                End = "2023/12/31 23:59:59.999 +00:00"
+            };
+            
+            partnerCustomerFactory.GetCustomerService(Arg.Any<string>()).Returns(oWCustomerService);
+            oWCustomerService.StartPromotion(Arg.Any<PartnerStartPromotionCall>())
+                .Returns(Task.FromException<PartnerResponse<PartnerStartPromotionResult>>(new Exception("Test exception")));
+
+            // Act
+            var actualValue = await controller.StartPromotion(model);
+
+            // Assert
+            var badRequestResult = actualValue as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            
+            var errorResponse = badRequestResult.Value as object;
+            Assert.NotNull(errorResponse);
+            
+            // Convert to dictionary to access dynamic properties
+            var properties = errorResponse.GetType().GetProperties();
+            var errorCode = properties.FirstOrDefault(p => p.Name == "ErrorCode")?.GetValue(errorResponse);
+            var errorDescription = properties.FirstOrDefault(p => p.Name == "ErrorDescription")?.GetValue(errorResponse);
+            
+            Assert.Equal(1007, errorCode);
+            Assert.Equal("An error occurred while processing the request", errorDescription);
         }
     }
 }

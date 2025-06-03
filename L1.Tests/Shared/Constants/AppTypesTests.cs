@@ -77,7 +77,7 @@ namespace L1.Tests.Shared.Constants
 
         [Theory]
         [InlineData(0)]
-        [InlineData(8)]
+        [InlineData(10)]
         [InlineData(255)]
         public void IsValid_NotValidAppType_ReturnFalse(byte appType)
         {

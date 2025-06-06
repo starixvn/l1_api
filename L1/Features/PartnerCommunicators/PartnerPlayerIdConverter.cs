@@ -14,7 +14,7 @@ namespace L1.Features.PartnerCommunicators
         private readonly Dictionary<string, Type> operatorPlayerIdTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
         {
             //TODO key is OperatorId? if so, should remove SG, add XD support
-            { "ONEworks1", typeof(int) },
+            { "ONEworks1", typeof(string) },
             { "SBO", typeof(int) },
             { "PFF", typeof(string) },
             { "SG", typeof(int) },

@@ -113,6 +113,7 @@ namespace L1.WebApi.Controllers
                 model.OperatorToken,
                 model.OperatorId,
                 model.UserId,
+                model.PromotionId,
                 model.PromotionCode);
 
                 var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
@@ -287,7 +288,7 @@ namespace L1.WebApi.Controllers
             {
                 return BadRequest(new { ErrorCode = 1007, ErrorDescription = "PromotionCode is required" });
             }
-            
+
             if (string.IsNullOrWhiteSpace(model.Start) || string.IsNullOrWhiteSpace(model.End))
             {
                 return BadRequest(new { ErrorCode = 1007, ErrorDescription = "Start and End dates are required" });

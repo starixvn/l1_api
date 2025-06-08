@@ -34,7 +34,9 @@ namespace L1.WebApi.Models
         public string OperatorToken { get; set; }
 
         public string UserId { get; set; }
-        
+
+        public string PromotionId { get; set; }
+
         public string PromotionCode { get; set; }
     }
 }

@@ -101,7 +101,7 @@ namespace L1.Features.OWCommunicators
                     call.PlayerId,
                     call.SiteId,
                     call.TimeStamp,
-                    call.PromotionCode,
+                    call.PromotionId,
                     System = system,
                     Metadata = metadata
                 });
@@ -181,7 +181,7 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogPromotionAsync(OperatorId, response);
             }
-           
+
             return response;
         }
     }

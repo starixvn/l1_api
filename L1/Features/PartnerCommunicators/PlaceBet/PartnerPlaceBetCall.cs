@@ -25,6 +25,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             string operatorToken,
             string operatorId,
             string userId,
+            string promotionId = null,
             string promotionCode = null) : base(playerId, siteId)
 #pragma warning restore S107 // Methods should not have too many parameters
         {
@@ -42,6 +43,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             OperatorToken = operatorToken;
             OperatorId = operatorId;
             UserId = userId;
+            PromotionId = promotionId;
             PromotionCode = promotionCode;
         }
 
@@ -73,7 +75,9 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
         public string OperatorId { get; set; }
 
         public string UserId { get; set; }
-        
+
+        public string PromotionId { get; set; }
+
         public string PromotionCode { get; set; }
     }
 }

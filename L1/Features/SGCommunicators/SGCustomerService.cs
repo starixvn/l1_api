@@ -101,7 +101,7 @@ namespace L1.Features.SGCommunicators
                 call.OperatorToken,
                 call.OperatorId,
                 call.UserId,
-                call.PromotionCode), OperatorId);
+                call.PromotionId), OperatorId);
 
             if (response.Result.IsSuccessful())
             {
@@ -126,7 +126,7 @@ namespace L1.Features.SGCommunicators
                     call.PlayerId,
                     call.SiteId,
                     call.TimeStamp,
-                    call.PromotionCode,
+                    call.PromotionId,
                     System = system,
                     Metadata = metadata
                 });
@@ -220,13 +220,13 @@ namespace L1.Features.SGCommunicators
                 ErrorCode = 1000, // Not supported promotion
                 ErrorDescription = "Promotions are not supported for this partner"
             };
-            
-            var response = new PartnerResponse<PartnerStartPromotionResult> 
+
+            var response = new PartnerResponse<PartnerStartPromotionResult>
             {
                 Result = result,
                 TimeStamp = DateTimeOffset.UtcNow
             };
-            
+
             return Task.FromResult(response);
         }
     }

@@ -202,7 +202,8 @@ namespace L1.WebApi.Controllers
                 model.SiteId,
                 model.GameRoundId,
                 model.GameTypeId,
-                model.WinningAmount));
+                model.WinningAmount,
+                model.SiteName));
 
             return Ok(response);
         }

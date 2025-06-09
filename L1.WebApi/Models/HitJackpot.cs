@@ -7,5 +7,7 @@
         public int GameTypeId { get; set; }
 
         public decimal WinningAmount { get; set; }
+
+        public string SiteName { get; set; }
     }
 }

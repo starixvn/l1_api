@@ -7,11 +7,13 @@
             string siteId,
             int gameRoundId,
             int gameTypeId,
-            decimal winningAmount) : base(playerId, siteId)
+            decimal winningAmount,
+            string siteName) : base(playerId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
             WinningAmount = winningAmount;
+            SiteName = siteName;
         }
 
         public int GameRoundId { get; set; }
@@ -19,5 +21,7 @@
         public int GameTypeId { get; set; }
 
         public decimal WinningAmount { get; set; }
+
+        public string SiteName { get; set; }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
 using L1.Shared.Helpers;
 using L1.Shared.Json;
+using Sentry;
 
 namespace L1.Features.HotdogCommunicators
 {
@@ -16,22 +18,25 @@ namespace L1.Features.HotdogCommunicators
 
     public class HotdogService : IHotdogService
     {
-        private const string HeaderAccessKey = "Saba-access-key";
+        private const string HeaderAccessKey = "Access-Key";
         private readonly HttpClient httpClient;
         private readonly IHotdogFailureHandler failureHandler;
         private readonly string secretKey;
         private readonly IJsonService jsonService;
+        private readonly ISentryClient sentryClient;
 
         public HotdogService(
             HttpClient httpClient,
             IHotdogFailureHandler failureHandler,
             HotdogServiceSettings hotdogServiceSettings,
-            IJsonService jsonService)
+            IJsonService jsonService,
+            ISentryClient sentryClient)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
             this.secretKey = hotdogServiceSettings.SecretKey;
             this.jsonService = jsonService;
+            this.sentryClient = sentryClient;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new()
@@ -40,7 +45,9 @@ namespace L1.Features.HotdogCommunicators
             var requestBody = jsonService.Serialize(call);
 
             using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
+            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes(this.secretKey));
+            var hashResult = hmac.ComputeHash(Encoding.ASCII.GetBytes(requestBody));
+            var accessKey = Convert.ToBase64String(hashResult);
 
             using var requestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(apiEndpoint, UriKind.Relative))
             {
@@ -68,7 +75,7 @@ namespace L1.Features.HotdogCommunicators
             }
             catch (HttpRequestException ex)
             {
-                return new PartnerResponse<T>
+                var operatorResponse = new PartnerResponse<T>
                 {
                     TimeStamp = DateTimeOffset.UtcNow,
                     Request = request,
@@ -80,6 +87,10 @@ namespace L1.Features.HotdogCommunicators
                     },
                     AccessKey = accessKey
                 };
+
+                sentryClient.CaptureException(new Exception(jsonService.Serialize(operatorResponse), ex));
+
+                return operatorResponse;
             }
         }
 

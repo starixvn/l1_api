@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using L1.Features.PartnerCommunicators;
 using L1.Shared.Constants;
-using L1.Shared.Helpers;
 using L1.Shared.Json;
+using Microsoft.Extensions.Logging;
 using Sentry;
 
 namespace L1.Features.HotdogCommunicators
@@ -24,19 +24,22 @@ namespace L1.Features.HotdogCommunicators
         private readonly string secretKey;
         private readonly IJsonService jsonService;
         private readonly ISentryClient sentryClient;
+        private readonly ILogger logger;
 
         public HotdogService(
             HttpClient httpClient,
             IHotdogFailureHandler failureHandler,
             HotdogServiceSettings hotdogServiceSettings,
             IJsonService jsonService,
-            ISentryClient sentryClient)
+            ISentryClient sentryClient,
+            ILogger<HotdogService> logger)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
             this.secretKey = hotdogServiceSettings.SecretKey;
             this.jsonService = jsonService;
             this.sentryClient = sentryClient;
+            this.logger = logger;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call, string operatorId) where T : PartnerResult, new()
@@ -69,12 +72,20 @@ namespace L1.Features.HotdogCommunicators
                     finalResponse.AccessKey = accessKey;
                     await failureHandler.Handle<T>(finalResponse, operatorId);
                     finalResponse.Result.ErrorCode = ErrorCodes.CovertErrorCode(finalResponse.Result.ErrorCode);
+                    logger.LogWarning(jsonService.Serialize(new {
+                        requestBody,
+                        accessKey,
+                        apiEndpoint,
+                        hashResult,
+                        content
+                    }));  
                 }
 
                 return finalResponse;
             }
             catch (HttpRequestException ex)
             {
+                
                 var operatorResponse = new PartnerResponse<T>
                 {
                     TimeStamp = DateTimeOffset.UtcNow,

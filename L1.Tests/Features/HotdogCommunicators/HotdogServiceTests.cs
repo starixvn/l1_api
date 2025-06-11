@@ -8,6 +8,7 @@ using NSubstitute;
 using Xunit;
 using L1.Shared.Json;
 using Sentry;
+using Microsoft.Extensions.Logging;
 
 namespace L1.Tests.Features.HotdogCommunicators
 {
@@ -20,12 +21,14 @@ namespace L1.Tests.Features.HotdogCommunicators
             Result = new PartnerResult()
         };
         private readonly ISentryClient sentryClient;
+        private readonly ILogger<HotdogService> logger;
 
         public HotdogServiceTests()
         {
             failureHandler = Substitute.For<IHotdogFailureHandler>();
             jsonService = Substitute.For<IJsonService>();
             sentryClient = Substitute.For<ISentryClient>();
+            logger = Substitute.For<ILogger<HotdogService>>();
         }
 
         [Theory, AutoData]
@@ -38,7 +41,7 @@ namespace L1.Tests.Features.HotdogCommunicators
                 .Returns(new PartnerResponse<PartnerResult> { Result = new PartnerResult() });
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.OK, serializedContent);
-            var service = new HotdogService(httpClient, failureHandler, oWServiceSettings, jsonService, sentryClient);
+            var service = new HotdogService(httpClient, failureHandler, oWServiceSettings, jsonService, sentryClient, logger);
 
             // Act
             var result = await service.Post<PartnerResult>("/aaa", call, "Hotdog");
@@ -55,7 +58,7 @@ namespace L1.Tests.Features.HotdogCommunicators
             jsonService.Serialize(Arg.Any<HotdogCall>()).Returns(serializedContent);
 
             var httpClient = MockHttpClient.Create(HttpStatusCode.BadGateway, serializedContent);
-            var service = new HotdogService(httpClient, failureHandler, oWServiceSettings, jsonService, sentryClient);
+            var service = new HotdogService(httpClient, failureHandler, oWServiceSettings, jsonService, sentryClient, logger);
 
             // Act
             var response = await service.Post<PartnerResult>("/aaa", call, "Hotdog");

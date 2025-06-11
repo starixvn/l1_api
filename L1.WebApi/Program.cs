@@ -2,6 +2,7 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace L1.WebApi
 {
@@ -10,6 +11,9 @@ namespace L1.WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
 
             // Add configuration
             builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())

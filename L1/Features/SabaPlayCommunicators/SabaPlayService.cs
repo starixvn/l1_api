@@ -19,19 +19,32 @@ namespace L1.Features.SabaPlayCommunicators
         private const string HeaderAccessKey = "Saba-access-key";
         private readonly HttpClient httpClient;
         private readonly ISabaPlayFailureHandler failureHandler;
-        private readonly string secretKey;
         private readonly IJsonService jsonService;
+        private readonly SabaPlayServiceSettings settings;
+        private readonly IHttpClientFactory httpClientFactory;
 
         public SabaPlayService(
             HttpClient httpClient, 
             ISabaPlayFailureHandler failureHandler, 
             SabaPlayServiceSettings settings,
-            IJsonService jsonService)
+            IJsonService jsonService,
+            IHttpClientFactory httpClientFactory)
         {
             this.httpClient = httpClient;
             this.failureHandler = failureHandler;
-            this.secretKey = settings.SecretKey;
             this.jsonService = jsonService;
+            this.settings = settings;
+            this.httpClientFactory = httpClientFactory;
+        }
+
+        private HttpClient GetHttpClient(IPartnerCall call)
+        {
+           if(settings.SiteUrls != null && settings.SiteUrls.ContainsKey(call.SiteId))
+           {
+               return this.httpClientFactory.CreateClient($"httpclient_{call.SiteId}");
+            }
+
+           return this.httpClient;
         }
 
         public async Task<PartnerResponse<T>> Post<T>(string apiEndpoint, IPartnerCall call) where T : PartnerResult, new()
@@ -40,7 +53,8 @@ namespace L1.Features.SabaPlayCommunicators
             var requestBody = jsonService.Serialize(call);
             
             using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var accessKey = Md5Helper.Create($"{secretKey}{requestBody}");
+            var accessKey = Md5Helper.Create($"{this.settings.SecretKey}{requestBody}");
+            var apiHttpClient = GetHttpClient(call);
 
             using var requestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(apiEndpoint, UriKind.Relative))
             {
@@ -50,7 +64,7 @@ namespace L1.Features.SabaPlayCommunicators
 
             try 
             {
-                using var response = await httpClient.SendAsync(requestMessage);
+                using var response = await apiHttpClient.SendAsync(requestMessage);
                 var finalResponse = response.IsSuccessStatusCode
                     ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
                     : await CreateNetworkErrorResponse<T>(new SabaPlayCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);

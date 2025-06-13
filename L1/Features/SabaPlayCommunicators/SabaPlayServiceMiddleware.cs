@@ -40,6 +40,35 @@ namespace L1.Features.SabaPlayCommunicators
                     };
                 });
             }
+
+            InitHttpClientForSite(services, sabaPlayServiceSettings);
+        }
+
+        private static void InitHttpClientForSite(IServiceCollection services, SabaPlayServiceSettings sabaPlayServiceSettings)
+        {
+            if (sabaPlayServiceSettings.SiteUrls != null && sabaPlayServiceSettings.SiteUrls.Count > 0)
+            {
+                foreach (var siteUrl in sabaPlayServiceSettings.SiteUrls)
+                {
+                    var siteHttpClient = services.AddHttpClient($"httpclient_{siteUrl.Key}", client =>
+                    {
+                        client.BaseAddress = new Uri(siteUrl.Value);
+                        client.Timeout = TimeSpan.FromSeconds(30); // Add reasonable timeout
+                    });
+
+                    if (!string.IsNullOrEmpty(sabaPlayServiceSettings.Proxy))
+                    {
+                        siteHttpClient.ConfigurePrimaryHttpMessageHandler(() =>
+                        {
+                            return new HttpClientHandler
+                            {
+                                Proxy = new WebProxy(sabaPlayServiceSettings.Proxy),
+                                UseProxy = true,
+                            };
+                        });
+                    }
+                }
+            }
         }
 
         public static void AddSabaPlayDailySummaryServices(this IServiceCollection services,

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace L1.Features.SabaPlayCommunicators
 {
@@ -11,6 +13,9 @@ namespace L1.Features.SabaPlayCommunicators
         public SabaPlayEndPoints Endpoints { get; set; }
 
         public string Proxy { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, string> SiteUrls { get; set; }
     }
 
     public class SabaPlayEndPoints

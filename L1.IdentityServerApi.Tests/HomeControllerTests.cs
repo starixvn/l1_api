@@ -1,5 +1,4 @@
-﻿using L1.IdentityServerApi;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace L1.IdentityServerApi.Tests.Controllers
@@ -19,7 +18,7 @@ namespace L1.IdentityServerApi.Tests.Controllers
             // Arrange 
             var expectedResult = new ContentResult
             {
-                Content = "Auth server is running!!!",
+                Content = "Auth is running!!!",
                 ContentType = "text/html"
             };
 

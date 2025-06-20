@@ -60,14 +60,20 @@ namespace L1.Shared.Middlewares
         {
             services.AddSingleton<IConnection>(sp =>
             {
-                var opts = ConnectionFactory.GetDefaultOptions();
-                opts.Url = appSettings.StreamSettings.Host;
-                var connection = new ConnectionFactory().CreateConnection(opts);
+                if(appSettings.StreamSettings.Enable)
+                {
+                    var opts = ConnectionFactory.GetDefaultOptions();
+                    opts.Url = appSettings.StreamSettings.Host;
+                    var connection = new ConnectionFactory().CreateConnection(opts);
 
-                var sentryClient = sp.GetRequiredService<ISentryClient>();
-                InitializeJetStream(connection, appSettings, sentryClient);
+                    var sentryClient = sp.GetRequiredService<ISentryClient>();
+                    InitializeJetStream(connection, appSettings, sentryClient);
 
-                return connection;
+                    return connection;
+                }
+
+
+                return null;
             });
 
             services.AddSingleton<INatsService, NatsService>();

@@ -28,12 +28,16 @@ namespace L1.Features.PartnerCommunicators
             ISentryClient sentryClient,
             IJsonService jsonService)
         {
-            this.jetStream = connection.CreateJetStreamContext();
-            this.subjectPrefix = appSettings.StreamSettings.SubjectPrefix;
             this.enable = appSettings.StreamSettings.Enable;
+            this.subjectPrefix = appSettings.StreamSettings.SubjectPrefix;
             this.publishTimeoutMs = appSettings.StreamSettings.PublishTimeoutMs;
             this.sentryClient = sentryClient;
             this.jsonService = jsonService;
+
+            if (enable)
+            {
+                this.jetStream = connection.CreateJetStreamContext();
+            }
         }
 
         public async Task PublishAsync(string subject, object message)

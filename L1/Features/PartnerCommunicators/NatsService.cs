@@ -22,7 +22,7 @@ namespace L1.Features.PartnerCommunicators
         private readonly ISentryClient sentryClient;
         private readonly IJsonService jsonService;
 
-        IConnection connection;
+        private readonly IConnection connection;
 
         public NatsService(
             IConnection connection,
@@ -52,7 +52,6 @@ namespace L1.Features.PartnerCommunicators
                 var formattedSubject = SubjectFormatter.FormatSubject(subjectPrefix, subject);
                 var jsonMessage = jsonService.Serialize(message);
                 var msg = new Msg(formattedSubject, (MsgHeader)null, System.Text.Encoding.UTF8.GetBytes(jsonMessage));
-
 
                 var publishOpts = PublishOptions.Builder()
                     .WithTimeout(publishTimeoutMs)

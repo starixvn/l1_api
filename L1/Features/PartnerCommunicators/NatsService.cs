@@ -15,12 +15,14 @@ namespace L1.Features.PartnerCommunicators
 
     public class NatsService : INatsService
     {
-        private readonly IJetStream jetStream;
+        private IJetStream jetStream;
         private readonly string subjectPrefix;
         private readonly bool enable;
         private readonly int publishTimeoutMs;
         private readonly ISentryClient sentryClient;
         private readonly IJsonService jsonService;
+
+        IConnection connection;
 
         public NatsService(
             IConnection connection,
@@ -33,11 +35,7 @@ namespace L1.Features.PartnerCommunicators
             this.publishTimeoutMs = appSettings.StreamSettings.PublishTimeoutMs;
             this.sentryClient = sentryClient;
             this.jsonService = jsonService;
-
-            if (enable)
-            {
-                this.jetStream = connection.CreateJetStreamContext();
-            }
+            this.connection = connection;
         }
 
         public async Task PublishAsync(string subject, object message)
@@ -47,12 +45,15 @@ namespace L1.Features.PartnerCommunicators
                 return;
             }
 
-            var formattedSubject = SubjectFormatter.FormatSubject(subjectPrefix, subject);
-            var jsonMessage = jsonService.Serialize(message);
-            var msg = new Msg(formattedSubject, (MsgHeader)null, System.Text.Encoding.UTF8.GetBytes(jsonMessage));
-
             try
             {
+                jetStream ??= connection.CreateJetStreamContext();
+
+                var formattedSubject = SubjectFormatter.FormatSubject(subjectPrefix, subject);
+                var jsonMessage = jsonService.Serialize(message);
+                var msg = new Msg(formattedSubject, (MsgHeader)null, System.Text.Encoding.UTF8.GetBytes(jsonMessage));
+
+
                 var publishOpts = PublishOptions.Builder()
                     .WithTimeout(publishTimeoutMs)
                     .WithMessageId(Guid.NewGuid().ToString())

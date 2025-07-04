@@ -17,5 +17,7 @@ namespace L1.WebApi.Models
         public bool FreeBet { get; set; }
 
         public DateTimeOffset EndTime { get; set; }
+
+        public object MetaData { get; set; }
     }
 }

@@ -143,7 +143,8 @@ namespace L1.Features.SGCommunicators
                 call.TotalWin,
                 call.ValidBetAmount,
                 call.EndTime ?? DateTimeOffset.UtcNow,
-                call.FreeBet), OperatorId);
+                call.FreeBet,
+                call.MetaData), OperatorId);
 
             if (response.Result.IsSuccessful())
             {

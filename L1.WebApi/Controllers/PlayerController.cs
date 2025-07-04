@@ -135,6 +135,12 @@ namespace L1.WebApi.Controllers
                 return BadRequest();
             }
 
+            object endGameMetaData = model.MetaData;
+            if (endGameMetaData is System.Text.Json.JsonElement jsonElement)
+            {
+                endGameMetaData = System.Text.Json.JsonSerializer.Deserialize<EndGameMetaData>(jsonElement.GetRawText());
+            }
+
             var response = await customerService.EndGame(
                 new PartnerEndGameCall(
                     partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
@@ -145,7 +151,8 @@ namespace L1.WebApi.Controllers
                     model.TotalWin,
                     model.ValidBetAmount,
                     model.EndTime,
-                    model.FreeBet));
+                    model.FreeBet,
+                    endGameMetaData));
 
             return Ok(response);
         }

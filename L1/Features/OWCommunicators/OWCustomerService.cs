@@ -114,8 +114,6 @@ namespace L1.Features.OWCommunicators
 
             if (response.Result.IsSuccessful())
             {
-                Console.WriteLine("End game");
-                Console.WriteLine(response);
                 await logService.LogEndGameAsync(OperatorId, response);
                 await natsService.PublishAsync("bet.settled", call);
             }

@@ -15,7 +15,8 @@ namespace L1.Features.SGCommunicators.EndGame
             decimal validBetAmount,
             DateTimeOffset endTime,
             bool freeBet,
-            object metaData) 
+            object metaData
+            ) 
             : base(
                   playerId,
                   siteId,

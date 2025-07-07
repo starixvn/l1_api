@@ -4,8 +4,10 @@
     {
         public int ChoiceId { get; set; }
 
-        public decimal Amount { get; set; }
+        public decimal ValidBetAmount { get; set; }
 
-        public decimal Win { get; set; }
+        public decimal TotalAmount { get; set; }
+
+        public decimal TotalWin { get; set; }
     }
 }

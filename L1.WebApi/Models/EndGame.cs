@@ -19,5 +19,7 @@ namespace L1.WebApi.Models
         public DateTimeOffset EndTime { get; set; }
 
         public EndGameMetaData MetaData { get; set; }
+        
+        public string PromotionId { get; set; }
     }
 }

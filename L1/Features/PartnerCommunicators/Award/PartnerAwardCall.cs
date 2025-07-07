@@ -10,7 +10,7 @@ namespace L1.Features.PartnerCommunicators.Award
             string siteId,
             int gameTypeId,
             decimal amount,
-            int promotionId,
+            string promotionId,
             string currency) : base(playerId, siteId)
         {
             GameTypeId = gameTypeId;
@@ -24,7 +24,7 @@ namespace L1.Features.PartnerCommunicators.Award
 
         public int GameTypeId { get; set; }
 
-        public int PromotionId { get; set; }
+        public string PromotionId { get; set; }
 
         public string Currency { get; set; }
     }

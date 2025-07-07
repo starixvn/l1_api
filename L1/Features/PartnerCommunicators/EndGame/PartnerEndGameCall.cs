@@ -18,7 +18,8 @@ namespace L1.Features.PartnerCommunicators.EndGame
             decimal validBetAmount,
             DateTimeOffset endTime,
             bool freeBet,
-            object metaData)
+            object metaData,
+            string promotionId)
 #pragma warning restore S107 // Methods should not have too many parameters
             : base(playerId, siteId)
         {
@@ -30,6 +31,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
             EndTime = endTime;
             FreeBet = freeBet;
             MetaData = metaData;
+            PromotionId = promotionId;
         }
 
         public int GameRoundId { get; set; }
@@ -49,5 +51,6 @@ namespace L1.Features.PartnerCommunicators.EndGame
 
         public object MetaData { get; set; }
         
+        public string PromotionId { get; set; }
     }
 }

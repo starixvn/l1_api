@@ -6,7 +6,7 @@
 
         public decimal Amount { get; set; }
 
-        public int PromotionId { get; set; }
+        public string PromotionId { get; set; }
 
         public string Currency { get; set; }
     }

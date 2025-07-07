@@ -111,7 +111,8 @@ namespace L1.WebApi.Controllers
                 model.FreeBet,
                 model.OperatorToken,
                 model.OperatorId,
-                model.UserId);
+                model.UserId,
+                model.PromotionId);
 
                 var response = await customerService.PlaceBet(placeBetCall, model.System, model.Metadata);
                 return Ok(response);
@@ -146,7 +147,8 @@ namespace L1.WebApi.Controllers
                     model.ValidBetAmount,
                     model.EndTime,
                     model.FreeBet,
-                    model.MetaData));
+                    model.MetaData,
+                    model.PromotionId));
 
             return Ok(response);
         }
@@ -202,7 +204,7 @@ namespace L1.WebApi.Controllers
                 partnerPlayerIdConverter.ConvertPlayerId(model.OperatorId, model.PlayerId),
                 model.SiteId,
                 model.GameRoundId,
-                model.GameTypeId,
+                model.GameTypeId, 
                 model.WinningAmount));
 
             return Ok(response);

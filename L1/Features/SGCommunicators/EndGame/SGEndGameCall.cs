@@ -15,7 +15,8 @@ namespace L1.Features.SGCommunicators.EndGame
             decimal validBetAmount,
             DateTimeOffset endTime,
             bool freeBet,
-            object metaData
+            object metaData,
+            string promotionId
             ) 
             : base(
                   playerId,
@@ -27,7 +28,8 @@ namespace L1.Features.SGCommunicators.EndGame
                   validBetAmount,
                   endTime,
                   freeBet,
-                  metaData
+                  metaData,
+                  promotionId
                   )
         {
         }

@@ -21,5 +21,7 @@ namespace L1.WebApi.Models
         public EndGameMetaData MetaData { get; set; }
         
         public string PromotionId { get; set; }
+
+        public string SiteName { get; set; }
     }
 }

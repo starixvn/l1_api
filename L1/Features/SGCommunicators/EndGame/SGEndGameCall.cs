@@ -16,7 +16,8 @@ namespace L1.Features.SGCommunicators.EndGame
             DateTimeOffset endTime,
             bool freeBet,
             object metaData,
-            string promotionId
+            string promotionId,
+            string siteName
             ) 
             : base(
                   playerId,
@@ -29,7 +30,8 @@ namespace L1.Features.SGCommunicators.EndGame
                   endTime,
                   freeBet,
                   metaData,
-                  promotionId
+                  promotionId,
+                  siteName
                   )
         {
         }

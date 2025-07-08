@@ -146,7 +146,8 @@ namespace L1.Features.SGCommunicators
                 call.EndTime ?? DateTimeOffset.UtcNow,
                 call.FreeBet,
                 call.MetaData,
-                call.PromotionId), OperatorId);
+                call.PromotionId,
+                call.SiteName), OperatorId);
 
             if (response.Result.IsSuccessful())
             {

@@ -1,4 +1,6 @@
-﻿namespace L1.Shared.Configurations
+﻿using System.Collections.Generic;
+
+namespace L1.Shared.Configurations
 {
     public partial interface IAppSettings
     {
@@ -14,6 +16,8 @@
 
         StreamSettings StreamSettings { get; set; }
         public string MicrositeClientPatternDomain { get; set; }
+
+        public Dictionary<string, int[]> IgnoreBrowserAgentCheck { get; set; }
     }
 
     public partial class AppSettings : IAppSettings
@@ -29,7 +33,10 @@
         public LogEnabling LogEnabling { get; set; } = new();
 
         public StreamSettings StreamSettings { get; set; } = new();
+
         public string MicrositeClientPatternDomain { get; set; }
+
+        public Dictionary<string, int[]> IgnoreBrowserAgentCheck { get; set; } = new();
     }
 
     public class LogEnabling

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using L1.Shared.Json;
 using L1.Shared.Resources;
 using Sentry;
@@ -37,12 +40,11 @@ namespace L1.Features.MemberAuthentications
 
             if (memberAuth != null)
             {
-                //if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
-                //{
-                //    LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
-
-                //    return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
-                //}
+                var userAgentVerificationResult = VerifyUserAgent(verificationParams, memberAuth);
+                if(!userAgentVerificationResult.IsSuccessful)
+                {
+                    return userAgentVerificationResult;
+                }
 
                 if (new DateTimeOffset(memberAuth.Time, TimeSpan.Zero).AddSeconds(appSettings.TokenExpiredSeconds) <= DateTimeOffset.UtcNow)
                 {
@@ -73,6 +75,26 @@ namespace L1.Features.MemberAuthentications
             }
 
             return VerificationResult.CreateErrorResponse(VerificationResult.TokenNotFoundCode);
+        }
+
+        private VerificationResult VerifyUserAgent(VerificationParams verificationParams, MemberAuth memberAuth)
+        {
+            if(appSettings.IgnoreBrowserAgentCheck != null 
+                && appSettings.IgnoreBrowserAgentCheck.TryGetValue(memberAuth.OperatorId, out var ignoreAppTypes)
+                && ignoreAppTypes != null 
+                && ignoreAppTypes.Contains(memberAuth.AppType))
+            {
+                return new VerificationResult(VerificationResult.SuccessCode, string.Empty);
+            }
+
+            if (memberAuth.BrowserUserAgent?.ToUpper() != verificationParams.BrowserUserAgent?.ToUpper())
+            {
+                LogToSentry(VerifyTokenErrors.InvalidUserAgentOrIP, verificationParams, memberAuth);
+
+                return VerificationResult.CreateErrorResponse(VerificationResult.InvalidUserAgentOrIPCode);
+            }
+
+            return new VerificationResult(VerificationResult.SuccessCode, string.Empty);
         }
 
         private void LogToSentry(string message, VerificationParams verificationParams, MemberAuth memberAuth)

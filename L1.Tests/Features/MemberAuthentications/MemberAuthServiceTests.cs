@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using L1.Features.MemberAuthentications;
@@ -176,5 +177,138 @@ namespace L1.Tests.Features.MemberAuthentications
             Assert.IsType<VerificationResult>(result);
             Assert.Equal(VerificationResult.TokenExpiredCode, result.Code);
         }
+        [Theory]
+        [InlineData("partner", 1, "Mozilla/5.0", "Mozilla/5.0", true)]
+        [InlineData("partner", 1, "Mozilla/5.0", "Chrome/1.0", false)]
+        [InlineData("partner", 2, "Mozilla/5.0", "Mozilla/5.0", true)]
+        [InlineData("partner", 2, "Mozilla/5.0", "Chrome/1.0", false)]
+        public void VerifyUserAgent_BrowserUserAgentMatchOrNot_ReturnsExpectedResult(
+            string operatorId, byte appType, string memberUserAgent, string paramUserAgent, bool shouldSucceed)
+        {
+            // Arrange
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
+            var ignoreDict = new Dictionary<string, int[]>
+            {
+                { "other", new[] { 2 } }
+            };
+#pragma warning restore CA1861 // Avoid constant arrays as arguments
+            appSettings.IgnoreBrowserAgentCheck.Returns(ignoreDict);
+
+            var verificationParams = new VerificationParams
+            {
+                BrowserUserAgent = paramUserAgent
+            };
+            var memberAuth = new MemberAuth
+            {
+                OperatorId = operatorId,
+                AppType = appType,
+                BrowserUserAgent = memberUserAgent
+            };
+
+            // Act
+            var result = typeof(MemberAuthService)
+                .GetMethod("VerifyUserAgent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .Invoke(memberAuthService, new object[] { verificationParams, memberAuth }) as VerificationResult;
+
+            // Assert
+            if (shouldSucceed)
+            {
+                Assert.Equal(VerificationResult.SuccessCode, result.Code);
+            }
+            else
+            {
+                Assert.Equal(VerificationResult.InvalidUserAgentOrIPCode, result.Code);
+            }
+        }
+
+        [Fact]
+        public void VerifyUserAgent_IgnoreBrowserAgentCheck_SkipsUserAgentCheck()
+        {
+            // Arrange
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
+            var ignoreDict = new Dictionary<string, int[]>
+            {
+                { "partner", new[] { 5, 7 } }
+            };
+#pragma warning restore CA1861 // Avoid constant arrays as arguments
+            appSettings.IgnoreBrowserAgentCheck.Returns(ignoreDict);
+
+            var verificationParams = new VerificationParams
+            {
+                BrowserUserAgent = "SomeAgent"
+            };
+            var memberAuth = new MemberAuth
+            {
+                OperatorId = "partner",
+                AppType = 7,
+                BrowserUserAgent = "DifferentAgent"
+            };
+
+            // Act
+            var result = typeof(MemberAuthService)
+                .GetMethod("VerifyUserAgent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .Invoke(memberAuthService, new object[] { verificationParams, memberAuth }) as VerificationResult;
+
+            // Assert
+            Assert.Equal(VerificationResult.SuccessCode, result.Code);
+        }
+
+        [Fact]
+        public void VerifyUserAgent_IgnoreBrowserAgentCheck_NullDictionary_DoesNotSkip()
+        {
+            // Arrange
+            appSettings.IgnoreBrowserAgentCheck.Returns((Dictionary<string, int[]>)null);
+
+            var verificationParams = new VerificationParams
+            {
+                BrowserUserAgent = "UA1"
+            };
+            var memberAuth = new MemberAuth
+            {
+                OperatorId = "partner",
+                AppType = 1,
+                BrowserUserAgent = "UA2"
+            };
+
+            // Act
+            var result = typeof(MemberAuthService)
+                .GetMethod("VerifyUserAgent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .Invoke(memberAuthService, new object[] { verificationParams, memberAuth }) as VerificationResult;
+
+            // Assert
+            Assert.Equal(VerificationResult.InvalidUserAgentOrIPCode, result.Code);
+        }
+
+        [Fact]
+        public void VerifyUserAgent_IgnoreBrowserAgentCheck_EmptyAppTypes_DoesNotSkip()
+        {
+            // Arrange
+            var ignoreDict = new Dictionary<string, int[]>
+            {
+                { "partner", null }
+            };
+            appSettings.IgnoreBrowserAgentCheck.Returns(ignoreDict);
+
+            var verificationParams = new VerificationParams
+            {
+                BrowserUserAgent = "UA1"
+            };
+            var memberAuth = new MemberAuth
+            {
+                OperatorId = "partner",
+                AppType = 1,
+                BrowserUserAgent = "UA2"
+            };
+
+            // Act
+            var result = typeof(MemberAuthService)
+                .GetMethod("VerifyUserAgent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .Invoke(memberAuthService, new object[] { verificationParams, memberAuth }) as VerificationResult;
+
+            // Assert
+            Assert.Equal(VerificationResult.InvalidUserAgentOrIPCode, result.Code);
+        }
+
+
     }
 }

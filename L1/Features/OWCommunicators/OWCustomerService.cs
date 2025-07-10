@@ -115,7 +115,23 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(OperatorId, response);
-                await natsService.PublishAsync("bet.settled", call);
+                await natsService.PublishAsync("bet.settled", new
+                {
+                    OperatorId,
+                    call.Seq,
+                    call.PlayerId,
+                    call.SiteId,
+                    call.TimeStamp,
+                    call.GameRoundId,
+                    call.GameTypeId,
+                    call.TotalAmount,
+                    call.TotalWin,
+                    call.ValidBetAmount,
+                    call.EndTime,
+                    call.FreeBet,
+                    call.PromotionId,
+                    call.SiteName,
+                });
             }
 
             return response;

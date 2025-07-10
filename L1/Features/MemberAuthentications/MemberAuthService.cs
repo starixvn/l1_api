@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using L1.Shared.Configurations;
-using L1.Shared.Constants;
 using L1.Shared.Json;
 using L1.Shared.Resources;
 using Sentry;
@@ -70,7 +68,9 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.OperatorToken,
                     memberAuth.IsCash,
                     memberAuth.OperatorPlayerId,
-                    memberAuth.DisableAward
+                    memberAuth.DisableAward,
+                    memberAuth.PlayerNickname,
+                    memberAuth.PlayerAvatarUrl
                     );
             }
 

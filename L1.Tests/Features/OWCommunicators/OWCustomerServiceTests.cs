@@ -11,6 +11,7 @@ using L1.Features.PartnerCommunicators.Log;
 using L1.Features.PartnerCommunicators.PlaceBet;
 using L1.Features.PartnerCommunicators.VoidGame;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;
 using Xunit;
@@ -114,7 +115,7 @@ namespace L1.Tests.Features.OWCommunicators
             await service.PlaceBet(call, 1);
 
             // Assert
-            await natsService.Received(1).PublishAsync("bet.created", Arg.Any<object>());
+            await natsService.Received(1).PublishAsync(StreamSubjects.BetCreated, Arg.Any<object>());
             await logService.Received(1).LogBetAsync("OW", response, Arg.Any<byte>());
         }
 

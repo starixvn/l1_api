@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant GP as "Game Provider"
+    participant SP as "SP (Service Platform)"
+    participant OP as "Operator"
+
+    GP->>SP: PlaceBet (ticket)
+    alt Promotion Ticket (promotionId != null)
+        SP->>SP: Track promotional PlaceBet (Amount, ContributionAmount, etc.)
+        Note right of SP: Do NOT send PlaceBet to Operator
+    else Normal Ticket (promotionId == null)
+        SP->>OP: PlaceBet (original Amount, ContributionAmount)
+    end
+
+    GP->>SP: EndGame (ticket)
+    alt Promotion Ticket (promotionId != null)
+        SP->>SP: Track promotional EndGame (TotalAmount, TotalWin, ValidBetAmount)
+        Note right of SP: Do NOT send EndGame to Operator
+    else Normal Ticket (promotionId == null)
+        SP->>OP: EndGame (original TotalAmount, TotalWin, ValidBetAmount)
+    end 

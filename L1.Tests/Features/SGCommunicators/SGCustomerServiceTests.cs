@@ -17,6 +17,7 @@ using L1.Features.SGCommunicators.GetBetLimit;
 using L1.Features.SGCommunicators.EndGame;
 using L1.Features.SGCommunicators.VoidGame;
 using L1.Shared.Configurations;
+using L1.Shared.Constants;
 using NSubstitute;
 using Sentry;
 using Xunit;
@@ -107,7 +108,7 @@ namespace L1.Tests.Features.SGCommunicators
             await service.PlaceBet(call);
 
             // Assert
-            await natsService.Received(1).PublishAsync("bet.created", Arg.Any<object>());
+            await natsService.Received(1).PublishAsync(StreamSubjects.BetCreated, Arg.Any<object>());
             await logService.Received(1).LogBetAsync("SG", response, Arg.Any<byte>());
         }
 

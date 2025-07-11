@@ -80,7 +80,7 @@ namespace L1.Features.OWCommunicators
             {
                 await logService.LogBetAsync(OperatorId, response, system, metadata);
 
-                await natsService.PublishAsync("bet.created", new
+                await natsService.PublishAsync(StreamSubjects.BetCreated, new
                 {
                     call.GameRoundId,
                     call.GameTypeId,
@@ -115,7 +115,7 @@ namespace L1.Features.OWCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(OperatorId, response);
-                await natsService.PublishAsync("bet.settled", new
+                await natsService.PublishAsync(StreamSubjects.BetSettled, new
                 {
                     OperatorId,
                     call.Seq,

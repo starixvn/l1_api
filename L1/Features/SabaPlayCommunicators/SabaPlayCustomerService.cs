@@ -78,7 +78,7 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogBetAsync(appSettings.PartnerIds.SabaPlay, response, system);
-                await natsService.PublishAsync("bet.created", new
+                await natsService.PublishAsync(StreamSubjects.BetCreated, new
                 {
                     call.GameRoundId,
                     call.GameTypeId,
@@ -113,7 +113,7 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(appSettings.PartnerIds.SabaPlay, response);
-                await natsService.PublishAsync("bet.settled", call);
+                await natsService.PublishAsync(StreamSubjects.BetSettled, call);
             }
 
             return response;

@@ -88,25 +88,66 @@ namespace L1.Shared.Middlewares
                 var settings = appSettings.StreamSettings;
                 var jsm = connection.CreateJetStreamManagementContext();
 
+                // Enhanced stream configuration for new streams - supports ack/nak pattern
                 var streamConfig = StreamConfiguration.Builder()
                     .WithName(formattedStreamName)
                     .WithSubjects($"{settings.SubjectPrefix}.>")
+                    .WithStorageType(ParseStorageType(settings.GetEffectiveStorageType()))
+                    .WithRetentionPolicy(ParseRetentionPolicy(settings.GetEffectiveRetentionPolicy()))
+                    .WithDiscardPolicy(ParseDiscardPolicy(settings.GetEffectiveDiscardPolicy()))
                     .WithMaxAge(Duration.OfHours(settings.MaxAgeHours))
-                    .WithDiscardPolicy(DiscardPolicy.Old)
-                    .WithRetentionPolicy(RetentionPolicy.Limits)
                     .WithMaxMessages(settings.MaxMessages)
+                    .WithMaxBytes(settings.MaxBytes)
+                    .WithReplicas(settings.Replicas)
+                    .WithDuplicateWindow(Duration.OfMillis(settings.DuplicateWindowMs))
+                    .WithNoAck(settings.NoAck)
+                    .WithAllowRollup(settings.AllowRollup)
+                    .WithDenyDelete(settings.DenyDelete)
+                    .WithDenyPurge(settings.DenyPurge)
                     .Build();
 
                 jsm.AddStream(streamConfig);
+                sentryClient.CaptureMessage($"Created new stream with ack/nak support: {formattedStreamName}");
             }
             catch (NATSJetStreamException ex) when (ex.ErrorCode == JetStreamErrorStreamAlreadyExists)
             {
-                sentryClient.CaptureMessage($"Stream {formattedStreamName} already exists");
+                sentryClient.CaptureMessage($"Stream {formattedStreamName} already exists. For migration, see manual steps in documentation.");
             }
             catch (Exception ex)
             {
                 sentryClient.CaptureException(ex);
             }
+        }
+
+        private static StorageType ParseStorageType(string storageType)
+        {
+            return storageType?.ToLowerInvariant() switch
+            {
+                "file" => StorageType.File,
+                "memory" => StorageType.Memory,
+                _ => StorageType.File
+            };
+        }
+
+        private static RetentionPolicy ParseRetentionPolicy(string policy)
+        {
+            return policy?.ToLowerInvariant() switch
+            {
+                "limits" => RetentionPolicy.Limits,
+                "interest" => RetentionPolicy.Interest,
+                "workqueue" => RetentionPolicy.WorkQueue,
+                _ => RetentionPolicy.Limits
+            };
+        }
+
+        private static DiscardPolicy ParseDiscardPolicy(string policy)
+        {
+            return policy?.ToLowerInvariant() switch
+            {
+                "old" => DiscardPolicy.Old,
+                "new" => DiscardPolicy.New,
+                _ => DiscardPolicy.Old
+            };
         }
     }
 }

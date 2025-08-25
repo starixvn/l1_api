@@ -1,4 +1,4 @@
-FROM hub.lumigame.com/base/dotnet/core/sdk:8.0-alpine AS builder
+FROM hub.lumigame.com/base/dotnet/core/sdk:8.0-alpine-25h2 AS builder
 WORKDIR /src
 
 COPY ./L1 ./L1
@@ -11,7 +11,7 @@ COPY ./L1.WebApi .
 
 RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
-FROM hub.lumigame.com/base/dotnet/core/aspnet:8.0-alpine-24h1.1 AS base
+FROM hub.lumigame.com/base/dotnet/core/aspnet:8.0-alpine-25h2 AS base
 ENV ASPNETCORE_HTTP_PORTS=
 
 WORKDIR /app

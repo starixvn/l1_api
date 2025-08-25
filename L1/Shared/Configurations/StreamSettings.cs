@@ -32,13 +32,13 @@ namespace L1.Shared.Configurations
 
         public long DuplicateWindowMs { get; set; } = 120_000; // 2 minutes for duplicate detection
 
-        public bool NoAck { get; set; } = false; // Ensure ack/nak support
+        public bool NoAck { get; set; } // Ensure ack/nak support
 
-        public bool AllowRollup { get; set; } = false;
+        public bool AllowRollup { get; set; }
 
-        public bool DenyDelete { get; set; } = false;
+        public bool DenyDelete { get; set; }
 
-        public bool DenyPurge { get; set; } = false;
+        public bool DenyPurge { get; set; }
 
         // Backward compatibility: Use safe defaults for missing properties
         public string GetEffectiveStorageType() => string.IsNullOrEmpty(StorageType) ? "File" : StorageType;

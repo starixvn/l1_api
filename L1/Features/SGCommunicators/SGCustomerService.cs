@@ -200,7 +200,8 @@ namespace L1.Features.SGCommunicators
 
         public async Task<PartnerResponse<PartnerAwardResult>> Award(PartnerAwardCall call)
         {
-            var response = await sgService.Post<PartnerAwardResult>(endpoints.Award, new SGAwardCall((int)call.PlayerId, call.SiteId, call.GameTypeId, call.Amount, call.Currency, call.PromotionId), OperatorId);
+            var response = await sgService.Post<PartnerAwardResult>(endpoints.Award, 
+                new SGAwardCall((int)call.PlayerId, call.SiteId, call.GameTypeId, call.Amount, call.Currency, call.PromotionId), OperatorId);
 
             if (response.Result.IsSuccessful())
             {

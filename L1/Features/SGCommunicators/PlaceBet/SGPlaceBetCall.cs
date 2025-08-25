@@ -23,7 +23,9 @@ namespace L1.Features.SGCommunicators.PlaceBet
             string operatorId,
             string userId,
             string promotionId)
-            : base(playerId, siteId, gameRoundId, gameTypeId, choiceId, amount, currency, roundEndTime, ip, freeSpin, contributionAmount, contributionRate, freeBet, operatorToken, operatorId, userId, promotionId)
+            : base(playerId, siteId, gameRoundId, gameTypeId, choiceId, amount, currency, 
+                  roundEndTime, ip, freeSpin, contributionAmount, contributionRate, freeBet, 
+                  operatorToken, operatorId, userId, promotionId)
         {
         }
     }

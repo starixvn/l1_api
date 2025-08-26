@@ -11,12 +11,14 @@ namespace L1.Features.PartnerCommunicators.Award
             int gameTypeId,
             decimal amount,
             string promotionId,
-            string currency) : base(playerId, siteId)
+            string currency,
+            byte awardType) : base(playerId, siteId)
         {
             GameTypeId = gameTypeId;
             Amount = amount;
             PromotionId = promotionId;
             Currency = currency;
+            AwardType = awardType;
         }
 
         [BsonRepresentation(BsonType.Decimal128)]
@@ -27,5 +29,7 @@ namespace L1.Features.PartnerCommunicators.Award
         public string PromotionId { get; set; }
 
         public string Currency { get; set; }
+
+        public byte AwardType { get; set; }
     }
 }

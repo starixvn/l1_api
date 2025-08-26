@@ -231,7 +231,8 @@ namespace L1.WebApi.Controllers
                     model.GameTypeId,
                     model.Amount,
                     model.PromotionId,
-                    model.Currency));
+                    model.Currency,
+                    model.AwardType));
 
             return Ok(response);
         }

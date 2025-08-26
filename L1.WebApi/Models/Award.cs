@@ -1,4 +1,6 @@
-﻿namespace L1.WebApi.Models
+﻿using L1.Shared.Constants;
+
+namespace L1.WebApi.Models
 {
     public class Award : MemberRequest
     {
@@ -9,5 +11,7 @@
         public string PromotionId { get; set; }
 
         public string Currency { get; set; }
+
+        public byte AwardType { get; set; } = AwardTypes.FreeSpinBonus;
     }
 }

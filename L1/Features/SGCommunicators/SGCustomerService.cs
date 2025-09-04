@@ -147,7 +147,8 @@ namespace L1.Features.SGCommunicators
                 call.FreeBet,
                 call.MetaData,
                 call.PromotionId,
-                call.SiteName), OperatorId);
+                call.SiteName,
+                call.BaseTotalAmount), OperatorId);
 
             if (response.Result.IsSuccessful())
             {

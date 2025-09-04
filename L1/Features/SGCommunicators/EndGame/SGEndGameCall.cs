@@ -17,7 +17,8 @@ namespace L1.Features.SGCommunicators.EndGame
             bool freeBet,
             object metaData,
             string promotionId,
-            string siteName
+            string siteName,
+            decimal baseTotalAmount
             ) 
             : base(
                   playerId,
@@ -31,7 +32,8 @@ namespace L1.Features.SGCommunicators.EndGame
                   freeBet,
                   metaData,
                   promotionId,
-                  siteName
+                  siteName,
+                  baseTotalAmount
                   )
         {
         }

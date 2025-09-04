@@ -23,5 +23,7 @@ namespace L1.WebApi.Models
         public string PromotionId { get; set; }
 
         public string SiteName { get; set; }
+
+        public decimal BaseTotalAmount { get; set; }
     }
 }

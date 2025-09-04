@@ -131,6 +131,7 @@ namespace L1.Features.OWCommunicators
                     call.FreeBet,
                     call.PromotionId,
                     call.SiteName,
+                    call.BaseTotalAmount
                 });
             }
 

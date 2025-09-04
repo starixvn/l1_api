@@ -149,7 +149,8 @@ namespace L1.WebApi.Controllers
                     model.FreeBet,
                     model.MetaData,
                     model.PromotionId,
-                    model.SiteName));
+                    model.SiteName,
+                    model.BaseTotalAmount));
 
             return Ok(response);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace L1.Features.PartnerCommunicators.EndGame
 {
@@ -20,7 +21,8 @@ namespace L1.Features.PartnerCommunicators.EndGame
             bool freeBet,
             object metaData,
             string promotionId,
-            string siteName)
+            string siteName,
+            decimal baseTotalAmount)
 #pragma warning restore S107 // Methods should not have too many parameters
             : base(playerId, siteId)
         {
@@ -34,6 +36,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
             MetaData = metaData;
             PromotionId = promotionId;
             SiteName = siteName;
+            BaseTotalAmount = baseTotalAmount;
         }
 
         public int GameRoundId { get; set; }
@@ -56,5 +59,8 @@ namespace L1.Features.PartnerCommunicators.EndGame
         public string PromotionId { get; set; }
 
         public string SiteName { get; set; }
+
+        [JsonIgnore]
+        public decimal BaseTotalAmount { get; set; }
     }
 }

@@ -113,7 +113,24 @@ namespace L1.Features.SabaPlayCommunicators
             if (response.Result.IsSuccessful())
             {
                 await logService.LogEndGameAsync(appSettings.PartnerIds.SabaPlay, response);
-                await natsService.PublishAsync(StreamSubjects.BetSettled, call);
+                await natsService.PublishAsync(StreamSubjects.BetSettled, new
+                {
+                    OperatorId,
+                    call.Seq,
+                    PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
+                    call.SiteId,
+                    call.TimeStamp,
+                    call.GameRoundId,
+                    call.GameTypeId,
+                    call.TotalAmount,
+                    call.TotalWin,
+                    call.ValidBetAmount,
+                    call.EndTime,
+                    call.FreeBet,
+                    call.PromotionId,
+                    call.SiteName,
+                    call.BaseTotalAmount
+                });
             }
 
             return response;

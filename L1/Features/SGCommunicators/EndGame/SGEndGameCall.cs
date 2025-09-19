@@ -8,7 +8,7 @@ namespace L1.Features.SGCommunicators.EndGame
         public SGEndGameCall(
             int playerId,
             string siteId,
-            int gameRoundId,
+            long gameRoundId,
             int gameTypeId,
             decimal totalAmount,
             decimal totalWin,

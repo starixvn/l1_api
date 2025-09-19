@@ -12,7 +12,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
         public PartnerEndGameCall(
             object playerId,
             string siteId,
-            int gameRoundId,
+            long gameRoundId,
             int gameTypeId,
             decimal totalAmount,
             decimal totalWin,
@@ -39,7 +39,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
             BaseTotalAmount = baseTotalAmount;
         }
 
-        public int GameRoundId { get; set; }
+        public long GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }
 

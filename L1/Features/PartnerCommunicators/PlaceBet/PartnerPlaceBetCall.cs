@@ -11,7 +11,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
         public PartnerPlaceBetCall(
             object playerId,
             string siteId,
-            int gameRoundId,
+            long gameRoundId,
             int gameTypeId,
             int choiceId,
             decimal amount,
@@ -45,7 +45,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
             PromotionId = promotionId;
         }
 
-        public int GameRoundId { get; set; }
+        public long GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }
 

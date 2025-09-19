@@ -4,7 +4,7 @@ namespace L1.WebApi.Models
 {
     public class EndGame : MemberRequest
     {
-        public int GameRoundId { get; set; }
+        public long GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }
 
@@ -19,7 +19,7 @@ namespace L1.WebApi.Models
         public DateTimeOffset EndTime { get; set; }
 
         public EndGameMetaData MetaData { get; set; }
-        
+
         public string PromotionId { get; set; }
 
         public string SiteName { get; set; }

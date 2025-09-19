@@ -2,7 +2,7 @@
 {
     public class PartnerVoidGameCall : PartnerCall
     {
-        public PartnerVoidGameCall(object playerId, string siteId, int gameRoundId, int gameTypeId, string reason, bool freeBet) : base(playerId, siteId)
+        public PartnerVoidGameCall(object playerId, string siteId, long gameRoundId, int gameTypeId, string reason, bool freeBet) : base(playerId, siteId)
         {
             GameRoundId = gameRoundId;
             GameTypeId = gameTypeId;
@@ -10,7 +10,7 @@
             FreeBet = freeBet;
         }
 
-        public int GameRoundId { get; set; }
+        public long GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }
 

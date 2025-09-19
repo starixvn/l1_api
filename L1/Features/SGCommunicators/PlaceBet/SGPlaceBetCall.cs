@@ -8,7 +8,7 @@ namespace L1.Features.SGCommunicators.PlaceBet
         public SGPlaceBetCall(
             int playerId,
             string siteId,
-            int gameRoundId,
+            long gameRoundId,
             int gameTypeId,
             int choiceId,
             decimal amount,

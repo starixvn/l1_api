@@ -5,7 +5,7 @@
         public HitJackpotCall(
             object playerId,
             string siteId,
-            int gameRoundId,
+            long gameRoundId,
             int gameTypeId,
             decimal winningAmount) : base(playerId, siteId)
         {
@@ -14,7 +14,7 @@
             WinningAmount = winningAmount;
         }
 
-        public int GameRoundId { get; set; }
+        public long GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }
 

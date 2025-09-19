@@ -5,7 +5,7 @@ namespace L1.WebApi.Models
 {
     public class PlaceBet : MemberRequest
     {
-        public int GameRoundId { get; set; }
+        public long GameRoundId { get; set; }
 
         public int GameTypeId { get; set; }
 

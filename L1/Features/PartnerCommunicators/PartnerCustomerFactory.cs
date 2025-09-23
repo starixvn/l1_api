@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using L1.Features.OneTwoCheersCommunicators;
 using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
@@ -34,6 +35,7 @@ namespace L1.Features.PartnerCommunicators
             AddService(appSettings.PartnerIds.SBO, typeof(SboCustomerService));
             AddService(appSettings.PartnerIds.PFF, typeof(PFFCustomerService));
             AddService(appSettings.PartnerIds.SabaPlay, typeof(SabaPlayCustomerService));
+            AddService(appSettings.PartnerIds.OneTwoCheers, typeof(OneTwoCheersCustomerService));
         }
 
         private void AddService(string key, Type serviceType)

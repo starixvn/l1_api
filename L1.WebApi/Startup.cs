@@ -4,6 +4,7 @@ using Coravel;
 using L1.Features.AdminApiCommunicators;
 using L1.Features.BackendAuthentications;
 using L1.Features.MemberAuthentications;
+using L1.Features.OneTwoCheersCommunicators;
 using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
@@ -49,7 +50,8 @@ namespace L1.WebApi
                 (appSettings.SboServiceSettings, () => services.AddSboServices(appSettings.SboServiceSettings)),
                 (appSettings.PFFServiceSettings, () => services.AddPFFServices(appSettings.PFFServiceSettings)),
                 (appSettings.SabaPlayServiceSettings, () => services.AddSabaPlayServices(appSettings.SabaPlayServiceSettings)),
-                (appSettings.SabaPlayDailySummaryServiceSettings, () => services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings))
+                (appSettings.SabaPlayDailySummaryServiceSettings, () => services.AddSabaPlayDailySummaryServices(appSettings.SabaPlayDailySummaryServiceSettings)),
+                (appSettings.OneTwoCheersServiceSettings, () => services.AddOneTwoCheersServices(appSettings.OneTwoCheersServiceSettings))
             };
 
             foreach (var (settings, registration) in serviceRegistrations)

@@ -8,7 +8,6 @@ using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
-using L1.Features.SGCommunicators;
 using L1.Shared.Configurations;
 using L1.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -46,7 +45,6 @@ namespace L1.WebApi
 
             var serviceRegistrations = new List<(object Settings, Action Registration)>
             {
-                (appSettings.SGServiceSettings, () => services.AddSGServices(appSettings.SGServiceSettings)),
                 (appSettings.OWServiceSettings, () => services.AddOWServices(appSettings.OWServiceSettings)),
                 (appSettings.SboServiceSettings, () => services.AddSboServices(appSettings.SboServiceSettings)),
                 (appSettings.PFFServiceSettings, () => services.AddPFFServices(appSettings.PFFServiceSettings)),

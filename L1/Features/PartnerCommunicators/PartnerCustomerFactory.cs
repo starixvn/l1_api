@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using L1.Features.OWCommunicators;
 using L1.Features.PFFCommunicators;
 using L1.Features.SabaPlayCommunicators;
 using L1.Features.SboCommunicators;
-using L1.Features.SGCommunicators;
+
 using L1.Shared.Configurations;
 
 namespace L1.Features.PartnerCommunicators
@@ -23,9 +23,6 @@ namespace L1.Features.PartnerCommunicators
         {
             this.serviceProvider = serviceProvider;
             services = [];
-
-            //Operators using playerId as integer
-            AddService(appSettings.PartnerIds.SG, typeof(SGCustomerService));
 
             //Operators using playerId as string
             AddService(appSettings.PartnerIds.OW, typeof(OWCustomerService));

@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using L1.Features.OWCommunicators;
 using L1.Features.PartnerCommunicators;
-using L1.Features.SGCommunicators;
 using L1.Shared.Configurations;
 using NSubstitute;
 using Xunit;
@@ -68,20 +67,6 @@ namespace L1.Tests.Features.PartnerCommunicators
 
             // Act
             var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.SBO);
-
-            // Assert
-            Assert.IsAssignableFrom<IPartnerCustomerServices>(result);
-            Assert.NotNull(result);
-        }
-
-        [Fact]
-        public void GetService_SGPartner_ReturnService()
-        {
-            // Arrange
-            serviceProvider.GetService(Arg.Any<Type>()).Returns(new SGCustomerService(null, null, null, null, null, null));
-
-            // Act
-            var result = partnerCustomerFactory.GetCustomerService(appSettings.PartnerIds.SG);
 
             // Assert
             Assert.IsAssignableFrom<IPartnerCustomerServices>(result);

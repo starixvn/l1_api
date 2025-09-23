@@ -9,7 +9,7 @@ namespace L1.Features.PartnerCommunicators.PlaceBet
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public PartnerPlaceBetCall(
-            object playerId,
+            string playerId,
             string siteId,
             long gameRoundId,
             int gameTypeId,

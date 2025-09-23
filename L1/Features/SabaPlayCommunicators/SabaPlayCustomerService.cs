@@ -95,7 +95,7 @@ namespace L1.Features.SabaPlayCommunicators
                     call.OperatorId,
                     call.UserId,
                     call.Seq,
-                    PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
+                    PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId),
                     call.SiteId,
                     call.TimeStamp,
                     System = system,
@@ -117,7 +117,7 @@ namespace L1.Features.SabaPlayCommunicators
                 {
                     OperatorId,
                     call.Seq,
-                    PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId.ToString()),
+                    PlayerId = SabaPlayFormatter.FormatPlayerId(call.SiteId, call.PlayerId),
                     call.SiteId,
                     call.TimeStamp,
                     call.GameRoundId,

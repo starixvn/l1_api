@@ -67,7 +67,7 @@ namespace L1.Features.SabaPlayCommunicators
                 using var response = await apiHttpClient.SendAsync(requestMessage);
                 var finalResponse = response.IsSuccessStatusCode
                     ? jsonService.Deserialize<PartnerResponse<T>>(await response.Content.ReadAsStringAsync())
-                    : await CreateNetworkErrorResponse<T>(new SabaPlayCall(call.Seq, call.PlayerId.ToString(), call.SiteId), response, accessKey);
+                    : await CreateNetworkErrorResponse<T>(new SabaPlayCall(call.Seq, call.PlayerId, call.SiteId), response, accessKey);
 
                 finalResponse!.Request = request;
 

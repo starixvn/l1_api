@@ -4,7 +4,6 @@ namespace L1.Features.PartnerCommunicators.VoidGame
 {
     public class PartnerVoidGameResult : PartnerResult
     {
-        [JsonConverter(typeof(OperatorPlayerIdJsonConverter))]
-        public dynamic PlayerId { get; set; }
+        public string PlayerId { get; set; }
     }
 }

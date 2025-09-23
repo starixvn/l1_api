@@ -10,7 +10,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
 #pragma warning disable S107 // Methods should not have too many parameters
 
         public PartnerEndGameCall(
-            object playerId,
+            string playerId,
             string siteId,
             long gameRoundId,
             int gameTypeId,
@@ -55,7 +55,7 @@ namespace L1.Features.PartnerCommunicators.EndGame
         public bool FreeBet { get; set; }
 
         public object MetaData { get; set; }
-        
+
         public string PromotionId { get; set; }
 
         public string SiteName { get; set; }

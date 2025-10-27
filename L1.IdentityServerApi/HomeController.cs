@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace L1.IdentityServerApi
 {
+    [ApiController]
+    [Route("")]
     public class HomeController : ControllerBase
     {
-        [AllowAnonymous]
-        public ActionResult Index() => new ContentResult
-        {
-            Content = "Auth server is running!!!",
-            ContentType = "text/html"
-        };
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult Index() => Content("Auth server is running!!!", "text/html");
     }
 }

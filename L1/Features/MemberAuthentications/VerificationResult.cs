@@ -40,7 +40,8 @@ namespace L1.Features.MemberAuthentications
             string operatorPlayerId,
             bool disableAward,
             string playerNickname,
-            string playerAvatarUrl
+            string playerAvatarUrl,
+            decimal xMode
             )
 #pragma warning restore S107 // Methods should not have too many parameters
             : this(code, message)
@@ -66,6 +67,7 @@ namespace L1.Features.MemberAuthentications
             DisableAward = disableAward;
             PlayerNickname = playerNickname;
             PlayerAvatarUrl = playerAvatarUrl;
+            XMode = xMode;
         }
 
         public string PlayerId { get; }
@@ -112,6 +114,8 @@ namespace L1.Features.MemberAuthentications
 
         public string PlayerAvatarUrl { get; set; }
 
+        public decimal XMode { get; set; }
+
         public static VerificationResult CreateErrorResponse(int code)
            => new(code, string.Empty);
 
@@ -138,7 +142,8 @@ namespace L1.Features.MemberAuthentications
             string operatorPlayerId,
             bool disableAward,
             string playerNickname,
-            string playerAvatarUrl)
+            string playerAvatarUrl,
+            decimal xMode)
 #pragma warning restore S107 // Methods should not have too many parameters
             => new VerificationResult(
                 SuccessCode,
@@ -163,6 +168,7 @@ namespace L1.Features.MemberAuthentications
                 operatorPlayerId,
                 disableAward,
                 playerNickname,
-                playerAvatarUrl);
+                playerAvatarUrl,
+                xMode);
     }
 }

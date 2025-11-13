@@ -70,7 +70,8 @@ namespace L1.Features.MemberAuthentications
                     memberAuth.OperatorPlayerId,
                     memberAuth.DisableAward,
                     memberAuth.PlayerNickname,
-                    memberAuth.PlayerAvatarUrl
+                    memberAuth.PlayerAvatarUrl,
+                    memberAuth.XMode
                     );
             }
 

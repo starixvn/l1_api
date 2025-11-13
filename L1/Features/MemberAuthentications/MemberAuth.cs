@@ -69,5 +69,7 @@ namespace L1.Features.MemberAuthentications
         public string PlayerNickname { get; set; }
 
         public string PlayerAvatarUrl { get; set; }
+
+        public decimal XMode { get; set; }
     }
 }

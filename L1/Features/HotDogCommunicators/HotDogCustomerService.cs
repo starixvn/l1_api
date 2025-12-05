@@ -48,8 +48,17 @@ namespace L1.Features.HotdogCommunicators
         public Task<PartnerResponse<PartnerEnterPortalResult>> EnterPortal(PartnerEnterPortalCall call)
         => HotdogService.Post<PartnerEnterPortalResult>(endpoints.EnterPortal, call, OperatorId);
 
-        public Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
-        => HotdogService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call, OperatorId);
+        public async Task<PartnerResponse<PartnerGetBalanceResult>> GetBalance(PartnerGetBalanceCall call)
+        {
+            var response = await HotdogService.Post<PartnerGetBalanceResult>(endpoints.GetBalance, call, OperatorId);
+
+            if (response.Result.IsSuccessful())
+            {
+                Sentry.SentrySdk.CaptureMessage("Balance After Get Balance From Hotdog: " + response.Result.Balance);
+            }
+
+            return response;
+        }
 
         public Task<PartnerResponse<PartnerGetBetLimitResult>> GetBetLimit(PartnerGetBetLimitCall call)
         => HotdogService.Post<PartnerGetBetLimitResult>(endpoints.GetBetLimit, call, OperatorId);
